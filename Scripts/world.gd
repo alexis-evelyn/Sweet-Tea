@@ -14,7 +14,9 @@ func _ready():
 	$HUD/panelPlayerList/lblLocalPlayer.text = gamestate.player_info.name # Display Local Client's Text on Screen
 
 	if (get_tree().is_network_server()):
-		# TODO: Make Sure Not To Execute spawn_player(...) if Running Headless
+		network.connect("player_removed", self, "_on_player_removed") # Register Player Removal Function
+		
+		# TODO: Make Sure Not To Execute this line of spawn_player_server(...) if Running Headless
 		spawn_players_server(gamestate.player_info) # Spawn Players (Currently Only Server's Player)
 	else:
 		rpc_id(1, "spawn_players_server", gamestate.player_info) # Request for Server To Spawn Player
@@ -35,10 +37,11 @@ master func spawn_players_server(pinfo):
 			# Spawn Existing Players for New Client (Not New Player)
 			# All clients' coordinates (including server's coordinates) get sent to new client (except for the new client)
 			if (id != pinfo.net_id):
-				print("Existing: ", id, " For: ", pinfo.net_id, " At Coordinates: ", coordinates)
+				var player = get_node(str(id) + "/KinematicBody2D") # Grab Existing Player's Object (Server Only)
+				print("Existing: ", id, " For: ", pinfo.net_id, " At Coordinates: ", player.position) # player.position grabs existing player's coordinates
 				# --------------------------Get rid of coordinates from the function arguments and retrieve coordinates from dictionary)--------------------------
 				# Separate Coordinate Variable From Rest of Function
-				rpc_id(pinfo.net_id, "spawn_players", network.players[id], coordinates) # TODO: This line of code is at fault for the current bug
+				rpc_id(pinfo.net_id, "spawn_players", network.players[id], player.position) # TODO: This line of code is at fault for the current bug
 				
 			# Spawn the new player within the currently iterated player as long it's not the server
 			# Because the server's list already contains the new player, that one will also get itself!
@@ -55,7 +58,6 @@ master func spawn_players_server(pinfo):
 # TODO (IMPORTANT): Let server decide coordinates and not client
 # For client only
 remote func spawn_players(pinfo, coordinates: Vector2):
-	# TODO: Get Rid of Spawnpoint System (Use Code From Previous Server)
 	#global_position = pinfo
 	
 	print("Spawning Player: ", pinfo.net_id, " At Coordinates: ", coordinates)
@@ -101,6 +103,34 @@ func add_player(pinfo, coordinates: Vector2):
 		
 	# Finally add the actor into the world
 	add_child(new_actor)
+
+# Server and Client - Despawn Player From Local World
+remote func despawn_player(pinfo):
+	# TODO: Fix Error Mentioned at: http://kehomsforge.com/tutorials/multi/gdMultiplayerSetup/part03/. The error does not break the game at all, it just spams the console.
+	# "ERROR: _process_get_node: Invalid packet received. Unabled to find requested cached node. At: core/io/multiplayer_api.cpp:259."
+	
+	if (get_tree().is_network_server()):
+		for id in network.players:
+			# Skip sending the despawn packet to both the disconnected player and the server (itself)
+			if (id == pinfo.net_id || id == 1):
+				continue
+			
+			# Notify players (clients) of despawned player
+			rpc_id(id, "despawn_player", pinfo)
+	
+	# Locate Player To Despawn
+	var player_node = get_node(str(pinfo.net_id))
+	
+	if (!player_node):
+		print("Failed To Find Player To Despawn")
+		return
+	
+	# Despawn Player from World
+	player_node.queue_free()
+	
+# Server Only - Call the Despawn Player Function
+func _on_player_removed(pinfo):
+	despawn_player(pinfo)
 
 # Update Player List in GUI
 func _on_player_list_changed():

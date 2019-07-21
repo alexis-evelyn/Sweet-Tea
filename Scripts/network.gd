@@ -1,9 +1,13 @@
 extends Node
 
+# TODO: Make Client Close if Server Shutdown Forcibly
+
+# It's not necessary to add signal arguments here, but it helps when studying the code
 signal server_created # When server is created (successfully)
 signal join_success # Successfully joined server
 signal join_fail # Failed to join server
 signal player_list_changed # Client List Updated
+signal player_removed(pinfo) # A Player Was Removed From The Player List
 
 # TODO (IMPORTANT): Figure out how to encrypt ENet!!! How Does Minecraft Do It?
 # This is important to prevent MITM attacks which could result in a server owner banning a player
@@ -97,8 +101,11 @@ remote func register_player(pinfo):
 remote func unregister_player(id):
 	print("Removing player ", players[id].name, " from internal table")
 	
+	var pinfo = players[id] # Cache player info for removal process
 	players.erase(id) # Remove Player From Player List
-	emit_signal("player_list_changed") # Notify Client's Of List Change
+	
+	emit_signal("player_list_changed") # Notify Clients Of List Change
+	emit_signal("player_removed", pinfo) # Request Server To Remove Player
 
 # Server Notified When A New Client Connects
 func _on_player_connected(id):
