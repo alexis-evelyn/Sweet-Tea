@@ -66,6 +66,7 @@ func _create_server():
 
 # Join Server Button
 func _on_btnJoin_pressed():
+	# TODO: Make Sure To Validate Data From User
 	var port = int($panelJoin/txtJoinPort.text)
 	var ip = $panelJoin/txtJoinIP.text
 	network.join_server(ip, port)
