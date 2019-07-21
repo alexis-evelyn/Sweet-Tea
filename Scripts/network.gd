@@ -102,11 +102,12 @@ remote func unregister_player(id):
 
 # Server Notified When A New Client Connects
 func _on_player_connected(id):
+	# Will Crash Server - print("Player ", players[id].name, " Connected to Server")
 	pass
 
 # Server Notified When A Client Disconnects
 func _on_player_disconnected(id):
-	print("Player ", players[id].name, " disconnected from server")
+	print("Player ", players[id].name, " Disconnected from Server")
 	
 	# Update the player tables
 	if (get_tree().is_network_server()):
