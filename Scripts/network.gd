@@ -123,6 +123,7 @@ func _on_connected_to_server():
 	register_player(gamestate.player_info) # Update Own Dictionary With Ourself
 
 # Successfully Disconnected From Server
+# TODO: Free Up Resources and Save Data (Client Side)
 func _on_disconnected_from_server():
 	print("Disconnected From Server")
 	
@@ -133,8 +134,3 @@ func _on_disconnected_from_server():
 func _on_connection_failed():
 	emit_signal("join_fail") # Call Function to do Something on Fail (probably show GUI)
 	get_tree().set_network_peer(null) # Disable Network Peer
-
-# Disconnected From Server
-# TODO: Free Up Resources and Save Data (Client Side)
-func _on_disconnected_from_server():
-	pass
