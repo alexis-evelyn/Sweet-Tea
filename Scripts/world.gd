@@ -15,17 +15,45 @@ func _ready():
 
 	if (get_tree().is_network_server()):
 		# TODO: Make Sure Not To Execute spawn_player(...) if Running Headless
-		spawn_players(gamestate.player_info, Vector2(500, 500)) # Spawn Players (Currently Only Server's Player)
+		spawn_players_server(gamestate.player_info) # Spawn Players (Currently Only Server's Player)
 	else:
-		rpc_id(1, "spawn_players", gamestate.player_info, Vector2(300,300)) # Request for Server To Spawn Player
+		rpc_id(1, "spawn_players_server", gamestate.player_info) # Request for Server To Spawn Player
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(_delta):
 #	pass
 
+# For the server only
+master func spawn_players_server(pinfo):
+	var coordinates = Vector2(300, 300) # Get rid of all references to this
+	
+	if (get_tree().is_network_server() && pinfo.net_id != 1):
+		# TODO: Validate That Player ID is Not Spoofed
+		# We Are The Server and The New Player is Not The Server
+		
+		for id in network.players:
+			# Spawn Existing Players for New Client (Not New Player)
+			# All clients' coordinates (including server's coordinates) get sent to new client (except for the new client)
+			if (id != pinfo.net_id):
+				print("Existing: ", id, " For: ", pinfo.net_id, " At Coordinates: ", coordinates)
+				# --------------------------Get rid of coordinates from the function arguments and retrieve coordinates from dictionary)--------------------------
+				# Separate Coordinate Variable From Rest of Function
+				rpc_id(pinfo.net_id, "spawn_players", network.players[id], coordinates) # TODO: This line of code is at fault for the current bug
+				
+			# Spawn the new player within the currently iterated player as long it's not the server
+			# Because the server's list already contains the new player, that one will also get itself!
+			# New Player's Coordinates gets sent to all clients (including new player/client) except the server
+			if (id != 1):
+				print("New: ", id, " For: ", pinfo.net_id, " At Coordinates: ", coordinates)
+				# Same here, get from dictionary, keep separate
+				rpc_id(id, "spawn_players", pinfo, coordinates)
+				
+	add_player(pinfo, coordinates)
+
 # Spawns a new player actor, using the provided player_info structure and the given spawn index
 # http://kehomsforge.com/tutorials/multi/gdMultiplayerSetup/part03/ - "Spawning A Player"
 # TODO (IMPORTANT): Let server decide coordinates and not client
+# For client only
 remote func spawn_players(pinfo, coordinates: Vector2):
 	# TODO: Get Rid of Spawnpoint System (Use Code From Previous Server)
 	#global_position = pinfo
@@ -52,7 +80,10 @@ remote func spawn_players(pinfo, coordinates: Vector2):
 				print("New: ", id, " For: ", pinfo.net_id)
 				# Same here, get from dictionary, keep separate
 				rpc_id(id, "spawn_players", pinfo, coordinates)
-			
+	
+	add_player(pinfo, coordinates)
+	
+func add_player(pinfo, coordinates: Vector2):
 	# Load the scene and create an instance
 	var player_class = load(pinfo.actor_path)
 	var new_actor = player_class.instance()
