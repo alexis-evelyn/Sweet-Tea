@@ -10,21 +10,35 @@ func _ready():
 	network.connect("join_success", self, "_load_game_client")
 	network.connect("join_fail", self, "_on_join_fail")
 
+# Server Starting Code
 func _load_game_server():
+	# Load World From Drive
+	# For Simplicity, We Are Starting Off Non Infinite So The Whole World Will Be Loaded At Once
+	# QUESTION: Do I want to Use Scenes For World Data Or Just To Populate A Scene From A Save File?
+	
+	# Enable Physics - Growing Plants, Moving Mobs, etc... (May Be Done In Respective Scenes Instead)
+	
+	# TODO: If Headless Make Sure Loaded, but Not Displayed
 	get_tree().change_scene("res://Worlds/World.tscn")
 
+# Client Starting Code
 func _load_game_client():
+	# Download World, Resources, Scripts, etc... From Server
+	
+	# Verify Hashes of Downloaded Data
+	
+	# This will be changed to load from world (chunks?) sent by server
 	get_tree().change_scene("res://Worlds/World.tscn")
 
+# TODO: Show GUI Error Message on Failed Join of Server
 func _on_join_fail():
 	print("Failed to join server")
-	pass # I am leaving pass here to notify me that this function needs more work
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
 
-# Create Server Button
+# Create Server Button (GUI Only - Not Headless)
 func _on_btnCreate_pressed():
 	# Gather values from the GUI and fill the network.server_info dictionary
 	
@@ -36,7 +50,18 @@ func _on_btnCreate_pressed():
 	network.server_info.max_players = int($panelHost/txtMaxPlayers.text)
 	network.server_info.used_port = int($panelHost/txtServerPort.text)
 	
-	# And create the server, using the function previously added into the code
+	# Create the Server (Through network.gd)
+	network.create_server()
+
+# TODO: Move This Function Outside of A Menu (and Put into Command Line Handling Code)
+# Headless Only
+func _create_server():
+	network.server_info.name = "Server Name - Headless"
+	
+	network.server_info.max_players = int("5") # Maximum Number of Players
+	network.server_info.used_port = int("4242") # Server Port
+	
+	# Create the Server (Through network.gd)
 	network.create_server()
 
 # Join Server Button
