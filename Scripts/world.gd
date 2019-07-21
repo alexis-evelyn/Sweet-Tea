@@ -10,11 +10,24 @@ extends Node2D
 func _ready():
 	network.connect("player_list_changed", self, "_on_player_list_changed")
 	
+	# Do Not Run Below Code if Headless
 	$HUD/panelPlayerList/lblLocalPlayer.text = gamestate.player_info.name # Display Local Client's Text on Screen
+
+	if (get_tree().is_network_server()):
+		# TODO: Make Sure Not To Execute spawn_player(...) if Running Headless
+		spawn_players(gamestate.player_info) # Spawn Players (Currently Only Server's Player)
+	else:
+		rpc_id(1, "spawn_players", gamestate.player_info) # Request for Server To Spawn Player
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(_delta):
 #	pass
+
+# Spawns a new player actor, using the provided player_info structure and the given spawn index
+# http://kehomsforge.com/tutorials/multi/gdMultiplayerSetup/part03/ - "Spawning A Player"
+remote func spawn_players(pinfo):
+	# TODO: Get Rid of Spawnpoint System (Use Code From Previous Server)
+	pass
 
 # Update Player List in GUI
 func _on_player_list_changed():
