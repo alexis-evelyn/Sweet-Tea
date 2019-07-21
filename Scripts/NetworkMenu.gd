@@ -4,11 +4,15 @@ extends CanvasLayer
 # var a = 2
 # var b = "text"
 
-# Called when the node enters the scene tree for the first time.
+# Main Function - Registers Event Handling (Handled By Both Client And Server)
 func _ready():
 	network.connect("server_created", self, "_load_game_server")
 	network.connect("join_success", self, "_load_game_client")
 	network.connect("join_fail", self, "_on_join_fail")
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(_delta):
+#	pass
 
 # Server Starting Code
 func _load_game_server():
@@ -31,16 +35,27 @@ func _load_game_client():
 	get_tree().change_scene("res://Worlds/World.tscn")
 
 # TODO: Show GUI Error Message on Failed Join of Server
+# Failed To Join Server
 func _on_join_fail():
-	print("Failed to join server")
+	print("Failed to Join Server")
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+# Record Player's Info (Require's GUI)
+func set_player_info():
+	# TODO: Validate User Input
+	
+	# Set Player's Name
+	if (!$panelPlayer/txtPlayerName.text.empty()):
+		gamestate.player_info.name = $panelPlayer/txtPlayerName.text
+	
+	# Set Character's Color
+	gamestate.player_info.char_color = $panelPlayer/btColor.color
 
 # Create Server Button (GUI Only - Not Headless)
 func _on_btnCreate_pressed():
 	# Gather values from the GUI and fill the network.server_info dictionary
+	
+	# Record Player's Info - GUI Only
+	set_player_info()
 	
 	# TODO: Make sure fields aren't empty before populating data
 	# Also, this is the perfect place to validate the data for the dictionary in network.gd
@@ -54,7 +69,7 @@ func _on_btnCreate_pressed():
 	network.create_server()
 
 # TODO: Move This Function Outside of A Menu (and Put into Command Line Handling Code)
-# Headless Only
+# Headless Only Creation of Server
 func _create_server():
 	network.server_info.name = "Server Name - Headless"
 	
@@ -66,6 +81,9 @@ func _create_server():
 
 # Join Server Button
 func _on_btnJoin_pressed():
+	# Record Player's Info - GUI Only
+	set_player_info()
+	
 	# TODO: Make Sure To Validate Data From User
 	var port = int($panelJoin/txtJoinPort.text)
 	var ip = $panelJoin/txtJoinIP.text
