@@ -140,12 +140,7 @@ margin_left = 871.514
 margin_top = 90.4298
 margin_right = 951.514
 margin_bottom = 110.43
-
-[node name="ColorPicker" type="ColorPicker" parent="panelPlayer"]
-visible = false
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 4.0
-margin_bottom = 4.0
+edit_alpha = false
 [connection signal="pressed" from="panelHost/btnCreate" to="." method="_on_btnCreate_pressed"]
 [connection signal="pressed" from="panelJoin/btnJoin" to="." method="_on_btnJoin_pressed"]
+[connection signal="color_changed" from="panelPlayer/btColor" to="." method="_on_btColor_color_changed"]

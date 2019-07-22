@@ -39,6 +39,11 @@ func _load_game_client():
 func _on_join_fail():
 	print("Failed to Join Server")
 
+# TODO: As I create an actual player creation screen, I will get rid of this section of the NetworkMenu
+# Set's Player Sprite Color in Menu Live
+func _on_btColor_color_changed(color):
+	$panelPlayer/playerIcon.modulate = $panelPlayer/btColor.color
+
 # Record Player's Info (Require's GUI)
 func set_player_info():
 	# TODO: Validate User Input

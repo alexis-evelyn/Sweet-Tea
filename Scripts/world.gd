@@ -13,7 +13,7 @@ func _ready():
 	var localPlayer = $PlayerUI/panelPlayerList/lblLocalPlayer
 	localPlayer.text = gamestate.player_info.name # Display Local Client's Text on Screen
 	localPlayer.align = Label.ALIGN_CENTER # Aligns the Text To Center
-	localPlayer.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
+	localPlayer.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # Fonts will be able to be chosen by player (including custom fonts added by player)
 
 	if (get_tree().is_network_server()):
 		network.connect("player_removed", self, "_on_player_removed") # Register Player Removal Function
@@ -25,6 +25,8 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
+	
+	# This allows user to see player list (I will eventually add support to change keys and maybe joystick support)
 	if Input.is_key_pressed(KEY_TAB):
 		playerList.visible = true
 	else:
@@ -35,8 +37,11 @@ master func spawn_players_server(pinfo):
 	var coordinates = Vector2(300, 300) # Get rid of all references to this
 	
 	if (get_tree().is_network_server() && pinfo.net_id != 1):
-		# TODO: Validate That Player ID is Not Spoofed
 		# We Are The Server and The New Player is Not The Server
+		
+		# TODO: Validate That Player ID is Not Spoofed
+		# Apparently the RPC ID (used as Player ID) is safe from spoofing? I need to do more research just to be sure.
+		# https://www.reddit.com/r/godot/comments/bf4z8r/is_get_rpc_sender_id_safe_enough/eld38y8?utm_source=share&utm_medium=web2x
 		
 		for id in network.players:
 			# Spawn Existing Players for New Client (Not New Player)
@@ -94,19 +99,21 @@ func add_player(pinfo, coordinates: Vector2):
 	# Load the scene and create an instance
 	var player_class = load(pinfo.actor_path)
 	var new_actor = player_class.instance()
-	# Setup player customization (well, the color)
-	#nactor.set_dominant_color(pinfo.char_color)
-	# And the actor position
-	print("Actor: ", pinfo.net_id)
-	# --------------------------
-	new_actor.get_node("KinematicBody2D").position = coordinates # Note To Self: This Works Fine
-	new_actor.set_name(str(pinfo.net_id))
 	
-	# If this actor does not belong to the server, change the network master accordingly
+	# TODO: Make Sure Alpha is 255 (fully opaque). We don't want people cheating...
+	# Setup Player Customization
+	new_actor.get_node("KinematicBody2D").set_dominant_color(pinfo.char_color) # The player script is attached to KinematicBody2D, hence retrieving its node
+	
+	print("Actor: ", pinfo.net_id)
+	new_actor.get_node("KinematicBody2D").position = coordinates # Setup Player's Position
+	
+	new_actor.set_name(str(pinfo.net_id)) # Set Player's ID (useful for referencing the player object later)
+	
+	# Hand off control to player's client (the server already controls itself)
 	if (pinfo.net_id != 1):
 		new_actor.set_network_master(pinfo.net_id)
 		
-	# Finally add the actor into the world
+	# Add the player to the world
 	add_child(new_actor)
 
 # Server and Client - Despawn Player From Local World

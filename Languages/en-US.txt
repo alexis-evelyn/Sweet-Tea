@@ -1,0 +1,5 @@
+{}
+
+# https://www.andiamo.co.uk/resources/iso-language-codes/
+
+Game text will be stored in files name using ISO 639-1 code. I will be using JSON format to store the text.
