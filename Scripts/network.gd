@@ -55,6 +55,9 @@ func _ready():
 func create_server():
 	var net = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
 	
+	# https://docs.godotengine.org/en/3.1/classes/class_networkedmultiplayerenet.html
+	net.set_bind_ip("*") # Sets the IP Address the Server Binds to
+	
 	# Could Not Create Server (probably port already in use or Failed Permissions)
 	if (net.create_server(server_info.used_port, server_info.max_players) != OK):
 		print("Failed to create server")
@@ -106,6 +109,37 @@ remote func unregister_player(id):
 	
 	emit_signal("player_list_changed") # Notify Clients Of List Change
 	emit_signal("player_removed", pinfo) # Request Server To Remove Player
+
+func close_connection():
+	# Do different things depending on if server or client
+	if get_tree().is_network_server():
+		pass
+	else:
+		pass
+	
+	players.clear() # Clear The Player List
+	gamestate.player_info.net_id = 1 # Reset Network ID To 1 (default value)
+	get_tree().set_network_peer(null) # Disable Network Peer
+	
+	# TODO: Maybe Pull Up A Disconnected Message GUI (which will then go to NetworkMenu)
+	get_tree().change_scene("res://Menus/NetworkMenu.tscn")
+
+# Kicks Player From Server (outside of a server shutdown)
+func kick_player():
+	var net = get_tree().get_network_peer() # Grab the existing Network Peer Node
+	
+	# TODO: Currently, the server disconnects everyone, but as chat gets added, the ability to select a peer (client) will be added to
+	
+	# The server will do the kicking of players, but mods can request the server to do so (with the right permissions)
+	if get_tree().is_network_server():
+		for player in players:
+			if player != 1: # If player is not server
+				rpc_id(player, "player_kicked", "You, " + str(player) + ", has been kicked!!! Your IP address is: " + str(net.get_peer_address(player))) # Notify Player They Have Been Kicked
+				net.disconnect_peer(player, false) # Disconnect the peer immediately (true means no flushing messages)
+	pass
+
+puppet func player_kicked(message):
+	print("Kick Message: ", message)
 
 # Server Notified When A New Client Connects
 func _on_player_connected(id):

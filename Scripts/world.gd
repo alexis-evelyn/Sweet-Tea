@@ -31,6 +31,14 @@ func _process(_delta):
 		playerList.visible = true
 	else:
 		playerList.visible = false
+		
+	# Closes Connection (Client and Server)
+	if Input.is_key_pressed(KEY_Q):
+		network.close_connection()
+		
+	# Kicks Player (Server) - Will be replaced by chat command
+	if Input.is_key_pressed(KEY_K):
+		network.kick_player()
 
 # For the server only
 master func spawn_players_server(pinfo):
@@ -51,6 +59,14 @@ master func spawn_players_server(pinfo):
 				print("Existing: ", id, " For: ", pinfo.net_id, " At Coordinates: ", player.position) # player.position grabs existing player's coordinates
 				# --------------------------Get rid of coordinates from the function arguments and retrieve coordinates from dictionary)--------------------------
 				# Separate Coordinate Variable From Rest of Function
+				
+				# There seems to be a bug where if the client is kicked three times, then it crashes and can bring down the server either immediately or bring it down upon joining again.
+				# The server is brought down by a non-existent client node (I do not know why the client crashes as Godot's ENET code throws errors, not my code). However, solving the server crash issue seems to fix the client crash issue too.
+				# I am leaving these comments here incase the bug is still active. I need to make sure the client cannot send malformed packets and crash the server.
+				if !has_node(str(id) + "/KinematicBody2D"): # Checks Player Node Exists (incase of malformed client packets)
+					print("Node Does Not Exist!!! Client is: ", str(id))
+					break # Stops For Loop
+				
 				rpc_id(pinfo.net_id, "spawn_players", network.players[id], player.position) # TODO: This line of code is at fault for the current bug
 				
 			# Spawn the new player within the currently iterated player as long it's not the server
