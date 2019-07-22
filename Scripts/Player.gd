@@ -51,20 +51,12 @@ func _physics_process(_delta):
 			friction = false
 		
 		rpc_unreliable("movePlayer", motion)
-		motion = move_and_slide(motion, LEFT)
+		motion = move_and_slide(motion)
 		
 # puppet (formerly slave) sets for all devices except server
 puppet func movePlayer(mot):
-	motion = move_and_slide(mot, LEFT)
+	motion = move_and_slide(mot)
 	
-	# Note to Godot Developers:
-	# There is a bug that setting the floor direction in the game allows players to drag other players (on that player's screen).
-	# The coordinates are updated properly so if a new client joins, they will be able to see where the dragged player was dragged to.
-	# This is activated by dragging to the direction that is considered the floor.
-	# An example is, if UP is set, the player can be dragged downward.
-	
-	# The workarounds to this issue are to either not set the floor (if gravity is not in use) or to create your own floor checking code.
-
 # Sets Player's Color (also sets other players colors too)
 func set_dominant_color(color):
 	$CollisionShape2D/Sprite.modulate = color # Changes the Player's Color in the World
