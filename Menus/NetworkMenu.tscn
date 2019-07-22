@@ -109,6 +109,7 @@ margin_bottom = 96.9037
 text = "Join Server"
 
 [node name="panelPlayer" type="Panel" parent="."]
+editor/display_folded = true
 margin_top = 400.0
 margin_right = 1024.0
 margin_bottom = 600.0

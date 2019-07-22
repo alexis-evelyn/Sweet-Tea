@@ -1,9 +1,12 @@
-[gd_scene format=2]
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/panelPlayerList.gd" type="Script" id=1]
 
 [node name="panelPlayerList" type="Panel"]
 self_modulate = Color( 1, 1, 1, 0 )
 margin_right = 200.0
 margin_bottom = 300.0
+script = ExtResource( 1 )
 
 [node name="lblLocalPlayer" type="Label" parent="."]
 margin_right = 200.0

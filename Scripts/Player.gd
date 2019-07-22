@@ -1,6 +1,8 @@
 extends KinematicBody2D
 
 # Declare member variables here:
+onready var panelChat = get_tree().get_root().get_node("GameWorld/PlayerUI/panelChat") #$PlayerUI/panelChat
+
 const UP = Vector2(0, -1)
 const LEFT = Vector2(-1, 0)
 const RIGHT = Vector2(1, 0)
@@ -25,20 +27,20 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta):
 	if is_network_master():
-		if Input.is_key_pressed(KEY_W):
+		if Input.is_key_pressed(KEY_W) and !panelChat.visible:
 			#print("Up")
 			motion.y = max(motion.y - ACCELERATION, -MAX_SPEED)
-		elif Input.is_key_pressed(KEY_S):
+		elif Input.is_key_pressed(KEY_S) and !panelChat.visible:
 			#print("Down")
 			motion.y = min(motion.y + ACCELERATION, MAX_SPEED)
 		else:
 			friction = true;
 			#$Sprite.play("Idle");
 			
-		if Input.is_key_pressed(KEY_A):
+		if Input.is_key_pressed(KEY_A) and !panelChat.visible:
 			#print("Left")
 			motion.x = max(motion.x - ACCELERATION, -MAX_SPEED)
-		elif Input.is_key_pressed(KEY_D):
+		elif Input.is_key_pressed(KEY_D) and !panelChat.visible:
 			#print("Right")
 			motion.x = min(motion.x + ACCELERATION, MAX_SPEED)
 		else:

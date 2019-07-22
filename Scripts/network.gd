@@ -252,6 +252,10 @@ func _on_connected_to_server():
       # <C Source>     core/object.cpp:1238 @ emit_signal()
       # <Stack Trace>  network.gd:247 @ _on_connected_to_server()
 	# The crash only happens if the player spams join when a server is available, so I am marking this comment to remind me to place another gui on screen on disconnect to prevent the player from being able to spam the join button.
+	
+	# If the crash really is about the signal, then I need to figure out how to verify the signal exists
+	#if "join_success" in self.get_signal_list():
+	#	emit_signal("join_success")
 	emit_signal("join_success")
 
 	gamestate.player_info.net_id = get_tree().get_network_unique_id() # Record Network ID

@@ -1,22 +1,13 @@
 extends Node2D
 
-# panelPlayerStats is meant for information like health and a hotbar
-
 # Declare member variables here. Examples:
 onready var playerList = $PlayerUI/panelPlayerList
+onready var panelChat = $PlayerUI/panelChat
 
 # Main Function - Registers Event Handling (Handled By Both Client And Server)
 func _ready():
 	#assert(active != true)
 	
-	network.connect("player_list_changed", self, "_on_player_list_changed")
-	
-	# Do Not Run Below Code if Headless
-	var localPlayer = $PlayerUI/panelPlayerList/lblLocalPlayer
-	localPlayer.text = gamestate.player_info.name # Display Local Client's Text on Screen
-	localPlayer.align = Label.ALIGN_CENTER # Aligns the Text To Center
-	localPlayer.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # Fonts will be able to be chosen by player (including custom fonts added by player)
-
 	if (get_tree().is_network_server()):
 		network.connect("player_removed", self, "_on_player_removed") # Register Player Removal Function
 		
@@ -27,27 +18,33 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	
 	# This allows user to see player list (I will eventually add support to change keys and maybe joystick support)
 	if Input.is_key_pressed(KEY_TAB):
 		playerList.visible = true
 	else:
 		playerList.visible = false
+	
+	if Input.is_key_pressed(KEY_SLASH) and !panelChat.visible:
+		panelChat.visible = true
+		panelChat.get_node("userChat").grab_focus()
 		
+	if Input.is_key_pressed(KEY_ESCAPE) and panelChat.visible:
+		panelChat.visible = false
+	
 	# Closes Connection (Client and Server)
-	if Input.is_key_pressed(KEY_Q):
+	if Input.is_key_pressed(KEY_Q) and !panelChat.visible:
 		network.close_connection()
 		
 	# Kicks Player (Server) - Will be replaced by chat command
-	if Input.is_key_pressed(KEY_K):
+	if Input.is_key_pressed(KEY_K) and !panelChat.visible:
 		network.kick_player()
 		
 	# Bans Player (Server) - Will be replaced by chat command
-	if Input.is_key_pressed(KEY_B):
+	if Input.is_key_pressed(KEY_B) and !panelChat.visible:
 		network.ban_player()
 	
 	# Bans IP (Server) - Will be replaced by chat command
-	if Input.is_key_pressed(KEY_N):
+	if Input.is_key_pressed(KEY_N) and !panelChat.visible:
 		network.ban_ip_address()
 
 # For the server only
@@ -170,18 +167,3 @@ remote func despawn_player(pinfo):
 # Server Only - Call the Despawn Player Function
 func _on_player_removed(pinfo):
 	despawn_player(pinfo)
-
-# Update Player List in GUI
-func _on_player_list_changed():
-	# Remove Nodes From Boxlist
-	for node in $PlayerUI/panelPlayerList/boxList.get_children():
-		node.queue_free()
-	
-	# Populate Boxlist With Player Names
-	for player in network.players:
-		if (player != gamestate.player_info.net_id):
-			var connectedPlayerLabel = Label.new()
-			connectedPlayerLabel.align = Label.ALIGN_CENTER # Aligns the Text To Center
-			connectedPlayerLabel.text = network.players[player].name
-			connectedPlayerLabel.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
-			$PlayerUI/panelPlayerList/boxList.add_child(connectedPlayerLabel)
