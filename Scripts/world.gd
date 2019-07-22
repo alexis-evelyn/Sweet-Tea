@@ -7,6 +7,8 @@ onready var playerList = $PlayerUI/panelPlayerList
 
 # Main Function - Registers Event Handling (Handled By Both Client And Server)
 func _ready():
+	#assert(active != true)
+	
 	network.connect("player_list_changed", self, "_on_player_list_changed")
 	
 	# Do Not Run Below Code if Headless
@@ -39,6 +41,14 @@ func _process(_delta):
 	# Kicks Player (Server) - Will be replaced by chat command
 	if Input.is_key_pressed(KEY_K):
 		network.kick_player()
+		
+	# Bans Player (Server) - Will be replaced by chat command
+	if Input.is_key_pressed(KEY_B):
+		network.ban_player()
+	
+	# Bans IP (Server) - Will be replaced by chat command
+	if Input.is_key_pressed(KEY_N):
+		network.ban_ip_address()
 
 # For the server only
 master func spawn_players_server(pinfo):
@@ -110,7 +120,8 @@ remote func spawn_players(pinfo, coordinates: Vector2):
 				rpc_id(id, "spawn_players", pinfo, coordinates)
 	
 	add_player(pinfo, coordinates)
-	
+
+# Spawns Player in World (Client and Server)
 func add_player(pinfo, coordinates: Vector2):
 	# Load the scene and create an instance
 	var player_class = load(pinfo.actor_path)
