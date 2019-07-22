@@ -31,7 +31,7 @@ var server_info = {
 	name = "Sweet Tea", # Name of Server
 	icon = "res://...something.svg", # Server Icon (for Clients to See)
 	motd = "A Message Will Be Displayed to Clients Using This...", # Display A Message To Clients Before Player Joins Server
-	website = "https://sweet-tea.senorcontento.com/", # Server Owner's Website (to display rules, purchases, etc...
+	website = "https://sweet-tea.senorcontento.com/", # Server Owner's Website (to display rules, purchases, etc...)
 	num_player = 0, # Display Current Number of Connected Players (so client can see how busy a server is)
 	max_players = 0, # Maximum Number of Players (including server player)
 	used_port = 0 # Host Port
@@ -137,6 +137,10 @@ func _on_disconnected_from_server():
 	
 	players.clear() # Clear The Player List
 	gamestate.player_info.net_id = 1 # Reset Network ID To 1 (default value)
+	get_tree().set_network_peer(null) # Disable Network Peer
+	
+	# TODO: Maybe Pull Up A Disconnected Message GUI (which will then go to NetworkMenu)
+	get_tree().change_scene("res://Menus/NetworkMenu.tscn")
 
 # Failed To Connect To Server
 func _on_connection_failed():

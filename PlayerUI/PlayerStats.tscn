@@ -1,0 +1,7 @@
+[gd_scene format=2]
+
+[node name="panelPlayerStats" type="Panel"]
+self_modulate = Color( 1, 1, 1, 0 )
+margin_top = 500.0
+margin_right = 1024.0
+margin_bottom = 600.0

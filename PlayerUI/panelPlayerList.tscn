@@ -1,0 +1,18 @@
+[gd_scene format=2]
+
+[node name="panelPlayerList" type="Panel"]
+self_modulate = Color( 1, 1, 1, 0 )
+margin_right = 200.0
+margin_bottom = 300.0
+
+[node name="lblLocalPlayer" type="Label" parent="."]
+margin_right = 200.0
+margin_bottom = 14.0
+hint_tooltip = "Your players name is listed here."
+text = "Local Player Name Here!!!"
+
+[node name="boxList" type="VBoxContainer" parent="."]
+margin_top = 24.0
+margin_right = 200.0
+margin_bottom = 300.0
+hint_tooltip = "This is a list of other players..."
