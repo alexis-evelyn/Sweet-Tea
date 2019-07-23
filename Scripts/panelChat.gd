@@ -19,7 +19,7 @@ func _ready():
 sync func chat_message_client(message):
 	print("Client Message: ", message)
 	
-	chatMessages.add_text(message + "\n")
+	chatMessages.add_text(message + "\n") # append_bbcode() will allow formatted text without writing a custom interpreter (maybe let servers choose if it is allowed? How about fine grained control?).
 	
 # Process Chat Message from Client
 master func chat_message_server(message):
