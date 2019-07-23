@@ -10,9 +10,6 @@ var NWSC = PoolByteArray(['U+8203']).get_string_from_utf8() # No Width Space Cha
 onready var chatMessages = $chatMessages
 onready var chat = $userChat
 
-# Commands are in separate file because they can become really complicated really quickly
-onready var commands = preload("commands.gd").new()
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	chat.set_max_length(max_characters)
@@ -103,19 +100,21 @@ func _on_chatMessages_meta_clicked(meta):
 			if typeof(json.result) == TYPE_DICTIONARY: # Type 18 (Under Variant.Type) - https://docs.godotengine.org/en/3.1/classes/class_@globalscope.html
 				print("JSON is Dictionary")
 			
-				handle_player_id_click(json.result) # Send to another function to process
+				handle_url_click(json.result) # Send to another function to process
 			elif typeof(json.result) == TYPE_ARRAY: # Type 19 (Under Variant.Type) - https://docs.godotengine.org/en/3.1/classes/class_@globalscope.html
 				print("JSON is Array")
 			elif typeof(json.result) == TYPE_OBJECT: # 17 - Means You Didn't Grab .result
 				print("JSON is Object")
 				
-func handle_player_id_click(dictionary):
+# Handles Client Clicking on URL
+func handle_url_click(dictionary):
 	# Checks to Make Sure Metadata Is What We Expect (Server Could Send Something Different)
 	if dictionary.has("player_net_id"):
 		var net_id = dictionary["player_net_id"]
 		
 		# Checks if Players Dictionary Has Net_ID (player could have disconnected by then)
 		if network.players.has(int(net_id)):
-			print("Clicked Player Name: " + network.players[int(net_id)].name + " Player ID: ", net_id)
+			print("Clicked Player Name: " + network.players[int(net_id)].name + " Player ID: " + net_id)
+			chat_message_client("Clicked Player Name: " + network.players[int(net_id)].name + " Player ID: " + net_id)
 		else:
 			print("The Players Dictionary is Missing ID: ", net_id)

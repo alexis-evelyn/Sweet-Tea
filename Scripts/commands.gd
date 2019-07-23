@@ -1,5 +1,7 @@
 extends Node
 
+# Commands are in separate file because they can become really complicated really quickly
+
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
