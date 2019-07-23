@@ -56,7 +56,7 @@ master func chat_message_server(message):
 		netid = get_tree().get_rpc_sender_id()
 
 	# The URL Idea Came From: https://docs.godotengine.org/en/latest/classes/class_richtextlabel.html?highlight=bbcode#signals
-	var username_start = "[url={\"player_net_id\"=\"" + str(netid) + "\"}][color=red][b][u]"
+	var username_start = "[url={\"player_net_id\":\"" + str(netid) + "\"}][color=red][b][u]"
 	var username_end = "[/u][/b][/color][/url]"
 	addedUsername = "<" + username_start + str(network.players[netid].name) + username_end + "> " + message
 
@@ -69,3 +69,35 @@ func _on_userChat_gui_input(event):
 			print("Enter Key Pressed!!!")
 			rpc_id(1, "chat_message_server", chat.text)
 			chat.text = ""
+
+# When URLs are Clicked in Chat Window
+func _on_chatMessages_meta_clicked(meta):
+	if typeof(meta) == TYPE_STRING:
+		print("URL Text: ", meta)
+		
+		var json = JSON.parse(meta)
+		
+		# Checks to Make Sure JSON was Parsed
+		if json.error == OK:
+			print("JSON Type: ", typeof(json.result))
+			
+			# JSON will either be a Dictionary or Array. If it is an object, you forgot to call json.result (instead you called json)
+			if typeof(json.result) == TYPE_DICTIONARY: # Type 18 (Under Variant.Type) - https://docs.godotengine.org/en/3.1/classes/class_@globalscope.html
+				print("JSON is Dictionary")
+			
+				handle_player_id_click(json.result) # Send to another function to process
+			elif typeof(json.result) == TYPE_ARRAY: # Type 19 (Under Variant.Type) - https://docs.godotengine.org/en/3.1/classes/class_@globalscope.html
+				print("JSON is Arrray")
+			elif typeof(json.result) == TYPE_OBJECT: # 17 - Means You Didn't Grab .result
+				print("JSON is Object")
+				
+func handle_player_id_click(dictionary):
+	# Checks to Make Sure Metadata Is What We Expect (Server Could Send Something Different)
+	if dictionary.has("player_net_id"):
+		var net_id = dictionary["player_net_id"]
+		
+		# Checks if Players Dictionary Has Net_ID (player could have disconnected by then)
+		if network.players.has(int(net_id)):
+			print("Clicked Player Name: " + network.players[int(net_id)].name + " Player ID: ", net_id)
+		else:
+			print("The Players Dictionary is Missing ID: ", net_id)

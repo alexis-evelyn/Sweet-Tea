@@ -21,4 +21,5 @@ margin_bottom = 275.0
 clear_button_enabled = true
 placeholder_text = "Type Chat Here..."
 caret_blink = true
+[connection signal="meta_clicked" from="chatMessages" to="." method="_on_chatMessages_meta_clicked"]
 [connection signal="gui_input" from="userChat" to="." method="_on_userChat_gui_input"]
