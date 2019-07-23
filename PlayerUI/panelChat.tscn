@@ -10,13 +10,9 @@ margin_right = 625.0
 margin_bottom = 500.0
 script = ExtResource( 1 )
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="chatMessages" type="RichTextLabel" parent="."]
 margin_right = 600.0
 margin_bottom = 250.0
-
-[node name="chatMessages" type="VBoxContainer" parent="ScrollContainer"]
-margin_bottom = 240.0
-rect_min_size = Vector2( 0, 240 )
 
 [node name="userChat" type="LineEdit" parent="."]
 margin_top = 250.0
@@ -25,6 +21,4 @@ margin_bottom = 275.0
 clear_button_enabled = true
 placeholder_text = "Type Chat Here..."
 caret_blink = true
-[connection signal="scroll_ended" from="ScrollContainer" to="." method="_on_ScrollContainer_scroll_ended"]
-[connection signal="scroll_started" from="ScrollContainer" to="." method="_on_ScrollContainer_scroll_started"]
 [connection signal="gui_input" from="userChat" to="." method="_on_userChat_gui_input"]
