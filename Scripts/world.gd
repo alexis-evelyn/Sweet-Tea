@@ -24,10 +24,12 @@ func _process(_delta):
 	else:
 		playerList.visible = false
 	
+	# Makes Chat Window Visible
 	if Input.is_key_pressed(KEY_SLASH) and !panelChat.visible:
 		panelChat.visible = true
-		panelChat.get_node("userChat").grab_focus()
-		
+		panelChat.get_node("userChat").grab_focus() # Causes LineEdit (where user types) to grab focus of keyboard
+	
+	# Makes Chat Window Invisible
 	if Input.is_key_pressed(KEY_ESCAPE) and panelChat.visible:
 		panelChat.visible = false
 	

@@ -14,7 +14,7 @@ func _ready():
 	var localPlayer = $lblLocalPlayer
 	localPlayer.text = gamestate.player_info.name # Display Local Client's Text on Screen
 	localPlayer.align = Label.ALIGN_CENTER # Aligns the Text To Center
-	localPlayer.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # Fonts will be able to be chosen by player (including custom fonts added by player)
+	localPlayer.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -33,5 +33,5 @@ func _on_player_list_changed():
 			var connectedPlayerLabel = Label.new()
 			connectedPlayerLabel.align = Label.ALIGN_CENTER # Aligns the Text To Center
 			connectedPlayerLabel.text = network.players[player].name
-			connectedPlayerLabel.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
+			connectedPlayerLabel.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
 			$boxList.add_child(connectedPlayerLabel)

@@ -52,7 +52,8 @@ func _physics_process(_delta):
 			motion.y = lerp(motion.y, 0, 0.2)
 			friction = false
 		
-		rpc_unreliable("movePlayer", motion)
+		# No Matter How It's Sent (UDP or TCP), If "movePlayer" is received, it is processed.
+		rpc("movePlayer", motion) #rpc_unreliable("movePlayer", motion) - Disabled until correcting coordinates exists
 		motion = move_and_slide(motion)
 		
 # puppet (formerly slave) sets for all devices except server
