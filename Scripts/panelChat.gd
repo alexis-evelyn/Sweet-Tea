@@ -55,6 +55,7 @@ master func chat_message_server(message):
 	elif network.players.has(get_tree().get_rpc_sender_id()):
 		netid = get_tree().get_rpc_sender_id()
 
+	# The URL Idea Came From: https://docs.godotengine.org/en/latest/classes/class_richtextlabel.html?highlight=bbcode#signals
 	var username_start = "[url={\"player_net_id\"=\"" + str(netid) + "\"}][color=red][b][u]"
 	var username_end = "[/u][/b][/color][/url]"
 	addedUsername = "<" + username_start + str(network.players[netid].name) + username_end + "> " + message
