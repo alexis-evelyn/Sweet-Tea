@@ -7,11 +7,13 @@ var max_lines = 500
 func _ready():
 	var chat = $userChat
 	chat.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
+	# $ScrollContainer.set_scroll_follow(true) # Why doesn't this exist for ScrollContainer?
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
 
+# Process Chat Messages from Server
 sync func chat_message_client(message):
 	print("Client Message: ", message)
 	
@@ -29,7 +31,7 @@ sync func chat_message_client(message):
 	
 	# Pseudo-Code explained in scroll_started/ended
 	# Psuedo-Code: if scrollbar.auto = true
-		#$ScrollContainer.set_v_scroll()
+		#$ScrollContainer.set_v_scroll($ScrollContainer.MAX_SCROLL)
 	
 # Process Chat Message from Client
 master func chat_message_server(message):
