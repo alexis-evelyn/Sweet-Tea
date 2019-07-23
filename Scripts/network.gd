@@ -87,6 +87,7 @@ func join_server(ip, port):
 	
 	# Assign NetworkedMultiplayerENet as Handler of Network - https://docs.godotengine.org/en/3.1/classes/class_multiplayerapi.html?highlight=set_network_peer#class-multiplayerapi-property-network-peer
 	get_tree().set_network_peer(net)
+	#set_network_master(1)
 
 # Clients Notified To Add Player to Player List
 remote func register_player(pinfo):

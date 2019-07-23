@@ -109,7 +109,6 @@ margin_bottom = 96.9037
 text = "Join Server"
 
 [node name="panelPlayer" type="Panel" parent="."]
-editor/display_folded = true
 margin_top = 400.0
 margin_right = 1024.0
 margin_bottom = 600.0
@@ -141,6 +140,7 @@ margin_left = 871.514
 margin_top = 90.4298
 margin_right = 951.514
 margin_bottom = 110.43
+color = Color( 1, 1, 1, 1 )
 edit_alpha = false
 [connection signal="pressed" from="panelHost/btnCreate" to="." method="_on_btnCreate_pressed"]
 [connection signal="pressed" from="panelJoin/btnJoin" to="." method="_on_btnJoin_pressed"]

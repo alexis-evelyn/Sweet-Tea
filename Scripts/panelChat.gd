@@ -10,6 +10,9 @@ var NWSC = PoolByteArray(['U+8203']).get_string_from_utf8() # No Width Space Cha
 onready var chatMessages = $chatMessages
 onready var chat = $userChat
 
+# Commands are in separate file because they can become really complicated really quickly
+onready var commands = preload("commands.gd").new()
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	chat.set_max_length(max_characters)
@@ -38,29 +41,44 @@ sync func chat_message_client(message):
 	
 # Process Chat Message from Client
 master func chat_message_server(message):
-	var addedUsername = ""
-	var netid = -1
+	var added_username = "" # Used for Custom Username Formatting
+	var net_id = -1 # Invalid NetID (will be corrected later)
+	var chat_color = "red" # Default Chat Color
 	
+	# Record Chat Message in Server Log (e.g. if harassment needs to be reported)
 	print("Chat Message: ", message)
 	
+	# Check and Shorten The Length of Characters in Message
 	if message.length() > max_characters:
 		message = message.substr(0, max_characters)
 	
-	# Insert No Width Space After Open Bracket to Prevent BBCode - Should be able to be turned on and off by server (scratch that, let the server inject bbcode in if it approves the code or command)
-	message = message.replace("[", "[" + NWSC)
-	
 	# Get's The Sender's NetID
 	if get_tree().get_rpc_sender_id() == 0:
-		netid = gamestate.player_info.net_id
+		net_id = gamestate.player_info.net_id
 	elif network.players.has(get_tree().get_rpc_sender_id()):
-		netid = get_tree().get_rpc_sender_id()
+		net_id = get_tree().get_rpc_sender_id()
+
+	# Check to See if Message is a Command
+	if message.substr(0,1) == "/":
+		var response = $commands.process_command(net_id, message)
+		
+		#if response != null and response != "":
+		#	rpc_id(net_id, "chat_message_client", response)
+		
+		return # Prevents executing the rest of the function
+
+	# Set Color for Player's Username
+	chat_color = "#" + network.players[net_id].char_color.to_html() # For now, I am specify chat color as color of character. I may change how color is set later.
+
+	# Insert No Width Space After Open Bracket to Prevent BBCode - Should be able to be turned on and off by server (scratch that, let the server inject bbcode in if it approves the code or command)
+	message = message.replace("[", "[" + NWSC)
 
 	# The URL Idea Came From: https://docs.godotengine.org/en/latest/classes/class_richtextlabel.html?highlight=bbcode#signals
-	var username_start = "[url={\"player_net_id\":\"" + str(netid) + "\"}][color=red][b][u]"
+	var username_start = "[url={\"player_net_id\":\"" + str(net_id) + "\"}][color=" + chat_color + "][b][u]"
 	var username_end = "[/u][/b][/color][/url]"
-	addedUsername = "<" + username_start + str(network.players[netid].name) + username_end + "> " + message
+	added_username = "<" + username_start + str(network.players[net_id].name) + username_end + "> " + message
 
-	rpc("chat_message_client", addedUsername)
+	rpc("chat_message_client", added_username)
 
 # Send Chat To Server
 func _on_userChat_gui_input(event):
@@ -87,7 +105,7 @@ func _on_chatMessages_meta_clicked(meta):
 			
 				handle_player_id_click(json.result) # Send to another function to process
 			elif typeof(json.result) == TYPE_ARRAY: # Type 19 (Under Variant.Type) - https://docs.godotengine.org/en/3.1/classes/class_@globalscope.html
-				print("JSON is Arrray")
+				print("JSON is Array")
 			elif typeof(json.result) == TYPE_OBJECT: # 17 - Means You Didn't Grab .result
 				print("JSON is Object")
 				

@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Scripts/panelChat.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/commands.gd" type="Script" id=2]
 
 [node name="panelChat" type="Panel"]
 modulate = Color( 1, 1, 1, 0.588235 )
@@ -21,5 +22,8 @@ margin_bottom = 275.0
 clear_button_enabled = true
 placeholder_text = "Type Chat Here..."
 caret_blink = true
+
+[node name="commands" type="Node" parent="."]
+script = ExtResource( 2 )
 [connection signal="meta_clicked" from="chatMessages" to="." method="_on_chatMessages_meta_clicked"]
 [connection signal="gui_input" from="userChat" to="." method="_on_userChat_gui_input"]

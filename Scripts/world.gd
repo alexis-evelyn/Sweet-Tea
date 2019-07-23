@@ -28,6 +28,12 @@ func _process(_delta):
 	if Input.is_key_pressed(KEY_SLASH) and !panelChat.visible:
 		panelChat.visible = true
 		panelChat.get_node("userChat").grab_focus() # Causes LineEdit (where user types) to grab focus of keyboard
+		panelChat.get_node("userChat").set_text("/") # Replaces text with a Forward Slash
+		panelChat.get_node("userChat").set_cursor_position(1) # Moves Caret In Front of Slash
+	
+	if Input.is_key_pressed(KEY_ENTER) and !panelChat.visible:
+		panelChat.visible = true
+		panelChat.get_node("userChat").grab_focus() # Causes LineEdit (where user types) to grab focus of keyboard
 	
 	# Makes Chat Window Invisible
 	if Input.is_key_pressed(KEY_ESCAPE) and panelChat.visible:
