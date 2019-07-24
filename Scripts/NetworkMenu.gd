@@ -9,6 +9,8 @@ func _ready():
 	network.connect("server_created", self, "_load_game_server")
 	network.connect("join_success", self, "_load_game_client")
 	network.connect("join_fail", self, "_on_join_fail")
+	
+	set_game_data()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(_delta):
@@ -93,3 +95,24 @@ func _on_btnJoin_pressed():
 	var port = int($panelJoin/txtJoinPort.text)
 	var ip = $panelJoin/txtJoinIP.text
 	network.join_server(ip, port)
+
+# Load Data - This Exists Just To Test Saving - I Am Not Setting Player Data From The Network Menu In The Real Game
+func set_game_data():
+	# Set Character's Name
+	var loaded = gamestate.load_game(0)
+	
+	$panelPlayer/txtPlayerName.text = gamestate.player_info.name
+	
+	if gamestate.player_info.has("char_color"):
+		_on_btColor_color_changed(gamestate.player_info.char_color)
+	
+	# Set Character's Color
+	$panelPlayer/btColor.color = gamestate.player_info.char_color
+
+# Save Data - This Exists Just To Test Saving - I Am Not Setting Player Data From The Network Menu In The Real Game
+func _on_btColor_popup_closed():
+	set_player_info()
+	
+	print("Character Color: " + str(gamestate.player_info.char_color))
+	
+	gamestate.save_game(0)
