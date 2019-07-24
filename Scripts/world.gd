@@ -82,7 +82,7 @@ master func spawn_players_server(pinfo):
 					print("Node Does Not Exist!!! Client is: ", str(id))
 					break # Stops For Loop
 				
-				rpc_id(pinfo.net_id, "spawn_players", network.players[id], player.position) # TODO: This line of code is at fault for the current bug
+				rpc_id(pinfo.net_id, "spawn_players", network.players[int(id)], player.position) # TODO: This line of code is at fault for the current bug
 				
 			# Spawn the new player within the currently iterated player as long it's not the server
 			# Because the server's list already contains the new player, that one will also get itself!
@@ -114,7 +114,7 @@ remote func spawn_players(pinfo, coordinates: Vector2):
 				print("Existing: ", id, " For: ", pinfo.net_id, " At Coordinates: ", coordinates)
 				# --------------------------Get rid of coordinates from the function arguments and retrieve coordinates from dictionary)--------------------------
 				# Separate Coordinate Variable From Rest of Function
-				rpc_id(pinfo.net_id, "spawn_players", network.players[id], coordinates) # TODO: This line of code is at fault for the current bug
+				rpc_id(pinfo.net_id, "spawn_players", network.players[int(id)], coordinates) # TODO: This line of code is at fault for the current bug
 				
 			# Spawn the new player within the currently iterated player as long it's not the server
 			# Because the server's list already contains the new player, that one will also get itself!

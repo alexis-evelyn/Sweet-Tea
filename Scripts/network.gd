@@ -95,14 +95,14 @@ remote func register_player(pinfo):
 		# Distribute Registered Clients Info to Clients
 		for id in players:
 			# Send Registered Clients to Newly Joined Client
-			rpc_id(pinfo.net_id, "register_player", players[id])
+			rpc_id(pinfo.net_id, "register_player", players[int(id)])
 			
 			# Send Newly Joined Client Info to All Other Clients
 			if (id != 1):
 				rpc_id(id, "register_player", pinfo)
 	
 	print("Registering player ", pinfo.name, " (", pinfo.net_id, ") to internal player table")
-	players[pinfo.net_id] = pinfo # Add Newly Joined Client to Dictionary of Clients
+	players[int(pinfo.net_id)] = pinfo # Add Newly Joined Client to Dictionary of Clients
 	emit_signal("player_list_changed") # Notify Clients That Client List Has Changed
 
 # Clients Notified To Remove Player From Player List

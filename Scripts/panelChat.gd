@@ -65,7 +65,7 @@ master func chat_message_server(message):
 		return # Prevents executing the rest of the function
 
 	# Set Color for Player's Username
-	chat_color = "#" + network.players[net_id].char_color.to_html() # For now, I am specify chat color as color of character. I may change how color is set later.
+	chat_color = "#" + network.players[int(net_id)].char_color # For now, I am specify chat color as color of character. I may change how color is set later.
 
 	# Insert No Width Space After Open Bracket to Prevent BBCode - Should be able to be turned on and off by server (scratch that, let the server inject bbcode in if it approves the code or command)
 	message = message.replace("[", "[" + NWSC)
@@ -73,7 +73,7 @@ master func chat_message_server(message):
 	# The URL Idea Came From: https://docs.godotengine.org/en/latest/classes/class_richtextlabel.html?highlight=bbcode#signals
 	var username_start = "[url={\"player_net_id\":\"" + str(net_id) + "\"}][color=" + chat_color + "][b][u]"
 	var username_end = "[/u][/b][/color][/url]"
-	added_username = "<" + username_start + str(network.players[net_id].name) + username_end + "> " + message
+	added_username = "<" + username_start + str(network.players[int(net_id)].name) + username_end + "> " + message
 
 	rpc("chat_message_client", added_username)
 

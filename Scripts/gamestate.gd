@@ -9,7 +9,7 @@ var player_info = {
 	name = "Player", # Player's Name
 	net_id = 1, # Player's ID
 	actor_path = "res://Objects/Players/Player.tscn", # The Player's Scene (Comparable to Class)
-	char_color = Color(1, 1, 1) # Unmodified Player Color - May Combine With Custom Sprites (and JSON)
+	char_color = "ffffff" # Unmodified Player Color - May Combine With Custom Sprites (and JSON)
 }
 
 # A Note On Saving
@@ -41,6 +41,8 @@ func save_game(slot: int):
 # Load Game Data
 func load_game(slot: int):
 	print("Game Version: " + game_version)
+	print("Save Data Location: " + OS.get_user_data_dir())
+	OS.shell_open(str("file://", OS.get_user_data_dir())) # Use this to open up user save data location (say to backup saves or downloaded resources/mods)
 	
 	var save_data = File.new()
 	

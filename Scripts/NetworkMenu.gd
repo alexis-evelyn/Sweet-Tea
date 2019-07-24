@@ -55,7 +55,7 @@ func set_player_info():
 		gamestate.player_info.name = $panelPlayer/txtPlayerName.text
 	
 	# Set Character's Color
-	gamestate.player_info.char_color = $panelPlayer/btColor.color
+	gamestate.player_info.char_color = $panelPlayer/btColor.color.to_html(true)
 
 # Create Server Button (GUI Only - Not Headless)
 func _on_btnCreate_pressed():
@@ -104,10 +104,10 @@ func set_game_data():
 	$panelPlayer/txtPlayerName.text = gamestate.player_info.name
 	
 	if gamestate.player_info.has("char_color"):
+		# Set Character's Color
+		$panelPlayer/btColor.color = gamestate.player_info.char_color
+		
 		_on_btColor_color_changed(gamestate.player_info.char_color)
-	
-	# Set Character's Color
-	$panelPlayer/btColor.color = gamestate.player_info.char_color
 
 # Save Data - This Exists Just To Test Saving - I Am Not Setting Player Data From The Network Menu In The Real Game
 func _on_btColor_popup_closed():
