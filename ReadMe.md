@@ -4,6 +4,12 @@ This game is inspired by Starbound and Undertale. I am not yet sure what I want 
 
 I fully intend for this to be a multiplayer compatible game and since I hear it is hard to add multiplayer to an existing game, I am building multiplayer support from the ground up.
 
+* I want to add a third party authentication system (like through Steam or Discord), which will allow a unique id to be set for the client that cannot be modified by the user. This is to help protect server owners against people trying to circumvent bans. I haven't decided how I want this to be set up, yet.
+
+- https://github.com/WesleiRamos/Godot-Rich-Presence - (Discord Integration with Godot) Deprecated?
+- https://discordapp.com/developers/docs/game-sdk/sdk-starter-guide - Discord's Current SDK
+- https://partner.steamgames.com/doc/sdk - Steam's SDK (SteamWorks)
+
 Licensing
 ---------
 FiraCode Font - Open Font License (https://github.com/tonsky/FiraCode/)

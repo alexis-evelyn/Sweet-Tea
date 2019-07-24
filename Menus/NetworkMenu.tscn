@@ -3,10 +3,11 @@
 [ext_resource path="res://Scripts/NetworkMenu.gd" type="Script" id=1]
 [ext_resource path="res://Assets/Icons/game_icon.png" type="Texture" id=2]
 
-[node name="CanvasLayer" type="CanvasLayer"]
+[node name="NetworkMenu" type="CanvasLayer"]
 script = ExtResource( 1 )
 
 [node name="panelHost" type="Panel" parent="."]
+editor/display_folded = true
 margin_right = 1024.0
 margin_bottom = 200.0
 

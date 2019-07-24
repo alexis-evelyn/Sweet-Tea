@@ -42,7 +42,7 @@ func save_game(slot: int):
 func load_game(slot: int):
 	print("Game Version: " + game_version)
 	print("Save Data Location: " + OS.get_user_data_dir())
-	OS.shell_open(str("file://", OS.get_user_data_dir())) # Use this to open up user save data location (say to backup saves or downloaded resources/mods)
+	#OS.shell_open(str("file://", OS.get_user_data_dir())) # Use this to open up user save data location (say to backup saves or downloaded resources/mods)
 	
 	var save_data = File.new()
 	

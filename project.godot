@@ -16,7 +16,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Sweet Tea"
-run/main_scene="res://Menus/NetworkMenu.tscn"
+run/main_scene="res://Menus/MainMenu.tscn"
 config/icon="res://Assets/Icons/game_icon.png"
 config/Version="0.0.1-alpha"
 
@@ -29,6 +29,10 @@ network="*res://Scripts/network.gd"
 
 window/stretch/mode="2d"
 
+[gui]
+
+theme/custom="res://Themes/default_theme.tres"
+
 [layer_names]
 
 2d_physics/layer_1="Walls"
@@ -38,4 +42,5 @@ window/stretch/mode="2d"
 
 [rendering]
 
+environment/default_clear_color=Color( 0.137255, 0.129412, 0.392157, 1 )
 environment/default_environment="res://default_env.tres"

@@ -18,15 +18,21 @@ func _ready():
 
 # Singleplayer Was Pressed
 func _on_Singleplayer_pressed():
-	get_tree().change_scene("res://Menus/SinglePlayerMenu.tscn")
-
+	var player_selection_menu = $Menu/PlayerSelectionMenu/PlayerSelectionWindow
+	
+	player_selection_menu.popup_centered()
+	
 # Multiplayer Was Pressed
 func _on_Multiplayer_pressed():
 	get_tree().change_scene("res://Menus/NetworkMenu.tscn")
 
 # Options Was Pressed
 func _on_Options_pressed():
-	get_tree().change_scene("res://Menus/OptionsMenu.tscn")
+	# About Theming - I Plan On Adding Theme Support Along With Changing Sprites (as part of implementing basic modding - will probably be added after initial release of game)
+	# I just wanted to make sure it was possible to change the theme live before I decided how I was going to skin the GUI. It is possible, I just need to make sure that I set the parents of GUI nodes to control nodes (to make it easier to theme GUI by gdscript)
+	#get_tree().get_root().get_node("MainMenu/Menu/Buttons").set_theme(load("res://Themes/default_theme.tres")) # Testing Setting Theme Live - It Works, but I need Control Nodes or Other GUI nodes to set it (e.g. I cannot set it for root)
+	#get_tree().change_scene("res://Menus/OptionsMenu.tscn")
+	pass
 
 # Quit Was Pressed
 func _on_Quit_pressed():
