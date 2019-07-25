@@ -58,7 +58,17 @@ func _process(_delta):
 # For the server only
 master func spawn_players_server(pinfo):
 	var net_id = -1
-	var coordinates = Vector2(300, 300) # Get rid of all references to this
+	
+	if pinfo.has("os_unique_id"):
+		print("OS Unique ID: " + pinfo.os_unique_id)
+	
+	if pinfo.has("char_unique_id"):
+		print("Character Unique ID: " + pinfo.char_unique_id)
+	
+	# Currently Coordinates are Randomly Chosen
+	var coor_x = rand_range(100,900)
+	var coor_y = rand_range(100,500)
+	var coordinates = Vector2(coor_x, coor_y)
 	
 	if get_tree().get_rpc_sender_id() == 0:
 		net_id = gamestate.net_id
@@ -137,12 +147,20 @@ remote func spawn_players(pinfo, net_id: int, coordinates: Vector2):
 # Spawns Player in World (Client and Server)
 func add_player(pinfo, net_id, coordinates: Vector2):
 	# Load the scene and create an instance
-	var player_class = load(pinfo.actor_path)
+	var player_class = load("res://Objects/Players/Player.tscn") # Load Default Player
+	if pinfo.has("actor_path"):
+		player_class = load(pinfo.actor_path)
+		
 	var new_actor = player_class.instance()
 	
 	# TODO: Make Sure Alpha is 255 (fully opaque). We don't want people cheating...
 	# Setup Player Customization
-	new_actor.get_node("KinematicBody2D").set_dominant_color(pinfo.char_color) # The player script is attached to KinematicBody2D, hence retrieving its node
+	
+	var char_color = "ffffff"
+	if pinfo.has("char_color"):
+		char_color = pinfo.char_color
+	
+	new_actor.get_node("KinematicBody2D").set_dominant_color(char_color) # The player script is attached to KinematicBody2D, hence retrieving its node
 	
 	print("Actor: ", net_id)
 	new_actor.get_node("KinematicBody2D").position = coordinates # Setup Player's Position

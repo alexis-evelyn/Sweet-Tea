@@ -14,7 +14,9 @@ var game_theme = load("res://Themes/default_theme.tres")
 var player_info = {
 	name = "Player", # Player's Name
 	actor_path = "res://Objects/Players/Player.tscn", # The Player's Scene (Comparable to Class)
-	char_color = "ffffff" # Unmodified Player Color - May Combine With Custom Sprites (and JSON)
+	char_color = "ffffff", # Unmodified Player Color - May Combine With Custom Sprites (and JSON)
+	os_unique_id = OS.get_unique_id(), # Stores OS Unique ID - Can be used to link players together, Not Designed to Be Secure (as in player is allowed to tamper with it)
+	char_unique_id = "Not Set"
 }
 
 var net_id = 1 # Player's ID

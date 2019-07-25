@@ -111,7 +111,10 @@ func set_game_data():
 	# Set Character's Name
 	var loaded = gamestate.load_player(0)
 	
-	$panelPlayer/txtPlayerName.text = gamestate.player_info.name
+	if gamestate.player_info.has("name"):
+		$panelPlayer/txtPlayerName.text = gamestate.player_info.name
+	else:
+		$panelPlayer/txtPlayerName.text = ""
 	
 	if gamestate.player_info.has("char_color"):
 		# Set Character's Color

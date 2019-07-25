@@ -108,6 +108,9 @@ remote func register_player(pinfo, net_id: int):
 			if (id != 1):
 				rpc_id(id, "register_player", pinfo, net_id)
 	
+	if not pinfo.has("name"):
+		pinfo.name = "Unnamed Player"
+	
 	print("Registering player ", pinfo.name, " (", net_id, ") to internal player table")
 	players[int(net_id)] = pinfo # Add Newly Joined Client to Dictionary of Clients
 	emit_signal("player_list_changed") # Notify Clients That Client List Has Changed
