@@ -73,7 +73,7 @@ func create_server():
 	# Register Server's Player in Player List
 	# TODO: Setup Ability To Run Headless (with no server player, since it is headless)
 	# I will probably setup headless mode to be activated by commandline (and maybe in the network menu?)
-	register_player(gamestate.player_info)
+	register_player(gamestate.player_info, 0)
 
 # Attempt to Join Server
 func join_server(ip, port):
@@ -90,23 +90,23 @@ func join_server(ip, port):
 	#set_network_master(1)
 
 # Clients Notified To Add Player to Player List
-remote func register_player(pinfo):
-	var net_id = -1
-	
+remote func register_player(pinfo, net_id: int):
 	if get_tree().get_rpc_sender_id() == 0:
 		net_id = gamestate.net_id
 	else:
-		net_id = get_tree().get_rpc_sender_id()
+		# If rpc_sender is not server, don't trust the given net_id
+		if get_tree().get_rpc_sender_id() != 1:
+			net_id = get_tree().get_rpc_sender_id()
 	
 	if get_tree().is_network_server():
 		# Distribute Registered Clients Info to Clients
 		for id in players:
 			# Send Registered Clients to Newly Joined Client
-			rpc_id(net_id, "register_player", players[int(id)])
+			rpc_id(net_id, "register_player", players[int(id)], id)
 			
 			# Send Newly Joined Client Info to All Other Clients
 			if (id != 1):
-				rpc_id(id, "register_player", pinfo)
+				rpc_id(id, "register_player", pinfo, net_id)
 	
 	print("Registering player ", pinfo.name, " (", net_id, ") to internal player table")
 	players[int(net_id)] = pinfo # Add Newly Joined Client to Dictionary of Clients
@@ -267,8 +267,8 @@ func _on_connected_to_server():
 	emit_signal("join_success")
 
 	gamestate.net_id = get_tree().get_network_unique_id() # Record Network ID
-	rpc_id(1, "register_player", gamestate.player_info) # Ask Server To Update Player Dictionary - Server ID is Always 1
-	register_player(gamestate.player_info) # Update Own Dictionary With Ourself
+	rpc_id(1, "register_player", gamestate.player_info, gamestate.net_id) # Ask Server To Update Player Dictionary - Server ID is Always 1
+	register_player(gamestate.player_info, 0) # Update Own Dictionary With Ourself
 
 # Successfully Disconnected From Server
 # TODO: Free Up Resources and Save Data (Client Side)
