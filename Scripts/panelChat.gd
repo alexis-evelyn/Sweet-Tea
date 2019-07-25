@@ -51,7 +51,7 @@ master func chat_message_server(message):
 	
 	# Get's The Sender's NetID
 	if get_tree().get_rpc_sender_id() == 0:
-		net_id = gamestate.player_info.net_id
+		net_id = gamestate.net_id
 	elif network.players.has(get_tree().get_rpc_sender_id()):
 		net_id = get_tree().get_rpc_sender_id()
 

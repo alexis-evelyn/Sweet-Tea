@@ -7,7 +7,7 @@ signal server_created # When server is created (successfully)
 signal join_success # Successfully joined server
 signal join_fail # Failed to join server
 signal player_list_changed # Client List Updated
-signal player_removed(pinfo) # A Player Was Removed From The Player List
+signal player_removed(pinfo, id) # A Player Was Removed From The Player List
 
 # TODO (IMPORTANT): Figure out how to encrypt ENet!!! How Does Minecraft Do It?
 # This is important to prevent MITM attacks which could result in a server owner banning a player
@@ -91,18 +91,25 @@ func join_server(ip, port):
 
 # Clients Notified To Add Player to Player List
 remote func register_player(pinfo):
+	var net_id = -1
+	
+	if get_tree().get_rpc_sender_id() == 0:
+		net_id = gamestate.net_id
+	else:
+		net_id = get_tree().get_rpc_sender_id()
+	
 	if get_tree().is_network_server():
 		# Distribute Registered Clients Info to Clients
 		for id in players:
 			# Send Registered Clients to Newly Joined Client
-			rpc_id(pinfo.net_id, "register_player", players[int(id)])
+			rpc_id(net_id, "register_player", players[int(id)])
 			
 			# Send Newly Joined Client Info to All Other Clients
 			if (id != 1):
 				rpc_id(id, "register_player", pinfo)
 	
-	print("Registering player ", pinfo.name, " (", pinfo.net_id, ") to internal player table")
-	players[int(pinfo.net_id)] = pinfo # Add Newly Joined Client to Dictionary of Clients
+	print("Registering player ", pinfo.name, " (", net_id, ") to internal player table")
+	players[int(net_id)] = pinfo # Add Newly Joined Client to Dictionary of Clients
 	emit_signal("player_list_changed") # Notify Clients That Client List Has Changed
 
 # Clients Notified To Remove Player From Player List
@@ -113,7 +120,7 @@ remote func unregister_player(id):
 	players.erase(id) # Remove Player From Player List
 	
 	emit_signal("player_list_changed") # Notify Clients Of List Change
-	emit_signal("player_removed", pinfo) # Request Server To Remove Player
+	emit_signal("player_removed", pinfo, id) # Request Server To Remove Player
 
 # Closes Connection - Client and Server
 func close_connection():
@@ -127,7 +134,7 @@ func close_connection():
 			pass
 		
 		players.clear() # Clear The Player List
-		gamestate.player_info.net_id = 1 # Reset Network ID To 1 (default value)
+		gamestate.net_id = 1 # Reset Network ID To 1 (default value)
 		get_tree().set_network_peer(null) # Disable Network Peer
 	
 	print("Attempt to Change Scene Tree")
@@ -259,7 +266,7 @@ func _on_connected_to_server():
 	#	emit_signal("join_success")
 	emit_signal("join_success")
 
-	gamestate.player_info.net_id = get_tree().get_network_unique_id() # Record Network ID
+	gamestate.net_id = get_tree().get_network_unique_id() # Record Network ID
 	rpc_id(1, "register_player", gamestate.player_info) # Ask Server To Update Player Dictionary - Server ID is Always 1
 	register_player(gamestate.player_info) # Update Own Dictionary With Ourself
 
@@ -270,7 +277,7 @@ func _on_disconnected_from_server():
 	
 	if(get_tree().get_network_peer() != null):
 		players.clear() # Clear The Player List
-		gamestate.player_info.net_id = 1 # Reset Network ID To 1 (default value)
+		gamestate.net_id = 1 # Reset Network ID To 1 (default value)
 		get_tree().set_network_peer(null) # Disable Network Peer
 		
 		print("Attempt to Change Scene Tree - Disconnected From Server")

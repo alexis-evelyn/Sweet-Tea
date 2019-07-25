@@ -29,7 +29,7 @@ func _on_player_list_changed():
 	
 	# Populate Boxlist With Player Names
 	for player in network.players:
-		if (player != gamestate.player_info.net_id):
+		if (player != gamestate.net_id):
 			var connectedPlayerLabel = Label.new()
 			connectedPlayerLabel.align = Label.ALIGN_CENTER # Aligns the Text To Center
 			connectedPlayerLabel.text = network.players[int(player)].name

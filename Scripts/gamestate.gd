@@ -13,10 +13,11 @@ var game_theme = load("res://Themes/default_theme.tres")
 # Player Info Dictionary
 var player_info = {
 	name = "Player", # Player's Name
-	net_id = 1, # Player's ID
 	actor_path = "res://Objects/Players/Player.tscn", # The Player's Scene (Comparable to Class)
 	char_color = "ffffff" # Unmodified Player Color - May Combine With Custom Sprites (and JSON)
 }
+
+var net_id = 1 # Player's ID
 
 # A Note On Saving
 # I am able to load and save nodes natively using Godot.
@@ -34,9 +35,6 @@ var player_info = {
 
 # Note: "user://" is guaranteed by default to be writeable (so I should be able to assume read/write permissions).
 # It will only change if the user changes it manually. I could check if I wanted to (and maybe I will add that feature later)
-
-# Note: I am leaving net_id in the save data as it is ultimately pointless for the save and it takes very little data.
-# I might write save and load code later to filter it out and put it back in, but for now, I am just leaving it in.
 
 # Save Game Data
 func save_player(slot: int): # TODO: Rename to save_player?
