@@ -8,6 +8,8 @@ var backups_save_file = "characters_%date%.json" # Backup Save File Name Templat
 
 var game_version = ProjectSettings.get_setting("application/config/Version")
 
+var game_theme = load("res://Themes/default_theme.tres")
+
 # Player Info Dictionary
 var player_info = {
 	name = "Player", # Player's Name
@@ -32,6 +34,9 @@ var player_info = {
 
 # Note: "user://" is guaranteed by default to be writeable (so I should be able to assume read/write permissions).
 # It will only change if the user changes it manually. I could check if I wanted to (and maybe I will add that feature later)
+
+# Note: I am leaving net_id in the save data as it is ultimately pointless for the save and it takes very little data.
+# I might write save and load code later to filter it out and put it back in, but for now, I am just leaving it in.
 
 # Save Game Data
 func save_player(slot: int): # TODO: Rename to save_player?

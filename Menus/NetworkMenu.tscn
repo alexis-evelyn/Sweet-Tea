@@ -3,7 +3,9 @@
 [ext_resource path="res://Scripts/NetworkMenu.gd" type="Script" id=1]
 [ext_resource path="res://Assets/Icons/game_icon.png" type="Texture" id=2]
 
-[node name="NetworkMenu" type="CanvasLayer"]
+[node name="NetworkMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
 script = ExtResource( 1 )
 
 [node name="panelHost" type="Panel" parent="."]
@@ -109,6 +111,7 @@ margin_bottom = 96.9037
 text = "Join Server"
 
 [node name="panelPlayer" type="Panel" parent="."]
+editor/display_folded = true
 margin_top = 400.0
 margin_right = 1024.0
 margin_bottom = 600.0

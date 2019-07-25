@@ -1,4 +1,4 @@
-extends CanvasLayer
+extends Control
 
 # Declare member variables here. Examples:
 # var a = 2
@@ -6,6 +6,8 @@ extends CanvasLayer
 
 # Main Function - Registers Event Handling (Handled By Both Client And Server)
 func _ready():
+	set_theme(gamestate.game_theme)
+	
 	network.connect("server_created", self, "_load_game_server")
 	network.connect("join_success", self, "_load_game_client")
 	network.connect("join_fail", self, "_on_join_fail")
@@ -15,6 +17,14 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(_delta):
 #	pass
+
+# Sets NetworkMenuTheme
+func set_theme(theme):
+	#get_tree().get_root().get_node("NetworkMenu").set_theme(load(theme)) # Sets The Network Menu's Theme
+
+	$panelHost.set_theme(theme)
+	$panelJoin.set_theme(theme)
+	$panelPlayer.set_theme(theme)
 
 # Server Starting Code
 func _load_game_server():

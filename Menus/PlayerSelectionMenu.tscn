@@ -6,8 +6,40 @@
 script = ExtResource( 1 )
 
 [node name="PlayerSelectionWindow" type="WindowDialog" parent="."]
+visible = true
 margin_left = 355.057
 margin_top = 87.234
 margin_right = 662.057
 margin_bottom = 542.234
 window_title = "Select Player"
+
+[node name="PlayerSlots" type="VBoxContainer" parent="PlayerSelectionWindow"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Slot 0" type="Button" parent="PlayerSelectionWindow/PlayerSlots"]
+margin_right = 307.0
+margin_bottom = 20.0
+text = "New Character"
+flat = true
+
+[node name="Slot 1" type="Button" parent="PlayerSelectionWindow/PlayerSlots"]
+margin_top = 24.0
+margin_right = 307.0
+margin_bottom = 44.0
+text = "New Character"
+flat = true
+
+[node name="Slot 2" type="Button" parent="PlayerSelectionWindow/PlayerSlots"]
+margin_top = 48.0
+margin_right = 307.0
+margin_bottom = 68.0
+text = "New Character"
+flat = true
+
+[node name="Slot 3" type="Button" parent="PlayerSelectionWindow/PlayerSlots"]
+margin_top = 72.0
+margin_right = 307.0
+margin_bottom = 92.0
+text = "New Character"
+flat = true
