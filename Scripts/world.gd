@@ -65,6 +65,8 @@ master func spawn_players_server(pinfo):
 	else:
 		net_id = get_tree().get_rpc_sender_id()
 	
+	print("(Server-Side) Spawning Player: " + str(net_id) + " At Coordinates: " + str(coordinates))
+	
 	if (get_tree().is_network_server() && net_id != 1):
 		# We Are The Server and The New Player is Not The Server
 		
@@ -96,7 +98,7 @@ master func spawn_players_server(pinfo):
 			if (id != 1):
 				print("New: ", id, " For: ", net_id, " At Coordinates: ", coordinates)
 				# Same here, get from dictionary, keep separate
-				rpc_id(id, "spawn_players", pinfo, id, coordinates)
+				rpc_id(id, "spawn_players", pinfo, net_id, coordinates)
 				
 	add_player(pinfo, net_id, coordinates)
 
@@ -107,7 +109,7 @@ master func spawn_players_server(pinfo):
 remote func spawn_players(pinfo, net_id: int, coordinates: Vector2):
 	#global_position = pinfo
 	
-	print("Spawning Player: ", net_id, " At Coordinates: ", coordinates)
+	print("Spawning Player: " + str(net_id) + " At Coordinates: " + str(coordinates))
 	
 	if (get_tree().is_network_server() && net_id != 1):
 		# TODO: Validate That Player ID is Not Spoofed
