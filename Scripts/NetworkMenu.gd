@@ -99,7 +99,7 @@ func _on_btnJoin_pressed():
 # Load Data - This Exists Just To Test Saving - I Am Not Setting Player Data From The Network Menu In The Real Game
 func set_game_data():
 	# Set Character's Name
-	var loaded = gamestate.load_game(0)
+	var loaded = gamestate.load_player(0)
 	
 	$panelPlayer/txtPlayerName.text = gamestate.player_info.name
 	
@@ -115,4 +115,4 @@ func _on_btColor_popup_closed():
 	
 	print("Character Color: " + str(gamestate.player_info.char_color))
 	
-	gamestate.save_game(0)
+	gamestate.save_player(0)

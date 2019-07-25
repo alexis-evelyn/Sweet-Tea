@@ -1,6 +1,10 @@
 extends Node
 
-var save_file = "user://savegame.save"
+var save_directory = "user://" # Set's Storage Directory
+var save_file = "characters.json" # Save File Name
+
+var backups_dir = "save_backups" # Backup Directory Name
+var backups_save_file = "characters_%date%.json" # Backup Save File Name Template
 
 var game_version = ProjectSettings.get_setting("application/config/Version")
 
@@ -26,38 +30,104 @@ var player_info = {
 
 # Servers should be able to create their own storymode along with custom mobs/mods/etc... (unrelated to saving, but storymode is a manual save too).
 
+# Note: "user://" is guaranteed by default to be writeable (so I should be able to assume read/write permissions).
+# It will only change if the user changes it manually. I could check if I wanted to (and maybe I will add that feature later)
+
 # Save Game Data
-func save_game(slot: int):
+func save_player(slot: int): # TODO: Rename to save_player?
+	var save_path = save_directory.plus_file(save_file) # Save File Path
+	var save_path_backup = save_directory.plus_file(backups_dir.plus_file(backups_save_file.replace("%date%", str(OS.get_unix_time())))) # Save File Backup Path - OS.get_unix_time() is Unix Time Stamp
+	var backup_path = save_directory.plus_file(backups_dir) # Backup Directory Path
+
 	print("Game Version: " + game_version)
+	var players_data = {} # Data To Save
 	
-	var data_to_save
+	var file_op = Directory.new() # Allows Performing Operations on Files (like moving or deleting a file)
+	
+	# Make Save File Backup Directory (if it does not exist)
+	if not file_op.dir_exists(backup_path):
+		file_op.make_dir(backup_path)
 	
 	var save_data = File.new()
-	save_data.open(save_file, File.WRITE)
 	
-	save_data.store_line(to_json(player_info))
+	# Checks to See If Save File Exists
+	if save_data.file_exists(save_path):
+		print("Save File Exists!!!")
+		
+		save_data.open(save_path, File.READ_WRITE) # Open Save File For Reading/Writing
+		players_data = JSON.parse(save_data.get_as_text()) # Load existing Save File as JSON
+	
+		# Backup The Save File (I Want It To Back Up Regardless of if It Is Corrupted)
+		file_op.copy(save_path, save_path_backup) # Copy Save File to Backup	
+	
+		# Checks to Make Sure JSON was Parsed
+		if players_data.error == OK and typeof(players_data.result) == TYPE_DICTIONARY:
+			print("Save File Read and Imported As Dictionary!!!")
+			players_data = players_data.result # Grabs Result From JSON (this is done now so I can grab the error code from earlier)
+			
+			# Should I merge this and the code from new save into a single function?
+			players_data["game_version"] = game_version
+			
+			# Note: Key has to be a string, otherwise Godot bugs out and adds duplicate keys to Dictionary
+			players_data[str(slot)] = player_info # Replaces Key In Dictionary With Updated Player_Info
+			
+			print(to_json(players_data)) # Print Save Data to stdout (Debug)
+			save_data.store_string(to_json(players_data))
+	else:
+		print("Save File Does Not Exist!!! Creating!!!")
+		save_data.open(save_path, File.WRITE) # Open Save File For Writing
+		
+		# Should I merge this and the code from existing save into a single function?
+		players_data["game_version"] = game_version
+		
+		# Note: Key has to be a string, otherwise Godot bugs out and adds duplicate keys to Dictionary
+		players_data[str(slot)] = player_info
+		
+		print(to_json(players_data)) # Print Save Data to stdout (Debug)
+		save_data.store_string(to_json(players_data))
+		
 	save_data.close()
 
 # Load Game Data
-func load_game(slot: int):
+func load_player(slot: int): # TODO: Rename to load_player?
 	print("Game Version: " + game_version)
 	print("Save Data Location: " + OS.get_user_data_dir())
 	#OS.shell_open(str("file://", OS.get_user_data_dir())) # Use this to open up user save data location (say to backup saves or downloaded resources/mods)
 	
 	var save_data = File.new()
 	
-	if not save_data.file_exists(save_file):
+	if not save_data.file_exists(save_directory.plus_file(save_file)): # Check If Save File Exists
 		print("Save File Does Not Exist!!! New Player?")
-		return
+		return -1 # Returns -1 to signal that loading save file failed (for reasons of non-existence)
 	
-	save_data.open(save_file, File.READ)
-	var json = JSON.parse(save_data.get_line())
+	save_data.open(save_directory.plus_file(save_file), File.READ)
+	var json = JSON.parse(save_data.get_as_text())
 		
 	# Checks to Make Sure JSON was Parsed
 	if json.error == OK:
-		print("Save File Read and Imported As Dictionary!!!")
-		player_info = json.result
+		print("Save File Read!!!")
+		
+		if typeof(json.result) == TYPE_DICTIONARY:
+			print("Save File Imported As Dictionary!!!")
+			
+			if json.result.has("game_version"):
+				print("Game Version That Saved File Was: " + json.result["game_version"])
+			else:
+				print("Unknown What Game Version Saved File!!!")
+			
+			if json.result.has(str(slot)):
+				player_info = json.result[str(slot)]
+			else:
+				printerr("Player Slot Does Not Exist: " + str(slot))
+				return -2 # Returns -2 to signal that player slot does not exist
+		else:
+			printerr("Save Format Is Not A Dictionary!!! It Probably is An Array!!")
+			return -3 # Returns -3 to signal that JSON cannot be interpreted as a Dictionary
 	else:
 		printerr("Cannot Interpret Save!!! Invalid JSON!!!")
 		
 	save_data.close()
+	
+# Delete Player From Save
+func delete_player(slot: int):
+	pass
