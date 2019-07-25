@@ -134,3 +134,24 @@ func load_player(slot: int): # TODO: Rename to load_player?
 # Delete Player From Save
 func delete_player(slot: int):
 	pass
+	
+# Checks If Slot Exists
+func check_if_slot_exists(slot: int):
+	var save_data = File.new()
+	
+	if not save_data.file_exists(save_directory.plus_file(save_file)): # Check If Save File Exists
+		print("Save File Does Not Exist!!! So, Slot Does Not Exist!!!")
+		return false
+	
+	save_data.open(save_directory.plus_file(save_file), File.READ)
+	var json = JSON.parse(save_data.get_as_text())
+		
+	# Checks to Make Sure JSON was Parsed
+	if json.error == OK:
+		if typeof(json.result) == TYPE_DICTIONARY:
+			if json.result.has(str(slot)):
+				print("Slot Exists: " + str(slot))
+				return true
+			else:
+				print("Slot Does Not Exist: " + str(slot))
+				return false
