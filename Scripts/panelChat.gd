@@ -97,14 +97,14 @@ func _on_chatMessages_meta_clicked(meta):
 			print("JSON Type: ", typeof(json.result))
 			
 			# JSON will either be a Dictionary or Array. If it is an object, you forgot to call json.result (instead you called json)
-			if typeof(json.result) == TYPE_DICTIONARY: # Type 18 (Under Variant.Type) - https://docs.godotengine.org/en/3.1/classes/class_@globalscope.html
-				print("JSON is Dictionary")
-			
-				handle_url_click(json.result) # Send to another function to process
-			elif typeof(json.result) == TYPE_ARRAY: # Type 19 (Under Variant.Type) - https://docs.godotengine.org/en/3.1/classes/class_@globalscope.html
-				print("JSON is Array")
-			elif typeof(json.result) == TYPE_OBJECT: # 17 - Means You Didn't Grab .result
-				print("JSON is Object")
+			match typeof(json.result): # Similar to Switch Statement
+				TYPE_DICTIONARY:
+					print("JSON is Dictionary")
+					handle_url_click(json.result) # Send to another function to process
+				TYPE_ARRAY:
+					print("JSON is Array")
+				TYPE_OBJECT:
+					print("JSON is Object")
 				
 # Handles Client Clicking on URL
 func handle_url_click(dictionary):
