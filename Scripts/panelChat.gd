@@ -7,14 +7,15 @@ var max_characters = 500 # Max number of characters in line before cut off - Sho
 # The NWSC is used to break up BBCode submitted by user without deleting characters - Should be able to be disabled by Server Request
 var NWSC = PoolByteArray(['U+8203']).get_string_from_utf8() # No Width Space Character (Used to be called RawArray?) - https://docs.godotengine.org/en/3.1/classes/class_poolbytearray.html
 
+onready var chat = self
 onready var chatMessages = $chatMessages
-onready var chat = $userChat
+onready var chatInput = $userChat
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	chat.set_max_length(max_characters)
+	chatInput.set_max_length(max_characters)
 	
-	chat.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
+	chatInput.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
 	
 	# RichTextLabel Fonts
 	chatMessages.set("custom_fonts/normal_font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
@@ -25,6 +26,13 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+
+# Cleanup PlayerChat - Meant to be Called by PlayerUI
+func cleanup():
+	print("Clearing PlayerChat")
+	
+	chat.visible = false # Hides PlayerChat
+	chatMessages.clear() # Clear Chat Messages
 
 # Process Chat Messages from Server
 sync func chat_message_client(message):
@@ -80,10 +88,10 @@ master func chat_message_server(message):
 # Send Chat To Server
 func _on_userChat_gui_input(event):
 	if event is InputEventKey:
-		if event.scancode == KEY_ENTER and chat.text.rstrip(" ").lstrip(" ") != "":
+		if event.scancode == KEY_ENTER and chatInput.text.rstrip(" ").lstrip(" ") != "":
 			print("Enter Key Pressed!!!")
-			rpc_id(1, "chat_message_server", chat.text)
-			chat.text = ""
+			rpc_id(1, "chat_message_server", chatInput.text)
+			chatInput.text = ""
 
 # When URLs are Clicked in Chat Window
 func _on_chatMessages_meta_clicked(meta):

@@ -24,6 +24,7 @@ config/Version="0.0.1-alpha"
 
 gamestate="*res://Scripts/gamestate.gd"
 network="*res://Scripts/network.gd"
+PlayerUI="*res://PlayerUI/PlayerUI.tscn"
 
 [display]
 

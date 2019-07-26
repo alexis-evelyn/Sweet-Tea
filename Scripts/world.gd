@@ -1,9 +1,5 @@
 extends Node2D
 
-# Declare member variables here. Examples:
-onready var playerList = $PlayerUI/panelPlayerList
-onready var panelChat = $PlayerUI/panelChat
-
 # Main Function - Registers Event Handling (Handled By Both Client And Server)
 func _ready():
 	#assert(active != true)
@@ -18,42 +14,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	# This allows user to see player list (I will eventually add support to change keys and maybe joystick support)
-	if Input.is_key_pressed(KEY_TAB):
-		playerList.visible = true
-	else:
-		playerList.visible = false
-	
-	# Makes Chat Window Visible
-	if Input.is_key_pressed(KEY_SLASH) and !panelChat.visible:
-		panelChat.visible = true
-		panelChat.get_node("userChat").grab_focus() # Causes LineEdit (where user types) to grab focus of keyboard
-		panelChat.get_node("userChat").set_text("/") # Replaces text with a Forward Slash
-		panelChat.get_node("userChat").set_cursor_position(1) # Moves Caret In Front of Slash
-	
-	if Input.is_key_pressed(KEY_ENTER) and !panelChat.visible:
-		panelChat.visible = true
-		panelChat.get_node("userChat").grab_focus() # Causes LineEdit (where user types) to grab focus of keyboard
-	
-	# Makes Chat Window Invisible
-	if Input.is_key_pressed(KEY_ESCAPE) and panelChat.visible:
-		panelChat.visible = false
-	
-	# Closes Connection (Client and Server)
-	if Input.is_key_pressed(KEY_Q) and !panelChat.visible:
-		network.close_connection()
-		
-	# Kicks Player (Server) - Will be replaced by chat command
-	if Input.is_key_pressed(KEY_K) and !panelChat.visible:
-		network.kick_player()
-		
-	# Bans Player (Server) - Will be replaced by chat command
-	if Input.is_key_pressed(KEY_B) and !panelChat.visible:
-		network.ban_player()
-	
-	# Bans IP (Server) - Will be replaced by chat command
-	if Input.is_key_pressed(KEY_N) and !panelChat.visible:
-		network.ban_ip_address()
+	pass
 
 # For the server only
 master func spawn_players_server(pinfo):

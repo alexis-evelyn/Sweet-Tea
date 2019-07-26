@@ -8,6 +8,8 @@ extends Panel
 func _ready():
 	network.connect("player_list_changed", self, "_on_player_list_changed") # Register Event for If Player List Changed
 
+# Load Player List - Called When Player Joins Server
+func loadPlayerList():
 	print("Player List")
 
 	# Do Not Run Below Code if Headless
@@ -15,7 +17,6 @@ func _ready():
 	localPlayer.text = gamestate.player_info.name # Display Local Client's Text on Screen
 	localPlayer.align = Label.ALIGN_CENTER # Aligns the Text To Center
 	localPlayer.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -37,3 +38,9 @@ func _on_player_list_changed():
 			connectedPlayerLabel.text = network.players[int(player)].name
 			connectedPlayerLabel.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
 			$boxList.add_child(connectedPlayerLabel)
+			
+# Cleanup PlayerList - Meant to be Called by PlayerUI
+func cleanup():
+	# Remove Nodes From Boxlist
+	for node in $boxList.get_children():
+		node.queue_free()

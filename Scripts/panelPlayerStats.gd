@@ -13,3 +13,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+
+# Cleanup PlayerStats - Meant to be Called by PlayerUI
+func cleanup():
+	pass

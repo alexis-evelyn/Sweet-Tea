@@ -22,6 +22,10 @@ signal player_removed(pinfo, id) # A Player Was Removed From The Player List
 # I followed the below tutorial to learn how to create a multiplayer server
 # http://kehomsforge.com/tutorials/multi/gdMultiplayerSetup/part02/
 
+# Reference to Player List
+onready var playerList = get_tree().get_root().get_node("PlayerUI/panelPlayerList")
+onready var playerUI = get_tree().get_root().get_node("PlayerUI")
+
 # Currently Registered Players
 var players = {}
 
@@ -74,6 +78,7 @@ func create_server():
 	# TODO: Setup Ability To Run Headless (with no server player, since it is headless)
 	# I will probably setup headless mode to be activated by commandline (and maybe in the network menu?)
 	register_player(gamestate.player_info, 0)
+	playerList.loadPlayerList() # Load PlayerList
 
 # Attempt to Join Server
 func join_server(ip, port):
@@ -88,6 +93,8 @@ func join_server(ip, port):
 	# Assign NetworkedMultiplayerENet as Handler of Network - https://docs.godotengine.org/en/3.1/classes/class_multiplayerapi.html?highlight=set_network_peer#class-multiplayerapi-property-network-peer
 	get_tree().set_network_peer(net)
 	#set_network_master(1)
+
+	playerList.loadPlayerList() # Load PlayerList
 
 # Clients Notified To Add Player to Player List
 remote func register_player(pinfo, net_id: int):
@@ -128,6 +135,9 @@ remote func unregister_player(id):
 # Closes Connection - Client and Server
 func close_connection():
 	print("Close Connection")
+	
+	# Clears PlayerUI on Disconnect
+	playerUI.cleanup()
 	
 	# Do different things depending on if server or client
 	if(get_tree().get_network_peer() != null):

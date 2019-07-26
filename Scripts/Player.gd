@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 # Declare member variables here:
-onready var panelChat = get_tree().get_root().get_node("GameWorld/PlayerUI/panelChat") #$PlayerUI/panelChat
+onready var panelChat = get_tree().get_root().get_node("PlayerUI/panelChat")
 
 const UP = Vector2(0, -1)
 const LEFT = Vector2(-1, 0)
