@@ -23,6 +23,8 @@ func _ready():
 
 # Update Player List in GUI
 func _on_player_list_changed():
+	# TODO: Replace the player list with a rich text label to implement clicking on player names (and add player icons (profile pics?))
+	
 	# Remove Nodes From Boxlist
 	for node in $boxList.get_children():
 		node.queue_free()

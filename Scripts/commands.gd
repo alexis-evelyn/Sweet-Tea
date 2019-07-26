@@ -71,6 +71,9 @@ func check_command(net_id, message):
 # Help Command
 func help_command(net_id, message):
 	var output_array = PoolStringArray()
+	
+	#output_array.append("Commands" + '\n')
+	#output_array.append("-----------------------" + "\n")
 	for command in supported_commands:
 		# TODO: Alphanumerically Sort Commands using PSA.insert(index, string)
 		output_array.append(command + ": " + supported_commands[str(command)]["description"])
