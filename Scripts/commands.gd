@@ -1,6 +1,9 @@
 extends Node
 
-# Commands are in separate file because they can become really complicated really quickly
+# NOTE (IMPORTANT): Outside of a third party authentication system, a builtin login system on server join can help
+# set permissions.
+
+# Commands are in separate file because they can become really lengthy really quickly
 
 # A Permission System Does Not Exist Yet, So The Permission Levels are Moot. This will be implemented eventually.
 # Integer Constants for Determining Permission Levels of Commands (basically only allow those with permission to use or even see the commands they have permission for)
@@ -110,6 +113,8 @@ func ban_player_ip(net_id, message):
 	
 	return "Ban Player By IP and Optional Message - Permission Needed: " + str(permission_level)
 	
+# TODO: Add Restart Command
+# Shutdown Server Command
 func shutdown_server(net_id, message):
 	var command = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var permission_level = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
