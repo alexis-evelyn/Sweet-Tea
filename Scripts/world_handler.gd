@@ -68,7 +68,9 @@ func load_world(location: String):
 	if get_tree().is_network_server():
 		# TODO (IMPORTANT): Figure out how to hide world from server player when loaded,
 			# Make Sure playerList is Updated Properly on both Clients and Server,
-			# and Make Sure World is only Loaded if Not Currently Spawned
+			# and Make Sure World is only Loaded if Not Currently Spawned.
+			
+			# ALSO, IMPORTANT - Make Sure RPC Nodes are properly unregistered (or exist) when changing worlds so the client and server don't throws thousands of errors when the player is still respawning.
 		
 		# Does Not Work
 		#world.hide() # Prevents Server Client From Having World Spawned On Them
