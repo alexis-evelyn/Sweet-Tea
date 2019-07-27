@@ -151,3 +151,9 @@ remote func despawn_player(pinfo, net_id):
 # Server Only - Call the Despawn Player Function
 func player_removed(pinfo, net_id):
 	despawn_player(pinfo, net_id)
+	
+# Remove Player Nodes From Spawn Handler
+func cleanup():
+	# Remove Nodes From spawn_handler
+	for node in self.get_children():
+		node.queue_free()

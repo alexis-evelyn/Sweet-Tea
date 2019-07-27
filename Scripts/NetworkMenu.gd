@@ -2,10 +2,7 @@ extends Control
 
 # Main Function - Registers Event Handling (Handled By Both Client And Server)
 func _ready():
-	set_theme(gamestate.game_theme)
-	
-	network.connect("join_fail", self, "_on_join_fail")
-	
+	set_theme(gamestate.game_theme)	
 	set_game_data()
 
 # Sets NetworkMenuTheme
@@ -14,11 +11,6 @@ func set_theme(theme):
 	$panelHost.set_theme(theme)
 	$panelJoin.set_theme(theme)
 	$panelPlayer.set_theme(theme)
-
-# TODO: Show GUI Error Message on Failed Join of Server
-# Failed To Join Server
-func _on_join_fail():
-	print("Failed to Join Server")
 
 # TODO: As I create an actual player creation screen, I will get rid of this section of the NetworkMenu
 # Set's Player Sprite Color in Menu Live

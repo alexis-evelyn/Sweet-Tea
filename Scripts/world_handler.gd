@@ -5,7 +5,7 @@ signal server_started(gamestate_player_info) # Server Started Up and World is Lo
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	network.connect("server_created", self, "_load_world_server")
-	network.connect("join_success", self, "_load_world_client")
+	network.connect("connection_success", self, "_load_world_client")
 
 # Server World Loading Function
 func _load_world_server():

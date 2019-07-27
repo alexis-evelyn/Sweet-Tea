@@ -1,9 +1,8 @@
 extends Node
 
 # Signals
-signal join_success
-signal join_fail # Failed to join server
-signal server_created
+signal connection_success # Joining Server Was Successful
+signal server_created # Server Was Successfully Created
 
 # TODO (IMPORTANT): Figure out how to encrypt ENet!!! How Does Minecraft Do It?
 # This is important to prevent MITM attacks which could result in a server owner banning a player
@@ -68,19 +67,20 @@ func create_server():
 
 # Attempt to Join Server (Not Connected Yet)
 func join_server(ip, port):
+	print("Attempting To Join Server")
+	
 	var net = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
 	
-	# Attempt to Connect To Server
+	# Attempt to Create Client (does not guarantee that joining is successful)
 	if (net.create_client(ip, port) != OK):
-		emit_signal("connection_failed") # Call Function to Signal Failed Joining Server
+		print("Cannot Create Client!!!")
 		return
 	
 	# Assign NetworkedMultiplayerENet as Handler of Network - https://docs.godotengine.org/en/3.1/classes/class_multiplayerapi.html?highlight=set_network_peer#class-multiplayerapi-property-network-peer
 	get_tree().set_network_peer(net)
-	#set_network_master(1)
-
-	emit_signal("join_success")
-	playerList.loadPlayerList() # Load PlayerList
+	
+	# TODO: Pull up Scene or Popup that says Connecting...
+	# Also figure out how to set connection timeout
 
 # Closes Connection - Client and Server
 func close_connection():
@@ -89,8 +89,8 @@ func close_connection():
 	# Clears PlayerUI on Disconnect
 	playerUI.cleanup()
 	
-	# Do different things depending on if server or client
 	if(get_tree().get_network_peer() != null):
+		# Do different things depending on if server or client
 		if get_tree().is_network_server():
 			# Server Side Only
 			pass
@@ -100,6 +100,7 @@ func close_connection():
 			pass
 		
 		player_registrar.cleanup()
+		spawn_handler.cleanup()
 		gamestate.net_id = 1 # Reset Network ID To 1 (default value)
 		get_tree().set_network_peer(null) # Disable Network Peer
 	
@@ -133,6 +134,9 @@ func _on_player_disconnected(id):
 # Successfully Joined Server (Client Side Only)
 func _on_connected_to_server():
 	#print("Connected To Server")
+	
+	emit_signal("connection_success") # Allows Loading World From Server on Successful Connection
+	playerList.loadPlayerList() # Load PlayerList
 
 	gamestate.net_id = get_tree().get_network_unique_id() # Record Network ID
 	rpc_id(1, "register_player", gamestate.player_info, gamestate.net_id) # Ask Server To Update Player Dictionary - Server ID is Always 1
@@ -141,8 +145,8 @@ func _on_connected_to_server():
 
 # Failed To Connect To Server
 func _on_connection_failed():
-	emit_signal("join_fail") # Call Function to do Something on Fail (probably show GUI)
-	get_tree().set_network_peer(null) # Disable Network Peer
+	print("Joining Server Failed!!!")
+	close_connection()
 	
 # How can I remove this and just have the rpc call go directly to player_registrar?
 remote func register_player(pinfo, net_id: int):

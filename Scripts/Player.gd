@@ -15,17 +15,10 @@ const MAX_SPEED = 200
 var friction = false
 
 var motion = Vector2()
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(_delta):
-#	pass
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta):
+	# Checks to See if in Server/Client Mode (I may have a server always started, but refuse connections in single player. That is still up to debate).
 	if not get_tree().has_network_peer():
 		return -1 # Should Be Connected Here
 	
