@@ -27,7 +27,7 @@ var server_info = {
 	website = "https://sweet-tea.senorcontento.com/", # Server Owner's Website (to display rules, purchases, etc...)
 	num_player = 0, # Display Current Number of Connected Players (so client can see how busy a server is)
 	max_players = 0, # Maximum Number of Players (including server player)
-	used_port = 0 # Host Port
+	used_port = 4242 # Host Port
 }
 
 # Main Function - Registers Event Handling (Handled By Both Client And Server)
@@ -46,6 +46,7 @@ func _ready():
 
 # Attempt to Create Server
 func create_server():
+	print("Attempting to Create Server on Port ", server_info.used_port)
 	var net = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
 	
 	# https://docs.godotengine.org/en/3.1/classes/class_networkedmultiplayerenet.html
@@ -62,8 +63,9 @@ func create_server():
 	# Register Server's Player in Player List
 	# TODO: Setup Ability To Run Headless (with no server player, since it is headless)
 	# I will probably setup headless mode to be activated by commandline (and maybe in the network menu?)
-	player_registrar.register_player(gamestate.player_info, 0)
-	playerList.loadPlayerList() # Load PlayerList
+	if(OS.has_feature("Server") == false):
+		player_registrar.register_player(gamestate.player_info, 0)
+		playerList.loadPlayerList() # Load PlayerList
 
 # Attempt to Join Server (Not Connected Yet)
 func join_server(ip, port):

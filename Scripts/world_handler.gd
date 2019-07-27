@@ -14,6 +14,7 @@ func _ready():
 
 # Server World Loading Function
 func _load_world_server():
+	print("Server Loading World")
 	# Load World From Drive
 	# For Simplicity, We Are Starting Off Non Infinite So The Whole World Will Be Loaded At Once
 	# QUESTION: Do I want to Use Scenes For World Data Or Just To Populate A Scene From A Save File?
@@ -22,7 +23,9 @@ func _load_world_server():
 	
 	# TODO: If Headless Make Sure Loaded, but Not Displayed
 	get_tree().change_scene("res://Worlds/World.tscn")
-	emit_signal("server_started", gamestate.player_info) # Sends Server Player's Info To Spawn Code
+	
+	if(OS.has_feature("Server") == false):
+		emit_signal("server_started", gamestate.player_info) # Sends Server Player's Info To Spawn Code
 
 # Client World Loading Code
 func _load_world_client():

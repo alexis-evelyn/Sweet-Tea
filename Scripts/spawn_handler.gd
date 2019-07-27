@@ -24,15 +24,17 @@ master func spawn_player_server(pinfo):
 		net_id = gamestate.net_id
 	else:
 		net_id = get_tree().get_rpc_sender_id()
-	
-	print("(Server-Side) Spawning Player: " + str(net_id) + " At Coordinates: " + str(coordinates))
-	
+		
 	if (get_tree().is_network_server() && net_id != 1):
 		# We Are The Server and The New Player is Not The Server
 		
 		# TODO: Validate That Player ID is Not Spoofed
 		# Apparently the RPC ID (used as Player ID) is safe from spoofing? I need to do more research just to be sure.
 		# https://www.reddit.com/r/godot/comments/bf4z8r/is_get_rpc_sender_id_safe_enough/eld38y8?utm_source=share&utm_medium=web2x
+		
+		# Make Sure Player Registered With Server First (keeps from having invisible clients)
+		if !player_registrar.has(net_id):
+			return -1
 		
 		for id in player_registrar.players:
 			# Spawn Existing Players for New Client (Not New Player)
@@ -66,7 +68,7 @@ master func spawn_player_server(pinfo):
 # http://kehomsforge.com/tutorials/multi/gdMultiplayerSetup/part03/ - "Spawning A Player"
 # TODO (IMPORTANT): Let server decide coordinates and not client
 # For client only
-remote func spawn_player(pinfo, net_id: int, coordinates: Vector2):
+puppet func spawn_player(pinfo, net_id: int, coordinates: Vector2):
 	#global_position = pinfo
 	
 	print("Spawning Player: " + str(net_id) + " At Coordinates: " + str(coordinates))

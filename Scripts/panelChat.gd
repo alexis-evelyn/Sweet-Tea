@@ -33,11 +33,13 @@ func _ready():
 sync func chat_message_client(message):
 	print("Client Message: ", message)
 	
-	#chatMessages.add_text(message + "\n") # append_bbcode() will allow formatted text without writing a custom interpreter (maybe let servers choose if it is allowed? How about fine grained control?).
-	chatMessages.append_bbcode(message + "\n") # Appends Text while Supporting BBCode from Server
-	
-	if chatMessages.get_line_count() > max_lines:
-		chatMessages.remove_line(0)
+	# Only Update ChatBox if Not Headless
+	if(OS.has_feature("Server") == false):
+		#chatMessages.add_text(message + "\n") # append_bbcode() will allow formatted text without writing a custom interpreter (maybe let servers choose if it is allowed? How about fine grained control?).
+		chatMessages.append_bbcode(message + "\n") # Appends Text while Supporting BBCode from Server
+		
+		if chatMessages.get_line_count() > max_lines:
+			chatMessages.remove_line(0)
 	
 # Process Chat Message from Client
 master func chat_message_server(message):
@@ -57,6 +59,10 @@ master func chat_message_server(message):
 		net_id = gamestate.net_id
 	elif player_registrar.has(get_tree().get_rpc_sender_id()):
 		net_id = get_tree().get_rpc_sender_id()
+
+	# Make Sure Player Registered With Server First (keeps from having unregistered clients chatting)
+		if !player_registrar.has(net_id):
+			return -1
 
 	# Check to See if Message is a Command
 	if message.substr(0,1) == "/":

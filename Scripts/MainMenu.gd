@@ -9,6 +9,10 @@ func _ready():
 	# I am going to try to make the game headless compatible without using a separate Godot binary.
 	print("Server Mode: ", OS.has_feature("Server"))
 	
+	# It appears my compiled version of Godot's Server cannot use network. It doesn't even show up in Wireshark (and I checked the firewall)
+	if(OS.has_feature("Server") == true):
+		network.create_server()
+	
 	# TODO: Save loaded theme to file that is not accessible to server
 	set_theme(gamestate.game_theme) # Sets The MainMenu's Theme
 	
