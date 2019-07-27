@@ -8,8 +8,10 @@ signal player_removed(pinfo, id) # A Player Was Removed From The Player List
 # Currently Registered Players
 var players = {}
 	
-# Clients Notified To Add Player to Player List (Client-Side)
-puppet func register_player(pinfo, net_id: int):
+# Clients Notified To Add Player to Player List (Client and Server Side)
+remote func register_player(pinfo, net_id: int):
+	#print("Registering Player")
+	
 	if get_tree().get_rpc_sender_id() == 0:
 		net_id = gamestate.net_id
 	else:
@@ -32,6 +34,12 @@ puppet func register_player(pinfo, net_id: int):
 	
 	print("Registering player ", pinfo.name, " (", net_id, ") to internal player table")
 	players[int(net_id)] = pinfo # Add Newly Joined Client to Dictionary of Clients
+	
+	# Add Current World to Server's Copy of Player Data
+	if get_tree().is_network_server():
+		# Add Starting World Name to Player Data (names are unique in the same parent node, so it can be treated as an id)
+		players[int(net_id)].current_world = world_handler.starting_world_name
+	
 	emit_signal("player_list_changed") # Notify Clients That Client List Has Changed
 
 # Clients Notified To Remove Player From Player List

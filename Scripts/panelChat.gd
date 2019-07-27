@@ -90,6 +90,8 @@ master func chat_message_server(message):
 func _on_userChat_gui_input(event):
 	if event is InputEventKey:
 		if event.scancode == KEY_ENTER and chatInput.text.rstrip(" ").lstrip(" ") != "":
+			# TODO (IMPORTANT): Create Way to Store Command History (maybe full chat history?)
+			
 			#print("Enter Key Pressed!!!")
 			rpc_id(1, "chat_message_server", chatInput.text)
 			chatInput.text = ""

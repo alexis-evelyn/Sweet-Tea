@@ -46,6 +46,8 @@ func _ready():
 
 # Attempt to Create Server
 func create_server():
+	# TODO: Godot supports UPNP hole punching, so this could be useful for non-technical players
+	
 	print("Attempting to Create Server on Port ", server_info.used_port)
 	var net = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
 	
@@ -91,6 +93,9 @@ func close_connection():
 	# Clears PlayerUI on Disconnect
 	playerUI.cleanup()
 	
+	# Frees All Worlds From Memory (1 World if Client, All if Server)
+	get_tree().get_root().get_node("Worlds").queue_free()
+	
 	if(get_tree().get_network_peer() != null):
 		# Do different things depending on if server or client
 		if get_tree().is_network_server():
@@ -114,7 +119,7 @@ func close_connection():
 puppet func player_kicked(message):
 	print("Kick Message: ", message)
 
-# Server (and Client) Notified When A New Client Connects
+# Server (and Client) Notified When A New Client Connects (Player Has Not Registered Yet, So, There Is No Player Data)
 func _on_player_connected(id):
 	
 	# Only the server should check if client is banned
