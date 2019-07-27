@@ -26,6 +26,9 @@ func _ready():
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta):
+	if not get_tree().has_network_peer():
+		return -1 # Should Be Connected Here
+	
 	if is_network_master():
 		if Input.is_key_pressed(KEY_W) and !panelChat.visible:
 			#print("Up")

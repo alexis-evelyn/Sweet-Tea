@@ -25,6 +25,13 @@ config/Version="0.0.1-alpha"
 gamestate="*res://Scripts/gamestate.gd"
 network="*res://Scripts/network.gd"
 PlayerUI="*res://PlayerUI/PlayerUI.tscn"
+player_registrar="*res://Scripts/player_registrar.gd"
+world_handler="*res://Scripts/world_handler.gd"
+spawn_handler="*res://Scripts/spawn_handler.gd"
+
+[debug]
+
+gdscript/warnings/enable=false
 
 [display]
 

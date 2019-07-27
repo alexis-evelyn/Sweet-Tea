@@ -1,13 +1,9 @@
 extends Node
 
-# TODO: Make Client Close if Server Shutdown Forcibly
-
-# It's not necessary to add signal arguments here, but it helps when studying the code
-signal server_created # When server is created (successfully)
-signal join_success # Successfully joined server
+# Signals
+signal join_success
 signal join_fail # Failed to join server
-signal player_list_changed # Client List Updated
-signal player_removed(pinfo, id) # A Player Was Removed From The Player List
+signal server_created
 
 # TODO (IMPORTANT): Figure out how to encrypt ENet!!! How Does Minecraft Do It?
 # This is important to prevent MITM attacks which could result in a server owner banning a player
@@ -19,19 +15,9 @@ signal player_removed(pinfo, id) # A Player Was Removed From The Player List
 # https://gamedev.stackexchange.com/a/115626/97290
 # https://gamedevcoder.wordpress.com/2011/08/28/packet-encryption-in-multiplayer-games-part-1/
 
-# I followed the below tutorial to learn how to create a multiplayer server
-# http://kehomsforge.com/tutorials/multi/gdMultiplayerSetup/part02/
-
 # Reference to Player List
 onready var playerList = get_tree().get_root().get_node("PlayerUI/panelPlayerList")
 onready var playerUI = get_tree().get_root().get_node("PlayerUI")
-
-# Currently Registered Players
-var players = {}
-
-# List of Banned Players (will be saved to file)
-var banned_players = {} # If I add actual authentication (via Steam or my own custom implementation, this will be useful)
-var banned_ips = {} # Allows banning players via IP address (if player ban is not enough). Use with restraint as multiple players could share the same IP address (e.g. in a university)
 
 # TODO: Make sure to verify the data is valid and coherent
 # Server Info to Send to Clients
@@ -72,69 +58,33 @@ func create_server():
 		return
 	
 	get_tree().set_network_peer(net) # Assign NetworkedMultiplayerENet as Handler of Network - https://docs.godotengine.org/en/3.1/classes/class_multiplayerapi.html?highlight=set_network_peer#class-multiplayerapi-property-network-peer
-	emit_signal("server_created") # Initializes Server World
+	emit_signal("server_created") # Notify world_handler That Server Was Created
 	
 	# Register Server's Player in Player List
 	# TODO: Setup Ability To Run Headless (with no server player, since it is headless)
 	# I will probably setup headless mode to be activated by commandline (and maybe in the network menu?)
-	register_player(gamestate.player_info, 0)
+	player_registrar.register_player(gamestate.player_info, 0)
 	playerList.loadPlayerList() # Load PlayerList
 
-# Attempt to Join Server
+# Attempt to Join Server (Not Connected Yet)
 func join_server(ip, port):
 	var net = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
 	
 	# Attempt to Connect To Server
 	if (net.create_client(ip, port) != OK):
-		print("Failed to create client")
-		emit_signal("join_fail") # Call Function to Pull Up Failed Join GUI
+		emit_signal("connection_failed") # Call Function to Signal Failed Joining Server
 		return
 	
 	# Assign NetworkedMultiplayerENet as Handler of Network - https://docs.godotengine.org/en/3.1/classes/class_multiplayerapi.html?highlight=set_network_peer#class-multiplayerapi-property-network-peer
 	get_tree().set_network_peer(net)
 	#set_network_master(1)
 
+	emit_signal("join_success")
 	playerList.loadPlayerList() # Load PlayerList
-
-# Clients Notified To Add Player to Player List
-remote func register_player(pinfo, net_id: int):
-	if get_tree().get_rpc_sender_id() == 0:
-		net_id = gamestate.net_id
-	else:
-		# If rpc_sender is not server, don't trust the given net_id
-		if get_tree().get_rpc_sender_id() != 1:
-			net_id = get_tree().get_rpc_sender_id()
-	
-	if get_tree().is_network_server():
-		# Distribute Registered Clients Info to Clients
-		for id in players:
-			# Send Registered Clients to Newly Joined Client
-			rpc_id(net_id, "register_player", players[int(id)], id)
-			
-			# Send Newly Joined Client Info to All Other Clients
-			if (id != 1):
-				rpc_id(id, "register_player", pinfo, net_id)
-	
-	if not pinfo.has("name"):
-		pinfo.name = "Unnamed Player"
-	
-	print("Registering player ", pinfo.name, " (", net_id, ") to internal player table")
-	players[int(net_id)] = pinfo # Add Newly Joined Client to Dictionary of Clients
-	emit_signal("player_list_changed") # Notify Clients That Client List Has Changed
-
-# Clients Notified To Remove Player From Player List
-remote func unregister_player(id):
-	print("Removing player ", players[id].name, " from internal table")
-	
-	var pinfo = players[id] # Cache player info for removal process
-	players.erase(id) # Remove Player From Player List
-	
-	emit_signal("player_list_changed") # Notify Clients Of List Change
-	emit_signal("player_removed", pinfo, id) # Request Server To Remove Player
 
 # Closes Connection - Client and Server
 func close_connection():
-	print("Close Connection")
+	#print("Close Connection")
 	
 	# Clears PlayerUI on Disconnect
 	playerUI.cleanup()
@@ -149,144 +99,60 @@ func close_connection():
 			# TODO: Free Up Resources and Save Data (Client Side)
 			pass
 		
-		players.clear() # Clear The Player List
+		player_registrar.cleanup()
 		gamestate.net_id = 1 # Reset Network ID To 1 (default value)
 		get_tree().set_network_peer(null) # Disable Network Peer
 	
-	print("Attempt to Change Scene Tree")
+	#print("Attempt to Change Scene Tree")
 	# TODO: Maybe Pull Up A Disconnected Message GUI (which will then go to NetworkMenu)
 	get_tree().change_scene("res://Menus/NetworkMenu.tscn")
-
-# Bans Player From Server (Arguments Player, Pardon Time in Seconds, and Message)
-func ban_player():
-	var ban_message = "Player Banned!!!" # Will be replaced by a function argument
-	
-	var net = get_tree().get_network_peer() # Grab the existing Network Peer Node
-	
-	var banned = OS.get_datetime(true)  # true means UTC format (helps consistency even if computer timezone is changed)
-	var pardoned = 10 # How many seconds to ban for (0 means indefinitely)
-	
-	if get_tree().is_network_server():
-		# TODO: This for loop will be replaced by a player ID (do not replace with name, but do set a permanent id via third party such as with Steam) specified by chat
-		for player in players:
-			if player != 1: # If player is not server
-				var ban_data = {
-					player_id = player, # Player's Network ID
-					player_ip_address = str(net.get_peer_address(player)), # Player's IP Address
-					banned_time = banned, # Sets Time Player Was Banned
-					pardon_time = pardoned # Time User Will be Pardoned
-				}
-			
-				banned_players[player] = ban_data
-				kick_player() # Will add arguments later (player id and ban message)
-
-# Bans IP Adress From Server (Arguments IP Address, Pardon Time in Seconds, and Message)
-func ban_ip_address():
-	var ban_message = "IP Banned!!!" # Will be replaced by a function argument
-	
-	var net = get_tree().get_network_peer() # Grab the existing Network Peer Node
-	
-	var banned = OS.get_datetime(true) # true means UTC format (helps consistency even if computer timezone is changed)
-	var pardoned = 10  # How many seconds to ban for (0 means indefinitely)
-	
-	if get_tree().is_network_server():
-		# TODO: This for loop will be replaced by a player ID (do not replace with name, but do set a permanent id via third party such as with Steam) specified by chat
-		for player in players:
-			if player != 1: # If player is not server
-				var ip_address = str(net.get_peer_address(player))
-			
-				var ban_data = {
-					player_id = player, # Player's Network ID
-					player_ip_address = ip_address, # Player's IP Address
-					banned_time = banned, # Sets Time Player Was Banned
-					pardon_time = pardoned # Time User Will be Pardoned
-				}
-				
-				banned_ips[ip_address] = ban_data
-				kick_player_by_ip(ip_address) # Will add arguments later (player id and ban message)
-
-# Allows Kicking All Players On A Particular IP Address
-func kick_player_by_ip(ip_address):
-	var net = get_tree().get_network_peer() # Grab the existing Network Peer Node
-	
-	# TODO: Make Efficient for Large Player Base
-	
-	for player in players:
-		if player != 1: # If player is not server
-			if str(net.get_peer_address(player)) == ip_address:
-				kick_player() # Will specify Player ID "player"
-
-# Kicks Player From Server (outside of a server shutdown)
-func kick_player(): # Arguments (Player and Kick/Ban Message)
-	var net = get_tree().get_network_peer() # Grab the existing Network Peer Node
-	
-	# TODO: Currently, the server disconnects everyone, but as chat gets added, the ability to select a peer (client) will be added to
-	
-	# The server will do the kicking of players, but mods can request the server to do so (with the right permissions)
-	if get_tree().is_network_server():
-		# TODO: This for loop will be replaced by a player ID (do not replace with name, but do set a permanent id via third party such as with Steam) specified by chat
-		for player in players:
-			if player != 1: # If player is not server
-				rpc_id(player, "player_kicked", "You, " + str(player) + ", has been kicked!!! Your IP address is: " + str(net.get_peer_address(player))) # Notify Player They Have Been Kicked
-				net.disconnect_peer(player, false) # Disconnect the peer immediately (true means no flushing messages)
 
 # Notifies Player as to Why They Were Kicked (does not need to call disconnect)
 puppet func player_kicked(message):
 	print("Kick Message: ", message)
-
-func check_if_banned(id):
-	var net = get_tree().get_network_peer() # Grab the existing Network Peer Node
-	
-	print("Ban Check - Player ID: ", str(id), " Player IP: ", str(net.get_peer_address(id)))
-	
-	if banned_players.has(id) or banned_ips.has(net.get_peer_address(id)):
-		print("Player Was Previously Banned")
-		
-		rpc_id(id, "player_kicked", "You were banned!!!") # Notify Player They Have Been Kicked
-		net.disconnect_peer(id, false) # Disconnect the peer immediately (true means no flushing messages)
 
 # Server (and Client) Notified When A New Client Connects
 func _on_player_connected(id):
 	
 	# Only the server should check if client is banned
 	if get_tree().is_network_server():
-		print("Player ", str(id), " Connected to Server")
-		check_if_banned(id)
+		#print("Player ", str(id), " Connected to Server")
+		#player_control.check_if_banned(id)
+		pass
 
 # Server Notified When A Client Disconnects
 func _on_player_disconnected(id):
-	if players.has(id):
-		print("Player ", players[id].name, " Disconnected from Server")
+	if player_registrar.has(id):
+		print("Player ", player_registrar.name(id), " Disconnected from Server")
 	
 		# Update the player tables
 		if (get_tree().is_network_server()):
-			unregister_player(id) # Remove Player From Server List
+			player_registrar.unregister_player(id) # Remove Player From Server List
 			rpc("unregister_player", id) # Notify Clients to do The Same
 
-# Successfully Joined Server
+# Successfully Joined Server (Client Side Only)
 func _on_connected_to_server():
-	print("Connected To Server")
-	
-	# TODO: If client keeps spamming connect (say if player was banned), it will crash. This does not affect the server.
-	# This comment is here, because it seems to have something to do with the client not being connected when it tries to run the connected code.
-	# Also, there is no error from the crash except from the Godot code itself. I think this is a race condition bug in Godot.
-	# I tried setting a timer on the set_network_peer to hold off on connecting, but that did not solve the crash.
-	# The last error I got was (it "randomizes" the error message and sometimes doesn't display one at all).
-	  # E 0:00:09:0516   Error calling method from signal 'join_success': 'CanvasLayer(NetworkMenu.gd)::_load_game_client': Method not found.
-      # <C Source>     core/object.cpp:1238 @ emit_signal()
-      # <Stack Trace>  network.gd:247 @ _on_connected_to_server()
-	# The crash only happens if the player spams join when a server is available, so I am marking this comment to remind me to place another gui on screen on disconnect to prevent the player from being able to spam the join button.
-	
-	# If the crash really is about the signal, then I need to figure out how to verify the signal exists
-	#if "join_success" in self.get_signal_list():
-	#	emit_signal("join_success")
-	emit_signal("join_success")
+	#print("Connected To Server")
 
 	gamestate.net_id = get_tree().get_network_unique_id() # Record Network ID
 	rpc_id(1, "register_player", gamestate.player_info, gamestate.net_id) # Ask Server To Update Player Dictionary - Server ID is Always 1
-	register_player(gamestate.player_info, 0) # Update Own Dictionary With Ourself
+	player_registrar.register_player(gamestate.player_info, 0) # Update Own Dictionary With Ourself
+	rpc_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
 
 # Failed To Connect To Server
 func _on_connection_failed():
 	emit_signal("join_fail") # Call Function to do Something on Fail (probably show GUI)
 	get_tree().set_network_peer(null) # Disable Network Peer
+	
+# How can I remove this and just have the rpc call go directly to player_registrar?
+remote func register_player(pinfo, net_id: int):
+	player_registrar.register_player(pinfo, net_id)
+	
+# How can I remove this and just have the rpc call go directly to player_registrar?
+remote func unregister_player(net_id: int):
+	player_registrar.unregister_player(net_id)
+
+# How can I remove this and just have the rpc call go directly to spawn_handler?
+master func spawn_player_server(pinfo):
+	print("Client Requested Spawn")
+	spawn_handler.spawn_player_server(pinfo)

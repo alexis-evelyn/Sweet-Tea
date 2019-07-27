@@ -1,23 +1,12 @@
-extends Node2D
+extends Node
 
-# Main Function - Registers Event Handling (Handled By Both Client And Server)
+# Called when the node enters the scene tree for the first time.
 func _ready():
-	#assert(active != true)
-	
-	if (get_tree().is_network_server()):
-		network.connect("player_removed", self, "_on_player_removed") # Register Player Removal Function
-		
-		# TODO: Make Sure Not To Execute this line of spawn_player_server(...) if Running Headless
-		spawn_players_server(gamestate.player_info) # Spawn Players (Currently Only Server's Player)
-	else:
-		rpc_id(1, "spawn_players_server", gamestate.player_info) # Request for Server To Spawn Player
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
-	pass
+	world_handler.connect("server_started", self, "spawn_player_server") # Spawn Server's Player's Character on Emission of Signal
+	player_registrar.connect("player_removed", self, "player_removed")
 
 # For the server only
-master func spawn_players_server(pinfo):
+master func spawn_player_server(pinfo):
 	var net_id = -1
 	
 	if pinfo.has("os_unique_id"):
@@ -45,7 +34,7 @@ master func spawn_players_server(pinfo):
 		# Apparently the RPC ID (used as Player ID) is safe from spoofing? I need to do more research just to be sure.
 		# https://www.reddit.com/r/godot/comments/bf4z8r/is_get_rpc_sender_id_safe_enough/eld38y8?utm_source=share&utm_medium=web2x
 		
-		for id in network.players:
+		for id in player_registrar.players:
 			# Spawn Existing Players for New Client (Not New Player)
 			# All clients' coordinates (including server's coordinates) get sent to new client (except for the new client)
 			if (id != net_id):
@@ -61,7 +50,7 @@ master func spawn_players_server(pinfo):
 					print("Node Does Not Exist!!! Client is: ", str(id))
 					break # Stops For Loop
 				
-				rpc_id(net_id, "spawn_players", network.players[int(id)], id, player.position) # TODO: This line of code is at fault for the current bug
+				rpc_id(net_id, "spawn_player", player_registrar.players[int(id)], id, player.position) # TODO: This line of code is at fault for the current bug
 				
 			# Spawn the new player within the currently iterated player as long it's not the server
 			# Because the server's list already contains the new player, that one will also get itself!
@@ -69,7 +58,7 @@ master func spawn_players_server(pinfo):
 			if (id != 1):
 				print("New: ", id, " For: ", net_id, " At Coordinates: ", coordinates)
 				# Same here, get from dictionary, keep separate
-				rpc_id(id, "spawn_players", pinfo, net_id, coordinates)
+				rpc_id(id, "spawn_player", pinfo, net_id, coordinates)
 				
 	add_player(pinfo, net_id, coordinates)
 
@@ -77,7 +66,7 @@ master func spawn_players_server(pinfo):
 # http://kehomsforge.com/tutorials/multi/gdMultiplayerSetup/part03/ - "Spawning A Player"
 # TODO (IMPORTANT): Let server decide coordinates and not client
 # For client only
-remote func spawn_players(pinfo, net_id: int, coordinates: Vector2):
+remote func spawn_player(pinfo, net_id: int, coordinates: Vector2):
 	#global_position = pinfo
 	
 	print("Spawning Player: " + str(net_id) + " At Coordinates: " + str(coordinates))
@@ -86,14 +75,14 @@ remote func spawn_players(pinfo, net_id: int, coordinates: Vector2):
 		# TODO: Validate That Player ID is Not Spoofed
 		# We Are The Server and The New Player is Not The Server
 		
-		for id in network.players:
+		for id in player_registrar.players:
 			# Spawn Existing Players for New Client (Not New Player)
 			# All clients' coordinates (including server's coordinates) get sent to new client (except for the new client)
 			if (id != net_id):
 				print("Existing: ", id, " For: ", net_id, " At Coordinates: ", coordinates)
 				# --------------------------Get rid of coordinates from the function arguments and retrieve coordinates from dictionary)--------------------------
 				# Separate Coordinate Variable From Rest of Function
-				rpc_id(net_id, "spawn_players", network.players[int(id)], net_id, coordinates) # TODO: This line of code is at fault for the current bug
+				rpc_id(net_id, "spawn_player", player_registrar.players[int(id)], net_id, coordinates) # TODO: This line of code is at fault for the current bug
 				
 			# Spawn the new player within the currently iterated player as long it's not the server
 			# Because the server's list already contains the new player, that one will also get itself!
@@ -101,7 +90,7 @@ remote func spawn_players(pinfo, net_id: int, coordinates: Vector2):
 			if (id != 1):
 				print("New: ", id, " For: ", net_id)
 				# Same here, get from dictionary, keep separate
-				rpc_id(id, "spawn_players", pinfo, net_id, coordinates)
+				rpc_id(id, "spawn_player", pinfo, net_id, coordinates)
 	
 	add_player(pinfo, net_id, coordinates)
 
@@ -141,7 +130,7 @@ remote func despawn_player(pinfo, net_id):
 	# "ERROR: _process_get_node: Invalid packet received. Unabled to find requested cached node. At: core/io/multiplayer_api.cpp:259."
 	
 	if (get_tree().is_network_server()):
-		for id in network.players:
+		for id in player_registrar.players:
 			# Skip sending the despawn packet to both the disconnected player and the server (itself)
 			if (id == net_id || id == 1):
 				continue
@@ -160,5 +149,5 @@ remote func despawn_player(pinfo, net_id):
 	player_node.queue_free()
 	
 # Server Only - Call the Despawn Player Function
-func _on_player_removed(pinfo, net_id):
+func player_removed(pinfo, net_id):
 	despawn_player(pinfo, net_id)

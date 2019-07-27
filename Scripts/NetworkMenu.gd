@@ -1,50 +1,19 @@
 extends Control
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
 # Main Function - Registers Event Handling (Handled By Both Client And Server)
 func _ready():
 	set_theme(gamestate.game_theme)
 	
-	network.connect("server_created", self, "_load_game_server")
-	network.connect("join_success", self, "_load_game_client")
 	network.connect("join_fail", self, "_on_join_fail")
 	
 	set_game_data()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(_delta):
-#	pass
-
 # Sets NetworkMenuTheme
 func set_theme(theme):
-	#get_tree().get_root().get_node("NetworkMenu").set_theme(load(theme)) # Sets The Network Menu's Theme
-
+	# Different Panels In Network Menu - Will Be Changed After Character Creation is Implemented
 	$panelHost.set_theme(theme)
 	$panelJoin.set_theme(theme)
 	$panelPlayer.set_theme(theme)
-
-# Server Starting Code
-func _load_game_server():
-	# Load World From Drive
-	# For Simplicity, We Are Starting Off Non Infinite So The Whole World Will Be Loaded At Once
-	# QUESTION: Do I want to Use Scenes For World Data Or Just To Populate A Scene From A Save File?
-	
-	# Enable Physics - Growing Plants, Moving Mobs, etc... (May Be Done In Respective Scenes Instead)
-	
-	# TODO: If Headless Make Sure Loaded, but Not Displayed
-	get_tree().change_scene("res://Worlds/World.tscn")
-
-# Client Starting Code
-func _load_game_client():
-	# Download World, Resources, Scripts, etc... From Server
-	
-	# Verify Hashes of Downloaded Data
-	
-	# This will be changed to load from world (chunks?) sent by server
-	get_tree().change_scene("res://Worlds/World.tscn")
 
 # TODO: Show GUI Error Message on Failed Join of Server
 # Failed To Join Server

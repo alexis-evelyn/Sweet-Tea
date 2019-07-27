@@ -28,7 +28,7 @@ var supported_commands = {
 
 # Process the Command and Return Result if Any
 func process_command(net_id, message):
-	print("UserID: " + str(net_id) + " Command: " + message)
+	#print("UserID: " + str(net_id) + " Command: " + message)
 	
 	var arguments = PoolStringArray()
 	arguments = message.split(" ", false, 0)
@@ -93,12 +93,17 @@ func kick_player(net_id, message):
 	var command = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var permission_level = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
+	# player_control
+	
 	return "Kick Player and Optional Message - Permission Needed: " + str(permission_level)
 	
 # Kick Player by IP Command
 func kick_player_ip(net_id, message):
 	var command = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var permission_level = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	var ip_address = str(message[1]) # Check to make sure IP Address is Specified
+	
+	# player_control
 	
 	return "Kick Player By IP and Optional Message - Permission Needed: " + str(permission_level)
 
@@ -107,12 +112,16 @@ func ban_player(net_id, message):
 	var command = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var permission_level = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
+	# player_control
+	
 	return "Ban Player and Optional Message - Permission Needed: " + str(permission_level)
 
 # Ban Player By IP Command
 func ban_player_ip(net_id, message):
 	var command = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var permission_level = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	
+	# player_control
 	
 	return "Ban Player By IP and Optional Message - Permission Needed: " + str(permission_level)
 	

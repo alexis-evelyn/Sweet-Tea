@@ -1,5 +1,8 @@
 extends CanvasLayer
 
+# Signals
+signal cleanup_ui
+
 # Declare member variables here. Examples:
 onready var panelPlayerList = $panelPlayerList
 onready var panelChat = $panelChat
@@ -39,30 +42,11 @@ func _process(_delta):
 	# Closes Connection (Client and Server)
 	if Input.is_key_pressed(KEY_Q) and !panelChat.visible:
 		network.close_connection()
-		
-	# Kicks Player (Server) - Will be replaced by chat command
-	if Input.is_key_pressed(KEY_K) and !panelChat.visible:
-		network.kick_player()
-		
-	# Bans Player (Server) - Will be replaced by chat command
-	if Input.is_key_pressed(KEY_B) and !panelChat.visible:
-		network.ban_player()
-	
-	# Bans IP (Server) - Will be replaced by chat command
-	if Input.is_key_pressed(KEY_N) and !panelChat.visible:
-		network.ban_ip_address()
-
-# Just a reference to Cleanup() - Standardize References
-func clear():
-	cleanup()
 
 # Cleanup PlayerUI
 func cleanup():
-	print("AAAAAAAAAAAA - Cleanup PlayerUI")
-	
-	panelStats.cleanup() # Call PlayerStats's Cleanup Function
-	panelChat.cleanup() # Call PlayerChat's Cleanup Function
-	panelPlayerList.cleanup() # Call PlayerList's Cleanup Function
+	#print("Cleanup PlayerUI")
+	emit_signal("cleanup_ui") # Both Standard Code and Modded Code Should Listen for this Signal
 
 # Sets PlayerUI Theme
 func set_theme(theme):

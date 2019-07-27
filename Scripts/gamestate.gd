@@ -96,7 +96,7 @@ func save_player(slot: int): # TODO: Rename to save_player?
 # Load Game Data
 func load_player(slot: int): # TODO: Rename to load_player?
 	print("Game Version: " + game_version)
-	print("Save Data Location: " + OS.get_user_data_dir())
+	#print("Save Data Location: " + OS.get_user_data_dir())
 	#OS.shell_open(str("file://", OS.get_user_data_dir())) # Use this to open up user save data location (say to backup saves or downloaded resources/mods)
 	
 	var save_data = File.new()
@@ -110,10 +110,10 @@ func load_player(slot: int): # TODO: Rename to load_player?
 		
 	# Checks to Make Sure JSON was Parsed
 	if json.error == OK:
-		print("Save File Read!!!")
+		#print("Save File Read!!!")
 		
 		if typeof(json.result) == TYPE_DICTIONARY:
-			print("Save File Imported As Dictionary!!!")
+			#print("Save File Imported As Dictionary!!!")
 			
 			if json.result.has("game_version"):
 				print("Game Version That Saved File Was: " + json.result["game_version"])
@@ -142,7 +142,7 @@ func check_if_slot_exists(slot: int):
 	var save_data = File.new()
 	
 	if not save_data.file_exists(save_directory.plus_file(save_file)): # Check If Save File Exists
-		print("Save File Does Not Exist!!! So, Slot Does Not Exist!!!")
+		#print("Save File Does Not Exist!!! So, Slot Does Not Exist!!!")
 		return false
 	
 	save_data.open(save_directory.plus_file(save_file), File.READ)

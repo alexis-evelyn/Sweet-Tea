@@ -1,6 +1,7 @@
 extends Panel
 
 # Declare member variables here. Examples:
+# TODO: Implement a Way For Server to Notify Client about Chat Char/Lines Limits
 var max_lines = 500 # Max lines in chat before lines are deleted) - Should be settable by user
 var max_characters = 500 # Max number of characters in line before cut off - Should be settable by user and server (server overrides user)
 
@@ -12,6 +13,8 @@ onready var chatInput = $userChat
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	get_tree().get_root().get_node("PlayerUI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
+	
 	chatInput.set_max_length(max_characters)
 	
 	chatInput.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
@@ -25,13 +28,6 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
-
-# Cleanup PlayerChat - Meant to be Called by PlayerUI
-func cleanup():
-	print("Clearing PlayerChat")
-	
-	self.visible = false # Hides PlayerChat
-	chatMessages.clear() # Clear Chat Messages
 
 # Process Chat Messages from Server
 sync func chat_message_client(message):
@@ -50,7 +46,7 @@ master func chat_message_server(message):
 	var chat_color = "red" # Default Chat Color
 	
 	# Record Chat Message in Server Log (e.g. if harassment needs to be reported)
-	print("Chat Message: ", message)
+	#print("Chat Message: ", message) - May Replace With Saving To File (dependent on server owner settings)
 	
 	# Check and Shorten The Length of Characters in Message
 	if message.length() > max_characters:
@@ -59,7 +55,7 @@ master func chat_message_server(message):
 	# Get's The Sender's NetID
 	if get_tree().get_rpc_sender_id() == 0:
 		net_id = gamestate.net_id
-	elif network.players.has(get_tree().get_rpc_sender_id()):
+	elif player_registrar.has(get_tree().get_rpc_sender_id()):
 		net_id = get_tree().get_rpc_sender_id()
 
 	# Check to See if Message is a Command
@@ -72,7 +68,7 @@ master func chat_message_server(message):
 		return # Prevents executing the rest of the function
 
 	# Set Color for Player's Username
-	chat_color = "#" + network.players[int(net_id)].char_color # For now, I am specify chat color as color of character. I may change how color is set later.
+	chat_color = "#" + player_registrar.color(int(net_id)) # For now, I am specify chat color as color of character. I may change how color is set later.
 
 	# Insert No Width Space After Open Bracket to Prevent BBCode - Should be able to be turned on and off by server (scratch that, let the server inject bbcode in if it approves the code or command)
 	message = message.replace("[", "[" + NWSC)
@@ -80,7 +76,7 @@ master func chat_message_server(message):
 	# The URL Idea Came From: https://docs.godotengine.org/en/latest/classes/class_richtextlabel.html?highlight=bbcode#signals
 	var username_start = "[url={\"player_net_id\":\"" + str(net_id) + "\"}][color=" + chat_color + "][b][u]"
 	var username_end = "[/u][/b][/color][/url]"
-	added_username = "<" + username_start + str(network.players[int(net_id)].name) + username_end + "> " + message
+	added_username = "<" + username_start + str(player_registrar.name(int(net_id))) + username_end + "> " + message
 
 	rpc("chat_message_client", added_username)
 
@@ -88,30 +84,31 @@ master func chat_message_server(message):
 func _on_userChat_gui_input(event):
 	if event is InputEventKey:
 		if event.scancode == KEY_ENTER and chatInput.text.rstrip(" ").lstrip(" ") != "":
-			print("Enter Key Pressed!!!")
+			#print("Enter Key Pressed!!!")
 			rpc_id(1, "chat_message_server", chatInput.text)
 			chatInput.text = ""
 
 # When URLs are Clicked in Chat Window
 func _on_chatMessages_meta_clicked(meta):
 	if typeof(meta) == TYPE_STRING:
-		print("URL Text: ", meta)
+		#print("URL Text: ", meta)
 		
 		var json = JSON.parse(meta)
 		
 		# Checks to Make Sure JSON was Parsed
 		if json.error == OK:
-			print("JSON Type: ", typeof(json.result))
+			#print("JSON Type: ", typeof(json.result))
 			
 			# JSON will either be a Dictionary or Array. If it is an object, you forgot to call json.result (instead you called json)
 			match typeof(json.result): # Similar to Switch Statement
 				TYPE_DICTIONARY:
-					print("JSON is Dictionary")
+					#print("JSON is Dictionary")
 					handle_url_click(json.result) # Send to another function to process
 				TYPE_ARRAY:
-					print("JSON is Array")
+					#print("JSON is Array")
+					pass # I may add a handler for this later, but to be honest, a dictionary is much more useful in this context
 				TYPE_OBJECT:
-					print("JSON is Object")
+					print("JSON is Object and it Shouldn't Be")
 				
 # Handles Client Clicking on URL
 func handle_url_click(dictionary):
@@ -120,8 +117,15 @@ func handle_url_click(dictionary):
 		var net_id = dictionary["player_net_id"]
 		
 		# Checks if Players Dictionary Has Net_ID (player could have disconnected by then)
-		if network.players.has(int(net_id)):
-			print("Clicked Player Name: " + network.players[int(net_id)].name + " Player ID: " + net_id)
-			chat_message_client("Clicked Player Name: " + network.players[int(net_id)].name + " Player ID: " + net_id)
+		if player_registrar.has(int(net_id)):
+			#print("Clicked Player Name: " + player_registrar.name(int(net_id)) + " Player ID: " + net_id)
+			chat_message_client("Clicked Player Name: " + player_registrar.name(int(net_id)) + " Player ID: " + net_id)
 		else:
 			print("The Players Dictionary is Missing ID: ", net_id)
+			
+# Cleanup PlayerChat - Meant to be Called by PlayerUI
+func cleanup():
+	#print("Clearing PlayerChat")
+	
+	self.visible = false # Hides PlayerChat
+	chatMessages.clear() # Clear Chat Messages
