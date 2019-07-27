@@ -57,7 +57,7 @@ func _ready():
 	#warning-ignore:return_value_discarded
 	get_tree().connect("connection_failed", self, "_on_connection_failed")
 	#warning-ignore:return_value_discarded
-	get_tree().connect("server_disconnected", self, "_on_disconnected_from_server")
+	get_tree().connect("server_disconnected", self, "close_connection")
 
 # Attempt to Create Server
 func create_server():
@@ -142,8 +142,11 @@ func close_connection():
 	# Do different things depending on if server or client
 	if(get_tree().get_network_peer() != null):
 		if get_tree().is_network_server():
+			# Server Side Only
 			pass
 		else:
+			# Client Side Only
+			# TODO: Free Up Resources and Save Data (Client Side)
 			pass
 		
 		players.clear() # Clear The Player List
@@ -282,21 +285,6 @@ func _on_connected_to_server():
 	gamestate.net_id = get_tree().get_network_unique_id() # Record Network ID
 	rpc_id(1, "register_player", gamestate.player_info, gamestate.net_id) # Ask Server To Update Player Dictionary - Server ID is Always 1
 	register_player(gamestate.player_info, 0) # Update Own Dictionary With Ourself
-
-# Successfully Disconnected From Server
-# TODO: Free Up Resources and Save Data (Client Side)
-func _on_disconnected_from_server():
-	print("Disconnected From Server")
-	
-	if(get_tree().get_network_peer() != null):
-		players.clear() # Clear The Player List
-		gamestate.net_id = 1 # Reset Network ID To 1 (default value)
-		get_tree().set_network_peer(null) # Disable Network Peer
-		
-		print("Attempt to Change Scene Tree - Disconnected From Server")
-		
-		# TODO: Maybe Pull Up A Disconnected Message GUI (which will then go to NetworkMenu)
-		get_tree().change_scene("res://Menus/NetworkMenu.tscn")
 
 # Failed To Connect To Server
 func _on_connection_failed():

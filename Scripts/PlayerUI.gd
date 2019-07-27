@@ -58,7 +58,7 @@ func clear():
 
 # Cleanup PlayerUI
 func cleanup():
-	print("Cleanup PlayerUI")
+	print("AAAAAAAAAAAA - Cleanup PlayerUI")
 	
 	panelStats.cleanup() # Call PlayerStats's Cleanup Function
 	panelChat.cleanup() # Call PlayerChat's Cleanup Function

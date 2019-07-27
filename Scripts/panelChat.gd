@@ -7,7 +7,6 @@ var max_characters = 500 # Max number of characters in line before cut off - Sho
 # The NWSC is used to break up BBCode submitted by user without deleting characters - Should be able to be disabled by Server Request
 var NWSC = PoolByteArray(['U+8203']).get_string_from_utf8() # No Width Space Character (Used to be called RawArray?) - https://docs.godotengine.org/en/3.1/classes/class_poolbytearray.html
 
-onready var chat = self
 onready var chatMessages = $chatMessages
 onready var chatInput = $userChat
 
@@ -31,7 +30,7 @@ func _ready():
 func cleanup():
 	print("Clearing PlayerChat")
 	
-	chat.visible = false # Hides PlayerChat
+	self.visible = false # Hides PlayerChat
 	chatMessages.clear() # Clear Chat Messages
 
 # Process Chat Messages from Server
