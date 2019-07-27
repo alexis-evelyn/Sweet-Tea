@@ -27,7 +27,7 @@ var server_info = {
 	website = "https://sweet-tea.senorcontento.com/", # Server Owner's Website (to display rules, purchases, etc...)
 	num_player = 0, # Display Current Number of Connected Players (so client can see how busy a server is)
 	max_players = 0, # Maximum Number of Players (including server player)
-	used_port = 4242 # Host Port
+	used_port = 0 # Host Port
 }
 
 # Main Function - Registers Event Handling (Handled By Both Client And Server)
