@@ -28,7 +28,7 @@ func _load_world_server():
 	worlds.name = "Worlds"
 	
 	var spawn = starting_world.instance()
-	starting_world_name = spawn.name # TODO: Make sure to add a way to send world name to client
+	starting_world_name = spawn.name
 	worlds.add_child(spawn)
 	get_tree().get_root().add_child(worlds)
 	

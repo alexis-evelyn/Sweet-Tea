@@ -38,10 +38,10 @@ master func spawn_player_server(pinfo):
 		
 		for id in player_registrar.players:
 			# Spawn Existing Players for New Client (Not New Player)
-			# All clients' coordinates (including server's coordinates) get sent to new client (except for the new client)
-			if (id != net_id):
+			# All clients' coordinates (in same world) (including server's coordinates) get sent to new client (except for the new client)
+			if (id != net_id and player_registrar.players[int(id)].current_world == player_registrar.players[int(net_id)].current_world):
 				var player = get_node(str(id) + "/KinematicBody2D") # Grab Existing Player's Object (Server Only)
-				print("Existing: ", id, " For: ", net_id, " At Coordinates: ", player.position) # player.position grabs existing player's coordinates
+				print("Existing: ", id, " For: ", net_id, " At Coordinates: ", player.position, " World: ", player_registrar.players[int(id)].current_world) # player.position grabs existing player's coordinates
 				# --------------------------Get rid of coordinates from the function arguments and retrieve coordinates from dictionary)--------------------------
 				# Separate Coordinate Variable From Rest of Function
 				
@@ -56,9 +56,9 @@ master func spawn_player_server(pinfo):
 				
 			# Spawn the new player within the currently iterated player as long it's not the server
 			# Because the server's list already contains the new player, that one will also get itself!
-			# New Player's Coordinates gets sent to all clients (including new player/client) except the server
-			if (id != 1):
-				print("New: ", id, " For: ", net_id, " At Coordinates: ", coordinates)
+			# New Player's Coordinates gets sent to all clients (within the same world) (including new player/client) except the server
+			if (id != 1 and player_registrar.players[int(id)].current_world == player_registrar.players[int(net_id)].current_world):
+				print("New: ", id, " For: ", net_id, " At Coordinates: ", coordinates, " World: ", player_registrar.players[int(id)].current_world)
 				# Same here, get from dictionary, keep separate
 				rpc_id(id, "spawn_player", pinfo, net_id, coordinates)
 				

@@ -19,26 +19,28 @@ remote func register_player(pinfo, net_id: int):
 		if get_tree().get_rpc_sender_id() != 1:
 			net_id = get_tree().get_rpc_sender_id()
 	
-	if get_tree().is_network_server():
-		# Distribute Registered Clients Info to Clients
-		for id in players:
-			# Send Registered Clients to Newly Joined Client
-			rpc_id(net_id, "register_player", players[int(id)], id)
-			
-			# Send Newly Joined Client Info to All Other Clients
-			if (id != 1):
-				rpc_id(id, "register_player", pinfo, net_id)
-	
-	if not pinfo.has("name"):
-		pinfo.name = "Unnamed Player"
-	
 	print("Registering player ", pinfo.name, " (", net_id, ") to internal player table")
 	players[int(net_id)] = pinfo # Add Newly Joined Client to Dictionary of Clients
 	
-	# Add Current World to Server's Copy of Player Data
 	if get_tree().is_network_server():
 		# Add Starting World Name to Player Data (names are unique in the same parent node, so it can be treated as an id)
-		players[int(net_id)].current_world = world_handler.starting_world_name
+		players[int(net_id)].current_world = world_handler.starting_world_name # Add Current World to Server's Copy of Player Data - I can load last seen world from save instead of sending to spawn everytime the player connects
+		
+		# Distribute Registered Clients Info to Clients
+		for id in players:
+			# Checks to Make Sure to Only Send Players in the Same World to New Player and Vice Versa
+			if players[int(id)].current_world == players[int(net_id)].current_world:
+				# Make Sure Not To Call Yourself or Other Clients Already Registered
+				if id != net_id:
+					# Send Registered Clients to Newly Joined Client
+					rpc_id(net_id, "register_player", players[int(id)], id)
+				
+				# Send Newly Joined Client Info to All Other Clients
+				if (id != 1):
+					rpc_id(id, "register_player", pinfo, net_id)
+	
+	if not pinfo.has("name"):
+		pinfo.name = "Unnamed Player"
 	
 	emit_signal("player_list_changed") # Notify Clients That Client List Has Changed
 
