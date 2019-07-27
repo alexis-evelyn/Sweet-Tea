@@ -2,6 +2,13 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# https://godotengine.org/qa/11251/how-to-export-the-project-for-server?show=11253#a11253
+	# Checks if Running on Headless Server (Currently Linux Only? There is a commit where someone added support for OSX, but no official builds)
+	# I compiled Godot's Server Executable and it cannot run the server without the original source code. This could cause problems for execution speed when the binaries are not precompiled.
+	# Also, OS.get_unique_id(), does not work in my Server Executable.
+	# I am going to try to make the game headless compatible without using a separate Godot binary.
+	print("Server Mode: ", OS.has_feature("Server"))
+	
 	# TODO: Save loaded theme to file that is not accessible to server
 	set_theme(gamestate.game_theme) # Sets The MainMenu's Theme
 	
