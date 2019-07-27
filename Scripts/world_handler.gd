@@ -2,6 +2,11 @@ extends Node
 
 signal server_started(gamestate_player_info) # Server Started Up and World is Loaded - Spawns Server Player
 
+# Chunk Loading (like in Minecraft) is perfectly possible with Godot - https://www.reddit.com/r/godot/comments/8shad4/how_do_large_open_worlds_work_in_godot/
+# I ultimately plan on having multiple worlds which the players can join on the server. As for singleplayer, it is going to be a server that refuses connections unless the player opens it up to other players.
+# I also want to have a "home" that players spawn at before they join the starting_world (like how Starbound has a spaceship. but I want my home to be an actual world that will be the player's home world. The player can then use portals to join the server world.
+var starting_world = load("res://Worlds/World.tscn") # Basically Server Spawn
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	network.connect("server_created", self, "_load_world_server")
