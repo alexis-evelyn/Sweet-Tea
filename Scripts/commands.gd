@@ -65,6 +65,8 @@ func check_command(net_id, message):
 			return ban_player_ip(net_id, message)
 		"shutdown":
 			return shutdown_server(net_id, message)
+		"changeworld":
+			return change_player_world(net_id, message)
 		_: # Default Result - Put at Bottom of Match Results
 			return "Command, " + command + ", Not Found!!!"
 
@@ -125,6 +127,26 @@ func ban_player_ip(net_id, message):
 	
 	return "Ban Player By IP and Optional Message - Permission Needed: " + str(permission_level)
 	
+# Change Player's World - Server Side Only
+func change_player_world(net_id, message):
+	var command = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	#var permission_level = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	
+	var world_path = "res://Worlds/World2.tscn"
+	player_registrar.players[net_id].current_world = world_handler.load_world(world_path)
+	
+	#print("NetID: ", net_id)
+	
+	spawn_handler.despawn_player(net_id)
+	
+	# TODO: Replace World Path with World Name (When the client can download worlds from server, the client will want to request the world by name
+	if net_id != 1:
+		print("NetID Change World: ", net_id)
+		rpc_id(net_id, "change_world", world_path)
+	else:
+		print("Server Change World: ", net_id)
+		spawn_handler.change_world(world_path)
+	
 # TODO: Add Restart Command
 # Shutdown Server Command
 func shutdown_server(net_id, message):
@@ -132,3 +154,7 @@ func shutdown_server(net_id, message):
 	var permission_level = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
 	return "Shutdown Command Not Implemented - Permission Needed: " + str(permission_level)
+	
+# RPC Structure Requires RPC Functions be in Same File (how can I get around this? I want to avoid dirtying up my code)
+remote func change_world(world_name):
+	spawn_handler.change_world(world_name)

@@ -7,6 +7,10 @@ func _ready():
 
 # For the server only
 master func spawn_player_server(pinfo):
+	# QUESTION: Should I place the player nodes under the world nodes?
+	# If I place player nodes under the world nodes, it can make the server more efficiently check if there are players in the world
+	# before the server decides to unload the world. It means more complicated spawn/despawn code, but it will make world loading so much easier.
+	
 	var net_id = -1
 	
 	if pinfo.has("os_unique_id"):
@@ -39,7 +43,7 @@ master func spawn_player_server(pinfo):
 		for id in player_registrar.players:
 			# Spawn Existing Players for New Client (Not New Player)
 			# All clients' coordinates (in same world) (including server's coordinates) get sent to new client (except for the new client)
-			if (id != net_id and player_registrar.players[int(id)].current_world == player_registrar.players[int(net_id)].current_world):
+			if (id != net_id) and (player_registrar.players[int(id)].current_world == player_registrar.players[int(net_id)].current_world):
 				var player = get_node(str(id) + "/KinematicBody2D") # Grab Existing Player's Object (Server Only)
 				print("Existing: ", id, " For: ", net_id, " At Coordinates: ", player.position, " World: ", player_registrar.players[int(id)].current_world) # player.position grabs existing player's coordinates
 				# --------------------------Get rid of coordinates from the function arguments and retrieve coordinates from dictionary)--------------------------
@@ -57,11 +61,12 @@ master func spawn_player_server(pinfo):
 			# Spawn the new player within the currently iterated player as long it's not the server
 			# Because the server's list already contains the new player, that one will also get itself!
 			# New Player's Coordinates gets sent to all clients (within the same world) (including new player/client) except the server
-			if (id != 1 and player_registrar.players[int(id)].current_world == player_registrar.players[int(net_id)].current_world):
+			if (id != 1) and (player_registrar.players[int(id)].current_world == player_registrar.players[int(net_id)].current_world):
 				print("New: ", id, " For: ", net_id, " At Coordinates: ", coordinates, " World: ", player_registrar.players[int(id)].current_world)
 				# Same here, get from dictionary, keep separate
 				rpc_id(id, "spawn_player", pinfo, net_id, coordinates)
 				
+	# TODO: Check to see if this is what causes problems with the Headless Server Mode
 	add_player(pinfo, net_id, coordinates)
 
 # Spawns a new player actor, using the provided player_info structure and the given spawn index
@@ -123,11 +128,21 @@ func add_player(pinfo, net_id, coordinates: Vector2):
 	if (net_id != 1):
 		new_actor.set_network_master(net_id)
 		
+	print("Added Character: ", net_id, " My ID: ", gamestate.net_id)
+		
+	# Only The Server Player Sees This - So Make Sure Server Player Is in Same World as New Player
+	if get_tree().is_network_server() and player_registrar.has(1): # Make sure server player has been registered (if running headless, server player will not be registered)
+		if player_registrar.players[1].current_world != player_registrar.players[int(net_id)].current_world:
+			print("Add Player - NetID: ", net_id)
+			# TODO (IMPORTANT): I am not convinced that this will prevent player from interacting with server owner's world
+			# I need to figure out how to test this. When player are allowed to collide, hiding the node prevents collisions with players.
+			new_actor.hide()
+		
 	# Add the player to the world
 	add_child(new_actor)
 
 # Server and Client - Despawn Player From Local World
-remote func despawn_player(pinfo, net_id):
+remote func despawn_player(net_id):
 	# TODO: Fix Error Mentioned at: http://kehomsforge.com/tutorials/multi/gdMultiplayerSetup/part03/. The error does not break the game at all, it just spams the console.
 	# "ERROR: _process_get_node: Invalid packet received. Unabled to find requested cached node. At: core/io/multiplayer_api.cpp:259."
 	
@@ -138,7 +153,7 @@ remote func despawn_player(pinfo, net_id):
 				continue
 			
 			# Notify players (clients) of despawned player
-			rpc_id(id, "despawn_player", pinfo, net_id)
+			rpc_id(id, "despawn_player", net_id)
 	
 	# Locate Player To Despawn
 	var player_node = get_node(str(net_id))
@@ -148,11 +163,31 @@ remote func despawn_player(pinfo, net_id):
 		return
 	
 	# Despawn Player from World
-	player_node.queue_free()
+	player_node.free() # Set to free so the player node gets freed immediately for respawn (if changing world)
 	
 # Server Only - Call the Despawn Player Function
 func player_removed(pinfo, net_id):
-	despawn_player(pinfo, net_id)
+	despawn_player(net_id)
+	
+# Changing Worlds - Perform Cleanup and Load World
+remote func change_world(world_path):
+	print("Changing World!!!")
+	get_tree().get_root().get_node("PlayerUI/panelPlayerList").cleanup() # Cleanup Player List
+	
+	if get_tree().is_network_server():
+		# In order for the server to process clients, the server cannot despawn the client nodes.
+		for player in spawn_handler.get_children():
+			player.hide()
+	else:
+		# When the player changing the world is the client, despawning nodes is perfectly fine as the client is not the one handling the other clients
+		for player in spawn_handler.get_children():
+			player.queue_free()
+	
+	# Download World using network.gd and Load it using world_handler.gd
+	
+	world_handler.load_world(world_path)
+	
+	rpc_id(1, "spawn_player_server", gamestate.player_info) # Request Server Spawn
 	
 # Remove Player Nodes From Spawn Handler
 func cleanup():

@@ -55,3 +55,30 @@ func _load_world_client():
 	get_tree().get_root().add_child(worlds)
 	
 	get_tree().get_current_scene().queue_free()
+	
+# Load World to Send Player To
+func load_world(location: String):
+	# TODO: Check to make sure world isn't already loaded
+	
+	var world_file = load(location) # Load World From File Location
+	var worlds = get_tree().get_root().get_node("Worlds") # Get Worlds node
+	
+	var world = world_file.instance() # Instance Loaded World
+	
+	if get_tree().is_network_server():
+		# TODO (IMPORTANT): Figure out how to hide world from server player when loaded,
+			# Make Sure playerList is Updated Properly on both Clients and Server,
+			# and Make Sure World is only Loaded if Not Currently Spawned
+		
+		# Does Not Work
+		#world.hide() # Prevents Server Client From Having World Spawned On Them
+		pass
+	
+	# If Client, Unload Previous World
+	if not get_tree().is_network_server():
+		for loaded_world in worlds.get_children():
+			loaded_world.queue_free()
+	
+	worlds.add_child(world) # Add Loaded World to Worlds node
+	
+	return world.name # Return World Name to Help Track Client Location

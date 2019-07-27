@@ -60,6 +60,8 @@ func create_server():
 		return
 	
 	get_tree().set_network_peer(net) # Assign NetworkedMultiplayerENet as Handler of Network - https://docs.godotengine.org/en/3.1/classes/class_multiplayerapi.html?highlight=set_network_peer#class-multiplayerapi-property-network-peer
+	
+	# The world_handler loader is intentionally before registering the server player so that the server player will have a current world marked
 	emit_signal("server_created") # Notify world_handler That Server Was Created
 	
 	# Register Server's Player in Player List

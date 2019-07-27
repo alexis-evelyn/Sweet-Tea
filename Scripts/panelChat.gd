@@ -36,7 +36,8 @@ sync func chat_message_client(message):
 	# Only Update ChatBox if Not Headless
 	if(OS.has_feature("Server") == false):
 		#chatMessages.add_text(message + "\n") # append_bbcode() will allow formatted text without writing a custom interpreter (maybe let servers choose if it is allowed? How about fine grained control?).
-		chatMessages.append_bbcode(message + "\n") # Appends Text while Supporting BBCode from Server
+		if message != null:
+			chatMessages.append_bbcode(message + "\n") # Appends Text while Supporting BBCode from Server
 		
 		if chatMessages.get_line_count() > max_lines:
 			chatMessages.remove_line(0)
