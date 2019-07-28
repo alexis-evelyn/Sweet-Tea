@@ -52,7 +52,7 @@ master func spawn_player_server(pinfo):
 				# There seems to be a bug where if the client is kicked three times, then it crashes and can bring down the server either immediately or bring it down upon joining again.
 				# The server is brought down by a non-existent client node (I do not know why the client crashes as Godot's ENET code throws errors, not my code). However, solving the server crash issue seems to fix the client crash issue too.
 				# I am leaving these comments here incase the bug is still active. I need to make sure the client cannot send malformed packets and crash the server.
-				if !has_node(str(id) + "/KinematicBody2D"): # Checks Player Node Exists (incase of malformed client packets)
+				if !get_tree().get_root().get_node("Worlds/" + str(player_registrar.players[int(id)].current_world) + "/Viewport/WorldGrid").get_node(str(id) + "/KinematicBody2D"): # Checks Player Node Exists (incase of malformed client packets)
 					print("Node Does Not Exist!!! Client is: ", str(id))
 					break # Stops For Loop
 				
@@ -128,16 +128,6 @@ func add_player(pinfo, net_id, coordinates: Vector2):
 	if (net_id != 1):
 		new_actor.set_network_master(net_id)
 		
-	print("Added Character: ", net_id, " My ID: ", gamestate.net_id)
-		
-	# Only The Server Player Sees This - So Make Sure Server Player Is in Same World as New Player
-	if get_tree().is_network_server() and player_registrar.has(1): # Make sure server player has been registered (if running headless, server player will not be registered)
-		if player_registrar.players[1].current_world != player_registrar.players[int(net_id)].current_world:
-			print("Add Player - NetID: ", net_id)
-			# TODO (IMPORTANT): I am not convinced that this will prevent player from interacting with server owner's world
-			# I need to figure out how to test this. When player are allowed to collide, hiding the node prevents collisions with players.
-			#new_actor.hide()
-		
 	if player_registrar.has(net_id):
 		# Add the player to the world
 		#add_child(new_actor)
@@ -158,37 +148,28 @@ remote func despawn_player(net_id):
 			rpc_id(id, "despawn_player", net_id)
 	
 	# Locate Player To Despawn
-	var player_node = get_tree().get_root().get_node("Worlds/" + str(player_registrar.players[int(net_id)].current_world) + "/Viewport/WorldGrid").get_node(str(net_id)) # Grab Existing Player's Object (Server Only) - I May Create Some Functions to Shorten This for Readability
+	if player_registrar.has(net_id):
+		var player_current_world = str(player_registrar.players[int(net_id)].current_world)
+		var player_node = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/" + str(net_id)) # Grab Existing Player's Object (Server Only) - I May Create Some Functions to Shorten This for Readability
 	
-	if (!player_node):
-		print("Failed To Find Player To Despawn")
-		return
-	
-	# Despawn Player from World
-	player_node.free() # Set to free so the player node gets freed immediately for respawn (if changing world)
-	
-# Server Only - Call the Despawn Player Function
-func player_removed(pinfo, net_id):
-	despawn_player(net_id)
-	
+		if (!player_node):
+			printerr("Failed To Find Player To Despawn")
+			return
+			
+		# Despawn Player from World
+		player_node.free() # Set to free so the player node gets freed immediately for respawn (if changing world)
+	else:
+		printerr("Player Registrar Missing ", net_id, " Cannot Locate Player Node to Despawn!!!")
+		
 # Changing Worlds - Perform Cleanup and Load World
 remote func change_world(world_path):
 	print("Changing World!!!")
 	get_tree().get_root().get_node("PlayerUI/panelPlayerList").cleanup() # Cleanup Player List
-	
-	# This may not be necessary anymore with Viewports - The clients will be attached to a world inside a Viewport.
-	if get_tree().is_network_server():
-		# In order for the server to process clients, the server cannot despawn the client nodes.
-		for player in spawn_handler.get_children():
-			player.hide()
-	else:
-		# When the player changing the world is the client, despawning nodes is perfectly fine as the client is not the one handling the other clients
-		for player in spawn_handler.get_children():
-			player.queue_free()
-	
+
 	# Download World using network.gd and Load it using world_handler.gd
-	
-	world_handler.load_world(world_path)
+
+	if not get_tree().is_network_server():
+		world_handler.load_world(world_path)
 	
 	rpc_id(1, "spawn_player_server", gamestate.player_info) # Request Server Spawn
 	

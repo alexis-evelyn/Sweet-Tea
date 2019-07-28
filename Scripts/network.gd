@@ -134,6 +134,7 @@ func _on_player_disconnected(id):
 	
 		# Update the player tables
 		if (get_tree().is_network_server()):
+			spawn_handler.despawn_player(id)
 			player_registrar.unregister_player(id) # Remove Player From Server List
 			rpc("unregister_player", id) # Notify Clients to do The Same
 

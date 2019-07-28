@@ -133,16 +133,13 @@ func change_player_world(net_id, message):
 	#var permission_level = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
 	var world_path = "res://Worlds/World2.tscn"
-	
-	#print("NetID: ", net_id)
+	player_registrar.players[net_id].current_world = world_handler.load_world(world_path)
 	
 	spawn_handler.despawn_player(net_id)
 	
 	# TODO: Replace World Path with World Name (When the client can download worlds from server, the client will want to request the world by name
 	if net_id != 1:
 		print("NetID Change World: ", net_id)
-		
-		player_registrar.players[net_id].current_world = world_handler.load_world(world_path)
 		rpc_id(net_id, "change_world", world_path)
 	else:
 		print("Server Change World: ", net_id)

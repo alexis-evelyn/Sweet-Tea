@@ -52,7 +52,6 @@ remote func unregister_player(id: int):
 	players.erase(id) # Remove Player From Player List
 	
 	emit_signal("player_list_changed") # Notify Clients Of List Change
-	emit_signal("player_removed", pinfo, id) # Request Server To Remove Player
 	
 # Cleanup Connected Player List
 func cleanup():

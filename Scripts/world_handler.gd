@@ -68,23 +68,17 @@ func _load_world_client():
 # Load World to Send Player To
 func load_world(location: String):
 	print("Change World Loading")
+	
+	# NOTE TO SELF!!!!!! Player Chat Still needs to be fixed for world changing!!!
+	# If a new player joins the spawn world while the client is not in spawn, playerlist is updated. It shouldn't be.
+	# If leaving a world, clients on left world still have client in playerlist. player_list_changed
+	
 	# TODO: Check to make sure world isn't already loaded
 	
 	var world_file = load(location) # Load World From File Location
 	var worlds = get_tree().get_root().get_node("Worlds") # Get Worlds node
 	
 	var world = world_file.instance() # Instance Loaded World
-	
-	if get_tree().is_network_server():
-		# TODO (IMPORTANT): Figure out how to hide world from server player when loaded,
-			# Make Sure playerList is Updated Properly on both Clients and Server,
-			# and Make Sure World is only Loaded if Not Currently Spawned.
-			
-			# ALSO, IMPORTANT - Make Sure RPC Nodes are properly unregistered (or exist) when changing worlds so the client and server don't throws thousands of errors when the player is still respawning.
-		
-		# Does Not Work
-		#world.hide() # Prevents Server Client From Having World Spawned On Them
-		pass
 	
 	# If Client, Unload Previous World
 	if not get_tree().is_network_server():
