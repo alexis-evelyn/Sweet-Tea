@@ -73,6 +73,8 @@ func load_world(location: String):
 	# If a new player joins the spawn world while the client is not in spawn, playerlist is updated. It shouldn't be.
 	# If leaving a world, clients on left world still have client in playerlist. player_list_changed
 	
+	# TODO (VERY IMPORTANT): Also fix the ability for client to change world and not lock server client out of movement.
+	
 	# TODO: Check to make sure world isn't already loaded
 	
 	var world_file = load(location) # Load World From File Location
