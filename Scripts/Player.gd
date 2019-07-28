@@ -59,20 +59,9 @@ func _physics_process(_delta):
 			friction = false
 		
 		# Figure Out How To Only Send RPC Packets to Clients only in Current World
-
-		# Only Send Packets to Player in Current World - Prevents Computer Heating Up From Invalid Packets
-		for player in players.get_children():
-			# No Matter How It's Sent (UDP or TCP), If "movePlayer" is received, it is processed.
-			id = int(player.name)
-
-			print("Player ID: ", id)
-			if id != int(gamestate.net_id):
-				rpc_id(int(id), "movePlayer", motion)
-				pass
-		
-		print("------------------------------------")
-		
-		#rpc("movePlayer", motion) #rpc_unreliable("movePlayer", motion) - Disabled until correcting coordinates exists
+		# This rpc acts weird. It was causing spamming at first (which caused my laptop to get really hot), but as I tried to fix it, the problem only got worse.
+		# Now, the weird thing is, I reverted back to the old code and it works fine (minus a temporary delay where a playernode wasn't spawned back in). This only happens when switching worlds.
+		rpc("movePlayer", motion) #rpc_unreliable("movePlayer", motion) - Disabled until correcting coordinates exists
 		motion = move_and_slide(motion)
 		
 # puppet (formerly slave) sets for all devices except server - Should this be puppet?
