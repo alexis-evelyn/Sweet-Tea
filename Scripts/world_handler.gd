@@ -22,6 +22,11 @@ func _load_world_server():
 	
 	# Enable Physics - Growing Plants, Moving Mobs, etc... (May Be Done In Respective Scenes Instead)
 	
+	# https://godotengine.org/qa/27962/running-multiple-viewports-and-switching-which-one-active?show=28262#a28262
+	# NOTE (IMPORTANT): Apparently, I can use ViewPorts to separate displayed scenes.
+	# This is important, because if the server is not running headless,
+	# then having multiple worlds loaded can causes problems for the server player.
+	
 	# TODO: If Headless Make Sure Loaded, but Not Displayed
 	# The server needs to keep all worlds (chunks surrounding players when infinite) loaded that has players inside. Eventually after game release options to keep specific worlds loaded regardless will be available to server owners that can support it.
 	var worlds = Node.new()
