@@ -39,6 +39,10 @@ func _load_world_server():
 	
 	get_tree().get_current_scene().queue_free()
 	
+	# Register Server's Player in Player List
+	if(OS.has_feature("Server") == false):
+		player_registrar.register_player(gamestate.player_info, 0)
+	
 	if(OS.has_feature("Server") == false):
 		emit_signal("server_started", gamestate.player_info) # Sends Server Player's Info To Spawn Code
 
@@ -63,6 +67,7 @@ func _load_world_client():
 	
 # Load World to Send Player To
 func load_world(location: String):
+	print("Change World Loading")
 	# TODO: Check to make sure world isn't already loaded
 	
 	var world_file = load(location) # Load World From File Location

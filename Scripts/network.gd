@@ -64,11 +64,8 @@ func create_server():
 	# The world_handler loader is intentionally before registering the server player so that the server player will have a current world marked
 	emit_signal("server_created") # Notify world_handler That Server Was Created
 	
-	# Register Server's Player in Player List
-	# TODO: Setup Ability To Run Headless (with no server player, since it is headless)
-	# I will probably setup headless mode to be activated by commandline (and maybe in the network menu?)
+	# Activate PlayerList Since Server is Close to Finishing Loading
 	if(OS.has_feature("Server") == false):
-		player_registrar.register_player(gamestate.player_info, 0)
 		playerList.loadPlayerList() # Load PlayerList
 
 # Attempt to Join Server (Not Connected Yet)

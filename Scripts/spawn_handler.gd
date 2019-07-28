@@ -44,7 +44,7 @@ master func spawn_player_server(pinfo):
 			# Spawn Existing Players for New Client (Not New Player)
 			# All clients' coordinates (in same world) (including server's coordinates) get sent to new client (except for the new client)
 			if (id != net_id) and (player_registrar.players[int(id)].current_world == player_registrar.players[int(net_id)].current_world):
-				var player = get_node(str(id) + "/KinematicBody2D") # Grab Existing Player's Object (Server Only)
+				var player = get_tree().get_root().get_node("Worlds/" + str(player_registrar.players[int(id)].current_world) + "/Viewport/WorldGrid").get_node(str(id) + "/KinematicBody2D") # Grab Existing Player's Object (Server Only)
 				print("Existing: ", id, " For: ", net_id, " At Coordinates: ", player.position, " World: ", player_registrar.players[int(id)].current_world) # player.position grabs existing player's coordinates
 				# --------------------------Get rid of coordinates from the function arguments and retrieve coordinates from dictionary)--------------------------
 				# Separate Coordinate Variable From Rest of Function
@@ -136,10 +136,12 @@ func add_player(pinfo, net_id, coordinates: Vector2):
 			print("Add Player - NetID: ", net_id)
 			# TODO (IMPORTANT): I am not convinced that this will prevent player from interacting with server owner's world
 			# I need to figure out how to test this. When player are allowed to collide, hiding the node prevents collisions with players.
-			new_actor.hide()
+			#new_actor.hide()
 		
-	# Add the player to the world
-	add_child(new_actor)
+	if player_registrar.has(net_id):
+		# Add the player to the world
+		#add_child(new_actor)
+		get_tree().get_root().get_node("Worlds/" + str(player_registrar.players[int(net_id)].current_world) + "/Viewport/WorldGrid").add_child(new_actor) # Adds Player to Respective World Node
 
 # Server and Client - Despawn Player From Local World
 remote func despawn_player(net_id):
@@ -156,7 +158,7 @@ remote func despawn_player(net_id):
 			rpc_id(id, "despawn_player", net_id)
 	
 	# Locate Player To Despawn
-	var player_node = get_node(str(net_id))
+	var player_node = get_tree().get_root().get_node("Worlds/" + str(player_registrar.players[int(net_id)].current_world) + "/Viewport/WorldGrid").get_node(str(net_id)) # Grab Existing Player's Object (Server Only) - I May Create Some Functions to Shorten This for Readability
 	
 	if (!player_node):
 		print("Failed To Find Player To Despawn")
@@ -174,6 +176,7 @@ remote func change_world(world_path):
 	print("Changing World!!!")
 	get_tree().get_root().get_node("PlayerUI/panelPlayerList").cleanup() # Cleanup Player List
 	
+	# This may not be necessary anymore with Viewports - The clients will be attached to a world inside a Viewport.
 	if get_tree().is_network_server():
 		# In order for the server to process clients, the server cannot despawn the client nodes.
 		for player in spawn_handler.get_children():
