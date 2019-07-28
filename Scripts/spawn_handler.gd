@@ -131,7 +131,10 @@ func add_player(pinfo, net_id, coordinates: Vector2):
 	if player_registrar.has(net_id):
 		# Add the player to the world
 		#add_child(new_actor)
-		get_tree().get_root().get_node("Worlds/" + str(player_registrar.players[int(net_id)].current_world) + "/Viewport/WorldGrid").add_child(new_actor) # Adds Player to Respective World Node
+		var player_current_world = str(player_registrar.players[int(net_id)].current_world)
+		
+		print("Player ", net_id, " Current World: ", player_current_world)
+		get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid").add_child(new_actor) # Adds Player to Respective World Node
 
 # Server and Client - Despawn Player From Local World
 remote func despawn_player(net_id):
@@ -162,11 +165,19 @@ remote func despawn_player(net_id):
 		printerr("Player Registrar Missing ", net_id, " Cannot Locate Player Node to Despawn!!!")
 		
 # Changing Worlds - Perform Cleanup and Load World
-remote func change_world(world_path):
+remote func change_world(world_name: String, world_path: String):
 	print("Changing World!!!")
 	get_tree().get_root().get_node("PlayerUI/panelPlayerList").cleanup() # Cleanup Player List
 
 	# Download World using network.gd and Load it using world_handler.gd
+	# If I use HTTP to transfer world, world_path will be replaced by a URL
+	# If Using RPC, I can get rid of world_path altogether
+
+	# The Server Would Have Already Updated World Name - No Need to Set Twice
+	if not get_tree().is_network_server():
+		player_registrar.players[gamestate.net_id].current_world = world_name
+
+	print("Player ", gamestate.net_id, " Change World: ", player_registrar.players[gamestate.net_id].current_world)
 
 	if not get_tree().is_network_server():
 		world_handler.load_world(world_path)

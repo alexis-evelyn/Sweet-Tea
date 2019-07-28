@@ -133,17 +133,21 @@ func change_player_world(net_id, message):
 	#var permission_level = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
 	var world_path = "res://Worlds/World2.tscn"
-	player_registrar.players[net_id].current_world = world_handler.load_world(world_path)
+	var world_name = world_handler.load_world(world_path)
 	
-	spawn_handler.despawn_player(net_id)
+	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
+	
+	player_registrar.players[net_id].current_world = world_name # Update World Player is In (server-side)
 	
 	# TODO: Replace World Path with World Name (When the client can download worlds from server, the client will want to request the world by name
 	if net_id != 1:
 		print("NetID Change World: ", net_id)
-		rpc_id(net_id, "change_world", world_path)
+		rpc_id(net_id, "change_world", world_name, world_path)
 	else:
 		print("Server Change World: ", net_id)
-		spawn_handler.change_world(world_path)
+		spawn_handler.change_world(world_name, world_path)
+		
+	return "Player " + str(net_id) + " Changing World to: " + str(world_name)
 	
 # TODO: Add Restart Command
 # Shutdown Server Command
@@ -154,5 +158,5 @@ func shutdown_server(net_id, message):
 	return "Shutdown Command Not Implemented - Permission Needed: " + str(permission_level)
 	
 # RPC Structure Requires RPC Functions be in Same File (how can I get around this? I want to avoid dirtying up my code)
-remote func change_world(world_name):
-	spawn_handler.change_world(world_name)
+remote func change_world(world_name: String, world_path: String):
+	spawn_handler.change_world(world_name, world_path)

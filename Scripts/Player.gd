@@ -15,7 +15,17 @@ const MAX_SPEED = 200
 var friction = false
 
 var motion = Vector2()
-	
+
+var player_current_world
+var players
+var id
+
+func _ready():
+	player_current_world = str(player_registrar.players[int(gamestate.net_id)].current_world)
+	players = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/")
+
+	print("(Player) Current World: ", player_current_world)
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta):
 	# Checks to See if in Server/Client Mode (I may have a server always started, but refuse connections in single player. That is still up to debate).
@@ -48,11 +58,24 @@ func _physics_process(_delta):
 			motion.y = lerp(motion.y, 0, 0.2)
 			friction = false
 		
-		# No Matter How It's Sent (UDP or TCP), If "movePlayer" is received, it is processed.
-		rpc("movePlayer", motion) #rpc_unreliable("movePlayer", motion) - Disabled until correcting coordinates exists
+		# Figure Out How To Only Send RPC Packets to Clients only in Current World
+
+		# Only Send Packets to Player in Current World - Prevents Computer Heating Up From Invalid Packets
+		for player in players.get_children():
+			# No Matter How It's Sent (UDP or TCP), If "movePlayer" is received, it is processed.
+			id = int(player.name)
+
+			print("Player ID: ", id)
+			if id != int(gamestate.net_id):
+				rpc_id(int(id), "movePlayer", motion)
+				pass
+		
+		print("------------------------------------")
+		
+		#rpc("movePlayer", motion) #rpc_unreliable("movePlayer", motion) - Disabled until correcting coordinates exists
 		motion = move_and_slide(motion)
 		
-# puppet (formerly slave) sets for all devices except server
+# puppet (formerly slave) sets for all devices except server - Should this be puppet?
 puppet func movePlayer(mot):
 	motion = move_and_slide(mot)
 	
