@@ -66,17 +66,16 @@ func _load_world_client():
 	get_tree().get_current_scene().queue_free()
 	
 # Load World to Send Player To
-func load_world(location: String):
+func load_world(net_id: int, location: String):
 	print("Change World Loading")
 	
 	# NOTE TO SELF!!!!!! Player Chat Still needs to be fixed for world changing!!!
 	# If a new player joins the spawn world while the client is not in spawn, playerlist is updated. It shouldn't be.
 	# If leaving a world, clients on left world still have client in playerlist. player_list_changed
 	
-	# TODO (VERY IMPORTANT): Also fix the ability for client to change world and not lock server client out of movement.
-	
 	# TODO: Check to make sure world isn't already loaded
 	
+	# NOTE: I forgot groups existed (could of added all worlds to group). Try to use groups when handling projectiles and mobs.
 	var world_file = load(location) # Load World From File Location
 	var worlds = get_tree().get_root().get_node("Worlds") # Get Worlds node
 	
@@ -86,6 +85,12 @@ func load_world(location: String):
 	if not get_tree().is_network_server():
 		for loaded_world in worlds.get_children():
 			loaded_world.queue_free()
+	else:
+		# Makes sure the viewport (world) is only visible (to the server player) if the server player is changing worlds
+		if net_id == gamestate.net_id:
+			world.visible = true
+		else:
+			world.visible = false
 	
 	worlds.add_child(world) # Add Loaded World to Worlds node
 	

@@ -166,7 +166,7 @@ remote func despawn_player(net_id):
 		
 # Changing Worlds - Perform Cleanup and Load World
 remote func change_world(world_name: String, world_path: String):
-	print("Changing World!!!")
+	print("Player ", gamestate.net_id, " Change World: ", player_registrar.players[gamestate.net_id].current_world)
 	get_tree().get_root().get_node("PlayerUI/panelPlayerList").cleanup() # Cleanup Player List
 
 	# Download World using network.gd and Load it using world_handler.gd
@@ -176,11 +176,7 @@ remote func change_world(world_name: String, world_path: String):
 	# The Server Would Have Already Updated World Name - No Need to Set Twice
 	if not get_tree().is_network_server():
 		player_registrar.players[gamestate.net_id].current_world = world_name
-
-	print("Player ", gamestate.net_id, " Change World: ", player_registrar.players[gamestate.net_id].current_world)
-
-	if not get_tree().is_network_server():
-		world_handler.load_world(world_path)
+		world_handler.load_world(gamestate.net_id, world_path)
 	
 	rpc_id(1, "spawn_player_server", gamestate.player_info) # Request Server Spawn
 	

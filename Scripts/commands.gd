@@ -133,7 +133,7 @@ func change_player_world(net_id, message):
 	#var permission_level = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
 	var world_path = "res://Worlds/World2.tscn"
-	var world_name = world_handler.load_world(world_path)
+	var world_name = world_handler.load_world(net_id, world_path)
 	
 	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 	
