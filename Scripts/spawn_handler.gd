@@ -44,7 +44,7 @@ master func spawn_player_server(pinfo):
 			# Spawn Existing Players for New Client (Not New Player)
 			# All clients' coordinates (in same world) (including server's coordinates) get sent to new client (except for the new client)
 			if (id != net_id) and (player_registrar.players[int(id)].current_world == player_registrar.players[int(net_id)].current_world):
-				var player = get_tree().get_root().get_node("Worlds/" + str(player_registrar.players[int(id)].current_world) + "/Viewport/WorldGrid").get_node(str(id) + "/KinematicBody2D") # Grab Existing Player's Object (Server Only)
+				var player = get_tree().get_root().get_node("Worlds/" + str(player_registrar.players[int(id)].current_world) + "/Viewport/WorldGrid/Players/").get_node(str(id) + "/KinematicBody2D") # Grab Existing Player's Object (Server Only)
 				print("Existing: ", id, " For: ", net_id, " At Coordinates: ", player.position, " World: ", player_registrar.players[int(id)].current_world) # player.position grabs existing player's coordinates
 				# --------------------------Get rid of coordinates from the function arguments and retrieve coordinates from dictionary)--------------------------
 				# Separate Coordinate Variable From Rest of Function
@@ -52,7 +52,7 @@ master func spawn_player_server(pinfo):
 				# There seems to be a bug where if the client is kicked three times, then it crashes and can bring down the server either immediately or bring it down upon joining again.
 				# The server is brought down by a non-existent client node (I do not know why the client crashes as Godot's ENET code throws errors, not my code). However, solving the server crash issue seems to fix the client crash issue too.
 				# I am leaving these comments here incase the bug is still active. I need to make sure the client cannot send malformed packets and crash the server.
-				if !get_tree().get_root().get_node("Worlds/" + str(player_registrar.players[int(id)].current_world) + "/Viewport/WorldGrid").get_node(str(id) + "/KinematicBody2D"): # Checks Player Node Exists (incase of malformed client packets)
+				if !get_tree().get_root().get_node("Worlds/" + str(player_registrar.players[int(id)].current_world) + "/Viewport/WorldGrid/Players/").get_node(str(id) + "/KinematicBody2D"): # Checks Player Node Exists (incase of malformed client packets)
 					print("Node Does Not Exist!!! Client is: ", str(id))
 					break # Stops For Loop
 				
@@ -132,9 +132,16 @@ func add_player(pinfo, net_id, coordinates: Vector2):
 		# Add the player to the world
 		#add_child(new_actor)
 		var player_current_world = str(player_registrar.players[int(net_id)].current_world)
+		var world_grid = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/")
+		
+		if not world_grid.has_node("Players"):
+			var players_node = Node.new()
+			players_node.name = "Players"
+			
+			world_grid.add_child(players_node)
 		
 		print("Player ", net_id, " Current World: ", player_current_world)
-		get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid").add_child(new_actor) # Adds Player to Respective World Node
+		get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/Players/").add_child(new_actor) # Adds Player to Respective World Node
 
 # Server and Client - Despawn Player From Local World
 remote func despawn_player(net_id):
@@ -153,7 +160,7 @@ remote func despawn_player(net_id):
 	# Locate Player To Despawn
 	if player_registrar.has(net_id):
 		var player_current_world = str(player_registrar.players[int(net_id)].current_world)
-		var player_node = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/" + str(net_id)) # Grab Existing Player's Object (Server Only) - I May Create Some Functions to Shorten This for Readability
+		var player_node = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/Players/" + str(net_id)) # Grab Existing Player's Object (Server Only) - I May Create Some Functions to Shorten This for Readability
 	
 		if (!player_node):
 			printerr("Failed To Find Player To Despawn")

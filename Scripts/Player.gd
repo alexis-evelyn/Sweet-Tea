@@ -18,12 +18,9 @@ var motion = Vector2()
 
 var player_current_world
 var players
-var id
 
 func _ready():
-	player_current_world = str(player_registrar.players[int(gamestate.net_id)].current_world)
-	players = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/")
-
+	player_current_world = get_node("../../../../../").name # Get Current World's Name (for this player node - should work server-side too)
 	print("(Player) Current World: ", player_current_world)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -58,15 +55,26 @@ func _physics_process(_delta):
 			motion.y = lerp(motion.y, 0, 0.2)
 			friction = false
 		
-		# Figure Out How To Only Send RPC Packets to Clients only in Current World
-		# This rpc acts weird. It was causing spamming at first (which caused my laptop to get really hot), but as I tried to fix it, the problem only got worse.
-		# Now, the weird thing is, I reverted back to the old code and it works fine (minus a temporary delay where a playernode wasn't spawned back in). This only happens when switching worlds.
-		rpc("movePlayer", motion) #rpc_unreliable("movePlayer", motion) - Disabled until correcting coordinates exists
-		motion = move_and_slide(motion)
-		
+		if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))):
+			#print("Motion: (", abs(motion.x), ", ", abs(motion.y), ")")
+			motion = move_and_slide(motion)
+			rpc("move_player", motion)
+			#send_to_clients(motion)
+
+func send_to_clients(mot):
+	# Get All Players in This Player's World
+	players = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/Players/")
+	
+	# Loop Through All Players
+	for player in players.get_children():
+		# Note: I could take away the calling player's ability to move from client side and have the server move the calling player.
+		if (int(gamestate.net_id) != int(player.name)):
+			print("Sending To: ", player.name)
+			rpc_id(int(player.name), "move_player", mot)
+
 # puppet (formerly slave) sets for all devices except server - Should this be puppet?
-puppet func movePlayer(mot):
-	motion = move_and_slide(mot)
+puppet func move_player(mot):
+	motion = move_and_slide(mot) # This works because this move_and_slide is tied to this node (even on the other clients).
 	
 # Sets Player's Color (also sets other players colors too)
 func set_dominant_color(color):
