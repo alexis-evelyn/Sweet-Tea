@@ -31,6 +31,8 @@ func _process(_delta):
 	if get_tree().is_network_server():
 		#rpc_unreliable("correct_coordinates", self.position)
 		
+		# Because of this, coordinates are only barely off (when friction is in effect), but are corrected when player starts moving again.
+		# It is close enough that it shouldn't matter, so I am keeping the code this way until polishing stage.
 		if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))):
 			# Get All Players in This Player's World
 			players = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/Players/")
