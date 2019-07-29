@@ -46,49 +46,36 @@ master func spawn_player_server(pinfo):
 			if (id != net_id) and (get_world(id) == player_registrar.players[int(net_id)].current_world):
 				var player = get_players(str(get_world(id))).get_node(str(id) + "/KinematicBody2D") # Grab Existing Player's Object (Server Only)
 				print("Existing: ", id, " For: ", net_id, " At Coordinates: ", player.position, " World: ", get_world(id)) # player.position grabs existing player's coordinates
-				# --------------------------Get rid of coordinates from the function arguments and retrieve coordinates from dictionary)--------------------------
-				# Separate Coordinate Variable From Rest of Function
 				
-				# There seems to be a bug where if the client is kicked three times, then it crashes and can bring down the server either immediately or bring it down upon joining again.
-				# The server is brought down by a non-existent client node (I do not know why the client crashes as Godot's ENET code throws errors, not my code). However, solving the server crash issue seems to fix the client crash issue too.
-				# I am leaving these comments here incase the bug is still active. I need to make sure the client cannot send malformed packets and crash the server.
 				if !get_players(str(get_world(id))).get_node(str(id) + "/KinematicBody2D"): # Checks Player Node Exists (incase of malformed client packets)
 					print("Node Does Not Exist!!! Client is: ", str(id))
 					break # Stops For Loop
 				
-				rpc_unreliable_id(net_id, "spawn_player", player_registrar.players[int(id)], id, player.position) # TODO: This line of code is at fault for the current bug
+				rpc_unreliable_id(net_id, "spawn_player", player_registrar.players[int(id)], id, player.position) # Send Existing Clients' Info to New Client
 				
 			# Spawn the new player within the currently iterated player as long it's not the server
 			# Because the server's list already contains the new player, that one will also get itself!
 			# New Player's Coordinates gets sent to all clients (within the same world) (including new player/client) except the server
 			if (id != 1) and (get_world(id) == get_world(net_id)):
 				print("New: ", id, " For: ", net_id, " At Coordinates: ", coordinates, " World: ", get_world(id))
-				# Same here, get from dictionary, keep separate
-				rpc_unreliable_id(id, "spawn_player", pinfo, net_id, coordinates)
+				rpc_unreliable_id(id, "spawn_player", pinfo, net_id, coordinates) # Send New Client's Info to Existing Clients
 				
 	# TODO: Check to see if this is what causes problems with the Headless Server Mode
 	add_player(pinfo, net_id, coordinates)
 
 # Spawns a new player actor, using the provided player_info structure and the given spawn index
 # http://kehomsforge.com/tutorials/multi/gdMultiplayerSetup/part03/ - "Spawning A Player"
-# TODO (IMPORTANT): Let server decide coordinates and not client
 # For client only
 puppet func spawn_player(pinfo, net_id: int, coordinates: Vector2):
-	#global_position = pinfo
-	
 	print("Spawning Player: " + str(net_id) + " At Coordinates: " + str(coordinates))
 	
 	if (get_tree().is_network_server() && net_id != 1):
-		# TODO: Validate That Player ID is Not Spoofed
 		# We Are The Server and The New Player is Not The Server
 		
 		for id in player_registrar.players:
-			# Spawn Existing Players for New Client (Not New Player)
-			# All clients' coordinates (including server's coordinates) get sent to new client (except for the new client)
+			# Spawn Existing Players for New Client - All clients' coordinates (including server's coordinates) get sent to new client (except for the new client)
 			if (id != net_id):
 				print("Existing: ", id, " For: ", net_id, " At Coordinates: ", coordinates)
-				# --------------------------Get rid of coordinates from the function arguments and retrieve coordinates from dictionary)--------------------------
-				# Separate Coordinate Variable From Rest of Function
 				rpc_unreliable_id(net_id, "spawn_player", player_registrar.players[int(id)], net_id, coordinates) # TODO: This line of code is at fault for the current bug
 				
 			# Spawn the new player within the currently iterated player as long it's not the server

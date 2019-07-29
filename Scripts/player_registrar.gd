@@ -42,7 +42,7 @@ remote func register_player(pinfo, net_id: int):
 	if not pinfo.has("name"):
 		pinfo.name = "Unnamed Player"
 	
-	emit_signal("player_list_changed") # Notify Clients That Client List Has Changed
+	#emit_signal("player_list_changed") # Notify Clients That Client List Has Changed
 
 # Clients Notified To Remove Player From Player List
 remote func unregister_player(id: int):
@@ -51,7 +51,7 @@ remote func unregister_player(id: int):
 	var pinfo = players[id] # Cache player info for removal process
 	players.erase(id) # Remove Player From Player List
 	
-	emit_signal("player_list_changed") # Notify Clients Of List Change
+	#emit_signal("player_list_changed") # Notify Clients Of List Change
 	
 # Cleanup Connected Player List
 func cleanup():
