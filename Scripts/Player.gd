@@ -61,7 +61,7 @@ func _physics_process(_delta):
 			motion = move_and_slide(motion)
 			send_to_clients(motion)
 
-# Server handles relaying client's position to other clients in same world
+# Handles relaying client's position to other clients in same world
 func send_to_clients(mot):
 	# Get All Players in This Player's World
 	players = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/Players/")
