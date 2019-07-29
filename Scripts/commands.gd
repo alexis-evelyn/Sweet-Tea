@@ -39,7 +39,7 @@ func process_command(net_id, message):
 
 	# The server is not allowed to RPC itself (neither is the client, but only the server could run this code (providing the client is not modified))
 	if net_id != 1:
-		rpc_id(net_id,"chat_message_client", response)
+		rpc_unreliable_id(net_id,"chat_message_client", response)
 	else:
 		chat_message_client(response) # This just calls the chat_message_client directly as the server wants to message itself
 
@@ -142,7 +142,7 @@ func change_player_world(net_id, message):
 	# TODO: Replace World Path with World Name (When the client can download worlds from server, the client will want to request the world by name
 	if net_id != 1:
 		print("NetID Change World: ", net_id)
-		rpc_id(net_id, "change_world", world_name, world_path)
+		rpc_unreliable_id(net_id, "change_world", world_name, world_path)
 	else:
 		print("Server Change World: ", net_id)
 		spawn_handler.change_world(world_name, world_path)

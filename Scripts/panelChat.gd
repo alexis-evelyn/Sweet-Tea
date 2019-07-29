@@ -70,7 +70,7 @@ master func chat_message_server(message):
 		var response = $commands.process_command(net_id, message)
 		
 		#if response != null and response != "":
-		#	rpc_id(net_id, "chat_message_client", response)
+		#	rpc_unreliable_id(net_id, "chat_message_client", response)
 		
 		return # Prevents executing the rest of the function
 
@@ -85,7 +85,7 @@ master func chat_message_server(message):
 	var username_end = "[/u][/b][/color][/url]"
 	added_username = "<" + username_start + str(player_registrar.name(int(net_id))) + username_end + "> " + message
 
-	rpc("chat_message_client", added_username)
+	rpc_unreliable("chat_message_client", added_username)
 
 # Send Chat To Server
 func _on_userChat_gui_input(event):
@@ -94,7 +94,7 @@ func _on_userChat_gui_input(event):
 			# TODO (IMPORTANT): Create Way to Store Command History (maybe full chat history?)
 			
 			#print("Enter Key Pressed!!!")
-			rpc_id(1, "chat_message_server", chatInput.text)
+			rpc_unreliable_id(1, "chat_message_server", chatInput.text)
 			chatInput.text = ""
 
 # When URLs are Clicked in Chat Window

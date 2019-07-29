@@ -20,7 +20,7 @@ func check_if_banned(id):
 	if banned_players.has(id) or banned_ips.has(net.get_peer_address(id)):
 		print("Player Was Previously Banned")
 		
-		rpc_id(id, "player_kicked", "You were banned!!!") # Notify Player They Have Been Kicked
+		rpc_unreliable_id(id, "player_kicked", "You were banned!!!") # Notify Player They Have Been Kicked
 		net.disconnect_peer(id, false) # Disconnect the peer immediately (true means no flushing messages)
 
 func kick_player():
@@ -33,7 +33,7 @@ func kick_player():
 		# TODO: This for loop will be replaced by a player ID (do not replace with name, but do set a permanent id via third party such as with Steam) specified by chat
 		for player in player_registrar.players:
 			if player != 1: # If player is not server
-				rpc_id(player, "player_kicked", "You, " + str(player) + ", has been kicked!!! Your IP address is: " + str(net.get_peer_address(player))) # Notify Player They Have Been Kicked
+				rpc_unreliable_id(player, "player_kicked", "You, " + str(player) + ", has been kicked!!! Your IP address is: " + str(net.get_peer_address(player))) # Notify Player They Have Been Kicked
 				net.disconnect_peer(player, false) # Disconnect the peer immediately (true means no flushing messages)
 				
 func kick_player_ip(ip_address: String):

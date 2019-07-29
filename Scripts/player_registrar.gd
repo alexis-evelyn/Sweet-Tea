@@ -33,11 +33,11 @@ remote func register_player(pinfo, net_id: int):
 				# Make Sure Not To Call Yourself or Other Clients Already Registered
 				if id != net_id:
 					# Send Registered Clients to Newly Joined Client
-					rpc_id(net_id, "register_player", players[int(id)], id)
+					rpc_unreliable_id(net_id, "register_player", players[int(id)], id)
 				
 				# Send Newly Joined Client Info to All Other Clients
 				if (id != 1):
-					rpc_id(id, "register_player", pinfo, net_id)
+					rpc_unreliable_id(id, "register_player", pinfo, net_id)
 	
 	if not pinfo.has("name"):
 		pinfo.name = "Unnamed Player"

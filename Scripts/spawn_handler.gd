@@ -56,7 +56,7 @@ master func spawn_player_server(pinfo):
 					print("Node Does Not Exist!!! Client is: ", str(id))
 					break # Stops For Loop
 				
-				rpc_id(net_id, "spawn_player", player_registrar.players[int(id)], id, player.position) # TODO: This line of code is at fault for the current bug
+				rpc_unreliable_id(net_id, "spawn_player", player_registrar.players[int(id)], id, player.position) # TODO: This line of code is at fault for the current bug
 				
 			# Spawn the new player within the currently iterated player as long it's not the server
 			# Because the server's list already contains the new player, that one will also get itself!
@@ -64,7 +64,7 @@ master func spawn_player_server(pinfo):
 			if (id != 1) and (player_registrar.players[int(id)].current_world == player_registrar.players[int(net_id)].current_world):
 				print("New: ", id, " For: ", net_id, " At Coordinates: ", coordinates, " World: ", player_registrar.players[int(id)].current_world)
 				# Same here, get from dictionary, keep separate
-				rpc_id(id, "spawn_player", pinfo, net_id, coordinates)
+				rpc_unreliable_id(id, "spawn_player", pinfo, net_id, coordinates)
 				
 	# TODO: Check to see if this is what causes problems with the Headless Server Mode
 	add_player(pinfo, net_id, coordinates)
@@ -89,7 +89,7 @@ puppet func spawn_player(pinfo, net_id: int, coordinates: Vector2):
 				print("Existing: ", id, " For: ", net_id, " At Coordinates: ", coordinates)
 				# --------------------------Get rid of coordinates from the function arguments and retrieve coordinates from dictionary)--------------------------
 				# Separate Coordinate Variable From Rest of Function
-				rpc_id(net_id, "spawn_player", player_registrar.players[int(id)], net_id, coordinates) # TODO: This line of code is at fault for the current bug
+				rpc_unreliable_id(net_id, "spawn_player", player_registrar.players[int(id)], net_id, coordinates) # TODO: This line of code is at fault for the current bug
 				
 			# Spawn the new player within the currently iterated player as long it's not the server
 			# Because the server's list already contains the new player, that one will also get itself!
@@ -97,7 +97,7 @@ puppet func spawn_player(pinfo, net_id: int, coordinates: Vector2):
 			if (id != 1):
 				print("New: ", id, " For: ", net_id)
 				# Same here, get from dictionary, keep separate
-				rpc_id(id, "spawn_player", pinfo, net_id, coordinates)
+				rpc_unreliable_id(id, "spawn_player", pinfo, net_id, coordinates)
 	
 	add_player(pinfo, net_id, coordinates)
 
@@ -155,7 +155,7 @@ remote func despawn_player(net_id):
 				continue
 			
 			# Notify players (clients) of despawned player
-			rpc_id(id, "despawn_player", net_id)
+			rpc_unreliable_id(id, "despawn_player", net_id)
 	
 	# Locate Player To Despawn
 	if player_registrar.has(net_id):
@@ -185,7 +185,7 @@ remote func change_world(world_name: String, world_path: String):
 		player_registrar.players[gamestate.net_id].current_world = world_name
 		world_handler.load_world(gamestate.net_id, world_path)
 	
-	rpc_id(1, "spawn_player_server", gamestate.player_info) # Request Server Spawn
+	rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Request Server Spawn
 	
 # Remove Player Nodes From Spawn Handler
 func cleanup():

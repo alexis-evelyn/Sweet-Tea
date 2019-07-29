@@ -16,13 +16,24 @@ var friction = false
 
 var motion = Vector2()
 
+var player_name
 var player_current_world
 var players
 
 # Called everytime player is spawned 
 func _ready():
+	player_name = get_node("..").name
 	player_current_world = get_node("../../../../../").name # Get Current World's Name (for this player node - used by server-side)
 	print("(Player) Current World: ", player_current_world)
+
+func _process(_delta):
+	# Server corrects coordinates of client to keep in sync
+	if get_tree().is_network_server():
+		#rpc_unreliable_id(int(player_name), "correct_coordinates", self.position)
+		rpc_unreliable("correct_coordinates", self.position)
+		
+		# This fixes the sync issue, but it won't play nice with clients not in same world.
+		# TODO: Detect motion and if moving, start correcting coordinates of player (I want to wait for motion, so the server is not constantly running a for loop and heating up the computer)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta):
@@ -56,13 +67,15 @@ func _physics_process(_delta):
 			motion.y = lerp(motion.y, 0, 0.2)
 			friction = false
 		
+		# TODO (VERY IMPORTANT): Apparently, the client and server positions are just not going to stay synced using the performance saving code.
+		# I am probably going to have to sync coordinates from the server to client. May cause rebound issues which I will not like.
 		if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))):
 			#print("Motion: (", abs(motion.x), ", ", abs(motion.y), ")")
 			motion = move_and_slide(motion)
 			send_to_clients(motion)
 
 # Handles relaying client's position to other clients in same world
-func send_to_clients(mot):
+func send_to_clients(mot: Vector2):
 	# Get All Players in This Player's World
 	players = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/Players/")
 	
@@ -71,11 +84,17 @@ func send_to_clients(mot):
 		# Note: I could take away the calling player's ability to move from client side and have the server move the calling player.
 		if (int(gamestate.net_id) != int(player.name)):
 			#print("Sending To: ", player.name)
-			rpc_id(int(player.name), "move_player", mot)
+			rpc_unreliable_id(int(player.name), "move_player", mot)
 
 # puppet (formerly slave) sets for all devices except master (the calling client)
-puppet func move_player(mot):
-	motion = move_and_slide(mot) # This works because this move_and_slide is tied to this node (even on the other clients).
+puppet func move_player(mot: Vector2):
+	move_and_slide(mot) # This works because this move_and_slide is tied to this node (even on the other clients).
+	
+# Could also be used for teleporting (designed to correct coordinates from lag, etc...)
+# Server is also guilty of getting out of sync with client, but server is arbiter and executor, so it overrides other clients positions
+remotesync func correct_coordinates(coordinates: Vector2):
+	#print(coordinates)
+	self.position = coordinates
 	
 # Sets Player's Color (also sets other players colors too)
 func set_dominant_color(color):

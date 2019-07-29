@@ -136,7 +136,7 @@ func _on_player_disconnected(id):
 		if (get_tree().is_network_server()):
 			spawn_handler.despawn_player(id)
 			player_registrar.unregister_player(id) # Remove Player From Server List
-			rpc("unregister_player", id) # Notify Clients to do The Same
+			rpc_unreliable("unregister_player", id) # Notify Clients to do The Same
 
 # Successfully Joined Server (Client Side Only)
 func _on_connected_to_server():
@@ -146,9 +146,9 @@ func _on_connected_to_server():
 	playerList.loadPlayerList() # Load PlayerList
 
 	gamestate.net_id = get_tree().get_network_unique_id() # Record Network ID
-	rpc_id(1, "register_player", gamestate.player_info, gamestate.net_id) # Ask Server To Update Player Dictionary - Server ID is Always 1
+	rpc_unreliable_id(1, "register_player", gamestate.player_info, gamestate.net_id) # Ask Server To Update Player Dictionary - Server ID is Always 1
 	player_registrar.register_player(gamestate.player_info, 0) # Update Own Dictionary With Ourself
-	rpc_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
+	rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
 
 # Failed To Connect To Server
 func _on_connection_failed():
