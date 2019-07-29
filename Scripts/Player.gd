@@ -19,8 +19,9 @@ var motion = Vector2()
 var player_current_world
 var players
 
+# Called everytime player is spawned 
 func _ready():
-	player_current_world = get_node("../../../../../").name # Get Current World's Name (for this player node - should work server-side too)
+	player_current_world = get_node("../../../../../").name # Get Current World's Name (for this player node - used by server-side)
 	print("(Player) Current World: ", player_current_world)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -57,10 +58,10 @@ func _physics_process(_delta):
 		
 		if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))):
 			#print("Motion: (", abs(motion.x), ", ", abs(motion.y), ")")
-			#rpc("move_player", motion)
 			motion = move_and_slide(motion)
 			send_to_clients(motion)
 
+# Server handles relaying client's position to other clients in same world
 func send_to_clients(mot):
 	# Get All Players in This Player's World
 	players = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/Players/")
@@ -69,7 +70,7 @@ func send_to_clients(mot):
 	for player in players.get_children():
 		# Note: I could take away the calling player's ability to move from client side and have the server move the calling player.
 		if (int(gamestate.net_id) != int(player.name)):
-			print("Sending To: ", player.name)
+			#print("Sending To: ", player.name)
 			rpc_id(int(player.name), "move_player", mot)
 
 # puppet (formerly slave) sets for all devices except master (the calling client)
