@@ -57,9 +57,9 @@ func _physics_process(_delta):
 		
 		if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))):
 			#print("Motion: (", abs(motion.x), ", ", abs(motion.y), ")")
+			#rpc("move_player", motion)
 			motion = move_and_slide(motion)
-			rpc("move_player", motion)
-			#send_to_clients(motion)
+			send_to_clients(motion)
 
 func send_to_clients(mot):
 	# Get All Players in This Player's World
@@ -72,7 +72,7 @@ func send_to_clients(mot):
 			print("Sending To: ", player.name)
 			rpc_id(int(player.name), "move_player", mot)
 
-# puppet (formerly slave) sets for all devices except server - Should this be puppet?
+# puppet (formerly slave) sets for all devices except master (the calling client)
 puppet func move_player(mot):
 	motion = move_and_slide(mot) # This works because this move_and_slide is tied to this node (even on the other clients).
 	

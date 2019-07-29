@@ -7,7 +7,7 @@ extends Control
 func _ready():
 	# If not careful, the game can easily make a laptop hot. For computers that can handle processing as quickly as possible, this can be disabled.
 	# TODO: Provide option in settings to turn this off.
-	OS.low_processor_usage_mode = true # Default Off - Makes game not update frames unless necessary (saves battery and cpu cycles)
+	#OS.low_processor_usage_mode = true # Default Off - Meant for programs (as not in games)
 	OS.vsync_enabled = true # Already enabled by default, but can be changed by code.
 	
 	# This doesn't do anything, but if I could find a way to change these settings in gdscript, I could help make the gamw work on lower end computers.
