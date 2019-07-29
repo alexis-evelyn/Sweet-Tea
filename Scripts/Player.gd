@@ -27,6 +27,10 @@ func _ready():
 	print("(Player) Current World: ", player_current_world)
 
 func _process(_delta):
+	# Checks to See if in Server/Client Mode (I may have a server always started, but refuse connections in single player. That is still up to debate).
+	if not get_tree().has_network_peer():
+		return -1 # Should Be Connected Here
+	
 	# Server corrects coordinates of client to keep in sync
 	if get_tree().is_network_server():
 		#rpc_unreliable("correct_coordinates", self.position)
@@ -101,7 +105,7 @@ puppet func move_player(mot: Vector2):
 	move_and_slide(mot) # This works because this move_and_slide is tied to this node (even on the other clients).
 	
 # Could also be used for teleporting (designed to correct coordinates from lag, etc...)
-# Server is also guilty of getting out of sync with client, but server is arbiter and executor, so it overrides other clients positions
+# Server is also guilty of getting out of sync with client, but server is arbiter and executor, so it overrides other clients' positions
 remotesync func correct_coordinates(coordinates: Vector2):
 	#print(coordinates)
 	self.position = coordinates
