@@ -4,6 +4,14 @@ extends Control
 # https://docs.godotengine.org/en/3.1/getting_started/step_by_step/scripting_continued.html#overrideable-functions
 # https://docs.godotengine.org/en/latest/classes/class_projectsettings.html
 
+# Performance Improving Links
+# https://docs.godotengine.org/en/3.1/classes/class_engine.html#class-engine-property-iterations-per-second
+# https://godotengine.org/article/why-does-godot-use-servers-and-rids - About Multi-Cores and Threading
+# https://docs.godotengine.org/en/3.1/tutorials/threads/using_multiple_threads.html - Multithreading
+
+# Quick Read
+# https://github.com/godotengine/godot/issues/7832
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# If not careful, the game can easily make a laptop hot. For computers that can handle processing as quickly as possible, this can be disabled.
@@ -12,9 +20,11 @@ func _ready():
 	OS.vsync_enabled = true # Already enabled by default, but can be changed by code.
 	
 	# This doesn't do anything, but if I could find a way to change these settings in gdscript, I could help make the gamw work on lower end computers.
-	#ProjectSettings.set_setting("physics/common/physics_fps", 1)
-	#ProjectSettings.set_setting("debug/settings/fps/force_fps", 1)
+	Engine.set_iterations_per_second(30) # Physics FPS - Default 60
+	Engine.set_target_fps(30) # Rendering FPS - Default Unlimited
 	#ProjectSettings.save()
+	
+	print("Number of Cores: ", OS.get_processor_count())
 	
 	# https://godotengine.org/qa/11251/how-to-export-the-project-for-server?show=11253#a11253
 	# Checks if Running on Headless Server (Currently Linux Only? There is a commit where someone added support for OSX, but no official builds)

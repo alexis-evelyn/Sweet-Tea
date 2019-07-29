@@ -48,7 +48,12 @@ theme/custom_font="res://Fonts/dynamicfont/firacode-regular.tres"
 2d_physics/layer_3="Enemies"
 2d_physics/layer_4="Coins"
 
+[physics]
+
+2d/thread_model=2
+
 [rendering]
 
+threads/thread_model=2
 environment/default_clear_color=Color( 0.137255, 0.129412, 0.392157, 1 )
 environment/default_environment="res://default_env.tres"
