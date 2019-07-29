@@ -29,8 +29,16 @@ func _ready():
 func _process(_delta):
 	# Server corrects coordinates of client to keep in sync
 	if get_tree().is_network_server():
-		#rpc_unreliable_id(int(player_name), "correct_coordinates", self.position)
-		rpc_unreliable("correct_coordinates", self.position)
+		#rpc_unreliable("correct_coordinates", self.position)
+		
+		if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))):
+			# Get All Players in This Player's World
+			players = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/Players/")
+			
+			# Loop Through All Players
+			for player in players.get_children():
+				if int(player.name) != 1:
+					rpc_unreliable_id(int(player.name), "correct_coordinates", self.position)
 		
 		# This fixes the sync issue, but it won't play nice with clients not in same world.
 		# TODO: Detect motion and if moving, start correcting coordinates of player (I want to wait for motion, so the server is not constantly running a for loop and heating up the computer)
