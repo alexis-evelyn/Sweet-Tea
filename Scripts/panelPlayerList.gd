@@ -54,8 +54,10 @@ func get_players(world_name: String) -> Node:
 		return null
 
 func get_world(net_id: int) -> String:
-	return str(player_registrar.players[int(net_id)].current_world)
-			
+	if player_registrar.players[int(net_id)].has("current_world"):
+		return str(player_registrar.players[int(net_id)].current_world)
+	return ""
+		
 # Cleanup PlayerList - Meant to be Called by PlayerUI
 func cleanup():
 	# Remove Nodes From Boxlist

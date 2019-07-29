@@ -14,6 +14,9 @@ signal server_created # Server Was Successfully Created
 # https://gamedev.stackexchange.com/a/115626/97290
 # https://gamedevcoder.wordpress.com/2011/08/28/packet-encryption-in-multiplayer-games-part-1/
 
+# Keep Alive Thread
+var keep_alive
+
 # Reference to Player List
 onready var playerList = get_tree().get_root().get_node("PlayerUI/panelPlayerList")
 onready var playerUI = get_tree().get_root().get_node("PlayerUI")
@@ -31,7 +34,7 @@ var server_info = {
 }
 
 # Main Function - Registers Event Handling (Handled By Both Client And Server)
-func _ready():
+func _ready() -> void:
 	# Why don't we have block ignore warnings?
 	#warning-ignore:return_value_discarded
 	get_tree().connect("network_peer_connected", self, "_on_player_connected")
@@ -45,7 +48,7 @@ func _ready():
 	get_tree().connect("server_disconnected", self, "close_connection")
 
 # Attempt to Create Server
-func create_server():
+func create_server() -> void:
 	# TODO: Godot supports UPNP hole punching, so this could be useful for non-technical players
 	
 	print("Attempting to Create Server on Port ", server_info.used_port)
@@ -69,7 +72,7 @@ func create_server():
 		playerList.loadPlayerList() # Load PlayerList
 
 # Attempt to Join Server (Not Connected Yet)
-func join_server(ip, port):
+func join_server(ip, port) -> void:
 	print("Attempting To Join Server")
 	
 	var net = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
@@ -86,8 +89,15 @@ func join_server(ip, port):
 	# Also figure out how to set connection timeout
 
 # Closes Connection - Client and Server
-func close_connection():
+func close_connection() -> void:
 	#print("Close Connection")
+	
+	if not get_tree().is_network_server():
+		if get_tree().get_root().has_node("ping_timer"):
+			var timer = get_tree().get_root().get_node("ping_timer")
+			
+			timer.queue_free()
+			keep_alive.wait_to_finish()
 	
 	# Clears PlayerUI on Disconnect
 	playerUI.cleanup()
@@ -115,11 +125,11 @@ func close_connection():
 	get_tree().change_scene("res://Menus/NetworkMenu.tscn")
 
 # Notifies Player as to Why They Were Kicked (does not need to call disconnect)
-puppet func player_kicked(message):
+puppet func player_kicked(message) -> void:
 	print("Kick Message: ", message)
 
 # Server (and Client) Notified When A New Client Connects (Player Has Not Registered Yet, So, There Is No Player Data)
-func _on_player_connected(id):
+func _on_player_connected(id) -> void:
 	
 	# Only the server should check if client is banned
 	if get_tree().is_network_server():
@@ -128,7 +138,7 @@ func _on_player_connected(id):
 		pass
 
 # Server Notified When A Client Disconnects
-func _on_player_disconnected(id):
+func _on_player_disconnected(id) -> void:
 	if player_registrar.has(id):
 		print("Player ", player_registrar.name(id), " Disconnected from Server")
 	
@@ -139,8 +149,12 @@ func _on_player_disconnected(id):
 			rpc_unreliable("unregister_player", id) # Notify Clients to do The Same
 
 # Successfully Joined Server (Client Side Only)
-func _on_connected_to_server():
+func _on_connected_to_server() -> void:
 	#print("Connected To Server")
+	
+	# Put Ping Timer on New Thread - Is the Timer Already on New Thread? Does this Affect Timer's Thread (given that it is a node)?
+	keep_alive = Thread.new()
+	keep_alive.start(self, "start_ping", "Test Connection")
 	
 	emit_signal("connection_success") # Allows Loading World From Server on Successful Connection
 	playerList.loadPlayerList() # Load PlayerList
@@ -151,19 +165,49 @@ func _on_connected_to_server():
 	rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
 
 # Failed To Connect To Server
-func _on_connection_failed():
+func _on_connection_failed() -> void:
 	print("Joining Server Failed!!!")
 	close_connection()
 	
 # How can I remove this and just have the rpc call go directly to player_registrar?
-remote func register_player(pinfo, net_id: int):
+remote func register_player(pinfo, net_id: int) -> void:
 	player_registrar.register_player(pinfo, net_id)
 	
 # How can I remove this and just have the rpc call go directly to player_registrar?
-remote func unregister_player(net_id: int):
+remote func unregister_player(net_id: int) -> void:
 	player_registrar.unregister_player(net_id)
 
 # How can I remove this and just have the rpc call go directly to spawn_handler?
-master func spawn_player_server(pinfo):
+master func spawn_player_server(pinfo) -> void:
 	print("Client Requested Spawn")
 	spawn_handler.spawn_player_server(pinfo)
+	
+# Start Timer to Send Pings to Server
+func start_ping(message: = "Ping") -> void:
+	# Create Timer Node
+	var timer = Timer.new()
+	timer.name = "ping_timer"
+	
+	# https://docs.godotengine.org/en/3.1/tutorials/threads/thread_safe_apis.html
+	get_tree().get_root().call_deferred("add_child", timer)
+	
+	timer.connect("timeout", self, "send_ping", [message]) # Function to Execute After Timer Runs Out
+	timer.set_wait_time(10) # Execute Every 10 Seconds
+	timer.start() # Start Timer
+	
+# Send Ping to Server
+func send_ping(message) -> void:
+	#print("Send Ping: ", message)
+	rpc_unreliable_id(1, "server_ping", message)
+	
+# Recieve Ping From Client (and send ping back)
+master func server_ping(message: String) -> void:
+	#print("Received Ping: ", message)
+	rpc_unreliable_id(int(get_tree().get_rpc_sender_id()), "client_ping", message)
+	
+# Receive Ping Back From Server
+puppet func client_ping(message: String) -> void:
+	#print("Message From Server: ", message)
+	pass
+	
+	# Track Last Ping Back and Do Something if Ping Back Fails
