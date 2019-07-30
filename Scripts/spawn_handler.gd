@@ -135,14 +135,14 @@ remote func despawn_player(net_id):
 	# Locate Player To Despawn
 	if player_registrar.has(net_id):
 		var player_current_world = get_world(net_id)
-		var player_node = get_players(player_current_world).get_node(str(net_id)) # Grab Existing Player's Object (Server Only) - I May Create Some Functions to Shorten This for Readability
+		var player_node = get_players(player_current_world).get_node(str(net_id)) # Grab Existing Player's Node (Server Only)
 	
 		if (!player_node):
 			printerr("Failed To Find Player To Despawn")
 			return
 			
 		# Despawn Player from World
-		player_node.free() # Set to free so the player node gets freed immediately for respawn (if changing world)
+		player_node.free() # Set to free so the player node gets freed immediately for respawn (if changing world) - Now that the player nodes are in different sections of the tree, do I really need to immediately disconnect the player?
 	else:
 		printerr("Player Registrar Missing ", net_id, " Cannot Locate Player Node to Despawn!!!")
 		
@@ -179,9 +179,3 @@ func get_world_grid(world: String) -> Node:
 # Get Players Node - Added To Make Code More Legible
 func get_players(world: String) -> Node:
 	return get_tree().get_root().get_node("Worlds/" + world + "/Viewport/WorldGrid/Players/")
-	
-# Remove Player Nodes From Spawn Handler
-func cleanup():
-	# Remove Nodes From spawn_handler
-	for node in self.get_children():
-		node.queue_free()

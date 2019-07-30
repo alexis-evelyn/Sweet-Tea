@@ -95,10 +95,13 @@ func send_to_clients(mot: Vector2):
 	
 	# Loop Through All Players
 	for player in players.get_children():
-		# Note: I could take away the calling player's ability to move from client side and have the server move the calling player.
-		if (int(gamestate.net_id) != int(player.name)):
-			#print("Sending To: ", player.name)
+		# Make sure to not send to self or server (server will be told about it later)
+		if (int(gamestate.net_id) != int(player.name)) and (1 != int(player.name)):
+			print("Sending To: ", player.name)
 			rpc_unreliable_id(int(player.name), "move_player", mot)
+
+	# Send copy to server regardless of it is in the world - Server won't update otherwise if not in same world
+	rpc_unreliable_id(1, "move_player", mot)
 
 # puppet (formerly slave) sets for all devices except master (the calling client)
 puppet func move_player(mot: Vector2):

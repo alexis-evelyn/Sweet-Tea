@@ -92,12 +92,9 @@ func join_server(ip, port) -> void:
 func close_connection() -> void:
 	#print("Close Connection")
 	
+	# If Client - Cleanup Ping Timer Thread (server doesn't have one). Timer itself is part of Player Node, so it gets cleaned up on player disconnect.
 	if not get_tree().is_network_server():
-		if get_tree().get_root().has_node("ping_timer"):
-			var timer = get_tree().get_root().get_node("ping_timer")
-			
-			timer.queue_free()
-			keep_alive.wait_to_finish()
+		keep_alive.wait_to_finish()
 	
 	# Clears PlayerUI on Disconnect
 	playerUI.cleanup()
@@ -116,7 +113,6 @@ func close_connection() -> void:
 			pass
 		
 		player_registrar.cleanup()
-		spawn_handler.cleanup()
 		gamestate.net_id = 1 # Reset Network ID To 1 (default value)
 		get_tree().set_network_peer(null) # Disable Network Peer
 	
