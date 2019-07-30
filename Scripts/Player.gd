@@ -97,7 +97,7 @@ func send_to_clients(mot: Vector2):
 	for player in players.get_children():
 		# Make sure to not send to self or server (server will be told about it later)
 		if (int(gamestate.net_id) != int(player.name)) and (1 != int(player.name)):
-			print("Sending To: ", player.name)
+			#print("Sending To: ", player.name)
 			rpc_unreliable_id(int(player.name), "move_player", mot)
 
 	# Send copy to server regardless of it is in the world - Server won't update otherwise if not in same world
@@ -132,8 +132,7 @@ func correct_coordinates_server():
 # Server is also guilty of getting out of sync with client, but server is arbiter and executor, so it overrides other clients' positions
 remotesync func correct_coordinates(coordinates: Vector2):
 	#print(coordinates)
-	#self.position = coordinates
-	pass
+	self.position = coordinates
 	
 # Sets Player's Color (also sets other players colors too)
 func set_dominant_color(color):
