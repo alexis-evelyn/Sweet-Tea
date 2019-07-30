@@ -121,7 +121,7 @@ func correct_coordinates_server():
 # Could also be used for teleporting (designed to correct coordinates from lag, etc...)
 # Server is also guilty of getting out of sync with client, but server is arbiter and executor, so it overrides other clients' positions
 remotesync func correct_coordinates(coordinates: Vector2):
-	print(coordinates)
+	#print(coordinates)
 	self.position = coordinates
 	
 # Sets Player's Color (also sets other players colors too)

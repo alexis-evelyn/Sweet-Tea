@@ -1,5 +1,8 @@
 extends Node
 
+# Signals
+signal player_list_changed # Player's Spawned in World
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	world_handler.connect("server_started", self, "spawn_player_server") # Spawn Server's Player's Character on Emission of Signal
@@ -113,6 +116,8 @@ func add_player(pinfo, net_id, coordinates: Vector2):
 		print("Player ", net_id, " Current World: ", player_current_world)
 		get_players(player_current_world).add_child(new_actor) # Adds Player to Respective World Node
 
+		emit_signal("player_list_changed") # Notify Client Of List Change
+
 # Server and Client - Despawn Player From Local World
 remote func despawn_player(net_id):
 	# TODO: Fix Error Mentioned at: http://kehomsforge.com/tutorials/multi/gdMultiplayerSetup/part03/. The error does not break the game at all, it just spams the console.
@@ -140,6 +145,8 @@ remote func despawn_player(net_id):
 		player_node.free() # Set to free so the player node gets freed immediately for respawn (if changing world)
 	else:
 		printerr("Player Registrar Missing ", net_id, " Cannot Locate Player Node to Despawn!!!")
+		
+	emit_signal("player_list_changed") # Notify Client Of List Change
 		
 # Changing Worlds - Perform Cleanup and Load World
 remote func change_world(world_name: String, world_path: String):

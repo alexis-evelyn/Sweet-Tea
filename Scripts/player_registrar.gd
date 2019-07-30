@@ -2,7 +2,6 @@ extends Node
 
 # It's not necessary to add signal arguments here, but it helps when studying the code
 # Signals - Used to Connect to Other GDScripts
-signal player_list_changed # 
 signal player_removed(pinfo, id) # A Player Was Removed From The Player List
 
 # Currently Registered Players
@@ -41,8 +40,6 @@ remote func register_player(pinfo, net_id: int):
 	
 	if not pinfo.has("name"):
 		pinfo.name = "Unnamed Player"
-	
-	#emit_signal("player_list_changed") # Notify Clients That Client List Has Changed
 
 # Clients Notified To Remove Player From Player List
 remote func unregister_player(id: int):
@@ -50,8 +47,6 @@ remote func unregister_player(id: int):
 	
 	var pinfo = players[id] # Cache player info for removal process
 	players.erase(id) # Remove Player From Player List
-	
-	#emit_signal("player_list_changed") # Notify Clients Of List Change
 	
 # Cleanup Connected Player List
 func cleanup():
