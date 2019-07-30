@@ -68,24 +68,6 @@ master func spawn_player_server(pinfo):
 # For client only
 puppet func spawn_player(pinfo, net_id: int, coordinates: Vector2):
 	print("Spawning Player: " + str(net_id) + " At Coordinates: " + str(coordinates))
-	
-	if (get_tree().is_network_server() && net_id != 1):
-		# We Are The Server and The New Player is Not The Server
-		
-		for id in player_registrar.players:
-			# Spawn Existing Players for New Client - All clients' coordinates (including server's coordinates) get sent to new client (except for the new client)
-			if (id != net_id):
-				print("Existing: ", id, " For: ", net_id, " At Coordinates: ", coordinates)
-				rpc_unreliable_id(net_id, "spawn_player", player_registrar.players[int(id)], net_id, coordinates) # TODO: This line of code is at fault for the current bug
-				
-			# Spawn the new player within the currently iterated player as long it's not the server
-			# Because the server's list already contains the new player, that one will also get itself!
-			# New Player's Coordinates gets sent to all clients (including new player/client) except the server
-			if (id != 1):
-				print("New: ", id, " For: ", net_id)
-				# Same here, get from dictionary, keep separate
-				rpc_unreliable_id(id, "spawn_player", pinfo, net_id, coordinates)
-	
 	add_player(pinfo, net_id, coordinates)
 
 # Spawns Player in World (Client and Server)

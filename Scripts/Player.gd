@@ -26,29 +26,29 @@ func _ready():
 	player_current_world = get_node("../../../../../").name # Get Current World's Name (for this player node - used by server-side)
 	print("(Player) Current World: ", player_current_world)
 
-func _process(_delta):
 	# Checks to See if in Server/Client Mode (I may have a server always started, but refuse connections in single player. That is still up to debate).
 	if not get_tree().has_network_peer():
 		return -1 # Should Be Connected Here
 	
 	# Server corrects coordinates of client to keep in sync
 	if get_tree().is_network_server():
-		#rpc_unreliable("correct_coordinates", self.position)
+		var correct_coordinates_timer = Timer.new()
+		correct_coordinates_timer.name = "correct_coordinates_timer"
 		
-		# Because of this, coordinates are only barely off (when friction is in effect), but are corrected when player starts moving again.
-		# It is close enough that it shouldn't matter, so I am keeping the code this way until polishing stage.
-		if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))):
-			# Get All Players in This Player's World
-			players = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/Players/")
-			
-			# Loop Through All Players
-			for player in players.get_children():
-				if int(player.name) != 1:
-					rpc_unreliable_id(int(player.name), "correct_coordinates", self.position)
+		# Root of Player Node Will be Busy Setting up Children Right Now, so Defer Adding Another Child For Now
+		get_parent().call_deferred("add_child", correct_coordinates_timer) # Add Timer to Root of Player Node
 		
-		# This fixes the sync issue, but it won't play nice with clients not in same world.
-		# TODO: Detect motion and if moving, start correcting coordinates of player (I want to wait for motion, so the server is not constantly running a for loop and heating up the computer)
+		correct_coordinates_timer.connect("timeout", self, "correct_coordinates_server") # Function to Execute After Timer Runs Out
+		
+		# Every Quarter of A Second Seems to Produce the Most Seamless Experience without Causing the Server to Catch Fire
+		# This still needs to be tested in an environment with real latency. The Wait Time Should Be Configurable.
+		correct_coordinates_timer.set_wait_time(0.25) # Execute Every Quarter a Second
+		correct_coordinates_timer.start() # Start Timer 
 
+# Called before every rendered frame.
+func _process(_delta):
+	pass
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta):
 	# Checks to See if in Server/Client Mode (I may have a server always started, but refuse connections in single player. That is still up to debate).
@@ -104,10 +104,24 @@ func send_to_clients(mot: Vector2):
 puppet func move_player(mot: Vector2):
 	move_and_slide(mot) # This works because this move_and_slide is tied to this node (even on the other clients).
 	
+# Called by Timer to Correct Client's Coordinates
+func correct_coordinates_server():
+	#rpc_unreliable("correct_coordinates", self.position)
+		
+	#if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))): # Can be used to only send rpc if client is moving (will be slightly off due to latency)
+	
+	# Get All Players in This Player's World
+	players = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/Players/")
+	
+	# Loop Through All Players
+	for player in players.get_children():
+		if int(player.name) != 1:
+			rpc_unreliable_id(int(player.name), "correct_coordinates", self.position)
+	
 # Could also be used for teleporting (designed to correct coordinates from lag, etc...)
 # Server is also guilty of getting out of sync with client, but server is arbiter and executor, so it overrides other clients' positions
 remotesync func correct_coordinates(coordinates: Vector2):
-	#print(coordinates)
+	print(coordinates)
 	self.position = coordinates
 	
 # Sets Player's Color (also sets other players colors too)
