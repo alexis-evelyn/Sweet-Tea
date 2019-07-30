@@ -114,9 +114,12 @@ func add_player(pinfo, net_id, coordinates: Vector2):
 			world_grid.add_child(players_node)
 		
 		print("Player ", net_id, " Current World: ", player_current_world)
-		get_players(player_current_world).add_child(new_actor) # Adds Player to Respective World Node
-
-		emit_signal("player_list_changed") # Notify Client Of List Change
+		
+		# Make sure client does not try to spawn player twice (to cause server crash)
+		if not get_players(player_current_world).has_node(new_actor.name):
+			get_players(player_current_world).add_child(new_actor) # Adds Player to Respective World Node
+	
+			emit_signal("player_list_changed") # Notify Client Of List Change
 
 # Server and Client - Despawn Player From Local World
 remote func despawn_player(net_id):
@@ -143,10 +146,9 @@ remote func despawn_player(net_id):
 			
 		# Despawn Player from World
 		player_node.free() # Set to free so the player node gets freed immediately for respawn (if changing world) - Now that the player nodes are in different sections of the tree, do I really need to immediately disconnect the player?
+		emit_signal("player_list_changed") # Notify Client Of List Change
 	else:
 		printerr("Player Registrar Missing ", net_id, " Cannot Locate Player Node to Despawn!!!")
-		
-	emit_signal("player_list_changed") # Notify Client Of List Change
 		
 # Changing Worlds - Perform Cleanup and Load World
 remote func change_world(world_name: String, world_path: String):

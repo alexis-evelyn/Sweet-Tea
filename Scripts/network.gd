@@ -3,6 +3,7 @@ extends Node
 # Signals
 signal connection_success # Joining Server Was Successful
 signal server_created # Server Was Successfully Created
+signal cleanup_worlds # Cleanup World Handler
 
 # TODO (IMPORTANT): Figure out how to encrypt ENet!!! How Does Minecraft Do It?
 # This is important to prevent MITM attacks which could result in a server owner banning a player
@@ -115,6 +116,8 @@ func close_connection() -> void:
 		player_registrar.cleanup()
 		gamestate.net_id = 1 # Reset Network ID To 1 (default value)
 		get_tree().set_network_peer(null) # Disable Network Peer
+	
+	emit_signal("cleanup_worlds")
 	
 	#print("Attempt to Change Scene Tree")
 	# TODO: Maybe Pull Up A Disconnected Message GUI (which will then go to NetworkMenu)

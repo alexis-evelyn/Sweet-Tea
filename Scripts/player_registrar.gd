@@ -18,6 +18,10 @@ remote func register_player(pinfo, net_id: int):
 		if get_tree().get_rpc_sender_id() != 1:
 			net_id = get_tree().get_rpc_sender_id()
 	
+	# Because of Server Adding To Registry Data - I Cannot Allow Client to Update Data Mid-Session
+	if players.has(int(net_id)):
+		return -1
+	
 	print("Registering player ", pinfo.name, " (", net_id, ") to internal player table")
 	players[int(net_id)] = pinfo # Add Newly Joined Client to Dictionary of Clients
 	
@@ -43,10 +47,13 @@ remote func register_player(pinfo, net_id: int):
 
 # Clients Notified To Remove Player From Player List
 remote func unregister_player(id: int):
-	print("Removing player ", players[id].name, " from internal table")
-	
-	var pinfo = players[id] # Cache player info for removal process
-	players.erase(id) # Remove Player From Player List
+	# The Disconnect Function Already Takes Care of Validating This Data (for the server)
+	# Still Validating For Client to Prevent Crash
+	if players.has(id):
+		print("Removing player ", players[id].name, " from internal table")
+		
+		var pinfo = players[id] # Cache player info for removal process
+		players.erase(id) # Remove Player From Player List
 	
 # Cleanup Connected Player List
 func cleanup():

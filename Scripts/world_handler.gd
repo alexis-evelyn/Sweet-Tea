@@ -1,17 +1,22 @@
 extends Node
 
 signal server_started(gamestate_player_info) # Server Started Up and World is Loaded - Spawns Server Player
+signal cleanup_worlds
 
 # Chunk Loading (like in Minecraft) is perfectly possible with Godot - https://www.reddit.com/r/godot/comments/8shad4/how_do_large_open_worlds_work_in_godot/
 # I ultimately plan on having multiple worlds which the players can join on the server. As for singleplayer, it is going to be a server that refuses connections unless the player opens it up to other players.
 # I also want to have a "home" that players spawn at before they join the starting_world (like how Starbound has a spaceship. but I want my home to be an actual world that will be the player's home world. The player can then use portals to join the server world.
-var starting_world = load("res://Worlds/World.tscn") # Basically Server Spawn
+var starting_world = "res://Worlds/World.tscn" # Basically Server Spawn
 var starting_world_name = "Not Set"
+
+# Server Gets Currently Loaded Worlds
+var loaded_worlds = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	network.connect("server_created", self, "_load_world_server")
 	network.connect("connection_success", self, "_load_world_client")
+	network.connect("cleanup_worlds", self, "cleanup")
 
 # Server World Loading Function
 func _load_world_server():
@@ -32,11 +37,16 @@ func _load_world_server():
 	var worlds = Node.new()
 	worlds.name = "Worlds"
 	
-	var spawn = starting_world.instance()
+	var spawn = load(starting_world).instance()
+	
+	# Add Spawn World to Loaded World's Dictionary
 	starting_world_name = spawn.name
+	loaded_worlds[starting_world] = starting_world_name
+	
 	worlds.add_child(spawn)
 	get_tree().get_root().add_child(worlds)
 	
+	# Unload Current Scene (either Network Menu or Single Player Menu)
 	get_tree().get_current_scene().queue_free()
 	
 	# Register Server's Player in Player List
@@ -59,7 +69,7 @@ func _load_world_client():
 	var worlds = Node.new()
 	worlds.name = "Worlds"
 	
-	var spawn = starting_world.instance()
+	var spawn = load(starting_world).instance()
 	worlds.add_child(spawn)
 	get_tree().get_root().add_child(worlds)
 	
@@ -69,11 +79,19 @@ func _load_world_client():
 func load_world(net_id: int, location: String):
 	print("Change World Loading")
 	
-	# NOTE TO SELF!!!!!! Player Chat Still needs to be fixed for world changing!!!
-	# If a new player joins the spawn world while the client is not in spawn, playerlist is updated. It shouldn't be.
-	# If leaving a world, clients on left world still have client in playerlist. player_list_changed
-	
 	# TODO: Check to make sure world isn't already loaded
+	
+	# Checks to Make sure World isn't already loaded
+	if loaded_worlds.has(location):
+		var world = get_tree().get_root().get_node("Worlds").get_node(loaded_worlds[location])
+		var player = world.get_node("Viewport/WorldGrid/Players").has_node(str(gamestate.net_id))
+		
+		if (net_id == gamestate.net_id) or (player):
+			world.visible = true
+		else:
+			world.visible = false
+			
+		return world.name
 	
 	# NOTE: I forgot groups existed (could of added all worlds to group). Try to use groups when handling projectiles and mobs.
 	var world_file = load(location) # Load World From File Location
@@ -94,4 +112,11 @@ func load_world(net_id: int, location: String):
 	
 	worlds.add_child(world) # Add Loaded World to Worlds node
 	
+	# Add Loaded World to Dictionary of Loaded Worlds
+	loaded_worlds[location] = world.name
+	
 	return world.name # Return World Name to Help Track Client Location
+	
+# Cleanup World Handler
+func cleanup():
+	loaded_worlds.clear()
