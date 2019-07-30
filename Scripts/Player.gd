@@ -42,7 +42,7 @@ func _ready():
 		
 		# Every Quarter of A Second Seems to Produce the Most Seamless Experience without Causing the Server to Catch Fire
 		# This still needs to be tested in an environment with real latency. The Wait Time Should Be Configurable.
-		correct_coordinates_timer.set_wait_time(0.25) # Execute Every Quarter a Second
+		correct_coordinates_timer.set_wait_time(0.05) # Execute Every Fifth of a Second (almost completely smooth and keeps laptop cool with just one client)
 		correct_coordinates_timer.start() # Start Timer 
 
 # Called before every rendered frame.
@@ -106,6 +106,12 @@ func send_to_clients(mot: Vector2):
 
 # puppet (formerly slave) sets for all devices except master (the calling client)
 puppet func move_player(mot: Vector2):
+	# https://github.com/godotengine/godot/blob/master/servers/physics_2d/physics_2d_server_sw.cpp#L1071
+	# Condition ' body->get_space()->is_locked() ' is true. returned: false
+	# This error is heavily dependent on how smoothly the client can move (the faster the timer ends on correcting coordinates, the less of this error that will show up when a player decides to change to the opposite direction all of a sudden).
+	# I think this error is a movement check (making sure the KinematicBody2d is not stuck). Hence, why it triggers on move_and_slide(...). It fails the space locked test in body_test_ray_separation of Godot's physics engine code.
+	# Adjust timer to your needs. The faster the timer, the smoother the player movement on client side. The slower the timer, the less processing power the server needs to correct coordinates. Timer will cause jerky movement when lagging.
+	
 	move_and_slide(mot) # This works because this move_and_slide is tied to this node (even on the other clients).
 	
 # Called by Timer to Correct Client's Coordinates
@@ -126,7 +132,8 @@ func correct_coordinates_server():
 # Server is also guilty of getting out of sync with client, but server is arbiter and executor, so it overrides other clients' positions
 remotesync func correct_coordinates(coordinates: Vector2):
 	#print(coordinates)
-	self.position = coordinates
+	#self.position = coordinates
+	pass
 	
 # Sets Player's Color (also sets other players colors too)
 func set_dominant_color(color):
