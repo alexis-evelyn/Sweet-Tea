@@ -39,14 +39,9 @@ func process_command(net_id, message):
 
 	# The server is not allowed to RPC itself (neither is the client, but only the server could run this code (providing the client is not modified))
 	if net_id != 1:
-		rpc_unreliable_id(net_id,"chat_message_client", response)
+		get_parent().rpc_unreliable_id(net_id, "chat_message_client", response)
 	else:
-		chat_message_client(response) # This just calls the chat_message_client directly as the server wants to message itself
-
-# Apparently if I try calling a function not in the same file, I get an error that I am not the network master.
-# Duplicating the function and redirecting it to the proper place fixes that issue.
-sync func chat_message_client(message):
-	get_parent().chat_message_client(message)
+		get_parent().chat_message_client(response) # This just calls the chat_message_client directly as the server wants to message itself
 	
 # Check What Command and Arguments
 func check_command(net_id, message):
@@ -142,7 +137,7 @@ func change_player_world(net_id, message):
 	# TODO: Replace World Path with World Name (When the client can download worlds from server, the client will want to request the world by name
 	if net_id != 1:
 		print("NetID Change World: ", net_id)
-		rpc_unreliable_id(net_id, "change_world", world_name, world_path)
+		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name, world_path)
 	else:
 		print("Server Change World: ", net_id)
 		spawn_handler.change_world(world_name, world_path)
@@ -156,7 +151,3 @@ func shutdown_server(net_id, message):
 	var permission_level = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
 	return "Shutdown Command Not Implemented - Permission Needed: " + str(permission_level)
-	
-# RPC Structure Requires RPC Functions be in Same File (how can I get around this? I want to avoid dirtying up my code)
-remote func change_world(world_name: String, world_path: String):
-	spawn_handler.change_world(world_name, world_path)

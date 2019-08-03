@@ -145,7 +145,7 @@ func _on_player_disconnected(id) -> void:
 		if (get_tree().is_network_server()):
 			spawn_handler.despawn_player(id)
 			player_registrar.unregister_player(id) # Remove Player From Server List
-			rpc_unreliable("unregister_player", id) # Notify Clients to do The Same
+			player_registrar.rpc_unreliable("unregister_player", id) # Notify Clients to do The Same
 
 # Successfully Joined Server (Client Side Only)
 func _on_connected_to_server() -> void:
@@ -162,25 +162,17 @@ func _on_connected_to_server() -> void:
 	player_registrar.register_player(gamestate.player_info, 0) # Update Own Dictionary With Ourself
 	
 	# Server will send current_world to client through the register_player function. The above line of code makes sure to already have a copy of player info registered before calling the server's register_player function
-	rpc_unreliable_id(1, "register_player", gamestate.player_info, gamestate.net_id) # Ask Server To Update Player Dictionary - Server ID is Always 1
+	player_registrar.rpc_unreliable_id(1, "register_player", gamestate.player_info, gamestate.net_id) # Ask Server To Update Player Dictionary - Server ID is Always 1
 	
 	#print("Connected Current World: ", player_registrar.has_current_world())
 	
 	# Callbacks would be nice - waiting on current world to be set. see player_registrar.gd
-	# rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
+	# spawn_handler.rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
 
 # Failed To Connect To Server
 func _on_connection_failed() -> void:
 	print("Joining Server Failed!!!")
 	close_connection()
-	
-# How can I remove this and just have the rpc call go directly to player_registrar?
-remote func register_player(pinfo, net_id: int) -> void:
-	player_registrar.register_player(pinfo, net_id)
-	
-# How can I remove this and just have the rpc call go directly to player_registrar?
-remote func unregister_player(net_id: int) -> void:
-	player_registrar.unregister_player(net_id)
 	
 # Start Timer to Send Pings to Server
 func start_ping(message: = "Ping") -> void:

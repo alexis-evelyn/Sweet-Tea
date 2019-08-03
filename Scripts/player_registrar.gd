@@ -67,12 +67,7 @@ puppet func set_current_world(current_world: String):
 	#print("Set Connected Current World: ", players[int(gamestate.net_id)].current_world)
 	
 	# Now that the current world has been set, ask server to spawn player
-	rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
-	
-# How can I remove this and just have the rpc call go directly to spawn_handler?
-master func spawn_player_server(pinfo) -> void:
-	print("Client Requested Spawn")
-	spawn_handler.spawn_player_server(pinfo)	
+	spawn_handler.rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
 
 # Cleanup Connected Player List
 func cleanup():
