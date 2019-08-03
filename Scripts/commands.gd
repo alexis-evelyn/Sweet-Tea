@@ -136,10 +136,10 @@ func change_player_world(net_id, message):
 	
 	# TODO: Replace World Path with World Name (When the client can download worlds from server, the client will want to request the world by name
 	if net_id != 1:
-		print("NetID Change World: ", net_id)
+		#print("NetID Change World: ", net_id)
 		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name, world_path)
 	else:
-		print("Server Change World: ", net_id)
+		#print("Server Change World: ", net_id)
 		spawn_handler.change_world(world_name, world_path)
 		
 	return "Player " + str(net_id) + " Changing World to: " + str(world_name)

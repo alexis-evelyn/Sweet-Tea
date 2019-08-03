@@ -31,7 +31,7 @@ func _ready():
 
 # Process Chat Messages from Server
 sync func chat_message_client(message):
-	print("Client Message: ", message)
+	#print("Client Message: ", message)
 	
 	# Only Update ChatBox if Not Headless
 	if(OS.has_feature("Server") == false):
@@ -117,7 +117,7 @@ func _on_chatMessages_meta_clicked(meta):
 					#print("JSON is Array")
 					pass # I may add a handler for this later, but to be honest, a dictionary is much more useful in this context
 				TYPE_OBJECT:
-					print("JSON is Object and it Shouldn't Be")
+					printerr("JSON is Object and it Shouldn't Be")
 				
 # Handles Client Clicking on URL
 func handle_url_click(dictionary):

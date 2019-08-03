@@ -44,7 +44,7 @@ func save_player(slot: int): # TODO: Rename to save_player?
 	var save_path_backup = save_directory.plus_file(backups_dir.plus_file(backups_save_file.replace("%date%", str(OS.get_unix_time())))) # Save File Backup Path - OS.get_unix_time() is Unix Time Stamp
 	var backup_path = save_directory.plus_file(backups_dir) # Backup Directory Path
 
-	print("Game Version: " + game_version)
+	#print("Game Version: " + game_version)
 	var players_data = {} # Data To Save
 	
 	var file_op = Directory.new() # Allows Performing Operations on Files (like moving or deleting a file)
@@ -57,7 +57,7 @@ func save_player(slot: int): # TODO: Rename to save_player?
 	
 	# Checks to See If Save File Exists
 	if save_data.file_exists(save_path):
-		print("Save File Exists!!!")
+		#print("Save File Exists!!!")
 		
 		save_data.open(save_path, File.READ_WRITE) # Open Save File For Reading/Writing
 		players_data = JSON.parse(save_data.get_as_text()) # Load existing Save File as JSON
@@ -67,7 +67,7 @@ func save_player(slot: int): # TODO: Rename to save_player?
 	
 		# Checks to Make Sure JSON was Parsed
 		if players_data.error == OK and typeof(players_data.result) == TYPE_DICTIONARY:
-			print("Save File Read and Imported As Dictionary!!!")
+			#print("Save File Read and Imported As Dictionary!!!")
 			players_data = players_data.result # Grabs Result From JSON (this is done now so I can grab the error code from earlier)
 			
 			# Should I merge this and the code from new save into a single function?
@@ -76,10 +76,10 @@ func save_player(slot: int): # TODO: Rename to save_player?
 			# Note: Key has to be a string, otherwise Godot bugs out and adds duplicate keys to Dictionary
 			players_data[str(slot)] = player_info # Replaces Key In Dictionary With Updated Player_Info
 			
-			print(to_json(players_data)) # Print Save Data to stdout (Debug)
+			#print(to_json(players_data)) # Print Save Data to stdout (Debug)
 			save_data.store_string(to_json(players_data))
 	else:
-		print("Save File Does Not Exist!!! Creating!!!")
+		#print("Save File Does Not Exist!!! Creating!!!")
 		save_data.open(save_path, File.WRITE) # Open Save File For Writing
 		
 		# Should I merge this and the code from existing save into a single function?
@@ -88,21 +88,21 @@ func save_player(slot: int): # TODO: Rename to save_player?
 		# Note: Key has to be a string, otherwise Godot bugs out and adds duplicate keys to Dictionary
 		players_data[str(slot)] = player_info
 		
-		print(to_json(players_data)) # Print Save Data to stdout (Debug)
+		#print(to_json(players_data)) # Print Save Data to stdout (Debug)
 		save_data.store_string(to_json(players_data))
 		
 	save_data.close()
 
 # Load Game Data
 func load_player(slot: int): # TODO: Rename to load_player?
-	print("Game Version: " + game_version)
+	#print("Game Version: " + game_version)
 	#print("Save Data Location: " + OS.get_user_data_dir())
 	#OS.shell_open(str("file://", OS.get_user_data_dir())) # Use this to open up user save data location (say to backup saves or downloaded resources/mods)
 	
 	var save_data = File.new()
 	
 	if not save_data.file_exists(save_directory.plus_file(save_file)): # Check If Save File Exists
-		print("Save File Does Not Exist!!! New Player?")
+		#print("Save File Does Not Exist!!! New Player?")
 		return -1 # Returns -1 to signal that loading save file failed (for reasons of non-existence)
 	
 	save_data.open(save_directory.plus_file(save_file), File.READ)
@@ -152,8 +152,8 @@ func check_if_slot_exists(slot: int):
 	if json.error == OK:
 		if typeof(json.result) == TYPE_DICTIONARY:
 			if json.result.has(str(slot)):
-				print("Slot Exists: " + str(slot))
+				#print("Slot Exists: " + str(slot))
 				return true
 			else:
-				print("Slot Does Not Exist: " + str(slot))
+				#print("Slot Does Not Exist: " + str(slot))
 				return false

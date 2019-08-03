@@ -29,7 +29,7 @@ remote func register_player(pinfo, net_id: int, new_world := false):
 	if players.has(int(net_id)) and get_tree().get_rpc_sender_id() != 1:
 		return -1
 	
-	print("Registering player ", pinfo.name, " (", net_id, ") to internal player table")
+	#print("Registering player ", pinfo.name, " (", net_id, ") to internal player table")
 	players[int(net_id)] = pinfo # Add Newly Joined Client to Dictionary of Clients
 	
 	if get_tree().is_network_server():
@@ -66,7 +66,7 @@ remote func unregister_player(id: int):
 	# The Disconnect Function Already Takes Care of Validating This Data (for the server)
 	# Still Validating For Client to Prevent Crash
 	if players.has(id):
-		print("Removing player ", players[id].name, " from internal table")
+		#print("Removing player ", players[id].name, " from internal table")
 		
 		var pinfo = players[id] # Cache player info for removal process
 		players.erase(id) # Remove Player From Player List
@@ -79,10 +79,11 @@ puppet func set_current_world(current_world: String):
 	# Now that the current world has been set, ask server to spawn player
 	spawn_handler.rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
 
-# Send client a copy of players in new world
+# Send client a copy of players in new world - net_id is who I am sending the info to
 func update_players(net_id: int, id: int):
 	print("Update Players - Player: ", id, " World: ", players[int(id)].current_world)
-	rpc_unreliable_id(net_id, "register_player", players[int(id)], id)
+	if net_id != 1:
+		rpc_unreliable_id(net_id, "register_player", players[int(id)], id)
 
 # Cleanup Connected Player List
 func cleanup():

@@ -87,6 +87,6 @@ func set_game_data():
 func _on_btColor_popup_closed():
 	set_player_info()
 	
-	print("Character Color: " + str(gamestate.player_info.char_color))
+	#print("Character Color: " + str(gamestate.player_info.char_color))
 	
 	gamestate.save_player(0)

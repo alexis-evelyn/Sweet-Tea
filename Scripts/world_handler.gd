@@ -20,7 +20,7 @@ func _ready():
 
 # Server World Loading Function
 func _load_world_server():
-	print("Server Loading World")
+	#print("Server Loading World")
 	# Load World From Drive
 	# For Simplicity, We Are Starting Off Non Infinite So The Whole World Will Be Loaded At Once
 	# QUESTION: Do I want to Use Scenes For World Data Or Just To Populate A Scene From A Save File?

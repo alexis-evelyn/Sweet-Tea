@@ -15,10 +15,10 @@ onready var player_registrar = preload("res://Scripts/player_registrar.gd")
 func check_if_banned(id):
 	var net = get_tree().get_network_peer() # Grab the existing Network Peer Node
 	
-	print("Ban Check - Player ID: ", str(id), " Player IP: ", str(net.get_peer_address(id)))
+	#print("Ban Check - Player ID: ", str(id), " Player IP: ", str(net.get_peer_address(id)))
 	
 	if banned_players.has(id) or banned_ips.has(net.get_peer_address(id)):
-		print("Player Was Previously Banned")
+		#print("Player Was Previously Banned")
 		
 		# Function is Missing - rpc_unreliable_id(id, "player_kicked", "You were banned!!!") # Notify Player They Have Been Kicked
 		net.disconnect_peer(id, false) # Disconnect the peer immediately (true means no flushing messages)

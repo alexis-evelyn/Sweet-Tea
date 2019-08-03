@@ -52,7 +52,7 @@ func _ready() -> void:
 func create_server() -> void:
 	# TODO: Godot supports UPNP hole punching, so this could be useful for non-technical players
 	
-	print("Attempting to Create Server on Port ", server_info.used_port)
+	#print("Attempting to Create Server on Port ", server_info.used_port)
 	var net = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
 	
 	# https://docs.godotengine.org/en/3.1/classes/class_networkedmultiplayerenet.html
@@ -60,7 +60,7 @@ func create_server() -> void:
 	
 	# Could Not Create Server (probably port already in use or Failed Permissions)
 	if (net.create_server(server_info.used_port, server_info.max_players) != OK):
-		print("Failed to create server")
+		#print("Failed to create server")
 		return
 	
 	get_tree().set_network_peer(net) # Assign NetworkedMultiplayerENet as Handler of Network - https://docs.godotengine.org/en/3.1/classes/class_multiplayerapi.html?highlight=set_network_peer#class-multiplayerapi-property-network-peer
@@ -74,13 +74,13 @@ func create_server() -> void:
 
 # Attempt to Join Server (Not Connected Yet)
 func join_server(ip, port) -> void:
-	print("Attempting To Join Server")
+	#print("Attempting To Join Server")
 	
 	var net = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
 	
 	# Attempt to Create Client (does not guarantee that joining is successful)
 	if (net.create_client(ip, port) != OK):
-		print("Cannot Create Client!!!")
+		#print("Cannot Create Client!!!")
 		return
 	
 	# Assign NetworkedMultiplayerENet as Handler of Network - https://docs.godotengine.org/en/3.1/classes/class_multiplayerapi.html?highlight=set_network_peer#class-multiplayerapi-property-network-peer
@@ -93,9 +93,13 @@ func join_server(ip, port) -> void:
 func close_connection() -> void:
 	#print("Close Connection")
 	
-	# If Client - Cleanup Ping Timer Thread (server doesn't have one). Timer itself is part of Player Node, so it gets cleaned up on player disconnect.
+	# If Client - Cleanup Ping Timer Thread (server doesn't have one).
 	if not get_tree().is_network_server():
 		keep_alive.wait_to_finish()
+		
+		# If has ping_timer, remove it
+		if get_tree().get_root().has_node("ping_timer"):
+			get_tree().get_root().get_node("ping_timer").queue_free()
 	
 	# Clears PlayerUI on Disconnect
 	playerUI.cleanup()
@@ -139,7 +143,7 @@ func _on_player_connected(id) -> void:
 # Server Notified When A Client Disconnects
 func _on_player_disconnected(id) -> void:
 	if player_registrar.has(id):
-		print("Player ", player_registrar.name(id), " Disconnected from Server")
+		#print("Player ", player_registrar.name(id), " Disconnected from Server")
 	
 		# Update the player tables
 		if (get_tree().is_network_server()):
@@ -171,7 +175,7 @@ func _on_connected_to_server() -> void:
 
 # Failed To Connect To Server
 func _on_connection_failed() -> void:
-	print("Joining Server Failed!!!")
+	#print("Joining Server Failed!!!")
 	close_connection()
 	
 # Start Timer to Send Pings to Server

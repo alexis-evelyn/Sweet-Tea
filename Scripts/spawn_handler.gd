@@ -32,7 +32,7 @@ master func spawn_player_server(pinfo):
 	else:
 		net_id = get_tree().get_rpc_sender_id()
 		
-	if (get_tree().is_network_server() && net_id != 1):
+	if (get_tree().is_network_server()):
 		# We Are The Server and The New Player is Not The Server
 		
 		# TODO: Validate That Player ID is Not Spoofed
@@ -50,11 +50,7 @@ master func spawn_player_server(pinfo):
 				var player = get_players(str(get_world(id))).get_node(str(id) + "/KinematicBody2D") # Grab Existing Player's Object (Server Only)
 				print("Existing: ", id, " For: ", net_id, " At Coordinates: ", player.position, " World: ", get_world(id)) # player.position grabs existing player's coordinates
 				
-				if !get_players(str(get_world(id))).get_node(str(id) + "/KinematicBody2D"): # Checks Player Node Exists (incase of malformed client packets)
-					print("Node Does Not Exist!!! Client is: ", str(id))
-					break # Stops For Loop
-				
-				player_registrar.update_players(int(net_id), int(id)) # Updates Client's Player Registry
+				player_registrar.update_players(int(net_id), int(id)) # Updates Client's Player Registry to let it know about clients already in the world
 				rpc_unreliable_id(net_id, "spawn_player", player_registrar.players[int(id)], id, player.position) # Send Existing Clients' Info to New Client
 				
 			# Spawn the new player within the currently iterated player as long it's not the server
@@ -62,6 +58,7 @@ master func spawn_player_server(pinfo):
 			# New Player's Coordinates gets sent to all clients (within the same world) (including new player/client) except the server
 			if (id != 1) and (get_world(id) == get_world(net_id)):
 				print("New: ", id, " For: ", net_id, " At Coordinates: ", coordinates, " World: ", get_world(id))
+				player_registrar.update_players(int(id), int(net_id)) # Updates Client's Player Registry to let it know about new client joining world
 				rpc_unreliable_id(id, "spawn_player", pinfo, net_id, coordinates) # Send New Client's Info to Existing Clients
 				
 	# TODO: Check to see if this is what causes problems with the Headless Server Mode
@@ -85,6 +82,7 @@ func add_player(pinfo, net_id, coordinates: Vector2):
 	
 	# TODO: Make Sure Alpha is 255 (fully opaque). We don't want people cheating...
 	# Setup Player Customization
+	# Player Customizations (by json) will be performed in another function that will be called here!!!
 	
 	var char_color = "ffffff"
 	if pinfo.has("char_color"):
@@ -92,7 +90,7 @@ func add_player(pinfo, net_id, coordinates: Vector2):
 	
 	new_actor.get_node("KinematicBody2D").set_dominant_color(char_color) # The player script is attached to KinematicBody2D, hence retrieving its node
 	
-	#print("Actor: ", net_id)
+	print("Actor: ", net_id)
 	new_actor.get_node("KinematicBody2D").position = coordinates # Setup Player's Position
 	
 	new_actor.set_name(str(net_id)) # Set Player's ID (useful for referencing the player object later)
@@ -116,17 +114,19 @@ func add_player(pinfo, net_id, coordinates: Vector2):
 			
 			world_grid.add_child(players_node)
 		
-		print("Player ", net_id, " Current World: ", player_current_world)
+		#print("Player ", net_id, " Current World: ", player_current_world)
 		
 		# Make sure client does not try to spawn player twice (to cause server crash)
 		if not get_players(player_current_world).has_node(new_actor.name):
 			get_players(player_current_world).add_child(new_actor) # Adds Player to Respective World Node
 	
 			emit_signal("player_list_changed") # Notify Client Of List Change
+		else:
+			print("Cannot Spawn Twice: ", net_id)
 	else:
 		# Player was not registered, so there is going to be an invisible client
 		# That is not good, so add player to registry and call ourself again
-		print("Player Missing From Registry!!! Trying to Add to Registry!!!")
+		#print("Player Missing From Registry!!! Trying to Add to Registry!!!")
 		player_registrar.register_player(pinfo, net_id, true) # Currently will not work
 		add_player(pinfo, net_id, coordinates)
 
@@ -147,7 +147,13 @@ remote func despawn_player(net_id):
 	# Locate Player To Despawn
 	if player_registrar.has(net_id):
 		var player_current_world = get_world(net_id)
-		var player_node = get_players(player_current_world).get_node(str(net_id)) # Grab Existing Player's Node (Server and Client)
+		var players = get_players(player_current_world)
+		
+		if (players == null):
+			#print("World Already Cleaned Up!!!")
+			return
+		
+		var player_node = players.get_node(str(net_id)) # Grab Existing Player's Node (Server and Client)
 	
 		if (!player_node):
 			printerr("Failed To Find Player To Despawn")
@@ -161,7 +167,7 @@ remote func despawn_player(net_id):
 		
 # Changing Worlds - Perform Cleanup and Load World
 remote func change_world(world_name: String, world_path: String):
-	print("Player ", gamestate.net_id, " Change World: ", get_world(gamestate.net_id))
+	#print("Player ", gamestate.net_id, " Change World: ", get_world(gamestate.net_id))
 	get_tree().get_root().get_node("PlayerUI/panelPlayerList").cleanup() # Cleanup Player List
 
 	# Download World using network.gd and Load it using world_handler.gd
@@ -172,8 +178,26 @@ remote func change_world(world_name: String, world_path: String):
 	if not get_tree().is_network_server():
 		set_world(world_name)
 		world_handler.load_world(gamestate.net_id, world_path)
-	
-	rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Request Server Spawn
+		
+		rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Request Server Spawn
+	elif get_tree().is_network_server():
+		# There's a bug specific to the server player changing to a world with existing clients
+		# The existing clients won't see the server player (this does not affect a client with existing clients)
+		# To fix the issue and be more efficient with cpu cycles, I am updating the player registry on the client with the server here
+		
+		var world = get_world(gamestate.net_id) # net_id should be 1 since this is the server
+		
+		# Check to make sure Players node exists and if so, loop through players to update
+		if has_players(world):
+			var players = get_players(world) # Get Players Node from World
+			
+			for player in players.get_children():
+				print("Updating: ", player.name, " With Server Info!!!")
+				
+				# First argument is who I am sending the update to, second is who's info I am sending
+				player_registrar.update_players(int(player.name), int(gamestate.net_id)) # Updates Client's Player Registry to let it know about server joining world
+		
+		spawn_player_server(gamestate.player_info)
 	
 # Sets Player's Current World Name - Added To Make Code More Legible
 func set_world(world_name: String) -> void:
@@ -186,6 +210,10 @@ func get_world(net_id: int) -> String:
 # Get World Grid Node - Added To Make Code More Legible
 func get_world_grid(world: String) -> Node:
 	return get_tree().get_root().get_node("Worlds/" + world + "/Viewport/WorldGrid/")
+	
+# Check for Players Node - Added To Make Code More Legible
+func has_players(world: String) -> bool:
+	return get_tree().get_root().get_node("Worlds/" + world + "/Viewport/WorldGrid/").has_node("Players")
 	
 # Get Players Node - Added To Make Code More Legible
 func get_players(world: String) -> Node:

@@ -15,10 +15,10 @@ func _ready():
 
 # Check Which Player Slots Already Exist In Save and Update Player Selection Buttons
 func check_existing_slots():
-	print("Checking For Existing Slots")
+	#print("Checking For Existing Slots")
 	
 	for slot in $PlayerSelectionWindow/PlayerSlots.get_child_count():
-		print("Checking Slot: " + str(slot))
+		#print("Checking Slot: " + str(slot))
 		
 		var slot_exists = gamestate.check_if_slot_exists(int(slot))
 		
@@ -33,6 +33,6 @@ func _character_slot_pressed(button):
 
 # Debug Message To See If Popup Should Show
 func _on_PlayerSelectionWindow_about_to_show():
-	print("Player Selection About to Show!!!")
+	#print("Player Selection About to Show!!!")
 	
 	check_existing_slots()

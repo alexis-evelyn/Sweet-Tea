@@ -24,14 +24,14 @@ func _ready():
 	Engine.set_target_fps(30) # Rendering FPS - Default Unlimited
 	#ProjectSettings.save()
 	
-	print("Number of Cores: ", OS.get_processor_count())
+	#print("Number of Cores: ", OS.get_processor_count())
 	
 	# https://godotengine.org/qa/11251/how-to-export-the-project-for-server?show=11253#a11253
 	# Checks if Running on Headless Server (Currently Linux Only? There is a commit where someone added support for OSX, but no official builds)
 	# I compiled Godot's Server Executable and it cannot run the server without the original source code. This could cause problems for execution speed when the binaries are not precompiled.
 	# Also, OS.get_unique_id(), does not work in my Server Executable.
 	# I am going to try to make the game headless compatible without using a separate Godot binary.
-	print("Server Mode: ", OS.has_feature("Server"))
+	#print("Server Mode: ", OS.has_feature("Server"))
 	
 	# It appears my compiled version of Godot's Server cannot use network. It doesn't even show up in Wireshark (and I checked the firewall)
 	if(OS.has_feature("Server") == true):

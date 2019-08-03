@@ -24,7 +24,7 @@ var players
 func _ready():
 	player_name = get_node("..").name
 	player_current_world = get_node("../../../../../").name # Get Current World's Name (for this player node - used by server-side)
-	print("(Player) Current World: ", player_current_world)
+	#print("(Player) Current World: ", player_current_world)
 
 	# Checks to See if in Server/Client Mode (I may have a server always started, but refuse connections in single player. That is still up to debate).
 	if not get_tree().has_network_peer():
