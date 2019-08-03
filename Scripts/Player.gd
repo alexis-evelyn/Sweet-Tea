@@ -56,20 +56,20 @@ func _physics_process(_delta):
 		return -1 # Should Be Connected Here
 	
 	if is_network_master():
-		if Input.is_key_pressed(KEY_W) and !panelChat.visible:
+		if Input.is_action_pressed("move_up") and !panelChat.visible:
 			#print("Up")
 			motion.y = max(motion.y - ACCELERATION, -MAX_SPEED)
-		elif Input.is_key_pressed(KEY_S) and !panelChat.visible:
+		elif Input.is_action_pressed("move_down") and !panelChat.visible:
 			#print("Down")
 			motion.y = min(motion.y + ACCELERATION, MAX_SPEED)
 		else:
 			friction = true;
 			#$Sprite.play("Idle");
 			
-		if Input.is_key_pressed(KEY_A) and !panelChat.visible:
+		if Input.is_action_pressed("move_left") and !panelChat.visible:
 			#print("Left")
 			motion.x = max(motion.x - ACCELERATION, -MAX_SPEED)
-		elif Input.is_key_pressed(KEY_D) and !panelChat.visible:
+		elif Input.is_action_pressed("move_right") and !panelChat.visible:
 			#print("Right")
 			motion.x = min(motion.x + ACCELERATION, MAX_SPEED)
 		else:

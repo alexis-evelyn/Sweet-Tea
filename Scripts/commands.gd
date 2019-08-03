@@ -63,7 +63,10 @@ func check_command(net_id, message):
 		"changeworld":
 			return change_player_world(net_id, message)
 		_: # Default Result - Put at Bottom of Match Results
-			return "Command, " + command + ", Not Found!!!"
+			if command == "":
+				return
+			else:
+				return "Command, " + command + ", Not Found!!!"
 
 # Help Command
 func help_command(net_id, message):

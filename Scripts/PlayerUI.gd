@@ -19,28 +19,29 @@ func _process(_delta):
 		return 0
 	
 	# This allows user to see player list (I will eventually add support to change keys and maybe joystick support)
-	if Input.is_key_pressed(KEY_TAB):
+	if Input.is_action_pressed("show_playerlist"):
 		panelPlayerList.visible = true
 	else:
 		panelPlayerList.visible = false
 	
 	# Makes Chat Window Visible
-	if Input.is_key_pressed(KEY_SLASH) and !panelChat.visible:
+	if Input.is_action_pressed("chat_command") and !panelChat.visible:
 		panelChat.visible = true
 		panelChat.get_node("userChat").grab_focus() # Causes LineEdit (where user types) to grab focus of keyboard
 		panelChat.get_node("userChat").set_text("/") # Replaces text with a Forward Slash
 		panelChat.get_node("userChat").set_cursor_position(1) # Moves Caret In Front of Slash
 	
-	if Input.is_key_pressed(KEY_ENTER) and !panelChat.visible:
+	if Input.is_action_pressed("chat_show") and !panelChat.visible:
 		panelChat.visible = true
 		panelChat.get_node("userChat").grab_focus() # Causes LineEdit (where user types) to grab focus of keyboard
 	
 	# Makes Chat Window Invisible
-	if Input.is_key_pressed(KEY_ESCAPE) and panelChat.visible:
+	if Input.is_action_pressed("chat_hide") and panelChat.visible:
 		panelChat.visible = false
 	
 	# Closes Connection (Client and Server)
-	if Input.is_key_pressed(KEY_Q) and !panelChat.visible:
+	# I plan on replacing this with a "pause" menu - it will only pause on singleplayer
+	if Input.is_action_pressed("quit_world") and !panelChat.visible:
 		network.close_connection()
 
 # Cleanup PlayerUI
