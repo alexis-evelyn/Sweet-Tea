@@ -1,5 +1,9 @@
 extends Node
 
+# Player Registration is Meant to Keep Track of Player's Public Info (for both server and clients)
+# The server will have a copy of a player's info no matter what world the player is in.
+# The client will only have a copy of a player's info if the player is in the same world as the client.
+
 # It's not necessary to add signal arguments here, but it helps when studying the code
 # Signals - Used to Connect to Other GDScripts
 signal player_removed(pinfo, id) # A Player Was Removed From The Player List
@@ -29,6 +33,9 @@ remote func register_player(pinfo, net_id: int):
 		# Add Starting World Name to Player Data (names are unique in the same parent node, so it can be treated as an id)
 		players[int(net_id)].current_world = world_handler.starting_world_name # Add Current World to Server's Copy of Player Data - I can load last seen world from save instead of sending to spawn everytime the player connects
 		
+		# Make sure the client knows what world it is supposed to load
+		rpc_unreliable_id(int(net_id), "set_current_world", players[int(net_id)].current_world)
+		
 		# Distribute Registered Clients Info to Clients
 		for id in players:
 			# Checks to Make Sure to Only Send Players in the Same World to New Player and Vice Versa
@@ -40,7 +47,7 @@ remote func register_player(pinfo, net_id: int):
 				
 				# Send Newly Joined Client Info to All Other Clients
 				if (id != 1):
-					rpc_unreliable_id(id, "register_player", pinfo, net_id)
+					rpc_unreliable_id(id, "register_player", players[int(net_id)], net_id)
 	
 	if not pinfo.has("name"):
 		pinfo.name = "Unnamed Player"
@@ -54,7 +61,19 @@ remote func unregister_player(id: int):
 		
 		var pinfo = players[id] # Cache player info for removal process
 		players.erase(id) # Remove Player From Player List
+
+puppet func set_current_world(current_world: String):
+	players[int(gamestate.net_id)].current_world = current_world
+	#print("Set Connected Current World: ", players[int(gamestate.net_id)].current_world)
 	
+	# Now that the current world has been set, ask server to spawn player
+	rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
+	
+# How can I remove this and just have the rpc call go directly to spawn_handler?
+master func spawn_player_server(pinfo) -> void:
+	print("Client Requested Spawn")
+	spawn_handler.spawn_player_server(pinfo)	
+
 # Cleanup Connected Player List
 func cleanup():
 	players.clear()

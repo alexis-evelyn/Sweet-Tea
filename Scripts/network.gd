@@ -159,9 +159,15 @@ func _on_connected_to_server() -> void:
 	playerList.loadPlayerList() # Load PlayerList
 
 	gamestate.net_id = get_tree().get_network_unique_id() # Record Network ID
-	rpc_unreliable_id(1, "register_player", gamestate.player_info, gamestate.net_id) # Ask Server To Update Player Dictionary - Server ID is Always 1
 	player_registrar.register_player(gamestate.player_info, 0) # Update Own Dictionary With Ourself
-	rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
+	
+	# Server will send current_world to client through the register_player function. The above line of code makes sure to already have a copy of player info registered before calling the server's register_player function
+	rpc_unreliable_id(1, "register_player", gamestate.player_info, gamestate.net_id) # Ask Server To Update Player Dictionary - Server ID is Always 1
+	
+	#print("Connected Current World: ", player_registrar.has_current_world())
+	
+	# Callbacks would be nice - waiting on current world to be set. see player_registrar.gd
+	# rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
 
 # Failed To Connect To Server
 func _on_connection_failed() -> void:
@@ -175,11 +181,6 @@ remote func register_player(pinfo, net_id: int) -> void:
 # How can I remove this and just have the rpc call go directly to player_registrar?
 remote func unregister_player(net_id: int) -> void:
 	player_registrar.unregister_player(net_id)
-
-# How can I remove this and just have the rpc call go directly to spawn_handler?
-master func spawn_player_server(pinfo) -> void:
-	print("Client Requested Spawn")
-	spawn_handler.spawn_player_server(pinfo)
 	
 # Start Timer to Send Pings to Server
 func start_ping(message: = "Ping") -> void:

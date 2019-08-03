@@ -138,7 +138,7 @@ remote func despawn_player(net_id):
 	# Locate Player To Despawn
 	if player_registrar.has(net_id):
 		var player_current_world = get_world(net_id)
-		var player_node = get_players(player_current_world).get_node(str(net_id)) # Grab Existing Player's Node (Server Only)
+		var player_node = get_players(player_current_world).get_node(str(net_id)) # Grab Existing Player's Node (Server and Client)
 	
 		if (!player_node):
 			printerr("Failed To Find Player To Despawn")
