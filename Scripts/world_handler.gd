@@ -43,6 +43,12 @@ func _load_world_server():
 	starting_world_name = spawn.name
 	loaded_worlds[starting_world] = starting_world_name
 	
+	# Transparent Window Background (if I wanted to use it for some reason) -  https://github.com/godotengine/godot/pull/14622#issue-158077062
+	# Still has to be allowed in project settings first
+	#spawn.get_node("Viewport").set_transparent_background(true)
+	#OS.window_per_pixel_transparency_enabled = true
+	#get_tree().get_root().set_transparent_background(true)
+	
 	worlds.add_child(spawn)
 	get_tree().get_root().add_child(worlds)
 	

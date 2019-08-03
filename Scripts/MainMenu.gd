@@ -14,6 +14,12 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	# Sets Window's Title
+	OS.set_window_title("This is a Title")
+	
+	# Supposed to Request Window Attention - Probably Only Works if Window is Out of Focus
+	#OS.request_attention()
+	
 	# If not careful, the game can easily make a laptop hot. For computers that can handle processing as quickly as possible, this can be disabled.
 	# TODO: Provide option in settings to turn this off.
 	#OS.low_processor_usage_mode = true # Default Off - Meant for programs (as not in games - Causes performance issues in game)
@@ -24,7 +30,12 @@ func _ready():
 	Engine.set_target_fps(30) # Rendering FPS - Default Unlimited
 	#ProjectSettings.save()
 	
-	#print("Number of Cores: ", OS.get_processor_count())
+	print("Number of Cores: ", OS.get_processor_count())
+	print("Multithread Support: ", OS.can_use_threads())
+	
+	if OS.can_use_threads():
+		# Figure out how to change Rendering Thread Model in GDScript
+		pass
 	
 	# https://godotengine.org/qa/11251/how-to-export-the-project-for-server?show=11253#a11253
 	# Checks if Running on Headless Server (Currently Linux Only? There is a commit where someone added support for OSX, but no official builds)
