@@ -22,6 +22,7 @@ config/Version="0.0.1-alpha"
 
 [autoload]
 
+main_loop_events="*res://Scripts/main_loop_events.gd"
 gamestate="*res://Scripts/gamestate.gd"
 network="*res://Scripts/network.gd"
 PlayerUI="*res://PlayerUI/PlayerUI.tscn"
