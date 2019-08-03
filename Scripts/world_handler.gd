@@ -58,8 +58,6 @@ func _load_world_server():
 	# Register Server's Player in Player List
 	if(OS.has_feature("Server") == false):
 		player_registrar.register_player(gamestate.player_info, 0)
-	
-	if(OS.has_feature("Server") == false):
 		emit_signal("server_started", gamestate.player_info) # Sends Server Player's Info To Spawn Code
 
 # Client World Loading Code
