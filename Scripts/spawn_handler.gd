@@ -54,6 +54,7 @@ master func spawn_player_server(pinfo):
 					print("Node Does Not Exist!!! Client is: ", str(id))
 					break # Stops For Loop
 				
+				player_registrar.update_players(int(net_id), int(id)) # Updates Client's Player Registry
 				rpc_unreliable_id(net_id, "spawn_player", player_registrar.players[int(id)], id, player.position) # Send Existing Clients' Info to New Client
 				
 			# Spawn the new player within the currently iterated player as long it's not the server
@@ -91,7 +92,7 @@ func add_player(pinfo, net_id, coordinates: Vector2):
 	
 	new_actor.get_node("KinematicBody2D").set_dominant_color(char_color) # The player script is attached to KinematicBody2D, hence retrieving its node
 	
-	print("Actor: ", net_id)
+	#print("Actor: ", net_id)
 	new_actor.get_node("KinematicBody2D").position = coordinates # Setup Player's Position
 	
 	new_actor.set_name(str(net_id)) # Set Player's ID (useful for referencing the player object later)
@@ -100,6 +101,8 @@ func add_player(pinfo, net_id, coordinates: Vector2):
 	if (net_id != 1):
 		new_actor.set_network_master(net_id)
 		
+	# If the player does not exist in the registry, then the client will keep having rpc errors from a non-existant player node
+	# I don't know how to get Godot to silently ignore these rpc errors
 	if player_registrar.has(net_id):
 		# Add the player to the world
 		#add_child(new_actor)
@@ -120,6 +123,12 @@ func add_player(pinfo, net_id, coordinates: Vector2):
 			get_players(player_current_world).add_child(new_actor) # Adds Player to Respective World Node
 	
 			emit_signal("player_list_changed") # Notify Client Of List Change
+	else:
+		# Player was not registered, so there is going to be an invisible client
+		# That is not good, so add player to registry and call ourself again
+		print("Player Missing From Registry!!! Trying to Add to Registry!!!")
+		player_registrar.register_player(pinfo, net_id, true) # Currently will not work
+		add_player(pinfo, net_id, coordinates)
 
 # Server and Client - Despawn Player From Local World
 remote func despawn_player(net_id):

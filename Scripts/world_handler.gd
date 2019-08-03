@@ -77,7 +77,7 @@ func _load_world_client():
 	
 # Load World to Send Player To
 func load_world(net_id: int, location: String):
-	print("Change World Loading")
+	#print("Change World Loading")
 	
 	# TODO: Check to make sure world isn't already loaded
 	

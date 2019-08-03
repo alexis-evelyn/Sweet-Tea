@@ -12,10 +12,12 @@ signal player_removed(pinfo, id) # A Player Was Removed From The Player List
 var players = {}
 	
 # Clients Notified To Add Player to Player List (Client and Server Side)
-remote func register_player(pinfo, net_id: int):
+remote func register_player(pinfo, net_id: int, new_world := false):
+	# new_world is for spawn handler to make sure player is registered (this is if registry failed through normal rpc call - makes game more robust in the event of packet loss)
 	#print("Registering Player")
 	
-	if get_tree().get_rpc_sender_id() == 0:
+	# Only check new_world if caller is self - prevents net_id spoofing
+	if (get_tree().get_rpc_sender_id() == 0) and (new_world == false):
 		net_id = gamestate.net_id
 	else:
 		# If rpc_sender is not server, don't trust the given net_id
@@ -23,7 +25,8 @@ remote func register_player(pinfo, net_id: int):
 			net_id = get_tree().get_rpc_sender_id()
 	
 	# Because of Server Adding To Registry Data - I Cannot Allow Client to Update Data Mid-Session
-	if players.has(int(net_id)):
+	# This is overriden if the server is sender - allows updating player info on world change and modded servers can change player's info on a vanilla client
+	if players.has(int(net_id)) and get_tree().get_rpc_sender_id() != 1:
 		return -1
 	
 	print("Registering player ", pinfo.name, " (", net_id, ") to internal player table")
@@ -33,12 +36,18 @@ remote func register_player(pinfo, net_id: int):
 		# Add Starting World Name to Player Data (names are unique in the same parent node, so it can be treated as an id)
 		players[int(net_id)].current_world = world_handler.starting_world_name # Add Current World to Server's Copy of Player Data - I can load last seen world from save instead of sending to spawn everytime the player connects
 		
-		# Make sure the client knows what world it is supposed to load
-		rpc_unreliable_id(int(net_id), "set_current_world", players[int(net_id)].current_world)
+		# If the server tries to call this on itself it returns method/function failed. This makes sure server only sends this rpc to clients.
+		if net_id != 1:
+			# Make sure the client knows what world it is supposed to load
+			rpc_unreliable_id(int(net_id), "set_current_world", players[int(net_id)].current_world)
 		
 		# Distribute Registered Clients Info to Clients
 		for id in players:
 			# Checks to Make Sure to Only Send Players in the Same World to New Player and Vice Versa
+			
+			# Player registry happens before player spawn, so I cannot just loop the players node.
+			# After game release (if the game goes well), I am planning on rewriting the network code to make this more efficient.
+			# This will make it easier for servers to handle large amounts of players at once.
 			if players[int(id)].current_world == players[int(net_id)].current_world:
 				# Make Sure Not To Call Yourself or Other Clients Already Registered
 				if id != net_id:
@@ -62,12 +71,18 @@ remote func unregister_player(id: int):
 		var pinfo = players[id] # Cache player info for removal process
 		players.erase(id) # Remove Player From Player List
 
+# Get current world name to download from server
 puppet func set_current_world(current_world: String):
 	players[int(gamestate.net_id)].current_world = current_world
 	#print("Set Connected Current World: ", players[int(gamestate.net_id)].current_world)
 	
 	# Now that the current world has been set, ask server to spawn player
 	spawn_handler.rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
+
+# Send client a copy of players in new world
+func update_players(net_id: int, id: int):
+	print("Update Players - Player: ", id, " World: ", players[int(id)].current_world)
+	rpc_unreliable_id(net_id, "register_player", players[int(id)], id)
 
 # Cleanup Connected Player List
 func cleanup():
