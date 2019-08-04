@@ -10,7 +10,7 @@ var banned_players = {} # If I add actual authentication (via Steam or my own cu
 var banned_ips = {} # Allows banning players via IP address (if player ban is not enough). Use with restraint as multiple players could share the same IP address (e.g. in a university)
 
 # Load Necessary Scripts
-onready var player_registrar = preload("res://Scripts/player_registrar.gd")
+#onready var player_registrar = preload("res://Scripts/player_registrar.gd")
 
 func check_if_banned(id):
 	var net = get_tree().get_network_peer() # Grab the existing Network Peer Node

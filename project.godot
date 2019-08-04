@@ -22,13 +22,13 @@ config/Version="0.0.1-alpha"
 
 [autoload]
 
-main_loop_events="*res://Scripts/main_loop_events.gd"
-gamestate="*res://Scripts/gamestate.gd"
-network="*res://Scripts/network.gd"
+main_loop_events="*res://Scripts/autoload/main_loop_events.gd"
+gamestate="*res://Scripts/autoload/gamestate.gd"
+network="*res://Scripts/autoload/network.gd"
 PlayerUI="*res://PlayerUI/PlayerUI.tscn"
-player_registrar="*res://Scripts/player_registrar.gd"
-world_handler="*res://Scripts/world_handler.gd"
-spawn_handler="*res://Scripts/spawn_handler.gd"
+player_registrar="*res://Scripts/autoload/player_registrar.gd"
+world_handler="*res://Scripts/autoload/world_handler.gd"
+spawn_handler="*res://Scripts/autoload/spawn_handler.gd"
 
 [debug]
 

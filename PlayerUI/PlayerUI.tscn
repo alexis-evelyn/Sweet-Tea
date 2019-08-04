@@ -1,9 +1,12 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Scripts/PlayerUI.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/UI/PlayerUI.gd" type="Script" id=1]
 [ext_resource path="res://PlayerUI/panelPlayerList.tscn" type="PackedScene" id=2]
 [ext_resource path="res://PlayerUI/PlayerStats.tscn" type="PackedScene" id=3]
 [ext_resource path="res://PlayerUI/panelChat.tscn" type="PackedScene" id=4]
+
+
+
 
 [node name="PlayerUI" type="CanvasLayer"]
 script = ExtResource( 1 )
