@@ -56,7 +56,7 @@ func _load_world_server():
 	get_tree().get_current_scene().queue_free()
 	
 	# Register Server's Player in Player List
-	if(OS.has_feature("Server") == false):
+	if not gamestate.server_mode:
 		player_registrar.register_player(gamestate.player_info, 0)
 		emit_signal("server_started", gamestate.player_info) # Sends Server Player's Info To Spawn Code
 

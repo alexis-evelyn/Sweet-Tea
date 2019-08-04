@@ -69,7 +69,7 @@ func create_server() -> void:
 	emit_signal("server_created") # Notify world_handler That Server Was Created
 	
 	# Activate PlayerList Since Server is Close to Finishing Loading
-	if(OS.has_feature("Server") == false):
+	if not gamestate.server_mode:
 		playerList.loadPlayerList() # Load PlayerList
 
 # Attempt to Join Server (Not Connected Yet)

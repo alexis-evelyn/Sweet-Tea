@@ -46,7 +46,28 @@ func _ready():
 	
 	# It appears my compiled version of Godot's Server cannot use network. It doesn't even show up in Wireshark (and I checked the firewall)
 	if(OS.has_feature("Server") == true):
-		network.create_server()
+		# If using a servermode engine, set game to servermode
+		# I may just listen for command line arguments and not use OS.has_feature(...)
+		gamestate.server_mode = true
+		
+	gamestate.server_mode = true
+	if gamestate.server_mode:
+		# This simulates a windowless server. I do not know if it will work in a true windowless environment (e.g. a dedicated linux server)
+		# In that, Godot has official builds for a linux server mode engine which handles the windowless mode automatically.
+		
+		# when this is true, splash is disabled and background is transparent (also, the window is in borderless mode).
+		# The transparent background is still clickable, so change window size to 0 and minimize the window.
+		# Also, figure out how to hide the root viewport (or dynamically the children viewports)
+		OS.set_window_size(Vector2(0, 0)) # Sets Window Size to 0 (so that it does not intercept clicks to another application)
+		OS.set_window_minimized(true) # Minimizes the Window - Shouldn't be necessary since window is already (0, 0), but provides not grabbing control from an invisible window
+		
+		# This is overkill
+		#OS.window_per_pixel_transparency_enabled = true # Turns on Pixel Transparency
+		#get_tree().get_root().set_transparent_background(true) # Makes Root Viewport Have a Transparent Background
+		#get_tree().get_root().get_node("MainMenu").visible = false # Hides MainMenu
+		
+		#network.create_server()
+		pass
 	
 	# TODO: Save loaded theme to file that is not accessible to server
 	set_theme(gamestate.game_theme) # Sets The MainMenu's Theme

@@ -9,6 +9,7 @@ var backups_save_file = "characters_%date%.json" # Backup Save File Name Templat
 var game_version = ProjectSettings.get_setting("application/config/Version")
 
 var game_theme = load("res://Themes/default_theme.tres")
+var server_mode = false
 
 # Player Info Dictionary
 var player_info = {
