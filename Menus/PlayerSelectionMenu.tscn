@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://Scripts/Menu/PlayerSelectionMenu.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/Menu/player_selection_menu.gd" type="Script" id=1]
+
 
 
 [node name="PlayerSelectionMenu" type="Control"]
