@@ -16,7 +16,7 @@ signal cleanup_worlds # Cleanup World Handler
 # https://gamedevcoder.wordpress.com/2011/08/28/packet-encryption-in-multiplayer-games-part-1/
 
 # Keep Alive Thread
-var keep_alive
+var keep_alive: Thread
 
 # Reference to Player List
 onready var playerList : Node = get_tree().get_root().get_node("PlayerUI/panelPlayerList")

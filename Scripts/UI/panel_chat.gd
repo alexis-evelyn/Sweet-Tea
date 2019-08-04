@@ -2,17 +2,17 @@ extends Panel
 
 # Declare member variables here. Examples:
 # TODO: Implement a Way For Server to Notify Client about Chat Char/Lines Limits
-var max_lines = 500 # Max lines in chat before lines are deleted) - Should be settable by user
-var max_characters = 500 # Max number of characters in line before cut off - Should be settable by user and server (server overrides user)
+var max_lines : int = 500 # Max lines in chat before lines are deleted) - Should be settable by user
+var max_characters : int = 500 # Max number of characters in line before cut off - Should be settable by user and server (server overrides user)
 
 # The NWSC is used to break up BBCode submitted by user without deleting characters - Should be able to be disabled by Server Request
-var NWSC = PoolByteArray(['U+8203']).get_string_from_utf8() # No Width Space Character (Used to be called RawArray?) - https://docs.godotengine.org/en/3.1/classes/class_poolbytearray.html
+var NWSC : String = PoolByteArray(['U+8203']).get_string_from_utf8() # No Width Space Character (Used to be called RawArray?) - https://docs.godotengine.org/en/3.1/classes/class_poolbytearray.html
 
-onready var chatMessages = $chatMessages
-onready var chatInput = $userChat
+onready var chatMessages : Node = $chatMessages
+onready var chatInput : Node = $userChat
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	get_tree().get_root().get_node("PlayerUI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
 	
 	chatInput.set_max_length(max_characters)
@@ -26,11 +26,11 @@ func _ready():
 	chatMessages.set_scroll_follow(true) # Sets RichTextLabel to AutoScroll if at Bottom
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(_delta: float):
+#func _process(_delta: float) -> void:
 #	pass
 
 # Process Chat Messages from Server
-sync func chat_message_client(message):
+sync func chat_message_client(message: String) -> void:
 	#print("Client Message: ", message)
 	
 	# Only Update ChatBox if Not Headless
@@ -43,10 +43,10 @@ sync func chat_message_client(message):
 			chatMessages.remove_line(0)
 	
 # Process Chat Message from Client
-master func chat_message_server(message):
-	var added_username = "" # Used for Custom Username Formatting
-	var net_id = -1 # Invalid NetID (will be corrected later)
-	var chat_color = "red" # Default Chat Color
+master func chat_message_server(message: String) -> int:
+	var added_username : String= "" # Used for Custom Username Formatting
+	var net_id : int = -1 # Invalid NetID (will be corrected later)
+	var chat_color : String = "red" # Default Chat Color
 	
 	# Record Chat Message in Server Log (e.g. if harassment needs to be reported)
 	#print("Chat Message: ", message) - May Replace With Saving To File (dependent on server owner settings)
@@ -67,28 +67,29 @@ master func chat_message_server(message):
 
 	# Check to See if Message is a Command
 	if message.substr(0,1) == "/":
-		var response = $commands.process_command(net_id, message)
+		$commands.process_command(net_id, message)
 		
 		#if response != null and response != "":
 		#	rpc_unreliable_id(net_id, "chat_message_client", response)
 		
-		return # Prevents executing the rest of the function
+		return 0 # Prevents executing the rest of the function
 
 	# Set Color for Player's Username
-	chat_color = "#" + player_registrar.color(int(net_id)) # For now, I am specify chat color as color of character. I may change how color is set later.
+	chat_color = "#" + player_registrar.color(int(net_id)).to_html(false) # For now, I am specify chat color as color of character. I may change how color is set later.
 
 	# Insert No Width Space After Open Bracket to Prevent BBCode - Should be able to be turned on and off by server (scratch that, let the server inject bbcode in if it approves the code or command)
 	message = message.replace("[", "[" + NWSC)
 
 	# The URL Idea Came From: https://docs.godotengine.org/en/latest/classes/class_richtextlabel.html?highlight=bbcode#signals
-	var username_start = "[url={\"player_net_id\":\"" + str(net_id) + "\"}][color=" + chat_color + "][b][u]"
-	var username_end = "[/u][/b][/color][/url]"
+	var username_start : String = "[url={\"player_net_id\":\"" + str(net_id) + "\"}][color=" + chat_color + "][b][u]"
+	var username_end : String = "[/u][/b][/color][/url]"
 	added_username = "<" + username_start + str(player_registrar.name(int(net_id))) + username_end + "> " + message
 
 	rpc_unreliable("chat_message_client", added_username)
+	return 0
 
 # Send Chat To Server
-func _on_userChat_gui_input(event):
+func _on_userChat_gui_input(event) -> void:
 	if event is InputEventKey:
 		if Input.is_action_just_pressed("chat_send") and chatInput.text.rstrip(" ").lstrip(" ") != "":
 			# TODO (IMPORTANT): Create Way to Store Command History (maybe full chat history?)
@@ -98,11 +99,11 @@ func _on_userChat_gui_input(event):
 			chatInput.text = ""
 
 # When URLs are Clicked in Chat Window
-func _on_chatMessages_meta_clicked(meta):
+func _on_chatMessages_meta_clicked(meta: String) -> void:
 	if typeof(meta) == TYPE_STRING:
 		#print("URL Text: ", meta)
 		
-		var json = JSON.parse(meta)
+		var json : JSONParseResult = JSON.parse(meta)
 		
 		# Checks to Make Sure JSON was Parsed
 		if json.error == OK:
@@ -120,20 +121,20 @@ func _on_chatMessages_meta_clicked(meta):
 					printerr("JSON is Object and it Shouldn't Be")
 				
 # Handles Client Clicking on URL
-func handle_url_click(dictionary):
+func handle_url_click(dictionary: Dictionary) -> void:
 	# Checks to Make Sure Metadata Is What We Expect (Server Could Send Something Different)
 	if dictionary.has("player_net_id"):
-		var net_id = dictionary["player_net_id"]
+		var net_id : int = dictionary["player_net_id"]
 		
 		# Checks if Players Dictionary Has Net_ID (player could have disconnected by then)
 		if player_registrar.has(int(net_id)):
 			#print("Clicked Player Name: " + player_registrar.name(int(net_id)) + " Player ID: " + net_id)
-			chat_message_client("Clicked Player Name: " + player_registrar.name(int(net_id)) + " Player ID: " + net_id)
+			chat_message_client("Clicked Player Name: " + player_registrar.name(int(net_id)) + " Player ID: " + str(net_id))
 		else:
 			print("The Players Dictionary is Missing ID: ", net_id)
 			
 # Cleanup PlayerChat - Meant to be Called by PlayerUI
-func cleanup():
+func cleanup() -> void:
 	#print("Clearing PlayerChat")
 	
 	self.visible = false # Hides PlayerChat

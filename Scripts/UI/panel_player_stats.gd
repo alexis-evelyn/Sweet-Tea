@@ -7,13 +7,13 @@ extends Panel
 # var b = "text"
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	get_tree().get_root().get_node("PlayerUI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(_delta: float):
+#func _process(_delta: float) -> void:
 #	pass
 
 # Cleanup PlayerStats - Meant to be Called by PlayerUI
-func cleanup():
+func cleanup() -> void:
 	pass

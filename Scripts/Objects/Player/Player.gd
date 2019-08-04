@@ -16,9 +16,9 @@ var friction : bool = false
 
 var motion : Vector2 = Vector2()
 
-var player_name
-var player_current_world
-var players
+var player_name: String
+var player_current_world: String
+var players: Node
 
 # Called everytime player is spawned 
 func _ready() -> void:

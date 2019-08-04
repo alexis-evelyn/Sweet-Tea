@@ -10,6 +10,8 @@
 
 
 
+
+
 [node name="panelChat" type="Panel"]
 modulate = Color( 1, 1, 1, 0.588235 )
 margin_left = 25.0

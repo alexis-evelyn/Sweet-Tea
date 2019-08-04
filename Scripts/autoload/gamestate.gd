@@ -46,7 +46,8 @@ func save_player(slot: int) -> void:
 	var backup_path : String = save_directory.plus_file(backups_dir) # Backup Directory Path
 
 	#print("Game Version: " + game_version)
-	var players_data # Data To Save
+	var players_data : JSONParseResult # Data To Save
+	var players_data_result : Dictionary # players_data's Result
 	
 	var file_op : Directory = Directory.new() # Allows Performing Operations on Files (like moving or deleting a file)
 	
@@ -69,13 +70,13 @@ func save_player(slot: int) -> void:
 		# Checks to Make Sure JSON was Parsed
 		if players_data.error == OK and typeof(players_data.result) == TYPE_DICTIONARY:
 			#print("Save File Read and Imported As Dictionary!!!")
-			players_data = players_data.result # Grabs Result From JSON (this is done now so I can grab the error code from earlier)
+			players_data_result = players_data.result # Grabs Result From JSON (this is done now so I can grab the error code from earlier)
 			
 			# Should I merge this and the code from new save into a single function?
-			players_data["game_version"] = game_version
+			players_data_result["game_version"] = game_version
 			
 			# Note: Key has to be a string, otherwise Godot bugs out and adds duplicate keys to Dictionary
-			players_data[str(slot)] = player_info # Replaces Key In Dictionary With Updated Player_Info
+			players_data_result[str(slot)] = player_info # Replaces Key In Dictionary With Updated Player_Info
 			
 			#print(to_json(players_data)) # Print Save Data to stdout (Debug)
 			save_data.store_string(to_json(players_data))
@@ -84,10 +85,10 @@ func save_player(slot: int) -> void:
 		save_data.open(save_path, File.WRITE) # Open Save File For Writing
 		
 		# Should I merge this and the code from existing save into a single function?
-		players_data["game_version"] = game_version
+		players_data_result["game_version"] = game_version
 		
 		# Note: Key has to be a string, otherwise Godot bugs out and adds duplicate keys to Dictionary
-		players_data[str(slot)] = player_info
+		players_data_result[str(slot)] = player_info
 		
 		#print(to_json(players_data)) # Print Save Data to stdout (Debug)
 		save_data.store_string(to_json(players_data))

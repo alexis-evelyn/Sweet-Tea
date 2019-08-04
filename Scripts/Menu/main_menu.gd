@@ -13,7 +13,7 @@ extends Control
 # https://github.com/godotengine/godot/issues/7832
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	# Sets Window's Title
 	OS.set_window_title("This is a Title")
 	
@@ -72,7 +72,7 @@ func _ready():
 	set_theme(gamestate.game_theme) # Sets The MainMenu's Theme
 	
 # Sets MainMenu Theme
-func set_theme(theme):
+func set_theme(theme) -> void:
 	# The set_theme(...) function can only set themes to nodes that are actively loaded (NetworkMenu is not loaded at this point)
 	
 	#get_tree().get_root().get_node("MainMenu/Menu/Buttons").set_theme(load("res://Themes/default_theme.tres")) # Testing Setting Theme Live - It Works, but I need Control Nodes or Other GUI nodes to set it (e.g. I cannot set it for root)
@@ -80,27 +80,27 @@ func set_theme(theme):
 	$Menu.set_theme(theme)
 	
 	# I May Add The Font To The Theme Instead (then again I may add an override for people to use custom fonts with the same theme)
-	var buttons = $Menu/Buttons
+	var buttons : Node = $Menu/Buttons
 	buttons.get_node("Singleplayer").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
 	buttons.get_node("Multiplayer").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
 	buttons.get_node("Options").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
 	buttons.get_node("Quit").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
 
 # Singleplayer Was Pressed
-func _on_Singleplayer_pressed():
-	var player_selection_menu = $Menu/PlayerSelectionMenu/PlayerSelectionWindow
+func _on_Singleplayer_pressed() -> void:
+	var player_selection_menu : Node = $Menu/PlayerSelectionMenu/PlayerSelectionWindow
 	
 	player_selection_menu.popup_centered()
 	
 # Multiplayer Was Pressed
-func _on_Multiplayer_pressed():
+func _on_Multiplayer_pressed() -> void:
 	get_tree().change_scene("res://Menus/NetworkMenu.tscn")
 
 # Options Was Pressed
-func _on_Options_pressed():
+func _on_Options_pressed() -> void:
 	get_tree().change_scene("res://Menus/OptionsMenu.tscn")
 	pass
 
 # Quit Was Pressed
-func _on_Quit_pressed():
+func _on_Quit_pressed() -> void:
 	get_tree().quit() # Quits Game

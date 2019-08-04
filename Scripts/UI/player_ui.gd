@@ -4,19 +4,19 @@ extends CanvasLayer
 signal cleanup_ui
 
 # Declare member variables here. Examples:
-onready var panelPlayerList = $panelPlayerList
-onready var panelChat = $panelChat
-onready var panelStats = $panelPlayerStats
+onready var panelPlayerList : Node = $panelPlayerList
+onready var panelChat : Node = $panelChat
+onready var panelStats : Node = $panelPlayerStats
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	set_theme(gamestate.game_theme)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float):
+func _process(_delta: float) -> void:
 	# Checks to See if connected to server (if not, just return)
 	if not get_tree().has_network_peer():
-		return 0
+		return
 	
 	# This allows user to see player list (I will eventually add support to change keys and maybe joystick support)
 	if Input.is_action_pressed("show_playerlist"):
@@ -45,12 +45,12 @@ func _process(_delta: float):
 		network.close_connection()
 
 # Cleanup PlayerUI
-func cleanup():
+func cleanup() -> void:
 	#print("Cleanup PlayerUI")
 	emit_signal("cleanup_ui") # Both Standard Code and Modded Code Should Listen for this Signal
 
 # Sets PlayerUI Theme
-func set_theme(theme):
+func set_theme(theme) -> void:
 	$panelPlayerList.set_theme(theme)
 	$panelPlayerStats.set_theme(theme)
 	$panelChat.set_theme(theme)
