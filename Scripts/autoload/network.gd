@@ -18,6 +18,10 @@ signal cleanup_worlds # Cleanup World Handler
 # Keep Alive Thread
 var keep_alive: Thread
 
+# StreamPeerSSL
+var ssl_server : String = "res://SSL/Server.tscn"
+var ssl_client : String = "res://SSL/Client.tscn"
+
 # Reference to Player List
 onready var playerList : Node = get_tree().get_root().get_node("PlayerUI/panelPlayerList")
 onready var playerUI : Node = get_tree().get_root().get_node("PlayerUI")
@@ -31,7 +35,10 @@ var server_info : Dictionary = {
 	website = "https://sweet-tea.senorcontento.com/", # Server Owner's Website (to display rules, purchases, etc...)
 	num_player = 0, # Display Current Number of Connected Players (so client can see how busy a server is)
 	max_players = 0, # Maximum Number of Players (including server player)
-	used_port = 0 # Host Port
+	bind_address = "*",
+	used_port = 0, # Host Port
+	ssl_bind_address = "*",
+	ssl_port = 4344 # StreamPeerSSL Port
 }
 
 # Main Function - Registers Event Handling (Handled By Both Client And Server)
@@ -52,11 +59,15 @@ func _ready() -> void:
 func create_server() -> void:
 	# TODO: Godot supports UPNP hole punching, so this could be useful for non-technical players
 	
+	# Start SSL Server
+	var ssl = load(ssl_server).instance()
+	get_tree().get_root().add_child(ssl)
+	
 	#print("Attempting to Create Server on Port ", server_info.used_port)
 	var net = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
 	
 	# https://docs.godotengine.org/en/3.1/classes/class_networkedmultiplayerenet.html
-	net.set_bind_ip("*") # Sets the IP Address the Server Binds to
+	net.set_bind_ip(server_info.bind_address) # Sets the IP Address the Server Binds to
 	
 	# Could Not Create Server (probably port already in use or Failed Permissions)
 	if (net.create_server(server_info.used_port, server_info.max_players) != OK):
@@ -76,6 +87,10 @@ func create_server() -> void:
 func join_server(ip: String, port: int) -> void:
 	#print("Attempting To Join Server")
 	
+	# Start SSL Client
+	var ssl = load(ssl_client).instance()
+	get_tree().get_root().add_child(ssl)
+	
 	var net : NetworkedMultiplayerENet = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
 	
 	# Attempt to Create Client (does not guarantee that joining is successful)
@@ -93,14 +108,6 @@ func join_server(ip: String, port: int) -> void:
 func close_connection() -> void:
 	#print("Close Connection")
 	
-	# If Client - Cleanup Ping Timer Thread (server doesn't have one).
-	if not get_tree().is_network_server():
-		keep_alive.wait_to_finish()
-		
-		# If has ping_timer, remove it
-		if get_tree().get_root().has_node("ping_timer"):
-			get_tree().get_root().get_node("ping_timer").queue_free()
-	
 	# Clears PlayerUI on Disconnect
 	playerUI.cleanup()
 	
@@ -111,11 +118,22 @@ func close_connection() -> void:
 		# Do different things depending on if server or client
 		if get_tree().is_network_server():
 			# Server Side Only
-			pass
+			
+			if get_tree().get_root().has_node("SSLServer"):
+				get_tree().get_root().get_node("SSLServer").queue_free()
 		else:
 			# Client Side Only
 			# TODO: Free Up Resources and Save Data (Client Side)
-			pass
+			
+			# If Client - Cleanup Ping Timer Thread (server doesn't have one).
+			keep_alive.wait_to_finish()
+		
+			# If has ping_timer, remove it
+			if get_tree().get_root().has_node("ping_timer"):
+				get_tree().get_root().get_node("ping_timer").queue_free()
+				
+			if get_tree().get_root().has_node("SSLClient"):
+				get_tree().get_root().get_node("SSLClient").queue_free()
 		
 		player_registrar.cleanup()
 		gamestate.net_id = 1 # Reset Network ID To 1 (default value)
