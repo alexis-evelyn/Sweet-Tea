@@ -14,7 +14,6 @@ var server_mode : bool = false
 # Player Info Dictionary
 var player_info : Dictionary = {
 	name = "Player", # Player's Name
-	actor_path = "res://Objects/Players/Player.tscn", # The Player's Scene (Comparable to Class)
 	char_color = "ffffff", # Unmodified Player Color - May Combine With Custom Sprites (and JSON)
 	os_unique_id = OS.get_unique_id(), # Stores OS Unique ID - Can be used to link players together, Not Designed to Be Secure (as in player is allowed to tamper with it)
 	char_unique_id = "Not Set"
@@ -86,6 +85,8 @@ func save_player(slot: int) -> void:
 		
 		# Should I merge this and the code from existing save into a single function?
 		players_data_result["game_version"] = game_version
+		
+		player_info["char_unique_id"] = generate_character_unique_id()
 		
 		# Note: Key has to be a string, otherwise Godot bugs out and adds duplicate keys to Dictionary
 		players_data_result[str(slot)] = player_info
@@ -162,3 +163,9 @@ func check_if_slot_exists(slot: int) -> bool:
 				return false
 				
 	return false
+	
+# Generates Character Unique ID - Can Be Used to Correlate Server Player Save Data and Client Player Save Data
+# Not Safe to Manual Modification
+func generate_character_unique_id() -> String:
+	# Returns OS Unique ID Plus A Random Int From 1 Million to 100 Million
+	return str(OS.get_unique_id() + "-" + str(randi()%100000001+100000))
