@@ -167,7 +167,6 @@ func check_if_slot_exists(slot: int) -> bool:
 # Generates Character Unique ID - Can Be Used to Correlate Server Player Save Data and Client Player Save Data
 # Not Safe to Manual Modification - If you want to have safe id, there needs to be some form of authentication the user cannot modify
 # Authentication can be server-side like in chat, or a login prompt before connecting to server. This can also be through Steam or some other third party service
-# Chat won't be encrypted (as Godot doesn't use DTLS for ENet), but the login prompt will use HTTPs for secure login
 func generate_character_unique_id() -> String:
 	# Returns OS Unique ID Plus A Random Int From 1 Million to 100 Million
 	return str(OS.get_unique_id() + "-" + str(randi()%100000001+100000))
