@@ -21,14 +21,14 @@ var player_current_world
 var players
 
 # Called everytime player is spawned 
-func _ready():
+func _ready() -> void:
 	player_name = get_node("..").name
 	player_current_world = get_node("../../../../../").name # Get Current World's Name (for this player node - used by server-side)
 	#print("(Player) Current World: ", player_current_world)
 
 	# Checks to See if in Server/Client Mode (I may have a server always started, but refuse connections in single player. That is still up to debate).
 	if not get_tree().has_network_peer():
-		return -1 # Should Be Connected Here
+		return # Should Be Connected Here
 	
 	# Server corrects coordinates of client to keep in sync
 	if get_tree().is_network_server():
@@ -46,14 +46,14 @@ func _ready():
 		correct_coordinates_timer.start() # Start Timer 
 
 # Called before every rendered frame.
-func _process(_delta: float):
+func _process(_delta: float) -> void:
 	pass
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(_delta: float):
+func _physics_process(_delta: float) -> void:
 	# Checks to See if in Server/Client Mode (I may have a server always started, but refuse connections in single player. That is still up to debate).
 	if not get_tree().has_network_peer():
-		return -1 # Should Be Connected Here
+		return # Should Be Connected Here
 	
 	if is_network_master():
 		if Input.is_action_pressed("move_up") and !panelChat.visible:
@@ -89,7 +89,7 @@ func _physics_process(_delta: float):
 			send_to_clients(motion)
 
 # Handles relaying client's position to other clients in same world
-func send_to_clients(mot: Vector2):
+func send_to_clients(mot: Vector2) -> void:
 	# Get All Players in This Player's World
 	players = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/Players/")
 	
@@ -105,7 +105,7 @@ func send_to_clients(mot: Vector2):
 		rpc_unreliable_id(1, "move_player", mot)
 
 # puppet (formerly slave) sets for all devices except master (the calling client)
-puppet func move_player(mot: Vector2):
+puppet func move_player(mot: Vector2) -> void:
 	# https://github.com/godotengine/godot/blob/master/servers/physics_2d/physics_2d_server_sw.cpp#L1071
 	# Condition ' body->get_space()->is_locked() ' is true. returned: false
 	# This error is heavily dependent on how smoothly the client can move (the faster the timer ends on correcting coordinates, the less of this error that will show up when a player decides to change to the opposite direction all of a sudden).
@@ -115,7 +115,7 @@ puppet func move_player(mot: Vector2):
 	move_and_slide(mot) # This works because this move_and_slide is tied to this node (even on the other clients).
 	
 # Called by Timer to Correct Client's Coordinates
-func correct_coordinates_server():
+func correct_coordinates_server() -> void:
 	#rpc_unreliable("correct_coordinates", self.position)
 		
 	#if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))): # Can be used to only send rpc if client is moving (will be slightly off due to latency)
@@ -130,10 +130,10 @@ func correct_coordinates_server():
 	
 # Could also be used for teleporting (designed to correct coordinates from lag, etc...)
 # Server is also guilty of getting out of sync with client, but server is arbiter and executor, so it overrides other clients' positions
-remotesync func correct_coordinates(coordinates: Vector2):
+remotesync func correct_coordinates(coordinates: Vector2) -> void:
 	#print(coordinates)
 	self.position = coordinates
 	
 # Sets Player's Color (also sets other players colors too)
-func set_dominant_color(color: Color):
+func set_dominant_color(color: Color) -> void:
 	$CollisionShape2D/Sprite.modulate = color # Changes the Player's Color in the World

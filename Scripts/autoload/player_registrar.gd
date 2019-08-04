@@ -12,7 +12,7 @@ signal player_removed(pinfo, id) # A Player Was Removed From The Player List
 var players : Dictionary = {}
 	
 # Clients Notified To Add Player to Player List (Client and Server Side)
-remote func register_player(pinfo: Dictionary, net_id: int, new_world := false):
+remote func register_player(pinfo: Dictionary, net_id: int, new_world := false) -> int:
 	# new_world is for spawn handler to make sure player is registered (this is if registry failed through normal rpc call - makes game more robust in the event of packet loss)
 	#print("Registering Player")
 	
@@ -60,9 +60,12 @@ remote func register_player(pinfo: Dictionary, net_id: int, new_world := false):
 	
 	if not pinfo.has("name"):
 		pinfo.name = "Unnamed Player"
+		return -2 # Allows Client and Server to Know it had to Change Player's Name Due To Name Missing - I May Implement A Custom Error Enum
+		
+	return 0
 
 # Clients Notified To Remove Player From Player List
-remote func unregister_player(id: int):
+remote func unregister_player(id: int) -> void:
 	# The Disconnect Function Already Takes Care of Validating This Data (for the server)
 	# Still Validating For Client to Prevent Crash
 	if players.has(id):
@@ -72,7 +75,7 @@ remote func unregister_player(id: int):
 		players.erase(id) # Remove Player From Player List
 
 # Get current world name to download from server
-puppet func set_current_world(current_world: String):
+puppet func set_current_world(current_world: String) -> void:
 	players[int(gamestate.net_id)].current_world = current_world
 	#print("Set Connected Current World: ", players[int(gamestate.net_id)].current_world)
 	
@@ -80,23 +83,23 @@ puppet func set_current_world(current_world: String):
 	spawn_handler.rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
 
 # Send client a copy of players in new world - net_id is who I am sending the info to
-func update_players(net_id: int, id: int):
+func update_players(net_id: int, id: int) -> void:
 	print("Update Players - Player: ", id, " World: ", players[int(id)].current_world)
 	if net_id != 1:
 		rpc_unreliable_id(net_id, "register_player", players[int(id)], id)
 
 # Cleanup Connected Player List
-func cleanup():
+func cleanup() -> void:
 	players.clear()
 	
 # Standard Function to Check If players has player id (net_id)
-func has(id: int):
+func has(id: int) -> bool:
 	return players.has(id)
 	
 # Returns Player's Name
-func name(id: int):
+func name(id: int) -> String:
 	return players[id].name
 	
 # Returns Player's Character's Color
-func color(id: int):
+func color(id: int) -> Color:
 	return players[id].char_color

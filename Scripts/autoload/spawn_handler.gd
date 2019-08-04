@@ -4,12 +4,12 @@ extends Node
 signal player_list_changed # Player's Spawned in World
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	world_handler.connect("server_started", self, "spawn_player_server") # Spawn Server's Player's Character on Emission of Signal
 	player_registrar.connect("player_removed", self, "player_removed")
 
 # For the server only
-master func spawn_player_server(pinfo: Dictionary):
+master func spawn_player_server(pinfo: Dictionary) -> int:
 	# QUESTION: Should I place the player nodes under the world nodes?
 	# If I place player nodes under the world nodes, it can make the server more efficiently check if there are players in the world
 	# before the server decides to unload the world. It means more complicated spawn/despawn code, but it will make world loading so much easier.
@@ -63,16 +63,17 @@ master func spawn_player_server(pinfo: Dictionary):
 				
 	# TODO: Check to see if this is what causes problems with the Headless Server Mode
 	add_player(pinfo, net_id, coordinates)
+	return 0
 
 # Spawns a new player actor, using the provided player_info structure and the given spawn index
 # http://kehomsforge.com/tutorials/multi/gdMultiplayerSetup/part03/ - "Spawning A Player"
 # For client only
-puppet func spawn_player(pinfo: Dictionary, net_id: int, coordinates: Vector2):
+puppet func spawn_player(pinfo: Dictionary, net_id: int, coordinates: Vector2) -> void:
 	print("Spawning Player: " + str(net_id) + " At Coordinates: " + str(coordinates))
 	add_player(pinfo, net_id, coordinates)
 
 # Spawns Player in World (Client and Server)
-func add_player(pinfo: Dictionary, net_id: int, coordinates: Vector2):
+func add_player(pinfo: Dictionary, net_id: int, coordinates: Vector2) -> void:
 	# Load the scene and create an instance
 	var player_class : Resource = load("res://Objects/Players/Player.tscn") # Load Default Player
 	if pinfo.has("actor_path"):
@@ -131,7 +132,7 @@ func add_player(pinfo: Dictionary, net_id: int, coordinates: Vector2):
 		add_player(pinfo, net_id, coordinates)
 
 # Server and Client - Despawn Player From Local World
-remote func despawn_player(net_id: int):
+remote func despawn_player(net_id: int) -> void:
 	# TODO: Fix Error Mentioned at: http://kehomsforge.com/tutorials/multi/gdMultiplayerSetup/part03/. The error does not break the game at all, it just spams the console.
 	# "ERROR: _process_get_node: Invalid packet received. Unabled to find requested cached node. At: core/io/multiplayer_api.cpp:259."
 	
@@ -166,7 +167,7 @@ remote func despawn_player(net_id: int):
 		printerr("Player Registrar Missing ", net_id, " Cannot Locate Player Node to Despawn!!!")
 		
 # Changing Worlds - Perform Cleanup and Load World
-remote func change_world(world_name: String, world_path: String):
+remote func change_world(world_name: String, world_path: String) -> void:
 	#print("Player ", gamestate.net_id, " Change World: ", get_world(gamestate.net_id))
 	get_tree().get_root().get_node("PlayerUI/panelPlayerList").cleanup() # Cleanup Player List
 

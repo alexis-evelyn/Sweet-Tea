@@ -9,12 +9,12 @@ extends Control
 var mods_installed : bool = false
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	if not mods_installed:
 		get_tree().change_scene("res://Menus/MainMenu.tscn")
 	else:
 		self.visible = true
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(_delta: float):
+#func _process(_delta: float) -> void:
 #	pass

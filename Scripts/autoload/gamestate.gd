@@ -40,7 +40,7 @@ var net_id : int = 1 # Player's ID
 # It will only change if the user changes it manually. I could check if I wanted to (and maybe I will add that feature later)
 
 # Save Game Data
-func save_player(slot: int): # TODO: Rename to save_player?
+func save_player(slot: int) -> void:
 	var save_path : String = save_directory.plus_file(save_file) # Save File Path
 	var save_path_backup : String = save_directory.plus_file(backups_dir.plus_file(backups_save_file.replace("%date%", str(OS.get_unix_time())))) # Save File Backup Path - OS.get_unix_time() is Unix Time Stamp
 	var backup_path : String = save_directory.plus_file(backups_dir) # Backup Directory Path
@@ -95,7 +95,7 @@ func save_player(slot: int): # TODO: Rename to save_player?
 	save_data.close()
 
 # Load Game Data
-func load_player(slot: int): # TODO: Rename to load_player?
+func load_player(slot: int) -> int: # TODO: Rename to load_player?
 	#print("Game Version: " + game_version)
 	#print("Save Data Location: " + OS.get_user_data_dir())
 	#OS.shell_open(str("file://", OS.get_user_data_dir())) # Use this to open up user save data location (say to backup saves or downloaded resources/mods)
@@ -133,13 +133,14 @@ func load_player(slot: int): # TODO: Rename to load_player?
 		printerr("Cannot Interpret Save!!! Invalid JSON!!!")
 		
 	save_data.close()
+	return 0
 	
 # Delete Player From Save
 func delete_player(slot: int):
 	pass
 	
 # Checks If Slot Exists
-func check_if_slot_exists(slot: int):
+func check_if_slot_exists(slot: int) -> bool:
 	var save_data : File = File.new()
 	
 	if not save_data.file_exists(save_directory.plus_file(save_file)): # Check If Save File Exists
@@ -158,3 +159,5 @@ func check_if_slot_exists(slot: int):
 			else:
 				#print("Slot Does Not Exist: " + str(slot))
 				return false
+				
+	return false

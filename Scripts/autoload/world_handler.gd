@@ -13,13 +13,13 @@ var starting_world_name : String = "Not Set"
 var loaded_worlds : Dictionary = {}
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	network.connect("server_created", self, "_load_world_server")
 	network.connect("connection_success", self, "_load_world_client")
 	network.connect("cleanup_worlds", self, "cleanup")
 
 # Server World Loading Function
-func _load_world_server():
+func _load_world_server() -> void:
 	#print("Server Loading World")
 	# Load World From Drive
 	# For Simplicity, We Are Starting Off Non Infinite So The Whole World Will Be Loaded At Once
@@ -61,7 +61,7 @@ func _load_world_server():
 		emit_signal("server_started", gamestate.player_info) # Sends Server Player's Info To Spawn Code
 
 # Client World Loading Code
-func _load_world_client():
+func _load_world_client() -> void:
 	# Download World, Resources, Scripts, etc... From Server
 	# Should I Use HTTP or Should I Send Data by RPC?
 	# If RPC, I may have to have client initiate download and then call signal to load worlds in a different function from here (below this function). I may not need to call signal, just load function.
@@ -80,7 +80,7 @@ func _load_world_client():
 	get_tree().get_current_scene().queue_free()
 	
 # Load World to Send Player To
-func load_world(net_id: int, location: String):
+func load_world(net_id: int, location: String) -> String:
 	#print("Change World Loading")
 	
 	# TODO: Check to make sure world isn't already loaded
@@ -122,5 +122,5 @@ func load_world(net_id: int, location: String):
 	return world.name # Return World Name to Help Track Client Location
 	
 # Cleanup World Handler
-func cleanup():
+func cleanup() -> void:
 	loaded_worlds.clear()

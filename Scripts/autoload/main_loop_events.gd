@@ -5,11 +5,11 @@ extends Node
 # var b = "text"
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	get_tree().set_auto_accept_quit(false) # Disables Default Quit Action - Allows Override to Handle Other Code (e.g. saving or in a meta horror game, play a creepy voice)
 
 # Called When MainLoop Event Happens
-func _notification(what: int):
+func _notification(what: int) -> void:
 	# This isn't an override of the normal behavior, it just allows listening for the events and doing something based on the event happening.
 	
 	match what:
