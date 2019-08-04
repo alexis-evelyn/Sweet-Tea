@@ -50,7 +50,6 @@ func _ready():
 		# I may just listen for command line arguments and not use OS.has_feature(...)
 		gamestate.server_mode = true
 		
-	gamestate.server_mode = true
 	if gamestate.server_mode:
 		# This simulates a windowless server. I do not know if it will work in a true windowless environment (e.g. a dedicated linux server)
 		# In that, Godot has official builds for a linux server mode engine which handles the windowless mode automatically.
