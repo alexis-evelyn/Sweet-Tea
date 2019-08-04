@@ -19,7 +19,7 @@ func loadPlayerList():
 	localPlayer.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
+#func _process(_delta: float):
 #	pass
 
 # Update Player List in GUI

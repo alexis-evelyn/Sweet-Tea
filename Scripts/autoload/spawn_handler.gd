@@ -9,12 +9,12 @@ func _ready():
 	player_registrar.connect("player_removed", self, "player_removed")
 
 # For the server only
-master func spawn_player_server(pinfo):
+master func spawn_player_server(pinfo: Dictionary):
 	# QUESTION: Should I place the player nodes under the world nodes?
 	# If I place player nodes under the world nodes, it can make the server more efficiently check if there are players in the world
 	# before the server decides to unload the world. It means more complicated spawn/despawn code, but it will make world loading so much easier.
 	
-	var net_id = -1
+	var net_id : int = -1
 	
 	if pinfo.has("os_unique_id"):
 		print("OS Unique ID: " + pinfo.os_unique_id)
@@ -23,9 +23,9 @@ master func spawn_player_server(pinfo):
 		print("Character Unique ID: " + pinfo.char_unique_id)
 	
 	# Currently Coordinates are Randomly Chosen
-	var coor_x = rand_range(100,900)
-	var coor_y = rand_range(100,500)
-	var coordinates = Vector2(coor_x, coor_y)
+	var coor_x : int = rand_range(100,900)
+	var coor_y : int = rand_range(100,500)
+	var coordinates : Vector2 = Vector2(coor_x, coor_y)
 	
 	if get_tree().get_rpc_sender_id() == 0:
 		net_id = gamestate.net_id
@@ -47,7 +47,7 @@ master func spawn_player_server(pinfo):
 			# Spawn Existing Players for New Client (Not New Player)
 			# All clients' coordinates (in same world) (including server's coordinates) get sent to new client (except for the new client)
 			if (id != net_id) and (get_world(id) == player_registrar.players[int(net_id)].current_world):
-				var player = get_players(str(get_world(id))).get_node(str(id) + "/KinematicBody2D") # Grab Existing Player's Object (Server Only)
+				var player : Node = get_players(str(get_world(id))).get_node(str(id) + "/KinematicBody2D") # Grab Existing Player's Object (Server Only)
 				print("Existing: ", id, " For: ", net_id, " At Coordinates: ", player.position, " World: ", get_world(id)) # player.position grabs existing player's coordinates
 				
 				player_registrar.update_players(int(net_id), int(id)) # Updates Client's Player Registry to let it know about clients already in the world
@@ -67,24 +67,24 @@ master func spawn_player_server(pinfo):
 # Spawns a new player actor, using the provided player_info structure and the given spawn index
 # http://kehomsforge.com/tutorials/multi/gdMultiplayerSetup/part03/ - "Spawning A Player"
 # For client only
-puppet func spawn_player(pinfo, net_id: int, coordinates: Vector2):
+puppet func spawn_player(pinfo: Dictionary, net_id: int, coordinates: Vector2):
 	print("Spawning Player: " + str(net_id) + " At Coordinates: " + str(coordinates))
 	add_player(pinfo, net_id, coordinates)
 
 # Spawns Player in World (Client and Server)
-func add_player(pinfo, net_id, coordinates: Vector2):
+func add_player(pinfo: Dictionary, net_id: int, coordinates: Vector2):
 	# Load the scene and create an instance
-	var player_class = load("res://Objects/Players/Player.tscn") # Load Default Player
+	var player_class : Resource = load("res://Objects/Players/Player.tscn") # Load Default Player
 	if pinfo.has("actor_path"):
 		player_class = load(pinfo.actor_path)
 		
-	var new_actor = player_class.instance()
+	var new_actor : Node = player_class.instance()
 	
 	# TODO: Make Sure Alpha is 255 (fully opaque). We don't want people cheating...
 	# Setup Player Customization
 	# Player Customizations (by json) will be performed in another function that will be called here!!!
 	
-	var char_color = "ffffff"
+	var char_color : Color = "ffffff"
 	if pinfo.has("char_color"):
 		char_color = pinfo.char_color
 	
@@ -104,12 +104,12 @@ func add_player(pinfo, net_id, coordinates: Vector2):
 	if player_registrar.has(net_id):
 		# Add the player to the world
 		#add_child(new_actor)
-		var player_current_world = get_world(net_id)
-		var world_grid = get_world_grid(player_current_world)
+		var player_current_world : String = get_world(net_id)
+		var world_grid : Node = get_world_grid(player_current_world)
 		
 		# Add Players Node (just a plain node) to put Players in
 		if not world_grid.has_node("Players"):
-			var players_node = Node.new()
+			var players_node : Node = Node.new()
 			players_node.name = "Players"
 			
 			world_grid.add_child(players_node)
@@ -131,7 +131,7 @@ func add_player(pinfo, net_id, coordinates: Vector2):
 		add_player(pinfo, net_id, coordinates)
 
 # Server and Client - Despawn Player From Local World
-remote func despawn_player(net_id):
+remote func despawn_player(net_id: int):
 	# TODO: Fix Error Mentioned at: http://kehomsforge.com/tutorials/multi/gdMultiplayerSetup/part03/. The error does not break the game at all, it just spams the console.
 	# "ERROR: _process_get_node: Invalid packet received. Unabled to find requested cached node. At: core/io/multiplayer_api.cpp:259."
 	
@@ -146,14 +146,14 @@ remote func despawn_player(net_id):
 	
 	# Locate Player To Despawn
 	if player_registrar.has(net_id):
-		var player_current_world = get_world(net_id)
-		var players = get_players(player_current_world)
+		var player_current_world : String = get_world(net_id)
+		var players : Node = get_players(player_current_world)
 		
 		if (players == null):
 			#print("World Already Cleaned Up!!!")
 			return
 		
-		var player_node = players.get_node(str(net_id)) # Grab Existing Player's Node (Server and Client)
+		var player_node : Node = players.get_node(str(net_id)) # Grab Existing Player's Node (Server and Client)
 	
 		if (!player_node):
 			printerr("Failed To Find Player To Despawn")
@@ -185,11 +185,11 @@ remote func change_world(world_name: String, world_path: String):
 		# The existing clients won't see the server player (this does not affect a client with existing clients)
 		# To fix the issue and be more efficient with cpu cycles, I am updating the player registry on the client with the server here
 		
-		var world = get_world(gamestate.net_id) # net_id should be 1 since this is the server
+		var world : String = get_world(gamestate.net_id) # net_id should be 1 since this is the server
 		
 		# Check to make sure Players node exists and if so, loop through players to update
 		if has_players(world):
-			var players = get_players(world) # Get Players Node from World
+			var players : Node = get_players(world) # Get Players Node from World
 			
 			for player in players.get_children():
 				print("Updating: ", player.name, " With Server Info!!!")

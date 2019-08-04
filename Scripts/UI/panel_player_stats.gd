@@ -11,7 +11,7 @@ func _ready():
 	get_tree().get_root().get_node("PlayerUI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
+#func _process(_delta: float):
 #	pass
 
 # Cleanup PlayerStats - Meant to be Called by PlayerUI

@@ -1,18 +1,18 @@
 extends Node
 
-var save_directory = "user://" # Set's Storage Directory
-var save_file = "characters.json" # Save File Name
+var save_directory : String = "user://" # Set's Storage Directory
+var save_file : String = "characters.json" # Save File Name
 
-var backups_dir = "save_backups" # Backup Directory Name
-var backups_save_file = "characters_%date%.json" # Backup Save File Name Template
+var backups_dir : String = "save_backups" # Backup Directory Name
+var backups_save_file : String = "characters_%date%.json" # Backup Save File Name Template
 
-var game_version = ProjectSettings.get_setting("application/config/Version")
+var game_version : String = ProjectSettings.get_setting("application/config/Version")
 
-var game_theme = load("res://Themes/default_theme.tres")
-var server_mode = false
+var game_theme : Theme = load("res://Themes/default_theme.tres")
+var server_mode : bool = false
 
 # Player Info Dictionary
-var player_info = {
+var player_info : Dictionary = {
 	name = "Player", # Player's Name
 	actor_path = "res://Objects/Players/Player.tscn", # The Player's Scene (Comparable to Class)
 	char_color = "ffffff", # Unmodified Player Color - May Combine With Custom Sprites (and JSON)
@@ -20,7 +20,7 @@ var player_info = {
 	char_unique_id = "Not Set"
 }
 
-var net_id = 1 # Player's ID
+var net_id : int = 1 # Player's ID
 
 # A Note On Saving
 # I am able to load and save nodes natively using Godot.
@@ -41,20 +41,20 @@ var net_id = 1 # Player's ID
 
 # Save Game Data
 func save_player(slot: int): # TODO: Rename to save_player?
-	var save_path = save_directory.plus_file(save_file) # Save File Path
-	var save_path_backup = save_directory.plus_file(backups_dir.plus_file(backups_save_file.replace("%date%", str(OS.get_unix_time())))) # Save File Backup Path - OS.get_unix_time() is Unix Time Stamp
-	var backup_path = save_directory.plus_file(backups_dir) # Backup Directory Path
+	var save_path : String = save_directory.plus_file(save_file) # Save File Path
+	var save_path_backup : String = save_directory.plus_file(backups_dir.plus_file(backups_save_file.replace("%date%", str(OS.get_unix_time())))) # Save File Backup Path - OS.get_unix_time() is Unix Time Stamp
+	var backup_path : String = save_directory.plus_file(backups_dir) # Backup Directory Path
 
 	#print("Game Version: " + game_version)
-	var players_data = {} # Data To Save
+	var players_data # Data To Save
 	
-	var file_op = Directory.new() # Allows Performing Operations on Files (like moving or deleting a file)
+	var file_op : Directory = Directory.new() # Allows Performing Operations on Files (like moving or deleting a file)
 	
 	# Make Save File Backup Directory (if it does not exist)
 	if not file_op.dir_exists(backup_path):
 		file_op.make_dir(backup_path)
 	
-	var save_data = File.new()
+	var save_data : File = File.new()
 	
 	# Checks to See If Save File Exists
 	if save_data.file_exists(save_path):
@@ -100,14 +100,14 @@ func load_player(slot: int): # TODO: Rename to load_player?
 	#print("Save Data Location: " + OS.get_user_data_dir())
 	#OS.shell_open(str("file://", OS.get_user_data_dir())) # Use this to open up user save data location (say to backup saves or downloaded resources/mods)
 	
-	var save_data = File.new()
+	var save_data : File = File.new()
 	
 	if not save_data.file_exists(save_directory.plus_file(save_file)): # Check If Save File Exists
 		#print("Save File Does Not Exist!!! New Player?")
 		return -1 # Returns -1 to signal that loading save file failed (for reasons of non-existence)
 	
 	save_data.open(save_directory.plus_file(save_file), File.READ)
-	var json = JSON.parse(save_data.get_as_text())
+	var json : JSONParseResult = JSON.parse(save_data.get_as_text())
 		
 	# Checks to Make Sure JSON was Parsed
 	if json.error == OK:
@@ -140,14 +140,14 @@ func delete_player(slot: int):
 	
 # Checks If Slot Exists
 func check_if_slot_exists(slot: int):
-	var save_data = File.new()
+	var save_data : File = File.new()
 	
 	if not save_data.file_exists(save_directory.plus_file(save_file)): # Check If Save File Exists
 		#print("Save File Does Not Exist!!! So, Slot Does Not Exist!!!")
 		return false
 	
 	save_data.open(save_directory.plus_file(save_file), File.READ)
-	var json = JSON.parse(save_data.get_as_text())
+	var json : JSONParseResult = JSON.parse(save_data.get_as_text())
 		
 	# Checks to Make Sure JSON was Parsed
 	if json.error == OK:

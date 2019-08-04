@@ -9,7 +9,7 @@ func _ready():
 	get_tree().set_auto_accept_quit(false) # Disables Default Quit Action - Allows Override to Handle Other Code (e.g. saving or in a meta horror game, play a creepy voice)
 
 # Called When MainLoop Event Happens
-func _notification(what):
+func _notification(what: int):
 	# This isn't an override of the normal behavior, it just allows listening for the events and doing something based on the event happening.
 	
 	match what:

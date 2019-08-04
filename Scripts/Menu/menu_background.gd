@@ -10,6 +10,6 @@ func _ready():
 	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
+func _process(_delta: float):
 	#$ParallaxLayer.motion_offset.x += SPEED # Allows Background to Move
 	pass

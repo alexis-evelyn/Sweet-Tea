@@ -6,11 +6,11 @@ signal cleanup_worlds
 # Chunk Loading (like in Minecraft) is perfectly possible with Godot - https://www.reddit.com/r/godot/comments/8shad4/how_do_large_open_worlds_work_in_godot/
 # I ultimately plan on having multiple worlds which the players can join on the server. As for singleplayer, it is going to be a server that refuses connections unless the player opens it up to other players.
 # I also want to have a "home" that players spawn at before they join the starting_world (like how Starbound has a spaceship. but I want my home to be an actual world that will be the player's home world. The player can then use portals to join the server world.
-var starting_world = "res://Worlds/World.tscn" # Basically Server Spawn
-var starting_world_name = "Not Set"
+var starting_world : String = "res://Worlds/World.tscn" # Basically Server Spawn
+var starting_world_name : String = "Not Set"
 
 # Server Gets Currently Loaded Worlds
-var loaded_worlds = {}
+var loaded_worlds : Dictionary = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -34,10 +34,10 @@ func _load_world_server():
 	
 	# TODO: If Headless Make Sure Loaded, but Not Displayed
 	# The server needs to keep all worlds (chunks surrounding players when infinite) loaded that has players inside. Eventually after game release options to keep specific worlds loaded regardless will be available to server owners that can support it.
-	var worlds = Node.new()
+	var worlds : Node = Node.new()
 	worlds.name = "Worlds"
 	
-	var spawn = load(starting_world).instance()
+	var spawn : Node = load(starting_world).instance()
 	
 	# Add Spawn World to Loaded World's Dictionary
 	starting_world_name = spawn.name
@@ -70,10 +70,10 @@ func _load_world_client():
 	
 	# This will be changed to load from world (chunks?) sent by server
 	# The client should only handle one world at a time (given worlds are everchanging, there is no reason to cache it - except if I can streamline performance with cached worlds)
-	var worlds = Node.new()
+	var worlds : Node = Node.new()
 	worlds.name = "Worlds"
 	
-	var spawn = load(starting_world).instance()
+	var spawn : Node = load(starting_world).instance()
 	worlds.add_child(spawn)
 	get_tree().get_root().add_child(worlds)
 	
@@ -87,8 +87,8 @@ func load_world(net_id: int, location: String):
 	
 	# Checks to Make sure World isn't already loaded
 	if loaded_worlds.has(location):
-		var world = get_tree().get_root().get_node("Worlds").get_node(loaded_worlds[location])
-		var player = world.get_node("Viewport/WorldGrid/Players").has_node(str(gamestate.net_id))
+		var world : Node = get_tree().get_root().get_node("Worlds").get_node(loaded_worlds[location])
+		var player : bool = world.get_node("Viewport/WorldGrid/Players").has_node(str(gamestate.net_id))
 		
 		if (net_id == gamestate.net_id) or (player):
 			world.visible = true
@@ -98,10 +98,10 @@ func load_world(net_id: int, location: String):
 		return world.name
 	
 	# NOTE: I forgot groups existed (could of added all worlds to group). Try to use groups when handling projectiles and mobs.
-	var world_file = load(location) # Load World From File Location
-	var worlds = get_tree().get_root().get_node("Worlds") # Get Worlds node
+	var world_file : Resource = load(location) # Load World From File Location
+	var worlds : Node = get_tree().get_root().get_node("Worlds") # Get Worlds node
 	
-	var world = world_file.instance() # Instance Loaded World
+	var world : Node = world_file.instance() # Instance Loaded World
 	
 	# If Client, Unload Previous World
 	if not get_tree().is_network_server():

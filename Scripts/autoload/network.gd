@@ -19,12 +19,12 @@ signal cleanup_worlds # Cleanup World Handler
 var keep_alive
 
 # Reference to Player List
-onready var playerList = get_tree().get_root().get_node("PlayerUI/panelPlayerList")
-onready var playerUI = get_tree().get_root().get_node("PlayerUI")
+onready var playerList : Node = get_tree().get_root().get_node("PlayerUI/panelPlayerList")
+onready var playerUI : Node = get_tree().get_root().get_node("PlayerUI")
 
 # TODO: Make sure to verify the data is valid and coherent
 # Server Info to Send to Clients
-var server_info = {
+var server_info : Dictionary = {
 	name = "Sweet Tea", # Name of Server
 	icon = "res://...something.svg", # Server Icon (for Clients to See)
 	motd = "A Message Will Be Displayed to Clients Using This...", # Display A Message To Clients Before Player Joins Server
@@ -73,10 +73,10 @@ func create_server() -> void:
 		playerList.loadPlayerList() # Load PlayerList
 
 # Attempt to Join Server (Not Connected Yet)
-func join_server(ip, port) -> void:
+func join_server(ip: String, port: int) -> void:
 	#print("Attempting To Join Server")
 	
-	var net = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
+	var net : NetworkedMultiplayerENet = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
 	
 	# Attempt to Create Client (does not guarantee that joining is successful)
 	if (net.create_client(ip, port) != OK):
@@ -128,11 +128,11 @@ func close_connection() -> void:
 	get_tree().change_scene("res://Menus/NetworkMenu.tscn")
 
 # Notifies Player as to Why They Were Kicked (does not need to call disconnect)
-puppet func player_kicked(message) -> void:
+puppet func player_kicked(message: String) -> void:
 	print("Kick Message: ", message)
 
 # Server (and Client) Notified When A New Client Connects (Player Has Not Registered Yet, So, There Is No Player Data)
-func _on_player_connected(id) -> void:
+func _on_player_connected(id: int) -> void:
 	
 	# Only the server should check if client is banned
 	if get_tree().is_network_server():
@@ -141,7 +141,7 @@ func _on_player_connected(id) -> void:
 		pass
 
 # Server Notified When A Client Disconnects
-func _on_player_disconnected(id) -> void:
+func _on_player_disconnected(id: int) -> void:
 	if player_registrar.has(id):
 		#print("Player ", player_registrar.name(id), " Disconnected from Server")
 	
@@ -179,9 +179,9 @@ func _on_connection_failed() -> void:
 	close_connection()
 	
 # Start Timer to Send Pings to Server
-func start_ping(message: = "Ping") -> void:
+func start_ping(message: String = "Ping") -> void:
 	# Create Timer Node
-	var timer = Timer.new()
+	var timer : Timer = Timer.new()
 	timer.name = "ping_timer"
 	
 	# https://docs.godotengine.org/en/3.1/tutorials/threads/thread_safe_apis.html
@@ -192,7 +192,7 @@ func start_ping(message: = "Ping") -> void:
 	timer.start() # Start Timer
 	
 # Send Ping to Server
-func send_ping(message) -> void:
+func send_ping(message: String = "Ping") -> void:
 	#print("Send Ping: ", message)
 	rpc_unreliable_id(1, "server_ping", message)
 	

@@ -9,10 +9,10 @@ extends Node
 signal player_removed(pinfo, id) # A Player Was Removed From The Player List
 
 # Currently Registered Players
-var players = {}
+var players : Dictionary = {}
 	
 # Clients Notified To Add Player to Player List (Client and Server Side)
-remote func register_player(pinfo, net_id: int, new_world := false):
+remote func register_player(pinfo: Dictionary, net_id: int, new_world := false):
 	# new_world is for spawn handler to make sure player is registered (this is if registry failed through normal rpc call - makes game more robust in the event of packet loss)
 	#print("Registering Player")
 	
@@ -68,7 +68,7 @@ remote func unregister_player(id: int):
 	if players.has(id):
 		#print("Removing player ", players[id].name, " from internal table")
 		
-		var pinfo = players[id] # Cache player info for removal process
+		var pinfo : Dictionary = players[id] # Cache player info for removal process
 		players.erase(id) # Remove Player From Player List
 
 # Get current world name to download from server

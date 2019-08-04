@@ -10,7 +10,7 @@ func _ready():
 		slot.connect("pressed", self, "_character_slot_pressed", [slot])
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
+#func _process(_delta: float):
 #	pass
 
 # Check Which Player Slots Already Exist In Save and Update Player Selection Buttons

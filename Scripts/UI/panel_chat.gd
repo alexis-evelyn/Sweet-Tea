@@ -26,7 +26,7 @@ func _ready():
 	chatMessages.set_scroll_follow(true) # Sets RichTextLabel to AutoScroll if at Bottom
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
+#func _process(_delta: float):
 #	pass
 
 # Process Chat Messages from Server

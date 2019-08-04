@@ -6,7 +6,7 @@ extends Control
 # https://gamedev.stackexchange.com/a/174312/97290
 
 # Declare member variables here. Examples:
-var mods_installed = false
+var mods_installed : bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -16,5 +16,5 @@ func _ready():
 		self.visible = true
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
+#func _process(_delta: float):
 #	pass

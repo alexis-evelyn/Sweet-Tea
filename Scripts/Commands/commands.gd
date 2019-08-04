@@ -8,16 +8,16 @@ extends Node
 # A Permission System Does Not Exist Yet, So The Permission Levels are Moot. This will be implemented eventually.
 # Integer Constants for Determining Permission Levels of Commands (basically only allow those with permission to use or even see the commands they have permission for)
 # Note: The lower the number is, the more power the permission level has.
-const server_owner = 0 # Owner of Server
-const admin = 1 # Paid helpers of Server Owner (manages the server plugins/mods and moderators)
-const mod = 2 # Trusted Moderators (Manages Operators and Helps Deal With Problems Such as Griefing)
-const op = 3 # Player With More Permissions Than Normal (Can access some commands a normal player cannot access) - Most useful with server plugins
-const player = 4 # A Normal Player
-const jail = 5 # A Joke Permission, but can be Used To Prevent Player From Executing Most Commands (except msg or invite, etc...)
-const max_security = 6 # Another Joke Permission, Prevents Any Commands At All (might be renamed to solitary)
+const server_owner : int = 0 # Owner of Server
+const admin : int = 1 # Paid helpers of Server Owner (manages the server plugins/mods and moderators)
+const mod : int = 2 # Trusted Moderators (Manages Operators and Helps Deal With Problems Such as Griefing)
+const op : int = 3 # Player With More Permissions Than Normal (Can access some commands a normal player cannot access) - Most useful with server plugins
+const player : int = 4 # A Normal Player
+const jail : int = 5 # A Joke Permission, but can be Used To Prevent Player From Executing Most Commands (except msg or invite, etc...)
+const max_security : int = 6 # Another Joke Permission, Prevents Any Commands At All (might be renamed to solitary)
 
 # Used by Help Command to Provide List of Commands
-var supported_commands = {
+var supported_commands : Dictionary = {
 "help": {"description": "Provides List of Commands and What They Do", "permission": player},
 "kick": {"description": "Kicks Player Specified As Argument", "permission": mod},
 "kickip": {"description": "Kicks All Players On Specified IP", "permission": mod},
@@ -27,13 +27,13 @@ var supported_commands = {
 }
 
 # Process the Command and Return Result if Any
-func process_command(net_id, message):
+func process_command(net_id: int, message: String):
 	#print("UserID: " + str(net_id) + " Command: " + message)
 	
-	var arguments = PoolStringArray()
+	var arguments : PoolStringArray = PoolStringArray()
 	arguments = message.split(" ", false, 0)
 	
-	var response = check_command(net_id, arguments)
+	var response : String = check_command(net_id, arguments)
 	
 	#var response = "UserID: " + str(net_id) + " Command: " + message
 
@@ -44,8 +44,8 @@ func process_command(net_id, message):
 		get_parent().chat_message_client(response) # This just calls the chat_message_client directly as the server wants to message itself
 	
 # Check What Command and Arguments
-func check_command(net_id, message):
-	var command = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+func check_command(net_id: int, message: PoolStringArray):
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	
 	match command:
 		"help":
@@ -70,7 +70,7 @@ func check_command(net_id, message):
 
 # Help Command
 func help_command(net_id, message):
-	var output_array = PoolStringArray()
+	var output_array : PoolStringArray = PoolStringArray()
 	
 	#output_array.append("Commands" + '\n')
 	#output_array.append("-----------------------" + "\n")
@@ -81,7 +81,7 @@ func help_command(net_id, message):
 		output_array.append('\n')
 	
 	# I was hoping for a builtin method to convert array to string without the array brackets and commas
-	var output = ""
+	var output : String = ""
 	
 	for line in output_array:
 		output += line
@@ -89,49 +89,49 @@ func help_command(net_id, message):
 	return str(output)
 	
 # Kick Player Command
-func kick_player(net_id, message):
-	var command = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-	var permission_level = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+func kick_player(net_id: int, message: PoolStringArray):
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
 	# player_control
 	
 	return "Kick Player and Optional Message - Permission Needed: " + str(permission_level)
 	
 # Kick Player by IP Command
-func kick_player_ip(net_id, message):
-	var command = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-	var permission_level = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
-	var ip_address = str(message[1]) # Check to make sure IP Address is Specified
+func kick_player_ip(net_id: int, message: PoolStringArray):
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	var ip_address : String = str(message[1]) # Check to make sure IP Address is Specified
 	
 	# player_control
 	
 	return "Kick Player By IP and Optional Message - Permission Needed: " + str(permission_level)
 
 # Ban Player Command
-func ban_player(net_id, message):
-	var command = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-	var permission_level = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+func ban_player(net_id: int, message: PoolStringArray):
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
 	# player_control
 	
 	return "Ban Player and Optional Message - Permission Needed: " + str(permission_level)
 
 # Ban Player By IP Command
-func ban_player_ip(net_id, message):
-	var command = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-	var permission_level = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+func ban_player_ip(net_id: int, message: PoolStringArray):
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
 	# player_control
 	
 	return "Ban Player By IP and Optional Message - Permission Needed: " + str(permission_level)
 	
 # Change Player's World - Server Side Only
-func change_player_world(net_id, message):
-	var command = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-	#var permission_level = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+func change_player_world(net_id: int, message: PoolStringArray):
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
-	var world_path = "res://Worlds/World2.tscn"
-	var world_name = world_handler.load_world(net_id, world_path)
+	var world_path : String = "res://Worlds/World2.tscn"
+	var world_name : String = world_handler.load_world(net_id, world_path)
 	
 	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 	
@@ -149,8 +149,8 @@ func change_player_world(net_id, message):
 	
 # TODO: Add Restart Command
 # Shutdown Server Command
-func shutdown_server(net_id, message):
-	var command = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-	var permission_level = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+func shutdown_server(net_id: int, message: PoolStringArray):
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
 	return "Shutdown Command Not Implemented - Permission Needed: " + str(permission_level)

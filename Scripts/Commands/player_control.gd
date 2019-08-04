@@ -6,14 +6,14 @@ extends Node
 # Declare member variables here. Examples:
 
 # List of Banned Players (will be saved to file)
-var banned_players = {} # If I add actual authentication (via Steam or my own custom implementation, this will be useful)
-var banned_ips = {} # Allows banning players via IP address (if player ban is not enough). Use with restraint as multiple players could share the same IP address (e.g. in a university)
+var banned_players : Dictionary = {} # If I add actual authentication (via Steam or my own custom implementation, this will be useful)
+var banned_ips : Dictionary = {} # Allows banning players via IP address (if player ban is not enough). Use with restraint as multiple players could share the same IP address (e.g. in a university)
 
 # Load Necessary Scripts
 #onready var player_registrar = preload("res://Scripts/player_registrar.gd")
 
-func check_if_banned(id):
-	var net = get_tree().get_network_peer() # Grab the existing Network Peer Node
+func check_if_banned(id: int):
+	var net : NetworkedMultiplayerENet = get_tree().get_network_peer() # Grab the existing Network Peer Node
 	
 	#print("Ban Check - Player ID: ", str(id), " Player IP: ", str(net.get_peer_address(id)))
 	
@@ -24,7 +24,7 @@ func check_if_banned(id):
 		net.disconnect_peer(id, false) # Disconnect the peer immediately (true means no flushing messages)
 
 func kick_player():
-	var net = get_tree().get_network_peer() # Grab the existing Network Peer Node
+	var net : NetworkedMultiplayerENet= get_tree().get_network_peer() # Grab the existing Network Peer Node
 	
 	# TODO: Currently, the server disconnects everyone, but as chat gets added, the ability to select a peer (client) will be added to
 	
@@ -48,18 +48,18 @@ func kick_player_ip(ip_address: String):
 				#kick_player() # Will specify Player ID "player"
 				
 func ban_player():
-	var ban_message = "Player Banned!!!" # Will be replaced by a function argument
+	var ban_message : String = "Player Banned!!!" # Will be replaced by a function argument
 	
-	var net = get_tree().get_network_peer() # Grab the existing Network Peer Node
+	var net : NetworkedMultiplayerENet = get_tree().get_network_peer() # Grab the existing Network Peer Node
 	
-	var banned = OS.get_datetime(true)  # true means UTC format (helps consistency even if computer timezone is changed)
-	var pardoned = 10 # How many seconds to ban for (0 means indefinitely)
+	var banned : Dictionary = OS.get_datetime(true)  # true means UTC format (helps consistency even if computer timezone is changed)
+	var pardoned : int = 10 # How many seconds to ban for (0 means indefinitely)
 	
 	if get_tree().is_network_server():
 		# TODO: This for loop will be replaced by a player ID (do not replace with name, but do set a permanent id via third party such as with Steam) specified by chat
 		for player in player_registrar.players:
 			if player != 1: # If player is not server
-				var ban_data = {
+				var ban_data : Dictionary = {
 					player_id = player, # Player's Network ID
 					player_ip_address = str(net.get_peer_address(player)), # Player's IP Address
 					banned_time = banned, # Sets Time Player Was Banned
@@ -70,20 +70,20 @@ func ban_player():
 				#kick_player() # Will add arguments later (player id and ban message)
 				
 func ban_player_ip():
-	var ban_message = "IP Banned!!!" # Will be replaced by a function argument
+	var ban_message : String = "IP Banned!!!" # Will be replaced by a function argument
 	
-	var net = get_tree().get_network_peer() # Grab the existing Network Peer Node
+	var net : NetworkedMultiplayerENet = get_tree().get_network_peer() # Grab the existing Network Peer Node
 	
-	var banned = OS.get_datetime(true) # true means UTC format (helps consistency even if computer timezone is changed)
-	var pardoned = 10  # How many seconds to ban for (0 means indefinitely)
+	var banned : Dictionary = OS.get_datetime(true) # true means UTC format (helps consistency even if computer timezone is changed)
+	var pardoned : int = 10  # How many seconds to ban for (0 means indefinitely)
 	
 	if get_tree().is_network_server():
 		# TODO: This for loop will be replaced by a player ID (do not replace with name, but do set a permanent id via third party such as with Steam) specified by chat
 		for player in player_registrar.players:
 			if player != 1: # If player is not server
-				var ip_address = str(net.get_peer_address(player))
+				var ip_address : String = str(net.get_peer_address(player))
 			
-				var ban_data = {
+				var ban_data : Dictionary = {
 					player_id = player, # Player's Network ID
 					player_ip_address = ip_address, # Player's IP Address
 					banned_time = banned, # Sets Time Player Was Banned

@@ -1,20 +1,20 @@
 extends KinematicBody2D
 
 # Declare member variables here:
-onready var panelChat = get_tree().get_root().get_node("PlayerUI/panelChat")
+onready var panelChat : Node = get_tree().get_root().get_node("PlayerUI/panelChat")
 
-const UP = Vector2(0, -1)
-const LEFT = Vector2(-1, 0)
-const RIGHT = Vector2(1, 0)
-const DOWN = Vector2(0, 1)
+const UP : Vector2 = Vector2(0, -1)
+const LEFT : Vector2 = Vector2(-1, 0)
+const RIGHT : Vector2 = Vector2(1, 0)
+const DOWN : Vector2 = Vector2(0, 1)
 
-const ACCELERATION = 50
-#const GRAVITY = 20
-const MAX_SPEED = 200
-#const JUMP_HEIGHT = -500
-var friction = false
+const ACCELERATION : int = 50
+#const GRAVITY : int = 20
+const MAX_SPEED : int = 200
+#const JUMP_HEIGHT : int = -500
+var friction : bool = false
 
-var motion = Vector2()
+var motion : Vector2 = Vector2()
 
 var player_name
 var player_current_world
@@ -32,7 +32,7 @@ func _ready():
 	
 	# Server corrects coordinates of client to keep in sync
 	if get_tree().is_network_server():
-		var correct_coordinates_timer = Timer.new()
+		var correct_coordinates_timer : Timer = Timer.new()
 		correct_coordinates_timer.name = "correct_coordinates_timer"
 		
 		# Root of Player Node Will be Busy Setting up Children Right Now, so Defer Adding Another Child For Now
@@ -46,11 +46,11 @@ func _ready():
 		correct_coordinates_timer.start() # Start Timer 
 
 # Called before every rendered frame.
-func _process(_delta):
+func _process(_delta: float):
 	pass
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(_delta):
+func _physics_process(_delta: float):
 	# Checks to See if in Server/Client Mode (I may have a server always started, but refuse connections in single player. That is still up to debate).
 	if not get_tree().has_network_peer():
 		return -1 # Should Be Connected Here
@@ -135,5 +135,5 @@ remotesync func correct_coordinates(coordinates: Vector2):
 	self.position = coordinates
 	
 # Sets Player's Color (also sets other players colors too)
-func set_dominant_color(color):
+func set_dominant_color(color: Color):
 	$CollisionShape2D/Sprite.modulate = color # Changes the Player's Color in the World

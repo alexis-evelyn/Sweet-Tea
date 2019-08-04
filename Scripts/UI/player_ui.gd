@@ -13,7 +13,7 @@ func _ready():
 	set_theme(gamestate.game_theme)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
+func _process(_delta: float):
 	# Checks to See if connected to server (if not, just return)
 	if not get_tree().has_network_peer():
 		return 0
