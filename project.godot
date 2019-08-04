@@ -16,7 +16,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Sweet Tea"
-run/main_scene="res://Menus/MainMenu.tscn"
+run/main_scene="res://Menus/Mods.tscn"
 config/icon="res://Assets/Icons/game_icon.png"
 config/Version="0.0.1-alpha"
 
