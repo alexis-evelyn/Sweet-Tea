@@ -79,7 +79,7 @@ func save_player(slot: int) -> void:
 			players_data_result[str(slot)] = player_info # Replaces Key In Dictionary With Updated Player_Info
 			
 			#print(to_json(players_data)) # Print Save Data to stdout (Debug)
-			save_data.store_string(to_json(players_data))
+			save_data.store_string(to_json(players_data_result))
 	else:
 		#print("Save File Does Not Exist!!! Creating!!!")
 		save_data.open(save_path, File.WRITE) # Open Save File For Writing
@@ -91,7 +91,7 @@ func save_player(slot: int) -> void:
 		players_data_result[str(slot)] = player_info
 		
 		#print(to_json(players_data)) # Print Save Data to stdout (Debug)
-		save_data.store_string(to_json(players_data))
+		save_data.store_string(to_json(players_data_result))
 		
 	save_data.close()
 
