@@ -18,6 +18,9 @@ func _notification(what: int) -> void:
 			print("Quit Game!!!")
 			get_tree().quit()
 		MainLoop.NOTIFICATION_CRASH:
+			# When I Was Rewriting the Save Player function, I crashed the game.
+			# This print statement was added to stdout, so I know it works.
+			# What I can do is save debug info to the hard drive and next time the user loads the game, I can request them to send the info to me.
 			print("Game Is About to Crash!!!")
 		MainLoop.NOTIFICATION_WM_ABOUT:
 			print("Specific to Mac!!! Pull up about Game info (button will be on MainMenu too)")
