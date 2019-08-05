@@ -102,4 +102,4 @@ func name(id: int) -> String:
 	
 # Returns Player's Character's Color
 func color(id: int) -> Color:
-	return players[id].char_color
+	return Color(players[id].char_color)

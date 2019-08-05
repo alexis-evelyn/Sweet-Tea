@@ -10,33 +10,12 @@ extends Control
 # https://docs.godotengine.org/en/3.1/tutorials/threads/using_multiple_threads.html - Multithreading
 
 # Quick Read
-# https://github.com/godotengine/godot/issues/7832
-
-# This is to test a custom module I compiled Godot with for encryption that I can use with RPC.
-# More on this later.
-# TODO: Add MBedTLS and Cripte to License Docs
-
-# Lets Hope it Works
-func test_module():
-	var Cripte = cripter.new()
-
-	var key = "My not secret key"
-
-	var gcm_add = "adicional data is: port: 316"
-	var gcm_input = var2bytes("The cow goes muuuu")
-
-	var encrypted_array_gcm = Cripte.encrypt_byte_GCM(gcm_input, key, gcm_add)
-	var decrypted_array_gcm = Cripte.decrypt_byte_GCM(encrypted_array_gcm, key, gcm_add) 
-
-	print("Encrypted: ", encrypted_array_gcm.get_string_from_ascii())
-	print("Decrypted: ", bytes2var(decrypted_array_gcm))
+# Multithreading Efficiency - https://github.com/godotengine/godot/issues/7832
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	# Sets Window's Title
 	OS.set_window_title("This is a Title")
-	
-	test_module()
 	
 	# Supposed to Request Window Attention - Probably Only Works if Window is Out of Focus
 	#OS.request_attention()

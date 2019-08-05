@@ -19,8 +19,8 @@ signal cleanup_worlds # Cleanup World Handler
 var keep_alive: Thread
 
 # StreamPeerSSL
-var ssl_server : String = "res://SSL/Server.tscn"
-var ssl_client : String = "res://SSL/Client.tscn"
+var enc_server : String = "res://Scripts/Security/server_encryption.gd"
+var enc_client : String = "res://Scripts/Security/client_encryption.gd"
 
 # Reference to Player List
 onready var playerList : Node = get_tree().get_root().get_node("PlayerUI/panelPlayerList")
@@ -59,9 +59,11 @@ func _ready() -> void:
 func create_server() -> void:
 	# TODO: Godot supports UPNP hole punching, so this could be useful for non-technical players
 	
-	# Start SSL Server
-	var ssl = load(ssl_server).instance()
-	get_tree().get_root().add_child(ssl)
+	# Setup Encryption Script
+	var encryption = Node.new()
+	encryption.set_script(load(enc_server)) # Attach A Script to Node
+	encryption.set_name("EncryptionServer") # Give Node A Unique ID
+	get_tree().get_root().add_child(encryption)
 	
 	#print("Attempting to Create Server on Port ", server_info.used_port)
 	var net = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
@@ -86,10 +88,6 @@ func create_server() -> void:
 # Attempt to Join Server (Not Connected Yet)
 func join_server(ip: String, port: int) -> void:
 	#print("Attempting To Join Server")
-	
-	# Start SSL Client
-	var ssl = load(ssl_client).instance()
-	get_tree().get_root().add_child(ssl)
 	
 	var net : NetworkedMultiplayerENet = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
 	
@@ -119,8 +117,8 @@ func close_connection() -> void:
 		if get_tree().is_network_server():
 			# Server Side Only
 			
-			if get_tree().get_root().has_node("SSLServer"):
-				get_tree().get_root().get_node("SSLServer").queue_free()
+			if get_tree().get_root().has_node("EncryptionServer"):
+				get_tree().get_root().get_node("EncryptionServer").queue_free()
 		else:
 			# Client Side Only
 			# TODO: Free Up Resources and Save Data (Client Side)
@@ -132,8 +130,8 @@ func close_connection() -> void:
 			if get_tree().get_root().has_node("ping_timer"):
 				get_tree().get_root().get_node("ping_timer").queue_free()
 				
-			if get_tree().get_root().has_node("SSLClient"):
-				get_tree().get_root().get_node("SSLClient").queue_free()
+			if get_tree().get_root().has_node("EncryptionClient"):
+				get_tree().get_root().get_node("EncryptionClient").queue_free()
 		
 		player_registrar.cleanup()
 		gamestate.net_id = 1 # Reset Network ID To 1 (default value)
@@ -172,6 +170,12 @@ func _on_player_disconnected(id: int) -> void:
 # Successfully Joined Server (Client Side Only)
 func _on_connected_to_server() -> void:
 	#print("Connected To Server")
+	
+	# Setup Encryption Script
+	var encryption = Node.new()
+	encryption.set_script(load(enc_client)) # Attach A Script to Node
+	encryption.set_name("EncryptionClient") # Give Node A Unique ID
+	get_tree().get_root().add_child(encryption)
 	
 	# Put Ping Timer on New Thread - Is the Timer Already on New Thread? Does this Affect Timer's Thread (given that it is a node)?
 	keep_alive = Thread.new()
