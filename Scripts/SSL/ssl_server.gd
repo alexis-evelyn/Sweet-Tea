@@ -1,5 +1,10 @@
 extends Node
 
+# It appears I may not be able to do encryption if StreamPeerSSL doesn't work server side.
+# The developer is working on DTLS for ENet, but I don't know when it will be available.
+# https://github.com/godotengine/godot/issues/19110
+# https://github.com/godotengine/godot/issues/13947#issuecomment-500947126
+
 # I plan on replacing Chat's RPC sending/receiving with StreamPeerSSL (only if enabled in server) - StreamPeerSSL makes server setup more complicated, so dedicated server owners will manage it, but regular players shouldn't be concerned about SSL Certs.
 # I also plan on adding authentication (before connecting to server) over StreamPeerSSL
 
@@ -37,6 +42,9 @@ func _listen(thread_data) -> void:
 func tcp_connection(connection: StreamPeerTCP) -> void:
 	server = StreamPeerSSL.new() # This is a wrapper for TCP_Server. This is not a node, so this will not be added to the scene tree
 	server.connect_to_stream(connection) # TODO: Do I use for_hostname?
+	
+	#server.set_blocking_handshake_enabled(false)
+	print("Is Blocking Handshake: ", server.is_blocking_handshake_enabled()) # Default True
 	
 	# Check if Connected
 	if server.is_connected_to_host():
