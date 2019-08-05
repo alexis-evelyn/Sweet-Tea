@@ -15,17 +15,26 @@ extends Control
 # This is to test a custom module I compiled Godot with for encryption that I can use with RPC.
 # More on this later.
 # TODO: Add MBedTLS and Cripte to License Docs
+
+# 3.2.dev export template download (2 files needed) - https://hugo.pro/projects/godot-builds/
+# Actually, you need to compile the export template (because of custom modules)
+# http://docs.godotengine.org/en/stable/development/compiling/compiling_for_windows.html#creating-windows-export-templates
+# https://docs.godotengine.org/en/3.1/development/compiling/compiling_for_x11.html#building-export-templates
+# OSX does not have explicit instructions on how to compile export templates - http://docs.godotengine.org/en/stable/development/compiling/compiling_for_osx.html
+
+# I am currently compiling for OSX with the command: scons platform=osx tools=no target=release bits=64
+# Lets Hope it Works
 func test_module():
 	var Cripte = cripter.new()
-	
+
 	var key = "My not secret key"
-	
+
 	var gcm_add = "adicional data is: port: 316"
 	var gcm_input = var2bytes("The cow goes muuuu")
-	
+
 	var encrypted_array_gcm = Cripte.encrypt_byte_GCM(gcm_input, key, gcm_add)
 	var decrypted_array_gcm = Cripte.decrypt_byte_GCM(encrypted_array_gcm, key, gcm_add) 
-	
+
 	print("Encrypted: ", encrypted_array_gcm.get_string_from_ascii())
 	print("Decrypted: ", bytes2var(decrypted_array_gcm))
 
