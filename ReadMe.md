@@ -15,12 +15,10 @@ Licensing
 Godot - MIT - https://docs.godotengine.org/en/3.1/tutorials/legal/complying_with_licenses.html
 FreeType - FreeType License (Comparable to GPL 3) - https://git.savannah.gnu.org/cgit/freetype/freetype2.git/tree/docs/FTL.TXT from https://docs.godotengine.org/en/3.1/tutorials/legal/complying_with_licenses.html
 ENet - Custom License (Comparable to MIT) - http://enet.bespin.org/License.html from https://docs.godotengine.org/en/3.1/tutorials/legal/complying_with_licenses.html
-OpenSSL - Apache Style License - https://www.apache.org/licenses/LICENSE-2.0 from https://www.openssl.org/
 
-FiraCode Font - Open Font License (https://github.com/tonsky/FiraCode/)
-Godot GameJolt API - MIT License (https://github.com/ackens/-godot-gj-api)
-cripter - MIT License (https://github.com/Malkverbena/cripter)
+FiraCode Font - Open Font License - https://github.com/tonsky/FiraCode/
+Godot GameJolt API - MIT License - https://github.com/ackens/-godot-gj-api
+cripter - MIT License - https://github.com/Malkverbena/cripter
+MBedTLS - Apache 2.0 license - https://www.apache.org/licenses/LICENSE-2.0 from https://tls.mbed.org/
 
 * Licenses are located in Legal/
-
-* OpenSSL isn't actually used, but I have been experimenting with it, so I am preemptively adding the license if I use their code. If I don't use it, I will remove the license by game release.
