@@ -14,7 +14,6 @@ func _ready():
 
 # This is to test a custom module I compiled Godot with for encryption that I can use with RPC.
 # More on this later.
-# TODO: Add MBedTLS and Cripte to License Docs
 
 # Lets Hope it Works
 func test_module():
