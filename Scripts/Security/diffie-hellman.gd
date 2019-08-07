@@ -1,5 +1,9 @@
 extends Node
 
+# I based my code on the example from here - https://www.geeksforgeeks.org/implementation-diffie-hellman-algorithm/
+# Generate Large Prime Numbers - https://medium.com/@prudywsh/how-to-generate-big-prime-numbers-miller-rabin-49e6e6af32fb
+# How to Add Encryption Keys to Data (Not Needed As I Have Cripter) - https://medium.com/asecuritysite-when-bob-met-alice/how-to-bob-and-alice-and-carol-add-their-encryption-keys-to-data-6c623d8ad9da
+
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
