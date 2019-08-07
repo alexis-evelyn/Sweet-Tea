@@ -9,8 +9,18 @@ extends Node
 # Diffie-Hellman Steps (Server Side)
 # If RSA (or GPG) is not enabled, then Skip to 
 # Load (or generate if first time) RSA/GPG key. If first time, upload GPG Key to PGP Keyserver
+# ...
 # TODO (IMPORTANT): Figure out how to prevent hacker from generating and uploading a fake PGP key
 # TODO continued: Look at Minecraft protocol and Certificate Authorities and see how they do it!!!
+# Minecraft does a hash system which requires a live server (that costs money, so I may not make mitm auth until I know the game will take off)
+# It appears I can do some authentication through Gamejolt (but I don't want to split auth between multiple services), so this could be a possibility for alpha stage
+# Looking at GameJolt's API, I may only be able to authenticate users, not servers (and the whole point is to authenticate the server to prevent mitm)
+# Can a server authenticating a user prevent a MITM server? If it can, this may be my best option for security right now. I don't think it can.
+# There is also a cert based option (requires certificate authorities), but how to do that without server-to-client SSL/TLS?
+# Without hosting my own public auth server like Mojang did, there may not be much I can do to prevent MITM (other than CAs which adds unnecessary complexity to server owners).
+# I'm trying to avoid hosting as I am a broke college student and my Raspberry Pi won't be able to handle a lot of traffic (I may use it for testing and alpha stage though).
+# If I do hosting, since I am having Steam/Gamejolt handle the financial processing/trophies, I don't need to worry about storing user data on my auth server,
+#   just making sure the client and server are talking to each other and not some malicious third party.
 # ...
 
 # Declare member variables here. Examples:
