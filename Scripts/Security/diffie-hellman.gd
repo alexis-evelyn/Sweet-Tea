@@ -22,11 +22,11 @@ extends Node
 # If I do hosting, since I am having Steam/Gamejolt handle the financial processing/trophies, I don't need to worry about storing user data on my auth server,
 #  just making sure the client and server are talking to each other and not some malicious third party.
 # ...
- 
+
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
-	
+
 # TODO (IMPORTANT): Figure out how to do math on bits (ints cannot hold that much data)
 func generate_secret(public_base: int, public_modulus: int, private_exponent: int):
 	# There is no reason the exponent should be 1.
