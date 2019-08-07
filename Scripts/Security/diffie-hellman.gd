@@ -22,7 +22,7 @@ extends Node
 # If I do hosting, since I am having Steam/Gamejolt handle the financial processing/trophies, I don't need to worry about storing user data on my auth server,
 #  just making sure the client and server are talking to each other and not some malicious third party.
 # ...
-
+ 
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
