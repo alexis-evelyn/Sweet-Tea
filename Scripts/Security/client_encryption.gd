@@ -1,21 +1,21 @@
 extends Node
 
+# Please Refer to server_encryption.gd for my notes.
+# I always start development on server/client by starting with the server, so all of my notes will be there.
+
 # Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+var dh = preload("diffie-hellman.gd").new() # Preload Diffie-Hellman Script (Math is Exact Same No Matter if Client or Server)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	dh.test()
 	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
 
-# This is to test a custom module I compiled Godot with for encryption that I can use with RPC.
-# More on this later.
-
-# Lets Hope it Works
+# Test Module for Cripte
 func test_module():
 	var Cripte = cripter.new()
 
