@@ -19,7 +19,7 @@ extends Node
 # RSA Keysizes - https://danielpocock.com/rsa-key-sizes-2048-or-4096-bits/
 
 # Authentication (Computation Speed) - https://crypto.stackexchange.com/questions/58571/is-authentication-more-computationally-expensive-than-encryption
-# Authentication vs Enryption - https://support.1password.com/authentication-encryption/
+# Authentication vs Encryption - https://support.1password.com/authentication-encryption/
 
 # References To Existing Game Encryption Schemes
 # Minecraft - https://wiki.vg/Protocol_Encryption
