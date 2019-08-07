@@ -20,7 +20,7 @@ extends Node
 # Without hosting my own public auth server like Mojang did, there may not be much I can do to prevent MITM (other than CAs which adds unnecessary complexity to server owners).
 # I'm trying to avoid hosting as I am a broke college student and my Raspberry Pi won't be able to handle a lot of traffic (I may use it for testing and alpha stage though).
 # If I do hosting, since I am having Steam/Gamejolt handle the financial processing/trophies, I don't need to worry about storing user data on my auth server,
-#   just making sure the client and server are talking to each other and not some malicious third party.
+#  just making sure the client and server are talking to each other and not some malicious third party.
 # ...
 
 # Declare member variables here. Examples:
