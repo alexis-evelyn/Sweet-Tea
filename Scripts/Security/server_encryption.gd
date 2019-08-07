@@ -33,9 +33,14 @@ extends Node
 # What is GCM Encryption (YouTube) - https://www.youtube.com/watch?v=g_eY7JXOc8U
 
 # NOTE (IMPORTANT): I plan on modifying this to use a third party server to prevent MITM attacks (e.g. my own server if I cannot use Steam, Gamejolt, or Discord). If I use my own server, it would be based off of Mojang's auth server (maybe).
-# My Implementation Plans (Using Diffie-Hellman and GCM)
+# My Implementation Plans (Using Diffie-Hellman (with RSA if enabled) and GCM)
+# ----------------------------------------------------------------------------------------------------------------
+# RSA needs to be enabled to prevent MITM attacks (it uses a third party service)
+# Note: I may change RSA to PGP so I can just have servers upload keys to a freely available PGP Keyserver.
+# This is only to prevent MITM, actually encryption will be done with GCM
+# ----------------------------------------------------------------------------------------------------------------
 # Client Establishes Connection to Server
-# Generate Key using 4096 bits (0.000512 megabytes) over Diffie-Hellman
+# Generate Key using 4096 bits (0.000512 megabytes) over Diffie-Hellman (these steps are explained in diffie-hellman.gd)
 # Client Sends Master Key (gcm_key) Using Diffie Hellman (DH Key is tossed after Master Key is sent)
 # Both Client and Server will Increment 96 bit IV (gcm_add) every message
 # Profit...
