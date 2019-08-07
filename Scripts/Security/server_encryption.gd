@@ -41,8 +41,8 @@ extends Node
 # Profit...
 
 # Public/Private Keypair - Assymetric Keypair (e.g. RSA)
-# Public Key is Used to Decrypt Data
-# Private Key is Used to Encrypt Data
+# Public Key is Used to Encrypt Data
+# Private Key is Used to Decrypt Data
 
 # Symmetric Key
 # Master Key is A Non-Public/Private Key that can be used to encrypt/decrypt Messages With The Same Key
