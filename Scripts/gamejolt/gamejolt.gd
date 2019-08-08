@@ -67,8 +67,8 @@ func login(name: String, token: String):
 	
 func get_executable_folder():
 	# Keeps folder in Project Directory (will probably bug out on OSX if running a debug build outside the editor)
-#	if OS.is_debug_build(): #Engine.is_editor_hint(): is for if running inside editor (put tool at top of file)
-#		return ""
+	if OS.is_debug_build(): #Engine.is_editor_hint(): is for if running inside editor (put tool at top of file)
+		return ""
 	
 	# Godot on OSX will try to return a path inside the .app file. Back out of that directory.
 	if OS.get_name() == "OSX":
