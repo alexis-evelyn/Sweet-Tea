@@ -1,10 +1,15 @@
 extends Node
 
+# NOTE: I am going to do more research before I continue with the encryption part of the networking.
+# Since I am planning on using RPC as usual, all I really need to do is just route the data to encrypt/decrypt when sending/receiving the rpc calls.
+# I don't want to rush this and make a mistake, so I am going to learn more about encryption and authentication before I start working on the code behind it.
+
 # I based my code on the example from here - https://www.geeksforgeeks.org/implementation-diffie-hellman-algorithm/
 # Generate Large Prime Numbers - https://medium.com/@prudywsh/how-to-generate-big-prime-numbers-miller-rabin-49e6e6af32fb
 # How to Add Encryption Keys to Data (Not Needed As I Have Cripter) - https://medium.com/asecuritysite-when-bob-met-alice/how-to-bob-and-alice-and-carol-add-their-encryption-keys-to-data-6c623d8ad9dab
 
 # Computerphile Explains How To Prevent MITM (Youtube) - https://youtu.be/vsXMMT2CqqE
+# Question on GameJolt forum about server/client auth - https://gamejolt.com/f/can-gamejolt-api-help-with-a-client-authenticating-a-server/345491
 
 # Diffie-Hellman Steps (Server Side)
 # If RSA (or GPG) is not enabled, then Skip to 
