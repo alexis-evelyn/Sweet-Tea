@@ -6,14 +6,22 @@ extends Node
 
 # GameJolt Plugin API Source: https://github.com/rojekabc/-godot-gj-api
 
+signal function_finished
+
 onready var api = $GameJoltAPI
 
 var gamejolt_credentials_name = ".gj-credentials"
 var executable_directory = get_executable_folder()
 var protocol = ""
+var gamejolt_auth_path = protocol.plus_file(executable_directory.plus_file(gamejolt_credentials_name))
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	var test = File.new()
+	test.open("user://testgodot.txt", File.WRITE)
+	test.store_string(gamejolt_auth_path)
+	test.close()
+	
 	test()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -21,8 +29,6 @@ func _ready():
 #	pass
 
 func test():
-	var gamejolt_auth_path = protocol.plus_file(executable_directory.plus_file(gamejolt_credentials_name))
-	
 	# There is no real way to protect the API key and a bad actor will be able to get it anyway.
 	# So, instead of wasting my time trying to hide it from people, I am just putting it in ProjectSettings
 	# I least it can only be tied to the bad actor's accounts.
@@ -32,8 +38,8 @@ func test():
 	
 	var gamejolt_auth = File.new()
 	
-#	print("Credentials: ", gamejolt_auth.file_exists(gamejolt_auth_path))
-#	print("Path: ", gamejolt_auth_path)
+	print("Credentials: ", gamejolt_auth.file_exists(gamejolt_auth_path))
+	print("Path: ", gamejolt_auth_path)
 
 	if gamejolt_auth.file_exists(gamejolt_auth_path):
 		gamejolt_auth.open(gamejolt_auth_path, File.READ)
@@ -47,9 +53,23 @@ func test():
 		if auth.size() >= 3:
 			var name : String = auth[1]
 			var token : String = auth[2]
+			
 			login(name, token)
+			yield(self, "function_finished") # Wait Until Function is Finished
+			
+			get_gj_time()
+			yield(self, "function_finished") # Wait Until Function is Finished
+			
+			get_trophies()
+			yield(self, "function_finished") # Wait Until Function is Finished
+			
+			toggle_trophy("109979")
+			yield(self, "function_finished") # Wait Until Function is Finished
+	else:
+		print("GameJolt File Not Found")
 	
 func login(name: String, token: String):
+	# There's a user friendly token on GameJolt's site. This token functions in place of the one inside the gamejolt file.
 	api.auth_user(name, token)
 	
 	var result = yield(api, 'gamejolt_request_completed')
@@ -57,18 +77,58 @@ func login(name: String, token: String):
 		print("Successful Login: ", result.responseBody.success)
 	else:
 		api.print_error(result)
+		
+	emit_signal("function_finished")
 	
+func get_gj_time():
 	api.fetch_time()
-	result = yield(api, 'gamejolt_request_completed')
+	var result = yield(api, 'gamejolt_request_completed')
 	if api.is_ok(result):
 		print("GameJolt's Server's Time: ", result.responseBody.timestamp)
 	else:
 		api.print_error(result)
+		
+	emit_signal("function_finished")
 	
+func get_trophies():
+	api.fetch_trophy()
+	var result = yield(api, 'gamejolt_request_completed')
+	if api.is_ok(result):
+		loop_trophies(result.responseBody.trophies)
+	else:
+		api.print_error(result)
+		
+	emit_signal("function_finished")
+	
+func loop_trophies(trophies: Array):
+	for trophy in trophies:
+		print("Trophy Name: ", trophy.title, " - ID: ", trophy.id, " - Achieved: ", trophy.achieved)
+
+func toggle_trophy(trophy: String):
+	api.fetch_trophy(trophy)
+	var result = yield(api, 'gamejolt_request_completed')
+	if api.is_ok(result):
+		var trophies = result.responseBody.trophies
+		
+		if trophies.size() > 0:
+			var achieved = trophies[0].achieved
+			
+			if achieved == "false":
+				api.set_trophy_achieved(trophy)
+				print("Trophy Achieved: ", trophies[0].title)
+			else:
+				api.remove_trophy_achieved(trophy)
+				print("Trophy Removed: ", trophies[0].title)
+	else:
+		api.print_error(result)
+		
+	emit_signal("function_finished")
+
 func get_executable_folder():
 	# Keeps folder in Project Directory (will probably bug out on OSX if running a debug build outside the editor)
-	if OS.is_debug_build(): #Engine.is_editor_hint(): is for if running inside editor (put tool at top of file)
-		return ""
+	# Godot Keeps Defaulting Back to Debug Mode and I Keep Forgetting to Change Exports Back to Release Mode, So I Am Disabling This
+#	if OS.is_debug_build(): #Engine.is_editor_hint(): is for if running inside editor (put tool at top of file)
+#		return ""
 	
 	# Godot on OSX will try to return a path inside the .app file. Back out of that directory.
 	if OS.get_name() == "OSX":

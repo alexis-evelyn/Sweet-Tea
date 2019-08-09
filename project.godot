@@ -117,7 +117,7 @@ pause_menu={
 
 [network]
 
-ssl/certificates="res://addons/gamejolt/gamejolt.pem"
+ssl/certificates="res://addons/gamejolt/gamejolt.crt"
 
 [physics]
 
