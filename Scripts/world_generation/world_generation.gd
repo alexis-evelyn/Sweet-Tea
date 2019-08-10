@@ -10,6 +10,10 @@ extends TileMap
 # Large Tilemap Generation - https://godotengine.org/qa/1121/how-go-about-generating-very-large-or-infinite-map-from-tiles
 # Tilemap Docs - https://docs.godotengine.org/en/3.0/classes/class_tilemap.html
 
+# World Gen Help
+# Studying/Using This May Help - https://github.com/perdugames/SoftNoise-GDScript-
+# Builtin Noise Generator - https://godotengine.org/article/simplex-noise-lands-godot-31
+
 # Note: I am using a Tilemap to improve performance.
 # This does mean world manipulation will be more complicated, but performance cannot be passed up.
 # I am using SteinCode's Tumblr Article to help me get started.
@@ -59,7 +63,6 @@ func generate_world() -> void:
 		
 		for coor_y in vertical:
 			# Just Playing Around With World Gen Code - This Experimentation May Take A While (I am going to research existing algorithms that I can start from (legally))
-			# Studying/Using This May Help (https://github.com/perdugames/SoftNoise-GDScript-)
 			if (coor_y > (vertical/2)):
 				world_grid[coor_x][coor_y] = block_stone
 			elif (coor_y > (vertical/3)):
