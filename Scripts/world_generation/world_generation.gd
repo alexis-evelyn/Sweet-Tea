@@ -8,18 +8,19 @@ extends TileMap
 # Intro Tilemap Procedural Generation (Reddit) - https://www.reddit.com/r/godot/comments/8v2xco/introduction_to_procedural_generation_with_godot/
 # Into Tilemap Procedural Generation (Article) - https://steincodes.tumblr.com/post/175407913859/introduction-to-procedural-generation-with-godot
 # Large Tilemap Generation - https://godotengine.org/qa/1121/how-go-about-generating-very-large-or-infinite-map-from-tiles
-# Tilemap Docs - https://docs.godotengine.org/en/3.0/classes/class_tilemap.html
+# Tilemap Docs - https://docs.godotengine.org/en/3.1/classes/class_tilemap.html
 
 # World Gen Help
 # Studying/Using This May Help - https://github.com/perdugames/SoftNoise-GDScript-
 # Builtin Noise Generator - https://godotengine.org/article/simplex-noise-lands-godot-31
+# OpenSimplexNoise - https://docs.godotengine.org/en/3.1/classes/class_opensimplexnoise.html
 
 # Note: I am using a Tilemap to improve performance.
 # This does mean world manipulation will be more complicated, but performance cannot be passed up.
 # I am using SteinCode's Tumblr Article to help me get started.
 
 # Declare member variables here. Examples:
-var world_grid : Array = []
+var world_grid : Dictionary = {} # I use a dictionary so I can have negative coordinates.
 
 # Tilemap uses ints to store tile ids. This means I do not have an infinite number of blocks.
 # This will make things difficult if there are 100+ mods (all adding new blocks).
@@ -53,44 +54,45 @@ func _ready() -> void:
 #	pass
 
 func generate_foreground() -> void:
-	# Code Came From SteinCodes Tutorial - Will Severely Modify and Make Variable Names Meaningful
+	world_grid.clear() # Empty World_Grid for New Data
+	var noise = OpenSimplexNoise.new() # Create New SimplexNoise Generator
+	
+	# Get World Generation Size
 	var horizontal : int = world_size.x
 	var vertical : int = world_size.y
 	
-	world_grid.resize(horizontal)
-	
 	# World Gen Code
 	for coor_x in horizontal:
-		world_grid[coor_x] = []
-		world_grid[coor_x].resize(vertical)
+		# Configure Simplex Noise Generator (runs every x coordinate)
+		noise.seed = randi()
+		noise.octaves = 4
+		noise.period = 20.0
+		noise.persistence = 0.8
 		
-		for coor_y in vertical:
-			# Just Playing Around With World Gen Code - This Experimentation May Take A While (I am going to research existing algorithms that I can start from (legally))
-			if (coor_y > (vertical/2)):
-				world_grid[coor_x][coor_y] = block_stone
-			elif (coor_y > (vertical/3)):
-				if randi() % 100 == 0:
-					world_grid[coor_x][coor_y] = block_stone
-				else:
-					world_grid[coor_x][coor_y] = block_dirt
-			else:
-				world_grid[coor_x][coor_y] = block_air
+		var noise_output : float = int(floor(noise.get_noise_2d(0, vertical)))
+		world_grid[coor_x] = {} # I set the Dictionary here because I may move away from the coor_x variable for custom worldgen types
+		
+		if noise_output < 0:
+			world_grid[coor_x][noise_output] = block_grass
+		else:
+			world_grid[coor_x][noise_output] = block_dirt
+		
+		#print(noise_output)
 
-	apply_foreground(horizontal, vertical) # Apply World Grid to TileMap
+	apply_foreground() # Apply World Grid to TileMap
 
 # Generates The Background Tiles
 func generate_background():
+	world_grid.clear() # Empty World_Grid for New Data
+	
 	# Code Came From SteinCodes Tutorial - Will Severely Modify and Make Variable Names Meaningful
 	var horizontal : int = world_size.x
 	var vertical : int = world_size.y
-	
-	world_grid.resize(horizontal)
-	
+
 	# World Gen Code
 	for coor_x in horizontal:
-		world_grid[coor_x] = []
-		world_grid[coor_x].resize(vertical)
-		
+		world_grid[coor_x] = {}
+
 		for coor_y in vertical:
 			# Just Playing Around With World Gen Code - This Experimentation May Take A While (I am going to research existing algorithms that I can start from (legally))
 			if (coor_y > (vertical/2)):
@@ -103,20 +105,22 @@ func generate_background():
 			else:
 				world_grid[coor_x][coor_y] = block_air
 
-	apply_background(horizontal, vertical) # Apply World Grid to TileMap
+	apply_background() # Apply World Grid to TileMap
 
 # Takes World Grid and Applies Grid to TileMap
-func apply_foreground(horizontal: int, vertical: int) -> void:
+func apply_foreground() -> void:
 	# Set's Tile ID in Tilemap from World Grid
-	for coor_x in range(0,horizontal - 1):
-		for coor_y in range(0,vertical - 1):
+	for coor_x in world_grid.keys():
+		for coor_y in world_grid[coor_x].keys():
+			#print("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
 			set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
 
 # Takes World Grid and Applies Grid to TileMap
-func apply_background(horizontal: int, vertical: int) -> void:
+func apply_background() -> void:
 	# Set's Tile ID in Tilemap from World Grid
-	for coor_x in range(0,horizontal - 1):
-		for coor_y in range(0,vertical - 1):
+	for coor_x in world_grid.keys():
+		for coor_y in world_grid[coor_x].keys():
+			#print("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
 			background_tilemap.set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
 
 # Generates A Seed if One Was Not Specified
