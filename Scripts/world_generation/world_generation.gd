@@ -140,10 +140,11 @@ func generate_seed() -> int:
 func set_seed(random_seed: String) -> int:
 	world_seed = random_seed
 	
+	# If Not A Pure Integer (in String form), then Hash String To Integer
 	if not world_seed.is_valid_integer():
 		seed(world_seed.hash()) # Activate Random Generator With Seed
-		
 		return world_seed.hash()
 		
+	# If Pure Integer (in String form), then convert to Integer Type
 	seed(int(world_seed)) # Activate Random Generator With Seed
 	return int(world_seed)
