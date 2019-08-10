@@ -36,6 +36,8 @@ const world_size : Vector2 = Vector2(100, 100) # Tilemap is 32x32 (the size of a
 var quadrant_size : int = get_quadrant_size() # Default 16
 var world_seed : String # World Seed Variable
 
+onready var background_tilemap : TileMap = get_node("Background") # Gets The Background Tilemap
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	gamestate.debug_camera = true # Turns on Debug Camera - Useful for Debugging World Gen
@@ -43,13 +45,14 @@ func _ready() -> void:
 	#seed(generate_seed()) # Takes an Integer and Seed's the random number generator (allows reproducing a previously discovered world)
 	seed(set_seed("Test Seed"))
 	
-	generate_world()
+	generate_foreground() # Generate The Foreground (Tiles Player Can Stand On and Collide With)
+	generate_background() # Generate The Background (Tiles Player Can Pass Through)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta: float):
 #	pass
 
-func generate_world() -> void:
+func generate_foreground() -> void:
 	# Code Came From SteinCodes Tutorial - Will Severely Modify and Make Variable Names Meaningful
 	var horizontal : int = world_size.x
 	var vertical : int = world_size.y
@@ -73,14 +76,48 @@ func generate_world() -> void:
 			else:
 				world_grid[coor_x][coor_y] = block_air
 
-	apply_world(horizontal, vertical) # Apply World Grid to TileMap
+	apply_foreground(horizontal, vertical) # Apply World Grid to TileMap
+
+# Generates The Background Tiles
+func generate_background():
+	# Code Came From SteinCodes Tutorial - Will Severely Modify and Make Variable Names Meaningful
+	var horizontal : int = world_size.x
+	var vertical : int = world_size.y
+	
+	world_grid.resize(horizontal)
+	
+	# World Gen Code
+	for coor_x in horizontal:
+		world_grid[coor_x] = []
+		world_grid[coor_x].resize(vertical)
+		
+		for coor_y in vertical:
+			# Just Playing Around With World Gen Code - This Experimentation May Take A While (I am going to research existing algorithms that I can start from (legally))
+			if (coor_y > (vertical/2)):
+				world_grid[coor_x][coor_y] = block_stone
+			elif (coor_y > (vertical/3)):
+				if randi() % 100 == 0:
+					world_grid[coor_x][coor_y] = block_stone
+				else:
+					world_grid[coor_x][coor_y] = block_dirt
+			else:
+				world_grid[coor_x][coor_y] = block_air
+
+	apply_background(horizontal, vertical) # Apply World Grid to TileMap
 
 # Takes World Grid and Applies Grid to TileMap
-func apply_world(horizontal: int, vertical: int) -> void:
+func apply_foreground(horizontal: int, vertical: int) -> void:
 	# Set's Tile ID in Tilemap from World Grid
 	for coor_x in range(0,horizontal - 1):
 		for coor_y in range(0,vertical - 1):
 			set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
+
+# Takes World Grid and Applies Grid to TileMap
+func apply_background(horizontal: int, vertical: int) -> void:
+	# Set's Tile ID in Tilemap from World Grid
+	for coor_x in range(0,horizontal - 1):
+		for coor_y in range(0,vertical - 1):
+			background_tilemap.set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
 
 # Generates A Seed if One Was Not Specified
 func generate_seed() -> int:
