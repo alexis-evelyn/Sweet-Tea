@@ -28,7 +28,7 @@ const block_dirt : int = 1
 const block_grass : int = 2
 
 # Set's Worldgen size (Tilemap's Origin is Fixed to Same Spot as World Origin - I doubt I am changing this. Not unless changing it improves performance)
-const world_size : Vector2 = Vector2(30, 30) # Tilemap is 32x32 (the size of a standard block) pixels per tile.
+const world_size : Vector2 = Vector2(100, 100) # Tilemap is 32x32 (the size of a standard block) pixels per tile.
 var quadrant_size : int = get_quadrant_size() # Default 16
 var world_seed : String # World Seed Variable
 
@@ -52,20 +52,32 @@ func generate_world() -> void:
 	
 	world_grid.resize(horizontal)
 	
+	# World Gen Code
 	for coor_x in horizontal:
 		world_grid[coor_x] = []
 		world_grid[coor_x].resize(vertical)
 		
 		for coor_y in vertical:
-			if (coor_x%15 == 0 or coor_y%8 == 0) and randi()%20 != 0:
+			# Just Playing Around With World Gen Code - This Experimentation May Take A While (I am going to research existing algorithms that I can start from (legally))
+			if (coor_y > (vertical/2)):
 				world_grid[coor_x][coor_y] = block_stone
+			elif (coor_y > (vertical/3)):
+				if randi() % 100 == 0:
+					world_grid[coor_x][coor_y] = block_stone
+				else:
+					world_grid[coor_x][coor_y] = block_dirt
 			else:
 				world_grid[coor_x][coor_y] = block_air
 
+	apply_world(horizontal, vertical) # Apply World Grid to TileMap
+
+# Takes World Grid and Applies Grid to TileMap
+func apply_world(horizontal: int, vertical: int) -> void:
+	# Set's Tile ID in Tilemap from World Grid
 	for coor_x in range(0,horizontal - 1):
 		for coor_y in range(0,vertical - 1):
 			set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
-			
+
 # Generates A Seed if One Was Not Specified
 func generate_seed() -> int:
 	randomize() # This is void, and I cannot get the seed directly, so I have to improvise.
