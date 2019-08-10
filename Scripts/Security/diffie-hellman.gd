@@ -15,8 +15,6 @@ extends Node
 # If RSA (or GPG) is not enabled, then Skip to 
 # Load (or generate if first time) RSA/GPG key. If first time, upload GPG Key to PGP Keyserver
 # ...
-# TODO (IMPORTANT): Figure out how to prevent hacker from generating and uploading a fake PGP key
-# TODO continued: Look at Minecraft protocol and Certificate Authorities and see how they do it!!!
 # Minecraft does a hash system which requires a live server (that costs money, so I may not make mitm auth until I know the game will take off)
 # It appears I can do some authentication through Gamejolt (but I don't want to split auth between multiple services), so this could be a possibility for alpha stage
 # Looking at GameJolt's API, I may only be able to authenticate users, not servers (and the whole point is to authenticate the server to prevent mitm)

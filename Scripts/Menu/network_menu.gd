@@ -19,8 +19,6 @@ func _on_btColor_color_changed(color: Color) -> void:
 
 # Record Player's Info (Require's GUI)
 func set_player_info() -> void:
-	# TODO: Validate User Input
-	
 	# Set Player's Name
 	if (!$panelPlayer/txtPlayerName.text.empty()):
 		gamestate.player_info.name = $panelPlayer/txtPlayerName.text
@@ -35,11 +33,11 @@ func _on_btnCreate_pressed() -> void:
 	# Record Player's Info - GUI Only
 	set_player_info()
 	
-	# TODO: Make sure fields aren't empty before populating data
 	# Also, this is the perfect place to validate the data for the dictionary in network.gd
 	if (!$panelHost/txtServerName.text.empty()):
 		network.server_info.name = $panelHost/txtServerName.text
 	
+	# TODO: Make sure fields aren't empty before populating data
 	network.server_info.max_players = int($panelHost/txtMaxPlayers.text)
 	network.server_info.used_port = int($panelHost/txtServerPort.text)
 	

@@ -5,16 +5,6 @@ signal connection_success # Joining Server Was Successful
 signal server_created # Server Was Successfully Created
 signal cleanup_worlds # Cleanup World Handler
 
-# TODO (IMPORTANT): Figure out how to encrypt ENet!!! How Does Minecraft Do It?
-# This is important to prevent MITM attacks which could result in a server owner banning a player
-# Some potential options are, have a master certificate that signs other server certs (requires alway online server)
-# Or implement the encryption like how SSH would. Also requiring servers to have a hostname and a CA will create a cert
-# for the server owner (only usable for dedicated servers)
-# https://wiki.vg/Protocol_Encryption
-# https://docs.godotengine.org/en/3.1/tutorials/networking/ssl_certificates.html
-# https://gamedev.stackexchange.com/a/115626/97290
-# https://gamedevcoder.wordpress.com/2011/08/28/packet-encryption-in-multiplayer-games-part-1/
-
 # Keep Alive Thread
 var keep_alive: Thread
 
@@ -121,7 +111,7 @@ func close_connection() -> void:
 				get_tree().get_root().get_node("EncryptionServer").queue_free()
 		else:
 			# Client Side Only
-			# TODO: Free Up Resources and Save Data (Client Side)
+			# Free Up Resources and Save Data (Client Side)
 			
 			# If Client - Cleanup Ping Timer Thread (server doesn't have one).
 			keep_alive.wait_to_finish()

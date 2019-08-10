@@ -81,8 +81,6 @@ func _physics_process(_delta: float) -> void:
 			motion.y = lerp(motion.y, 0, 0.2)
 			friction = false
 		
-		# TODO (VERY IMPORTANT): Apparently, the client and server positions are just not going to stay synced using the performance saving code.
-		# I am probably going to have to sync coordinates from the server to client. May cause rebound issues which I will not like.
 		if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))):
 			#print("Motion: (", abs(motion.x), ", ", abs(motion.y), ")")
 			motion = move_and_slide(motion)

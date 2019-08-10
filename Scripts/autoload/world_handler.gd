@@ -83,8 +83,6 @@ func _load_world_client() -> void:
 func load_world(net_id: int, location: String) -> String:
 	#print("Change World Loading")
 	
-	# TODO: Check to make sure world isn't already loaded
-	
 	# Checks to Make sure World isn't already loaded
 	if loaded_worlds.has(location):
 		var world : Node = get_tree().get_root().get_node("Worlds").get_node(loaded_worlds[location])

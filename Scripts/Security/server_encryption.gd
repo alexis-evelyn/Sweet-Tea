@@ -21,6 +21,12 @@ extends Node
 # Authentication (Computation Speed) - https://crypto.stackexchange.com/questions/58571/is-authentication-more-computationally-expensive-than-encryption
 # Authentication vs Encryption - https://support.1password.com/authentication-encryption/
 
+# Useful Links
+# https://wiki.vg/Protocol_Encryption
+# https://docs.godotengine.org/en/3.1/tutorials/networking/ssl_certificates.html
+# https://gamedev.stackexchange.com/a/115626/97290
+# https://gamedevcoder.wordpress.com/2011/08/28/packet-encryption-in-multiplayer-games-part-1/
+
 # References To Existing Game Encryption Schemes
 # Minecraft - https://wiki.vg/Protocol_Encryption
 

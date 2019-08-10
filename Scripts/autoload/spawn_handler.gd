@@ -35,7 +35,6 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 	if (get_tree().is_network_server()):
 		# We Are The Server and The New Player is Not The Server
 		
-		# TODO: Validate That Player ID is Not Spoofed
 		# Apparently the RPC ID (used as Player ID) is safe from spoofing? I need to do more research just to be sure.
 		# https://www.reddit.com/r/godot/comments/bf4z8r/is_get_rpc_sender_id_safe_enough/eld38y8?utm_source=share&utm_medium=web2x
 		
@@ -133,9 +132,6 @@ func add_player(pinfo: Dictionary, net_id: int, coordinates: Vector2) -> void:
 
 # Server and Client - Despawn Player From Local World
 remote func despawn_player(net_id: int) -> void:
-	# TODO: Fix Error Mentioned at: http://kehomsforge.com/tutorials/multi/gdMultiplayerSetup/part03/. The error does not break the game at all, it just spams the console.
-	# "ERROR: _process_get_node: Invalid packet received. Unabled to find requested cached node. At: core/io/multiplayer_api.cpp:259."
-	
 	if (get_tree().is_network_server()):
 		for id in player_registrar.players:
 			# Skip sending the despawn packet to both the disconnected player and the server (itself)

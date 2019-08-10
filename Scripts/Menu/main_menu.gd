@@ -25,10 +25,8 @@ func _ready() -> void:
 	#OS.low_processor_usage_mode = true # Default Off - Meant for programs (as not in games - Causes performance issues in game)
 	OS.vsync_enabled = true # Already enabled by default, but can be changed by code.
 	
-	# This doesn't do anything, but if I could find a way to change these settings in gdscript, I could help make the gamw work on lower end computers.
 	Engine.set_iterations_per_second(30) # Physics FPS - Default 60
 	Engine.set_target_fps(30) # Rendering FPS - Default Unlimited
-	#ProjectSettings.save()
 	
 	print("Number of Cores: ", OS.get_processor_count())
 	print("Multithread Support: ", OS.can_use_threads())
@@ -81,10 +79,10 @@ func set_theme(theme) -> void:
 	
 	# I May Add The Font To The Theme Instead (then again I may add an override for people to use custom fonts with the same theme)
 	var buttons : Node = $Menu/Buttons
-	buttons.get_node("Singleplayer").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
-	buttons.get_node("Multiplayer").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
-	buttons.get_node("Options").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
-	buttons.get_node("Quit").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) # TODO: Fonts will be able to be chosen by player (including custom fonts added by player)
+	buttons.get_node("Singleplayer").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
+	buttons.get_node("Multiplayer").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
+	buttons.get_node("Options").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
+	buttons.get_node("Quit").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
 
 # Singleplayer Was Pressed
 func _on_Singleplayer_pressed() -> void:
@@ -103,4 +101,4 @@ func _on_Options_pressed() -> void:
 
 # Quit Was Pressed
 func _on_Quit_pressed() -> void:
-	get_tree().quit() # Quits Game
+	main_loop_events.quit() # Quits Game

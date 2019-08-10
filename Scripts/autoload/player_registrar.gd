@@ -12,7 +12,7 @@ signal player_removed(pinfo, id) # A Player Was Removed From The Player List
 var players : Dictionary = {}
 	
 # Clients Notified To Add Player to Player List (Client and Server Side)
-remote func register_player(pinfo: Dictionary, net_id: int, new_world := false) -> int:
+remote func register_player(pinfo: Dictionary, net_id: int, new_world : bool = false) -> int:
 	# new_world is for spawn handler to make sure player is registered (this is if registry failed through normal rpc call - makes game more robust in the event of packet loss)
 	#print("Registering Player")
 	

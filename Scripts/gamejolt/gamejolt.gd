@@ -17,16 +17,24 @@ var gamejolt_auth_path = protocol.plus_file(executable_directory.plus_file(gamej
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var test = File.new()
-	test.open("user://testgodot.txt", File.WRITE)
-	test.store_string(gamejolt_auth_path)
-	test.close()
-	
-	test()
+	if not gamestate.server_mode:
+		debug_auth_path()
+		test()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+
+func debug_auth_path():
+	var output = []
+	OS.execute('export', [], true, output)
+	
+	var test = File.new()
+	test.open("user://testgodot.txt", File.WRITE)
+	test.store_string(gamejolt_auth_path + "\n\n")
+	
+	test.store_string(str(output))
+	test.close()
 
 func test():
 	# There is no real way to protect the API key and a bad actor will be able to get it anyway.
@@ -130,13 +138,13 @@ func get_executable_folder():
 #	if OS.is_debug_build(): #Engine.is_editor_hint(): is for if running inside editor (put tool at top of file)
 #		return ""
 	
+	var path = OS.get_executable_path()
+	
 	# Godot on OSX will try to return a path inside the .app file. Back out of that directory.
 	if OS.get_name() == "OSX":
-		var path = OS.get_executable_path()
 		var split_path = path.rsplit(".app", false, 1)
 		
 		return split_path[0].rsplit("/", true, 1)[0]
 		
-		#return OS.get_executable_path()
-		
-	return OS.get_executable_path()
+	# TODO: Test to make sure this works
+	return path[0].rsplit("/", true, 1)[0]
