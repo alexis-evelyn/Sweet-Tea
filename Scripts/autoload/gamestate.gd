@@ -20,6 +20,7 @@ var player_info : Dictionary = {
 }
 
 var net_id : int = 1 # Player's ID
+var debug_camera = false
 
 # A Note On Saving
 # I am able to load and save nodes natively using Godot.

@@ -1,5 +1,7 @@
 extends TileMap
 
+# Note (IMPORTANT): World Origin is Top Left of Starting Screen - This May Change
+
 # Non-Tilemap Generation - https://www.youtube.com/watch?v=skln7GPdB_A&list=PL0t9iz007UitFwiu33Vx4ZnjYQHH9th2r
 # How Many Tilemaps - https://godotengine.org/qa/17780/create-multiple-small-tilemaps-or-just-a-giant
 # 2D Tilemaps Chunk Theory - https://www.gamedev.net/forums/topic/653120-2d-tilemaps-chunk-theory/
@@ -13,34 +15,65 @@ extends TileMap
 # I am using SteinCode's Tumblr Article to help me get started.
 
 # Declare member variables here. Examples:
-var grid : Array = []
+var world_grid : Array = []
 
-const block_air = -1 # -1 means no tile exists - there is no such thing as block_air. It is just void.
-const block_stone = 0
-const block_dirt = 1
-const block_grass = 2
+# Tilemap uses ints to store tile ids. This means I do not have an infinite number of blocks.
+# This will make things difficult if there are 100+ mods (all adding new blocks).
+# Mojang used strings to solve this problem, but I don't know if I can make Tilemap use strings.
+# I may have to create my own Tilemap from scratch (after release).
+# Block IDs (referencing the Tilemap Tile ID)
+const block_air : int = -1 # -1 means no tile exists - there is no such thing as block_air. It is just void.
+const block_stone : int = 0
+const block_dirt : int = 1
+const block_grass : int = 2
+
+# Set's Worldgen size (Tilemap's Origin is Fixed to Same Spot as World Origin - I doubt I am changing this. Not unless changing it improves performance)
+const world_size : Vector2 = Vector2(30, 30) # Tilemap is 32x32 (the size of a standard block) pixels per tile.
+var quadrant_size : int = get_quadrant_size() # Default 16
+var world_seed : String # World Seed Variable
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
+	gamestate.debug_camera = true # Turns on Debug Camera - Useful for Debugging World Gen
 	
-	# Code Came From SteinCodes Tutorial - Will Severaly Modify and Make Variable Names Meaningful
-	randomize()
+	#seed(generate_seed()) # Takes an Integer and Seed's the random number generator (allows reproducing a previously discovered world)
+	seed(set_seed("Test Seed"))
 	
-	grid.resize(17)
-	
-	for n in 17:
-		grid[n] = []
-		grid[n].resize(17)
-		for m in 17:
-			if (n%15 == 0 or m%8 == 0) and randi()%20 != 0:
-				grid[n][m] = block_stone
-			else:
-				grid[n][m] = block_air
-
-	for n in range(0,16):
-		for m in range(0,16):
-			set_cell(n, m, grid[n][m])
+	generate_world()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
+#func _process(delta: float):
 #	pass
+
+func generate_world() -> void:
+	# Code Came From SteinCodes Tutorial - Will Severely Modify and Make Variable Names Meaningful
+	var horizontal : int = world_size.x
+	var vertical : int = world_size.y
+	
+	world_grid.resize(horizontal)
+	
+	for coor_x in horizontal:
+		world_grid[coor_x] = []
+		world_grid[coor_x].resize(vertical)
+		
+		for coor_y in vertical:
+			if (coor_x%15 == 0 or coor_y%8 == 0) and randi()%20 != 0:
+				world_grid[coor_x][coor_y] = block_stone
+			else:
+				world_grid[coor_x][coor_y] = block_air
+
+	for coor_x in range(0,horizontal - 1):
+		for coor_y in range(0,vertical - 1):
+			set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
+			
+# Generates A Seed if One Was Not Specified
+func generate_seed() -> int:
+	randomize() # This is void, and I cannot get the seed directly, so I have to improvise.
+	
+	return randi() # Generate a random int to use as a seed (and returns it for saving for player and inputting into generator later)
+
+# Sets World's Seed
+func set_seed(random_seed: String) -> int:
+	world_seed = random_seed
+	#seed(random_seed.hash())
+	return world_seed.hash()

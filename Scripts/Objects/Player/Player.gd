@@ -43,7 +43,11 @@ func _ready() -> void:
 		# Every Quarter of A Second Seems to Produce the Most Seamless Experience without Causing the Server to Catch Fire
 		# This still needs to be tested in an environment with real latency. The Wait Time Should Be Configurable.
 		correct_coordinates_timer.set_wait_time(0.05) # Execute Every Fifth of a Second (almost completely smooth and keeps laptop cool with just one client)
-		correct_coordinates_timer.start() # Start Timer 
+		correct_coordinates_timer.start() # Start Timer
+		
+	# Activate Debug Camera if Gamestate Debug Camera Boolean is True
+	if gamestate.debug_camera:
+		debug_camera(true)
 
 # Called before every rendered frame.
 func _process(_delta: float) -> void:
@@ -135,3 +139,14 @@ remotesync func correct_coordinates(coordinates: Vector2) -> void:
 # Sets Player's Color (also sets other players colors too)
 func set_dominant_color(color: Color) -> void:
 	$CollisionShape2D/Sprite.modulate = color # Changes the Player's Color in the World
+	
+# I put debug camera here as it is guaranteed that the player is placed in a loaded world by this point
+func debug_camera(activated : bool = true):
+	# The camera is automatically cleaned up when the world is unloaded
+	var camera = load("res://Objects/Players/DebugCamera.tscn").instance()
+	
+	# This allows me to align camera to World
+	get_tree().get_root().get_node("Worlds").get_node(player_registrar.players[gamestate.net_id].current_world).get_node("Viewport").add_child(camera)
+	
+	# This allows me to align camera to Player
+	#add_child(camera)
