@@ -27,10 +27,12 @@ var world_grid : Dictionary = {} # I use a dictionary so I can have negative coo
 # Mojang used strings to solve this problem, but I don't know if I can make Tilemap use strings.
 # I may have to create my own Tilemap from scratch (after release).
 # Block IDs (referencing the Tilemap Tile ID)
-const block_air : int = -1 # -1 means no tile exists - there is no such thing as block_air. It is just void.
-const block_stone : int = 0
-const block_dirt : int = 1
-const block_grass : int = 2
+const block : Dictionary = {
+	'air': -1, # -1 means no tile exists - there is no such thing as block_air. It is just void.
+	'stone': 0,
+	'dirt': 1,
+	'grass': 2
+}
 
 # Set's Worldgen size (Tilemap's Origin is Fixed to Same Spot as World Origin - I doubt I am changing this. Not unless changing it improves performance)
 const world_size : Vector2 = Vector2(100, 100) # Tilemap is 32x32 (the size of a standard block) pixels per tile.
@@ -43,8 +45,8 @@ onready var background_tilemap : TileMap = get_node("Background") # Gets The Bac
 func _ready() -> void:
 	gamestate.debug_camera = true # Turns on Debug Camera - Useful for Debugging World Gen
 	
-	#seed(generate_seed()) # Takes an Integer and Seed's the random number generator (allows reproducing a previously discovered world)
-	seed(set_seed("Test Seed"))
+	#print("Seed: ", generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
+	print("Seed: ", set_seed("Test Seed")) # Converts Seed to Int and Applies to Generator
 	
 	generate_foreground() # Generate The Foreground (Tiles Player Can Stand On and Collide With)
 	generate_background() # Generate The Background (Tiles Player Can Pass Through)
@@ -67,15 +69,17 @@ func generate_foreground() -> void:
 		noise.seed = randi()
 		noise.octaves = 4
 		noise.period = 20.0
+		noise.lacunarity = 1.5
 		noise.persistence = 0.8
 		
-		var noise_output : float = int(floor(noise.get_noise_2d(0, vertical)))
+		var noise_output : int = int(floor(noise.get_noise_2d(0, vertical) * 5)) + 15
+		#var noise_output : int = int(floor(noise.get_noise_2d((get_global_transform().origin.x + coor_x) * 0.1, 0) * vertical * 0.2)) - Modified From Non-Tilemap Generation Video (does not translate well :P)
 		world_grid[coor_x] = {} # I set the Dictionary here because I may move away from the coor_x variable for custom worldgen types
 		
 		if noise_output < 0:
-			world_grid[coor_x][noise_output] = block_grass
+			world_grid[coor_x][noise_output] = block.grass
 		else:
-			world_grid[coor_x][noise_output] = block_dirt
+			world_grid[coor_x][noise_output] = block.dirt
 		
 		#print(noise_output)
 
@@ -96,14 +100,14 @@ func generate_background():
 		for coor_y in vertical:
 			# Just Playing Around With World Gen Code - This Experimentation May Take A While (I am going to research existing algorithms that I can start from (legally))
 			if (coor_y > (vertical/2)):
-				world_grid[coor_x][coor_y] = block_stone
+				world_grid[coor_x][coor_y] = block.stone
 			elif (coor_y > (vertical/3)):
 				if randi() % 100 == 0:
-					world_grid[coor_x][coor_y] = block_stone
+					world_grid[coor_x][coor_y] = block.stone
 				else:
-					world_grid[coor_x][coor_y] = block_dirt
+					world_grid[coor_x][coor_y] = block.dirt
 			else:
-				world_grid[coor_x][coor_y] = block_air
+				world_grid[coor_x][coor_y] = block.air
 
 	apply_background() # Apply World Grid to TileMap
 
@@ -126,11 +130,20 @@ func apply_background() -> void:
 # Generates A Seed if One Was Not Specified
 func generate_seed() -> int:
 	randomize() # This is void, and I cannot get the seed directly, so I have to improvise.
+	var random_seed : int = randi() # Generate a random int to use as a seed
 	
-	return randi() # Generate a random int to use as a seed (and returns it for saving for player and inputting into generator later)
+	seed(random_seed) # Activate Random Generator With Seed
+	
+	return random_seed # Returns seed for saving for player and inputting into generator later
 
 # Sets World's Seed
 func set_seed(random_seed: String) -> int:
 	world_seed = random_seed
-	#seed(random_seed.hash())
-	return world_seed.hash()
+	
+	if not world_seed.is_valid_integer():
+		seed(world_seed.hash()) # Activate Random Generator With Seed
+		
+		return world_seed.hash()
+		
+	seed(int(world_seed)) # Activate Random Generator With Seed
+	return int(world_seed)
