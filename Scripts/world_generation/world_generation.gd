@@ -59,6 +59,7 @@ func generate_world() -> void:
 		
 		for coor_y in vertical:
 			# Just Playing Around With World Gen Code - This Experimentation May Take A While (I am going to research existing algorithms that I can start from (legally))
+			# Studying/Using This May Help (https://github.com/perdugames/SoftNoise-GDScript-)
 			if (coor_y > (vertical/2)):
 				world_grid[coor_x][coor_y] = block_stone
 			elif (coor_y > (vertical/3)):
