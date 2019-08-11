@@ -43,6 +43,9 @@ onready var background_tilemap : TileMap = get_node("Background") # Gets The Bac
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	background_tilemap.set_owner(get_parent().get_parent().get_parent())
+	print("Background TileMap's Owner: ", background_tilemap.get_owner().name)
+	
 	gamestate.debug_camera = true # Turns on Debug Camera - Useful for Debugging World Gen
 	
 	#print("Seed: ", generate_seed()) # Generates A Random Seed (Int) and Applies to Generator

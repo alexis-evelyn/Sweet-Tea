@@ -80,7 +80,7 @@ var dh = preload("diffie-hellman.gd").new() # Preload Diffie-Hellman Script (Mat
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	dh.test()
+	#dh.test()
 	load_key()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

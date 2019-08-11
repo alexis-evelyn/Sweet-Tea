@@ -6,8 +6,8 @@ signal cleanup_worlds
 # Chunk Loading (like in Minecraft) is perfectly possible with Godot - https://www.reddit.com/r/godot/comments/8shad4/how_do_large_open_worlds_work_in_godot/
 # I ultimately plan on having multiple worlds which the players can join on the server. As for singleplayer, it is going to be a server that refuses connections unless the player opens it up to other players.
 # I also want to have a "home" that players spawn at before they join the starting_world (like how Starbound has a spaceship. but I want my home to be an actual world that will be the player's home world. The player can then use portals to join the server world.
-var starting_world : String = "res://Worlds/World.tscn" # Basically Server Spawn
-var starting_world_name : String = "Not Set"
+var starting_world : String = "Not Set" # Basically Server Spawn
+var starting_world_name : String = "Not Set" # Spawn World's Name
 
 # Server Gets Currently Loaded Worlds
 var loaded_worlds : Dictionary = {}
@@ -37,7 +37,31 @@ func _load_world_server() -> void:
 	var worlds : Node = Node.new()
 	worlds.name = "Worlds"
 	
-	var spawn : Node = load(starting_world).instance()
+	if gamestate.player_info.has("starting_world"):
+		starting_world = gamestate.player_info.starting_world
+	else:
+		print("This should never be reached (once character creation exists). This is because Host Server will not be in network menu anymore.")
+		
+		# Cleans Up Connection on Error
+		player_registrar.cleanup()
+		gamestate.net_id = 1 # Reset Network ID To 1 (default value)
+		get_tree().set_network_peer(null) # Disable Network Peer
+		
+		return
+	
+	var spawn_resource : Resource = load(starting_world)
+	
+	if spawn_resource == null:
+		print("World is Missing!!!")
+		
+		# Cleans Up Connection on Error
+		player_registrar.cleanup()
+		gamestate.net_id = 1 # Reset Network ID To 1 (default value)
+		get_tree().set_network_peer(null) # Disable Network Peer
+		
+		return
+		
+	var spawn : Node = spawn_resource.instance()
 	
 	# Add Spawn World to Loaded World's Dictionary
 	starting_world_name = spawn.name
@@ -118,6 +142,24 @@ func load_world(net_id: int, location: String) -> String:
 	loaded_worlds[location] = world.name
 	
 	return world.name # Return World Name to Help Track Client Location
+	
+func save_world(world: Node):
+	var save_path = "user://".plus_file(world.name + ".tscn")
+	#var save_path = "user://worlds/".plus_file(world.name).plus_file("/world.tscn")
+	
+	var scene = PackedScene.new()
+	var result = scene.pack(world)
+	
+	if result == OK:
+		print("Saving: ", save_path)
+		
+		#var saved = ResourceSaver.save(save_path), scene)
+		var saved = ResourceSaver.save(save_path, scene)
+		
+		if saved == OK:
+			print("Hooray!!!")
+		else:
+			print("Something Went Wrong!!!")
 	
 # Cleanup World Handler
 func cleanup() -> void:

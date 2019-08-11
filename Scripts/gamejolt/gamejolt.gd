@@ -18,8 +18,9 @@ var gamejolt_auth_path = protocol.plus_file(executable_directory.plus_file(gamej
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	if not gamestate.server_mode:
-		debug_auth_path()
-		test()
+		#debug_auth_path()
+		#test()
+		pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

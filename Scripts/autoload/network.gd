@@ -99,13 +99,16 @@ func close_connection() -> void:
 	# Clears PlayerUI on Disconnect
 	playerUI.cleanup()
 	
-	# Frees All Worlds From Memory (1 World if Client, All if Server)
-	get_tree().get_root().get_node("Worlds").queue_free()
+	var worlds = get_tree().get_root().get_node("Worlds")
 	
 	if(get_tree().get_network_peer() != null):
 		# Do different things depending on if server or client
 		if get_tree().is_network_server():
 			# Server Side Only
+			
+			# Saves Worlds to Disk (in a separate folder per world)
+			for world in worlds.get_children():
+				world_handler.save_world(world)
 			
 			if get_tree().get_root().has_node("EncryptionServer"):
 				get_tree().get_root().get_node("EncryptionServer").queue_free()
@@ -126,6 +129,9 @@ func close_connection() -> void:
 		player_registrar.cleanup()
 		gamestate.net_id = 1 # Reset Network ID To 1 (default value)
 		get_tree().set_network_peer(null) # Disable Network Peer
+	
+	# Frees All Worlds From Memory (1 World if Client, All if Server)
+	worlds.queue_free()
 	
 	emit_signal("cleanup_worlds")
 	

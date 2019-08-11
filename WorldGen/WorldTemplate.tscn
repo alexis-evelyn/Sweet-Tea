@@ -2,7 +2,7 @@
 
 [ext_resource path="res://WorldGen/WorldGen.tscn" type="PackedScene" id=1]
 
-[node name="World 1" type="ViewportContainer"]
+[node name="World Template" type="ViewportContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 stretch = true
