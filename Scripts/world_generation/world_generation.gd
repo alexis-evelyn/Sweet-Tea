@@ -39,17 +39,20 @@ const world_size : Vector2 = Vector2(100, 100) # Tilemap is 32x32 (the size of a
 var quadrant_size : int = get_quadrant_size() # Default 16
 var world_seed : String # World Seed Variable
 
+onready var world_node = self.get_owner() # Gets The Current World's Node
 onready var background_tilemap : TileMap = get_node("Background") # Gets The Background Tilemap
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	background_tilemap.set_owner(get_parent().get_parent().get_parent())
-	print("Background TileMap's Owner: ", background_tilemap.get_owner().name)
+	background_tilemap.set_owner(world_node) # Set world as owner of Background Tilemap (allows saving Tilemap to world when client saves world)
+	print("Background TileMap's Owner: ", background_tilemap.get_owner().name) # Debug Statement to list Background TileMap's Owner's Name
 	
 	gamestate.debug_camera = true # Turns on Debug Camera - Useful for Debugging World Gen
 	
 	#print("Seed: ", generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
 	print("Seed: ", set_seed("Test Seed")) # Converts Seed to Int and Applies to Generator
+	
+	save_seed_to_world() # Saves World Seed - To Later Save World To Drive
 	
 	generate_foreground() # Generate The Foreground (Tiles Player Can Stand On and Collide With)
 	generate_background() # Generate The Background (Tiles Player Can Pass Through)
@@ -201,3 +204,31 @@ func world_get_tile_background(world_coordinate: Vector2) -> Vector2:
 	"""
 	
 	return background_tilemap.world_to_map(world_coordinate)
+
+func save_seed_to_world() -> void:
+	"""
+		Creates A Node With The World Seed Set As Name
+		
+		This is because I have not found a way to export variables to a scene file.
+		I am trying to save the seed to the world file, so the world data won't be more complicated than it needs to be.
+	"""
+	
+	#print("Save Seed to World!!!")
+	
+	# Create Seed Node's Parent and Seed Node
+	var seed_parent : Node = Node.new()
+	var seed_name : Node = Node.new()
+	
+	# Set Seed's Name and Parent's Name (having a parent with an already known name makes the seed easier to find)
+	seed_parent.name = "seed"
+	seed_name.name = world_seed
+	
+	# Adds Nodes to World - Deferred Call Because World Node Not Finished Loading Children Yet
+	world_node.call_deferred("add_child", seed_parent)
+	seed_parent.call_deferred("add_child", seed_name)
+	
+	# Sets Seed Nodes' Owner - Deferred Call Because Node Not Setup Yet
+	seed_parent.call_deferred("set_owner", world_node)
+	seed_name.call_deferred("set_owner", world_node)
+	
+	
