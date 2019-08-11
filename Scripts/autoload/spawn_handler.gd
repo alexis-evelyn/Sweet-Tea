@@ -127,7 +127,7 @@ func add_player(pinfo: Dictionary, net_id: int, coordinates: Vector2) -> void:
 		# Player was not registered, so there is going to be an invisible client
 		# That is not good, so add player to registry and call ourself again
 		#print("Player Missing From Registry!!! Trying to Add to Registry!!!")
-		player_registrar.register_player(pinfo, net_id, true) # Currently will not work
+		player_registrar.register_player(pinfo, net_id, true)
 		add_player(pinfo, net_id, coordinates)
 
 # Server and Client - Despawn Player From Local World

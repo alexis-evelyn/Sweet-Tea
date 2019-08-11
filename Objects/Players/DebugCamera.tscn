@@ -6,3 +6,16 @@
 anchor_mode = 0
 current = true
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Coordinates" type="RichTextLabel" parent="."]
+margin_left = 750.0
+margin_top = 10.0
+margin_right = 1015.0
+margin_bottom = 50.0
+text = "Coordinates..."
+__meta__ = {
+"_edit_use_anchors_": false
+}

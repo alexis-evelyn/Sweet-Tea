@@ -44,6 +44,7 @@ func _on_player_list_changed() -> void:
 				var connectedPlayerLabel : Node = Label.new()
 				connectedPlayerLabel.align = Label.ALIGN_CENTER # Aligns the Text To Center
 				connectedPlayerLabel.text = player_registrar.players[int(player.name)].name
+				# Font does not need to be loaded every single time (only once)
 				connectedPlayerLabel.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) 
 				$boxList.add_child(connectedPlayerLabel)
 	

@@ -35,8 +35,8 @@ const block : Dictionary = {
 }
 
 # Set's Worldgen size (Tilemap's Origin is Fixed to Same Spot as World Origin - I doubt I am changing this. Not unless changing it improves performance)
-const world_size : Vector2 = Vector2(100, 100) # Tilemap is 32x32 (the size of a standard block) pixels per tile.
 var quadrant_size : int = get_quadrant_size() # Default 16
+var chunk_size : Vector2 = Vector2(quadrant_size, quadrant_size) # Tilemap is 32x32 (the size of a standard block) pixels per tile.
 var world_seed : String # World Seed Variable
 
 onready var world_node = self.get_owner() # Gets The Current World's Node
@@ -72,8 +72,8 @@ func generate_foreground() -> void:
 	var noise = OpenSimplexNoise.new() # Create New SimplexNoise Generator
 	
 	# Get World Generation Size
-	var horizontal : int = world_size.x
-	var vertical : int = world_size.y
+	var horizontal : int = chunk_size.x
+	var vertical : int = chunk_size.y
 	
 	# World Gen Code
 	for coor_x in horizontal:
@@ -108,8 +108,8 @@ func generate_background():
 	world_grid.clear() # Empty World_Grid for New Data
 	
 	# Code Came From SteinCodes Tutorial - Will Severely Modify and Make Variable Names Meaningful
-	var horizontal : int = world_size.x
-	var vertical : int = world_size.y
+	var horizontal : int = chunk_size.x
+	var vertical : int = chunk_size.y
 
 	# World Gen Code
 	for coor_x in horizontal:
