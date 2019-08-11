@@ -61,6 +61,7 @@ func generate_foreground() -> void:
 		
 		Dumps Tiles to World Grid
 	"""
+	
 	world_grid.clear() # Empty World_Grid for New Data
 	var noise = OpenSimplexNoise.new() # Create New SimplexNoise Generator
 	
@@ -97,6 +98,7 @@ func generate_background():
 		
 		Dumps Tiles to World Grid
 	"""
+	
 	world_grid.clear() # Empty World_Grid for New Data
 	
 	# Code Came From SteinCodes Tutorial - Will Severely Modify and Make Variable Names Meaningful
@@ -127,6 +129,7 @@ func apply_foreground() -> void:
 		
 		Not Meant To Be Called Directly
 	"""
+	
 	# Set's Tile ID in Tilemap from World Grid
 	for coor_x in world_grid.keys():
 		for coor_y in world_grid[coor_x].keys():
@@ -139,6 +142,10 @@ func apply_background() -> void:
 		
 		Not Meant To Be Called Directly
 	"""
+	
+	# Z-Index for Background is -1 (Foreground is 0).
+	# This Makes Foreground Cover Up Background
+	
 	# Set's Tile ID in Tilemap from World Grid
 	for coor_x in world_grid.keys():
 		for coor_y in world_grid[coor_x].keys():
@@ -161,6 +168,7 @@ func set_seed(random_seed: String) -> int:
 	"""
 		Sets World's Seed
 	"""
+	
 	world_seed = random_seed
 	
 	# If Not A Pure Integer (in String form), then Hash String To Integer
@@ -179,6 +187,7 @@ func world_get_tile(world_coordinate: Vector2) -> Vector2:
 		
 		Specify World Coordinates as Vector2
 	"""
+	
 	return world_to_map(world_coordinate)
 	
 func world_get_tile_background(world_coordinate: Vector2) -> Vector2:
@@ -187,4 +196,5 @@ func world_get_tile_background(world_coordinate: Vector2) -> Vector2:
 		
 		Specify World Coordinates as Vector2
 	"""
+	
 	return background_tilemap.world_to_map(world_coordinate)
