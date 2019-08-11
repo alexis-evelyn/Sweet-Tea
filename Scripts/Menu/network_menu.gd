@@ -5,20 +5,36 @@ func _ready() -> void:
 	set_theme(gamestate.game_theme)	
 	set_game_data()
 
-# Sets NetworkMenuTheme
 func set_theme(theme: Theme) -> void:
+	"""
+		Set's Network Menu Theme
+		
+		Supply Theme Resource
+	"""
+	
 	# Different Panels In Network Menu - Will Be Changed After Character Creation is Implemented
 	$panelHost.set_theme(theme)
 	$panelJoin.set_theme(theme)
 	$panelPlayer.set_theme(theme)
 
-# TODO: As I create an actual player creation screen, I will get rid of this section of the NetworkMenu
-# Set's Player Sprite Color in Menu Live
 func _on_btColor_color_changed(color: Color) -> void:
+	"""
+		(Deprecated) - Change Player's Color Live
+		
+		Not Meant To Be Called Directly
+	"""
+	
 	$panelPlayer/playerIcon.modulate = $panelPlayer/btColor.color
 
-# Record Player's Info (Require's GUI)
 func set_player_info() -> void:
+	"""
+		(Deprecated) - Set's Players Info
+		
+		Will Be Relocated to Player Creation Screen
+		
+		Not Meant To Be Called Directly
+	"""
+	
 	# Set Player's Name
 	if (!$panelPlayer/txtPlayerName.text.empty()):
 		gamestate.player_info.name = $panelPlayer/txtPlayerName.text
@@ -26,8 +42,17 @@ func set_player_info() -> void:
 	# Set Character's Color
 	gamestate.player_info.char_color = $panelPlayer/btColor.color.to_html(true)
 
-# Create Server Button (GUI Only - Not Headless)
 func _on_btnCreate_pressed() -> void:
+	"""
+		(Deprecated) - Host Server
+		
+		Single Player is a Server. However, It Won't Accept Connections Until Enabled By Player
+		
+		There Will Be No Option to Host Server From Network Menu Once Player Creation and Loading is Created
+		
+		Not Meant To Be Called Directly
+	"""
+	
 	# Gather values from the GUI and fill the network.server_info dictionary
 	
 	# Record Player's Info - GUI Only
@@ -44,9 +69,16 @@ func _on_btnCreate_pressed() -> void:
 	# Create the Server (Through network.gd)
 	network.create_server()
 
-# TODO: Move This Function Outside of A Menu (and Put into Command Line Handling Code)
-# Headless Only Creation of Server
 func _create_server_headless() -> void:
+	"""
+		(Deprecated) - Host Server Without GUI (Not Implemented)
+		
+		Meant to Be Used By Command Line Arguments. Currently Broken.
+		Will Be Moved to Network Script Later.
+		
+		Not Meant To Be Called Directly
+	"""
+	
 	network.server_info.name = "Server Name - Headless"
 	
 	network.server_info.max_players = int("5") # Maximum Number of Players
@@ -55,8 +87,15 @@ func _create_server_headless() -> void:
 	# Create the Server (Through network.gd)
 	network.create_server()
 
-# Join Server Button
 func _on_btnJoin_pressed() -> void:
+	"""
+		Join's Server
+		
+		Will Call Player Selection Screen Before Attempting To Join Server
+		
+		Not Meant To Be Called Directly
+	"""
+	
 	# Record Player's Info - GUI Only
 	set_player_info()
 	
@@ -65,8 +104,15 @@ func _on_btnJoin_pressed() -> void:
 	var ip : String = $panelJoin/txtJoinIP.text
 	network.join_server(ip, port)
 
-# Load Data - This Exists Just To Test Saving - I Am Not Setting Player Data From The Network Menu In The Real Game
 func set_game_data() -> void:
+	"""
+		(Deprecated) - Loads Player's Data
+		
+		Will Be Moved to Character Selection Screen
+		
+		Not Meant To Be Called Directly
+	"""
+	
 	# Set Character's Name
 	var loaded : int = gamestate.load_player(0)
 	
@@ -81,8 +127,15 @@ func set_game_data() -> void:
 		
 		_on_btColor_color_changed(gamestate.player_info.char_color)
 
-# Save Data - This Exists Just To Test Saving - I Am Not Setting Player Data From The Network Menu In The Real Game
 func _on_btColor_popup_closed() -> void:
+	"""
+		(Deprecated) - Saves Player's Data
+		
+		Will Be Moved to Character Creation Screen
+		
+		Not Meant To Be Called Directly
+	"""
+	
 	set_player_info()
 	
 	#print("Character Color: " + str(gamestate.player_info.char_color))

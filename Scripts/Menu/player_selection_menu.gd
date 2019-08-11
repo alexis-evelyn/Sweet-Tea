@@ -13,8 +13,13 @@ func _ready() -> void:
 #func _process(_delta: float):
 #	pass
 
-# Check Which Player Slots Already Exist In Save and Update Player Selection Buttons
 func check_existing_slots() -> void:
+	"""
+		Check Save Data for Existing Slots
+		
+		Updates Player Selection Buttons
+	"""
+	
 	#print("Checking For Existing Slots")
 	
 	for slot in $PlayerSelectionWindow/PlayerSlots.get_child_count():
@@ -27,12 +32,22 @@ func check_existing_slots() -> void:
 		else:
 			$PlayerSelectionWindow/PlayerSlots.get_child(slot).set_text("New Character") # Change Button Text If Slot Does Not Exist in Save
 
-# Gets The Button That Was Pressed (and Loads or Creates Character)
 func _character_slot_pressed(button: Node) -> void:
+	"""
+		Detect Which Player Selection Button Was Pressed
+		
+		Pulls Up Load or Create Character Screen Depending on Save Data
+		
+		Not Meant to Be Called Directly
+	"""
+	
 	print("Character Slot Pressed: " + str(button.get_index()))
 
-# Debug Message To See If Popup Should Show
 func _on_PlayerSelectionWindow_about_to_show() -> void:
-	#print("Player Selection About to Show!!!")
+	"""
+		Check Save Data for Existing Slots
+		
+		Not Meant to Be Called Directly
+	"""
 	
 	check_existing_slots()

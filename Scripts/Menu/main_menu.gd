@@ -69,8 +69,13 @@ func _ready() -> void:
 	# TODO: Save loaded theme to file that is not accessible to server
 	set_theme(gamestate.game_theme) # Sets The MainMenu's Theme
 	
-# Sets MainMenu Theme
-func set_theme(theme) -> void:
+func set_theme(theme: Theme) -> void:
+	"""
+		Sets Up Main Menu's Theme
+		
+		Supply Theme Resource
+	"""
+	
 	# The set_theme(...) function can only set themes to nodes that are actively loaded (NetworkMenu is not loaded at this point)
 	
 	#get_tree().get_root().get_node("MainMenu/Menu/Buttons").set_theme(load("res://Themes/default_theme.tres")) # Testing Setting Theme Live - It Works, but I need Control Nodes or Other GUI nodes to set it (e.g. I cannot set it for root)
@@ -84,21 +89,41 @@ func set_theme(theme) -> void:
 	buttons.get_node("Options").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
 	buttons.get_node("Quit").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
 
-# Singleplayer Was Pressed
 func _on_Singleplayer_pressed() -> void:
+	"""
+		Pull Up Player Selection Menu
+		
+		Not Meant to Be Called Directly
+	"""
+	
 	var player_selection_menu : Node = $Menu/PlayerSelectionMenu/PlayerSelectionWindow
 	
 	player_selection_menu.popup_centered()
 	
-# Multiplayer Was Pressed
 func _on_Multiplayer_pressed() -> void:
+	"""
+		Pull Up Networking Menu
+		
+		Not Meant to Be Called Directly
+	"""
+	
 	get_tree().change_scene("res://Menus/NetworkMenu.tscn")
 
-# Options Was Pressed
 func _on_Options_pressed() -> void:
+	"""
+		Pull Up Options Menu
+		
+		Not Meant to Be Called Directly
+	"""
+	
 	get_tree().change_scene("res://Menus/OptionsMenu.tscn")
 	pass
 
-# Quit Was Pressed
 func _on_Quit_pressed() -> void:
+	"""
+		Quit Game from Main Menu
+		
+		Not Meant to Be Called Directly
+	"""
+	
 	main_loop_events.quit() # Quits Game

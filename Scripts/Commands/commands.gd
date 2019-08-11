@@ -28,6 +28,11 @@ var supported_commands : Dictionary = {
 
 # Process the Command and Return Result if Any
 func process_command(net_id: int, message: String) -> void:
+	"""
+		Processes Command Sent By Client
+		
+		Only Meant to Be Called By RPC (and by server)
+	"""
 	#print("UserID: " + str(net_id) + " Command: " + message)
 	
 	var arguments : PoolStringArray = PoolStringArray()
@@ -49,6 +54,12 @@ func process_command(net_id: int, message: String) -> void:
 	
 # Check What Command and Arguments
 func check_command(net_id: int, message: PoolStringArray) -> String:
+	"""
+		Checks Command Against List of Available Commands
+		
+		Not Meant to Be Called Directly
+	"""
+	
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	
 	match command:
@@ -74,6 +85,12 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 
 # Help Command
 func help_command(net_id, message) -> String:
+	"""
+		Help Command
+		
+		Not Meant to Be Called Directly
+	"""
+	
 	var output_array : PoolStringArray = PoolStringArray()
 	
 	#output_array.append("Commands" + '\n')
@@ -94,6 +111,11 @@ func help_command(net_id, message) -> String:
 	
 # Kick Player Command
 func kick_player(net_id: int, message: PoolStringArray) -> String:
+	"""
+		Kick Command
+		
+		Not Meant to Be Called Directly
+	"""
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
@@ -103,6 +125,11 @@ func kick_player(net_id: int, message: PoolStringArray) -> String:
 	
 # Kick Player by IP Command
 func kick_player_ip(net_id: int, message: PoolStringArray) -> String:
+	"""
+		Kick By IP Command
+		
+		Not Meant to Be Called Directly
+	"""
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	var ip_address : String = str(message[1]) # Check to make sure IP Address is Specified
@@ -113,6 +140,11 @@ func kick_player_ip(net_id: int, message: PoolStringArray) -> String:
 
 # Ban Player Command
 func ban_player(net_id: int, message: PoolStringArray) -> String:
+	"""
+		Ban Command
+		
+		Not Meant to Be Called Directly
+	"""
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
@@ -122,6 +154,11 @@ func ban_player(net_id: int, message: PoolStringArray) -> String:
 
 # Ban Player By IP Command
 func ban_player_ip(net_id: int, message: PoolStringArray) -> String:
+	"""
+		Ban By IP Command
+		
+		Not Meant to Be Called Directly
+	"""
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
@@ -131,6 +168,13 @@ func ban_player_ip(net_id: int, message: PoolStringArray) -> String:
 	
 # Change Player's World - Server Side Only
 func change_player_world(net_id: int, message: PoolStringArray) -> String:
+	"""
+		Change Player's World Command
+		
+		This Command is Meant for Debug
+		
+		Not Meant to Be Called Directly
+	"""
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
@@ -154,6 +198,12 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 # TODO: Add Restart Command
 # Shutdown Server Command
 func shutdown_server(net_id: int, message: PoolStringArray) -> String:
+	"""
+		Shutdown Server Command
+		
+		Not Meant to Be Called Directly
+	"""
+	
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	

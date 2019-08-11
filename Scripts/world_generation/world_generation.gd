@@ -56,6 +56,11 @@ func _ready() -> void:
 #	pass
 
 func generate_foreground() -> void:
+	"""
+		Generate Tiles for Foreground Tilemap
+		
+		Dumps Tiles to World Grid
+	"""
 	world_grid.clear() # Empty World_Grid for New Data
 	var noise = OpenSimplexNoise.new() # Create New SimplexNoise Generator
 	
@@ -87,6 +92,11 @@ func generate_foreground() -> void:
 
 # Generates The Background Tiles
 func generate_background():
+	"""
+		Generate Tiles for Background Tilemap
+		
+		Dumps Tiles to World Grid
+	"""
 	world_grid.clear() # Empty World_Grid for New Data
 	
 	# Code Came From SteinCodes Tutorial - Will Severely Modify and Make Variable Names Meaningful
@@ -111,24 +121,35 @@ func generate_background():
 
 	apply_background() # Apply World Grid to TileMap
 
-# Takes World Grid and Applies Grid to TileMap
 func apply_foreground() -> void:
+	"""
+		Applies World Grid to Foreground TileMap
+		
+		Not Meant To Be Called Directly
+	"""
 	# Set's Tile ID in Tilemap from World Grid
 	for coor_x in world_grid.keys():
 		for coor_y in world_grid[coor_x].keys():
 			#print("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
 			set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
 
-# Takes World Grid and Applies Grid to TileMap
 func apply_background() -> void:
+	"""
+		Applies World Grid to Background TileMap
+		
+		Not Meant To Be Called Directly
+	"""
 	# Set's Tile ID in Tilemap from World Grid
 	for coor_x in world_grid.keys():
 		for coor_y in world_grid[coor_x].keys():
 			#print("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
 			background_tilemap.set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
 
-# Generates A Seed if One Was Not Specified
 func generate_seed() -> int:
+	"""
+		Generates a Seed and Set as World's Seed
+	"""
+	
 	randomize() # This is void, and I cannot get the seed directly, so I have to improvise.
 	var random_seed : int = randi() # Generate a random int to use as a seed
 	
@@ -136,8 +157,10 @@ func generate_seed() -> int:
 	
 	return random_seed # Returns seed for saving for player and inputting into generator later
 
-# Sets World's Seed
 func set_seed(random_seed: String) -> int:
+	"""
+		Sets World's Seed
+	"""
 	world_seed = random_seed
 	
 	# If Not A Pure Integer (in String form), then Hash String To Integer
@@ -148,3 +171,20 @@ func set_seed(random_seed: String) -> int:
 	# If Pure Integer (in String form), then convert to Integer Type
 	seed(int(world_seed)) # Activate Random Generator With Seed
 	return int(world_seed)
+	
+# NOTE (IMPORTANT): I may set a spawn location using the world generator and then have spawn_player retrieve it (using map_to_world). The spawn location will be saved with the world data.
+func world_get_tile(world_coordinate: Vector2) -> Vector2:
+	"""
+		Get Tile's Coordinates Relative to Foreground Tilemap
+		
+		Specify World Coordinates as Vector2
+	"""
+	return world_to_map(world_coordinate)
+	
+func world_get_tile_background(world_coordinate: Vector2) -> Vector2:
+	"""
+		Get Tile's Coordinates Relative to Background Tilemap
+		
+		Specify World Coordinates as Vector2
+	"""
+	return background_tilemap.world_to_map(world_coordinate)

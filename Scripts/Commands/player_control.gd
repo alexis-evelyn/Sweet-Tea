@@ -13,6 +13,12 @@ var banned_ips : Dictionary = {} # Allows banning players via IP address (if pla
 #onready var player_registrar = preload("res://Scripts/player_registrar.gd")
 
 func check_if_banned(id: int) -> void:
+	"""
+		Checks If Player Is Banned by Net ID or IP Address
+		
+		Specify Net ID as Integer (will be changed when authentication is available)
+	"""
+	
 	var net : NetworkedMultiplayerENet = get_tree().get_network_peer() # Grab the existing Network Peer Node
 	
 	#print("Ban Check - Player ID: ", str(id), " Player IP: ", str(net.get_peer_address(id)))
@@ -24,6 +30,12 @@ func check_if_banned(id: int) -> void:
 		net.disconnect_peer(id, false) # Disconnect the peer immediately (true means no flushing messages)
 
 func kick_player() -> void:
+	"""
+		Kicks Player By Net ID (Not Implemented Yet)
+		
+		Specify Net ID as Integer (will be changed when authentication is available)
+	"""
+	
 	var net : NetworkedMultiplayerENet= get_tree().get_network_peer() # Grab the existing Network Peer Node
 	
 	# TODO: Currently, the server disconnects everyone, but as chat gets added, the ability to select a peer (client) will be added to
@@ -37,6 +49,14 @@ func kick_player() -> void:
 				net.disconnect_peer(player, false) # Disconnect the peer immediately (true means no flushing messages)
 				
 func kick_player_ip(ip_address: String) -> void:
+	"""
+		Kick Player by IP Address (Not Implemented)
+		
+		Cannot Kick Server, but Can Kick Other Players on Same IP Address As Server
+		
+		Specify IP Address as String
+	"""
+	
 	var net = get_tree().get_network_peer() # Grab the existing Network Peer Node
 	
 	# TODO: Make Efficient for Large Player Base
@@ -48,6 +68,12 @@ func kick_player_ip(ip_address: String) -> void:
 				#kick_player() # Will specify Player ID "player"
 				
 func ban_player() -> void:
+	"""
+		Ban Player By Net ID (Not Implemented)
+		
+		Specify Net ID as Integer (will be changed when authentication is available)
+	"""
+	
 	var ban_message : String = "Player Banned!!!" # Will be replaced by a function argument
 	
 	var net : NetworkedMultiplayerENet = get_tree().get_network_peer() # Grab the existing Network Peer Node
@@ -70,6 +96,12 @@ func ban_player() -> void:
 				#kick_player() # Will add arguments later (player id and ban message)
 				
 func ban_player_ip() -> void:
+	"""
+		Ban Player by IP Address (Not Implemented)
+		
+		Specify IP Address as String
+	"""
+	
 	var ban_message : String = "IP Banned!!!" # Will be replaced by a function argument
 	
 	var net : NetworkedMultiplayerENet = get_tree().get_network_peer() # Grab the existing Network Peer Node
