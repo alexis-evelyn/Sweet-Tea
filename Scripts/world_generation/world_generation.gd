@@ -20,6 +20,9 @@ extends TileMap
 # Custom Resources - https://github.com/godotengine/godot/issues/7037
 # Save Custom Resource - https://godotengine.org/qa/8139/need-help-with-exporting-a-custom-ressource-type?show=8146#a8146
 # Embed Resource into Scene - https://www.reddit.com/r/godot/comments/7xw6p9/is_there_any_way_to_embed_resource_into_a_scene/duh1bq0?utm_source=share&utm_medium=web2x
+# Save Variables to Scene - https://www.patreon.com/posts/saving-godots-22268842
+# Gist From Save Variables to Scene - https://gist.github.com/henriiquecampos/8d98f0660da499967d41c32988cd3612#gistcomment-2743040
+# Explains About export(Resource) - https://godotengine.org/qa/8139/need-help-with-exporting-a-custom-ressource-type?show=14398#a14398
 
 # Note: I am using a Tilemap to improve performance.
 # This does mean world manipulation will be more complicated, but performance cannot be passed up.
@@ -46,14 +49,19 @@ var debug_tileset : TileSet = load("res://Objects/Blocks/Default-Debug.tres")
 # Set's Worldgen size (Tilemap's Origin is Fixed to Same Spot as World Origin - I doubt I am changing this. Not unless changing it improves performance)
 var quadrant_size : int = get_quadrant_size() # Default 16
 var chunk_size : Vector2 = Vector2(quadrant_size, quadrant_size) # Tilemap is 32x32 (the size of a standard block) pixels per tile.
-var world_seed : String # World Seed Variable
 var world_size : Vector2 = Vector2(10, 10)
 
 onready var world_node = self.get_owner() # Gets The Current World's Node
 onready var background_tilemap : TileMap = get_node("Background") # Gets The Background Tilemap
 
+export(Resource) var world_data : Resource
+export(String) var world_seed : String
+export var test = "Hello"
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	#print("World Seed: ", world_seed)
+	
 	gamestate.debug_camera = true # Turns on Debug Camera - Useful for Debugging World Gen
 	
 	if gamestate.debug_camera:
@@ -63,10 +71,10 @@ func _ready() -> void:
 	background_tilemap.set_owner(world_node) # Set world as owner of Background Tilemap (allows saving Tilemap to world when client saves world)
 	print("Background TileMap's Owner: ", background_tilemap.get_owner().name) # Debug Statement to list Background TileMap's Owner's Name
 	
-	#print("Seed: ", generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
-	print("Seed: ", set_seed("436123424")) # Converts Seed to Int and Applies to Generator
-	
-	save_seed_to_world() # Saves World Seed - To Later Save World To Drive
+	# Seed should be set by world loader (if pre-existing world)
+	if world_seed == null:
+		print("Seed: ", generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
+		#print("Seed: ", set_seed("436123424")) # Converts Seed to Int and Applies to Generator
 	
 	for chunk_x in range(-world_size.x/2, world_size.x/2):
 		for chunk_y in range(-world_size.y/2, world_size.y/2):
@@ -224,29 +232,3 @@ func world_get_tile_background(world_coordinate: Vector2) -> Vector2:
 	"""
 	
 	return background_tilemap.world_to_map(world_coordinate)
-
-func save_seed_to_world() -> void:
-	"""
-		Creates A Node With The World Seed Set As Name
-		
-		This is because I have not found a way to export variables to a scene file.
-		I am trying to save the seed to the world file, so the world data won't be more complicated than it needs to be.
-	"""
-	
-	#print("Save Seed to World!!!")
-	
-	# Create Seed Node's Parent and Seed Node
-	var seed_parent : Node = Node.new()
-	var seed_name : Node = Node.new()
-	
-	# Set Seed's Name and Parent's Name (having a parent with an already known name makes the seed easier to find)
-	seed_parent.name = "seed"
-	seed_name.name = str(world_seed)
-	
-	# Adds Nodes to World - Deferred Call Because World Node Not Finished Loading Children Yet
-	world_node.call_deferred("add_child", seed_parent)
-	seed_parent.call_deferred("add_child", seed_name)
-	
-	# Sets Seed Nodes' Owner - Deferred Call Because Node Not Setup Yet
-	seed_parent.call_deferred("set_owner", world_node)
-	seed_name.call_deferred("set_owner", world_node)

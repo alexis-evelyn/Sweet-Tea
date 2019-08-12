@@ -181,6 +181,9 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	var world_path : String = "res://Worlds/World2.tscn"
 	var world_name : String = world_handler.load_world(net_id, world_path)
 	
+	if world_name == "":
+		return "Failed to Load World %s For %s" % [world_name, net_id]
+	
 	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 	
 	player_registrar.players[net_id].current_world = world_name # Update World Player is In (server-side)

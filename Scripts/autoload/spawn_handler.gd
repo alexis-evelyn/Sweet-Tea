@@ -174,9 +174,12 @@ remote func change_world(world_name: String, world_path: String) -> void:
 	# The Server Would Have Already Updated World Name - No Need to Set Twice
 	if not get_tree().is_network_server():
 		set_world(world_name)
-		world_handler.load_world(gamestate.net_id, world_path)
+		var loaded_world = world_handler.load_world(gamestate.net_id, world_path)
 		
-		rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Request Server Spawn
+		if loaded_world == "":
+			print("Failed to Load World %s For %s" % [world_path, gamestate.net_id])
+		else:
+			rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Request Server Spawn
 	elif get_tree().is_network_server():
 		# There's a bug specific to the server player changing to a world with existing clients
 		# The existing clients won't see the server player (this does not affect a client with existing clients)

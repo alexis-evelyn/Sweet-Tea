@@ -12,6 +12,8 @@ var starting_world_name : String = "Not Set" # Spawn World's Name
 # Server Gets Currently Loaded Worlds
 var loaded_worlds : Dictionary = {}
 
+var file_check : File = File.new() # Check to see if world's file path exists
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	network.connect("server_created", self, "_load_world_server")
@@ -63,6 +65,8 @@ func _load_world_server() -> void:
 		
 	var spawn : Node = spawn_resource.instance()
 	
+	#print("World Loader: ", spawn.get_node("Viewport/WorldGrid/WorldGen").world_seed)
+	
 	# Add Spawn World to Loaded World's Dictionary
 	starting_world_name = spawn.name
 	loaded_worlds[starting_world] = starting_world_name
@@ -94,14 +98,18 @@ func _load_world_client() -> void:
 	
 	# This will be changed to load from world (chunks?) sent by server
 	# The client should only handle one world at a time (given worlds are everchanging, there is no reason to cache it - except if I can streamline performance with cached worlds)
+	# If Saved World Exists, Then Load it Instead
 	var worlds : Node = Node.new()
 	worlds.name = "Worlds"
 	
-	var spawn : Node = load(starting_world).instance()
-	worlds.add_child(spawn)
-	get_tree().get_root().add_child(worlds)
-	
-	get_tree().get_current_scene().queue_free()
+	if file_check.file_exists(starting_world):
+			var spawn : Node = load(starting_world).instance()
+			print("Saved Seed: ", spawn.get_node("Viewport/WorldGrid/WorldGen").world_seed)
+			
+			worlds.add_child(spawn)
+			get_tree().get_root().add_child(worlds)
+			
+			get_tree().get_current_scene().queue_free()
 	
 # Load World to Send Player To
 func load_world(net_id: int, location: String) -> String:
@@ -120,31 +128,33 @@ func load_world(net_id: int, location: String) -> String:
 		return world.name
 	
 	# NOTE: I forgot groups existed (could of added all worlds to group). Try to use groups when handling projectiles and mobs.
-	var world_file : Resource = load(location) # Load World From File Location
-	var worlds : Node = get_tree().get_root().get_node("Worlds") # Get Worlds node
-	
-	var world : Node = world_file.instance() # Instance Loaded World
-	
-	# If Client, Unload Previous World
-	if not get_tree().is_network_server():
-		for loaded_world in worlds.get_children():
-			loaded_world.queue_free()
-	else:
-		# Makes sure the viewport (world) is only visible (to the server player) if the server player is changing worlds
-		if net_id == gamestate.net_id:
-			world.visible = true
+	if file_check.file_exists(location):
+		var world_file : Resource = load(location) # Load World From File Location
+		var worlds : Node = get_tree().get_root().get_node("Worlds") # Get Worlds node
+		
+		var world : Node = world_file.instance() # Instance Loaded World
+		
+		# If Client, Unload Previous World
+		if not get_tree().is_network_server():
+			for loaded_world in worlds.get_children():
+				loaded_world.queue_free()
 		else:
-			world.visible = false
-	
-	worlds.add_child(world) # Add Loaded World to Worlds node
-	
-	# Add Loaded World to Dictionary of Loaded Worlds
-	loaded_worlds[location] = world.name
-	
-	return world.name # Return World Name to Help Track Client Location
+			# Makes sure the viewport (world) is only visible (to the server player) if the server player is changing worlds
+			if net_id == gamestate.net_id:
+				world.visible = true
+			else:
+				world.visible = false
+		
+		worlds.add_child(world) # Add Loaded World to Worlds node
+		
+		# Add Loaded World to Dictionary of Loaded Worlds
+		loaded_worlds[location] = world.name
+		
+		return world.name # Return World Name to Help Track Client Location
+	return "" # World failed to load
 	
 func save_world(world: Node):
-	var save_path = "user://".plus_file(world.name + ".tscn")
+	var save_path = "user://%s.tscn" % world.name
 	#var save_path = "user://worlds/".plus_file(world.name).plus_file("/world.tscn")
 	
 	var scene = PackedScene.new()
