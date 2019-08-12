@@ -55,8 +55,7 @@ onready var world_node = self.get_owner() # Gets The Current World's Node
 onready var background_tilemap : TileMap = get_node("Background") # Gets The Background Tilemap
 
 export(Resource) var world_data : Resource
-export(String) var world_seed : String
-export var test = "Hello"
+export(String) var world_seed : String 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
