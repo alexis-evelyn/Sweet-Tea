@@ -49,17 +49,16 @@ func _ready() -> void:
 	
 	gamestate.debug_camera = true # Turns on Debug Camera - Useful for Debugging World Gen
 	
-	#print("Seed: ", generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
-	print("Seed: ", set_seed("Test Seed")) # Converts Seed to Int and Applies to Generator
+	print("Seed: ", generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
+	#print("Seed: ", set_seed("Test Seed")) # Converts Seed to Int and Applies to Generator
 	
 	save_seed_to_world() # Saves World Seed - To Later Save World To Drive
 	
-	#generate_foreground(1,1) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
-	generate_foreground(2,1) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
-	#generate_foreground(1,3) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
-	#generate_foreground(-1,-3) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
+	for chunk_x in range(-10, 10):
+		for chunk_y in range(-10, 10):
+			#generate_foreground(1,1) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
+			generate_background(chunk_x, chunk_y) # Generate The Background (Tiles Player Can Pass Through)
 	
-	generate_background(0, 0) # Generate The Background (Tiles Player Can Pass Through)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta: float):
@@ -123,21 +122,15 @@ func generate_background(chunk_x: int, chunk_y: int):
 	var horizontal : int = chunk_size.x + (quadrant_size * chunk_x)
 	var vertical : int = chunk_size.y + (quadrant_size * chunk_y)
 
+	# NOTE (Important): This is for testing the chunk selection process
+	var random_block : int = randi() % (block.size() - 1)
+
 	# World Gen Code
 	for coor_x in range((horizontal - quadrant_size), horizontal):
 		world_grid[coor_x] = {}
 
-		for coor_y in vertical:
-			# Just Playing Around With World Gen Code - This Experimentation May Take A While (I am going to research existing algorithms that I can start from (legally))
-			if (coor_y > (vertical/2)):
-				world_grid[coor_x][coor_y] = block.stone
-			elif (coor_y > (vertical/3)):
-				if randi() % 100 == 0:
-					world_grid[coor_x][coor_y] = block.stone
-				else:
-					world_grid[coor_x][coor_y] = block.dirt
-			else:
-				world_grid[coor_x][coor_y] = block.air
+		for coor_y in range((vertical - quadrant_size), vertical):
+			world_grid[coor_x][coor_y] = random_block
 
 	apply_background() # Apply World Grid to TileMap
 
@@ -178,6 +171,7 @@ func generate_seed() -> int:
 	randomize() # This is void, and I cannot get the seed directly, so I have to improvise.
 	var random_seed : int = randi() # Generate a random int to use as a seed
 	
+	world_seed = str(random_seed)
 	seed(random_seed) # Activate Random Generator With Seed
 	
 	return random_seed # Returns seed for saving for player and inputting into generator later
@@ -233,7 +227,7 @@ func save_seed_to_world() -> void:
 	
 	# Set Seed's Name and Parent's Name (having a parent with an already known name makes the seed easier to find)
 	seed_parent.name = "seed"
-	seed_name.name = world_seed
+	seed_name.name = str(world_seed)
 	
 	# Adds Nodes to World - Deferred Call Because World Node Not Finished Loading Children Yet
 	world_node.call_deferred("add_child", seed_parent)
