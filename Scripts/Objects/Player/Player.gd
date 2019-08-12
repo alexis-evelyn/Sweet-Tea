@@ -20,6 +20,8 @@ var player_name: String
 var player_current_world: String
 var players: Node
 
+var camera: Node
+
 # Called everytime player is spawned 
 func _ready() -> void:
 	player_name = get_node("..").name
@@ -143,10 +145,17 @@ func set_dominant_color(color: Color) -> void:
 # I put debug camera here as it is guaranteed that the player is placed in a loaded world by this point
 func debug_camera(activated : bool = true):
 	# The camera is automatically cleaned up when the world is unloaded
-	var camera = load("res://Objects/Players/DebugCamera.tscn").instance()
+	camera = load("res://Objects/Players/DebugCamera.tscn").instance()
 	
 	# This allows me to align camera to World
 	get_tree().get_root().get_node("Worlds").get_node(player_registrar.players[gamestate.net_id].current_world).get_node("Viewport").add_child(camera)
 	
 	# This allows me to align camera to Player
 	#add_child(camera)
+
+# Disable the camera when the player is despawned
+func _exit_tree() -> void:
+	# When exiting the server, the camera will be freed before this code has a chance to free it.
+	# camera.is_inside_tree() checks to see if the camera has already been freed to prevent the game from crashign
+	if camera.is_inside_tree():
+		camera.free()

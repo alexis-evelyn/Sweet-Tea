@@ -2,7 +2,7 @@ extends Camera2D
 
 # Declare member variables here. Examples:
 var cam_speed = 70
-onready var player = get_player_node()
+var player
 onready var coor_label = $PlayerCoordinates
 onready var cam_coor_label = $CameraCoordinates
 onready var crosshair = $Crosshair
@@ -11,6 +11,8 @@ onready var crosshair = $Crosshair
 func _ready() -> void:
 	set_theme(gamestate.game_theme)
 	set_physics_process(true)
+	
+	player = get_player_node()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta: float) -> void:
@@ -27,7 +29,8 @@ func _physics_process(delta: float) -> void:
 		translate(Vector2(cam_speed, 0))
 		
 	# Player's position is based on center of Player, not the edges
-	coor_label.text = "Player: " + str(player.position)
+	if player != null:
+		coor_label.text = "Player: " + str(player.position)
 	
 	# Get Builtin Screen Size and Find center of screen (add center coordinates to coordinates of camera)
 	# This helps locate where the crosshair is (which is only a visual reference for the user. The gdscript does not get position from crosshair)
