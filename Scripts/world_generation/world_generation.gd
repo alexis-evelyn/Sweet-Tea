@@ -54,14 +54,18 @@ func _ready() -> void:
 	
 	save_seed_to_world() # Saves World Seed - To Later Save World To Drive
 	
-	generate_foreground() # Generate The Foreground (Tiles Player Can Stand On and Collide With)
-	generate_background() # Generate The Background (Tiles Player Can Pass Through)
+	#generate_foreground(1,1) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
+	generate_foreground(2,1) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
+	#generate_foreground(1,3) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
+	#generate_foreground(-1,-3) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
+	
+	generate_background(0, 0) # Generate The Background (Tiles Player Can Pass Through)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta: float):
 #	pass
 
-func generate_foreground() -> void:
+func generate_foreground(chunk_x: int, chunk_y: int) -> void:
 	"""
 		Generate Tiles for Foreground Tilemap
 		
@@ -71,12 +75,12 @@ func generate_foreground() -> void:
 	world_grid.clear() # Empty World_Grid for New Data
 	var noise = OpenSimplexNoise.new() # Create New SimplexNoise Generator
 	
-	# Get World Generation Size
-	var horizontal : int = chunk_size.x
-	var vertical : int = chunk_size.y
+	# Get Chunk Generation Coordinates (allows finding where to spawn chunk)
+	var horizontal : int = chunk_size.x + (quadrant_size * chunk_x)
+	var vertical : int = chunk_size.y + (quadrant_size * chunk_y)
 	
 	# World Gen Code
-	for coor_x in horizontal:
+	for coor_x in range((horizontal - quadrant_size), horizontal):
 		# Configure Simplex Noise Generator (runs every x coordinate)
 		noise.seed = randi()
 		noise.octaves = 4
@@ -84,7 +88,15 @@ func generate_foreground() -> void:
 		noise.lacunarity = 1.5
 		noise.persistence = 0.8
 		
-		var noise_output : int = int(floor(noise.get_noise_2d(0, vertical) * 5)) + 15
+		# Debug Chunk Location (places grass blocks at beginning of chunk)
+		if coor_x % quadrant_size == 0:
+			world_grid[coor_x] = {}
+			world_grid[coor_x][vertical] = block.grass
+			world_grid[coor_x][vertical - quadrant_size] = block.grass
+			continue
+		
+		# How do I force this to be in the chunk? Should I force this to a chunk? I think yes.
+		var noise_output : int = int(floor(noise.get_noise_2d(vertical, vertical + quadrant_size) * 5)) + 15
 		#var noise_output : int = int(floor(noise.get_noise_2d((get_global_transform().origin.x + coor_x) * 0.1, 0) * vertical * 0.2)) - Modified From Non-Tilemap Generation Video (does not translate well :P)
 		world_grid[coor_x] = {} # I set the Dictionary here because I may move away from the coor_x variable for custom worldgen types
 		
@@ -98,7 +110,7 @@ func generate_foreground() -> void:
 	apply_foreground() # Apply World Grid to TileMap
 
 # Generates The Background Tiles
-func generate_background():
+func generate_background(chunk_x: int, chunk_y: int):
 	"""
 		Generate Tiles for Background Tilemap
 		
@@ -107,12 +119,12 @@ func generate_background():
 	
 	world_grid.clear() # Empty World_Grid for New Data
 	
-	# Code Came From SteinCodes Tutorial - Will Severely Modify and Make Variable Names Meaningful
-	var horizontal : int = chunk_size.x
-	var vertical : int = chunk_size.y
+	# Get Chunk Generation Coordinates (allows finding where to spawn chunk)
+	var horizontal : int = chunk_size.x + (quadrant_size * chunk_x)
+	var vertical : int = chunk_size.y + (quadrant_size * chunk_y)
 
 	# World Gen Code
-	for coor_x in horizontal:
+	for coor_x in range((horizontal - quadrant_size), horizontal):
 		world_grid[coor_x] = {}
 
 		for coor_y in vertical:
