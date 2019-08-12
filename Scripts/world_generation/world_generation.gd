@@ -15,6 +15,12 @@ extends TileMap
 # Builtin Noise Generator - https://godotengine.org/article/simplex-noise-lands-godot-31
 # OpenSimplexNoise - https://docs.godotengine.org/en/3.1/classes/class_opensimplexnoise.html
 
+# Saving Data in Scene Files
+# Answer to Question I Asked about Saving Variables to Scene - https://www.reddit.com/r/godot/comments/cp8siv/question_how_do_i_save_a_variable_to_a_scene_when/ewo070k/
+# Custom Resources - https://github.com/godotengine/godot/issues/7037
+# Save Custom Resource - https://godotengine.org/qa/8139/need-help-with-exporting-a-custom-ressource-type?show=8146#a8146
+# Embed Resource into Scene - https://www.reddit.com/r/godot/comments/7xw6p9/is_there_any_way_to_embed_resource_into_a_scene/duh1bq0?utm_source=share&utm_medium=web2x
+
 # Note: I am using a Tilemap to improve performance.
 # This does mean world manipulation will be more complicated, but performance cannot be passed up.
 # I am using SteinCode's Tumblr Article to help me get started.
