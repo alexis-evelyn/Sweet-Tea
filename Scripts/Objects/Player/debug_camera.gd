@@ -1,5 +1,12 @@
 extends Camera2D
 
+# NOTE (IMPORTANT): The coordinates are measured in pixels.
+# The tilemap quadrant size is 16x16 blocks
+# The block size is 32x32 pixels.
+# To convert coordinates to chunk positions you need to run the formula ((coordinate_x_or_y/16)/32)
+# The decimal after the chunk position shows where in the chunk the coordinate is located (if no decimal, then you are at the start of the chunk).
+# You may have to give or take a one depending on if the coordinate was negative or positive.
+
 # Declare member variables here. Examples:
 var cam_speed = 70
 var player

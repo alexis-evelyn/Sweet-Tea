@@ -38,6 +38,7 @@ const block : Dictionary = {
 var quadrant_size : int = get_quadrant_size() # Default 16
 var chunk_size : Vector2 = Vector2(quadrant_size, quadrant_size) # Tilemap is 32x32 (the size of a standard block) pixels per tile.
 var world_seed : String # World Seed Variable
+var world_size : Vector2 = Vector2(10, 10)
 
 onready var world_node = self.get_owner() # Gets The Current World's Node
 onready var background_tilemap : TileMap = get_node("Background") # Gets The Background Tilemap
@@ -54,8 +55,8 @@ func _ready() -> void:
 	
 	save_seed_to_world() # Saves World Seed - To Later Save World To Drive
 	
-	for chunk_x in range(-10, 10):
-		for chunk_y in range(-10, 10):
+	for chunk_x in range(-world_size.x/2, world_size.x/2):
+		for chunk_y in range(-world_size.y/2, world_size.y/2):
 			#generate_foreground(1,1) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
 			generate_background(chunk_x, chunk_y) # Generate The Background (Tiles Player Can Pass Through)
 	
