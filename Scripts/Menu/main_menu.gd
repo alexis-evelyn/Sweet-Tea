@@ -12,6 +12,14 @@ extends Control
 # Quick Read
 # Multithreading Efficiency - https://github.com/godotengine/godot/issues/7832
 
+# Interesting Console Output Ideas
+# OSX - syslog -s -l error "message to send"
+# Linux (May Need Root) - echo MESSAGE > /dev/kmsg
+# BSD - logger -p kern.crit MESSAGE
+# Windows - https://stackoverflow.com/a/27640623/6828099
+# Android - https://stackoverflow.com/a/2364842/6828099
+# IOS - https://stackoverflow.com/a/9097503/6828099
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	# Sets Window's Title
@@ -64,7 +72,6 @@ func _ready() -> void:
 		#get_tree().get_root().get_node("MainMenu").visible = false # Hides MainMenu
 		
 		#network.create_server()
-		pass
 	
 	# TODO: Save loaded theme to file that is not accessible to server
 	set_theme(gamestate.game_theme) # Sets The MainMenu's Theme
