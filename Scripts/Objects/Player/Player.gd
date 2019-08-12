@@ -157,5 +157,5 @@ func debug_camera(activated : bool = true):
 func _exit_tree() -> void:
 	# When exiting the server, the camera will be freed before this code has a chance to free it.
 	# camera.is_inside_tree() checks to see if the camera has already been freed to prevent the game from crashign
-	if camera.is_inside_tree():
+	if camera != null and camera.is_inside_tree():
 		camera.free()

@@ -34,6 +34,9 @@ const block : Dictionary = {
 	'grass': 2
 }
 
+# Debug Tileset
+var debug_tileset : TileSet = load("res://Objects/Blocks/Default-Debug.tres")
+
 # Set's Worldgen size (Tilemap's Origin is Fixed to Same Spot as World Origin - I doubt I am changing this. Not unless changing it improves performance)
 var quadrant_size : int = get_quadrant_size() # Default 16
 var chunk_size : Vector2 = Vector2(quadrant_size, quadrant_size) # Tilemap is 32x32 (the size of a standard block) pixels per tile.
@@ -45,13 +48,17 @@ onready var background_tilemap : TileMap = get_node("Background") # Gets The Bac
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	gamestate.debug_camera = true # Turns on Debug Camera - Useful for Debugging World Gen
+	
+	if gamestate.debug_camera:
+		self.tile_set = debug_tileset
+		background_tilemap.tile_set = debug_tileset
+	
 	background_tilemap.set_owner(world_node) # Set world as owner of Background Tilemap (allows saving Tilemap to world when client saves world)
 	print("Background TileMap's Owner: ", background_tilemap.get_owner().name) # Debug Statement to list Background TileMap's Owner's Name
 	
-	gamestate.debug_camera = true # Turns on Debug Camera - Useful for Debugging World Gen
-	
-	print("Seed: ", generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
-	#print("Seed: ", set_seed("Test Seed")) # Converts Seed to Int and Applies to Generator
+	#print("Seed: ", generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
+	print("Seed: ", set_seed("436123424")) # Converts Seed to Int and Applies to Generator
 	
 	save_seed_to_world() # Saves World Seed - To Later Save World To Drive
 	
