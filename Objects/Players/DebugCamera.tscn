@@ -10,12 +10,35 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Coordinates" type="RichTextLabel" parent="."]
-margin_left = 750.0
+[node name="PlayerCoordinates" type="RichTextLabel" parent="."]
+margin_left = 665.0
 margin_top = 10.0
 margin_right = 1015.0
 margin_bottom = 50.0
-text = "Coordinates..."
+text = "Player Coordinates..."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CameraCoordinates" type="RichTextLabel" parent="."]
+margin_left = 665.0
+margin_top = 61.4382
+margin_right = 1015.0
+margin_bottom = 101.438
+text = "Camera Coordinates..."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Crosshair" type="RichTextLabel" parent="."]
+margin_left = 502.0
+margin_top = 290.0
+margin_right = 522.0
+margin_bottom = 310.0
+bbcode_enabled = true
+bbcode_text = "[color=black][center]+[/center][/color]"
+text = "+"
+scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -236,5 +236,3 @@ func save_seed_to_world() -> void:
 	# Sets Seed Nodes' Owner - Deferred Call Because Node Not Setup Yet
 	seed_parent.call_deferred("set_owner", world_node)
 	seed_name.call_deferred("set_owner", world_node)
-	
-	
