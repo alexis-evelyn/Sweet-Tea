@@ -58,6 +58,8 @@ export(String) var world_seed : String # World's Seed (used by generator to prod
 export(Array) var generated_chunks_foreground : Array # Store Generated Chunks IDs to Make Sure Not To Generate Them Again
 export(Array) var generated_chunks_background : Array # Store Generated Chunks IDs to Make Sure Not To Generate Them Again
 
+# TODO (IMPORTANT): Generate chunks array on world load instead of reading from file!!!
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	#print("World Generator Seed: ", world_seed)
