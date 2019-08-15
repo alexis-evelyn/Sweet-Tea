@@ -178,11 +178,12 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
-	var world_path : String = "res://Worlds/World2.tscn"
+	var world_path : String = "user://worlds/World 2"
 	var world_name : String = world_handler.load_world(net_id, world_path)
 	
 	if world_name == "":
-		return "Failed to Load World %s For %s" % [world_name, net_id]
+		# TODO: Replace world_path in error message with name user gave!!!
+		return "Failed to Load World %s For Player ID %s" % [world_path, net_id]
 	
 	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 	

@@ -59,6 +59,7 @@ export(Array) var generated_chunks_foreground : Array # Store Generated Chunks I
 export(Array) var generated_chunks_background : Array # Store Generated Chunks IDs to Make Sure Not To Generate Them Again
 
 # TODO (IMPORTANT): Generate chunks array on world load instead of reading from file!!!
+# Also, currently seeds aren't loaded from world handler, so they are generated new every time.
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

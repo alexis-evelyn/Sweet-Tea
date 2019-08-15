@@ -114,8 +114,8 @@ func _load_world_client() -> void:
 			
 			get_tree().get_current_scene().queue_free()
 	
-# Load World to Send Player To
-func load_world(net_id: int, location: String) -> String:
+# Load Template to Instance World Into
+func load_template(net_id: int, location: String) -> String:
 	#print("Change World Loading")
 	
 	# Checks to Make sure World isn't already loaded
@@ -155,7 +155,20 @@ func load_world(net_id: int, location: String) -> String:
 		
 		return world.name # Return World Name to Help Track Client Location
 	return "" # World failed to load
+
+# Load World to Send Player To
+func load_world(net_id: int, location: String) -> String:
+	# Named world_meta because this will eventually just list things like seed and name (not tiles)
+	var world_meta = location.plus_file("world.json")
 	
+	# If world's metadata does not exist, do not even attempt to load the world
+	if not file_check.file_exists(world_meta):
+		return ""
+		
+	var template = load_template(net_id, "res://Worlds/World2.tscn")
+		
+	return template
+
 func save_world(world: Node):
 	var world_generator = world.get_node("Viewport/WorldGrid/WorldGen")
 	var world_generator_background = world_generator.get_node("Background")
@@ -191,8 +204,9 @@ func save_world(world: Node):
 	world_data_dict["tiles_foreground"] = get_tiles(world_generator)
 	world_data_dict["tiles_background"] = get_tiles(world_generator_background)
 	
-	world_data_dict["chunks_foreground"] = world_generator.generated_chunks_foreground
-	world_data_dict["chunks_background"] = world_generator.generated_chunks_background
+	# Shouldn't Be Necessary to Save Generated Chunks (world loader should repopulate the list)
+	#world_data_dict["chunks_foreground"] = world_generator.generated_chunks_foreground
+	#world_data_dict["chunks_background"] = world_generator.generated_chunks_background
 	
 	# Save World to Drive
 	world_data.store_string(to_json(world_data_dict))
