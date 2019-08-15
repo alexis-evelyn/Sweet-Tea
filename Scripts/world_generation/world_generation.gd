@@ -54,12 +54,13 @@ var world_size : Vector2 = Vector2(10, 10)
 onready var world_node = self.get_owner() # Gets The Current World's Node
 onready var background_tilemap : TileMap = get_node("Background") # Gets The Background Tilemap
 
-export(Resource) var world_data : Resource
-export(String) var world_seed : String
+export(String) var world_seed : String # World's Seed (used by generator to produce consistent results)
+export(Array) var generated_chunks_foreground : Array # Store Generated Chunks IDs to Make Sure Not To Generate Them Again
+export(Array) var generated_chunks_background : Array # Store Generated Chunks IDs to Make Sure Not To Generate Them Again
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	#print("World Seed: ", world_seed)
+	#print("World Generator Seed: ", world_seed)
 	
 	gamestate.debug_camera = true # Turns on Debug Camera - Useful for Debugging World Gen
 	
@@ -71,13 +72,13 @@ func _ready() -> void:
 	print("Background TileMap's Owner: ", background_tilemap.get_owner().name) # Debug Statement to list Background TileMap's Owner's Name
 	
 	# Seed should be set by world loader (if pre-existing world)
-	if world_seed == null:
-		print("Seed: ", generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
-		#print("Seed: ", set_seed("436123424")) # Converts Seed to Int and Applies to Generator
+	if world_seed.empty():
+		print("Generate Seed: ", generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
+		#print("Set Seed: ", set_seed("436123424")) # Converts Seed to Int and Applies to Generator
 	
 	for chunk_x in range(-world_size.x/2, world_size.x/2):
 		for chunk_y in range(-world_size.y/2, world_size.y/2):
-			#generate_foreground(1,1) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
+			generate_foreground(chunk_x, chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
 			generate_background(chunk_x, chunk_y) # Generate The Background (Tiles Player Can Pass Through)
 	
 
@@ -85,12 +86,21 @@ func _ready() -> void:
 #func _process(delta: float):
 #	pass
 
-func generate_foreground(chunk_x: int, chunk_y: int) -> void:
+func generate_foreground(chunk_x: int, chunk_y: int, regenerate: bool = false) -> void:
 	"""
 		Generate Tiles for Foreground Tilemap
 		
 		Dumps Tiles to World Grid
 	"""
+	
+	if generated_chunks_foreground.has(Vector2(chunk_x, chunk_y)) and not regenerate:
+		# Chunk already exists, do not generate it again.
+		# I may add an override if someone wants to regenerate it later.
+		
+		# A different function will handle loading the world from save.
+		return
+		
+	generated_chunks_foreground.append(Vector2(chunk_x, chunk_y))
 	
 	world_grid.clear() # Empty World_Grid for New Data
 	var noise = OpenSimplexNoise.new() # Create New SimplexNoise Generator
@@ -130,12 +140,21 @@ func generate_foreground(chunk_x: int, chunk_y: int) -> void:
 	apply_foreground() # Apply World Grid to TileMap
 
 # Generates The Background Tiles
-func generate_background(chunk_x: int, chunk_y: int):
+func generate_background(chunk_x: int, chunk_y: int, regenerate: bool = false):
 	"""
 		Generate Tiles for Background Tilemap
 		
 		Dumps Tiles to World Grid
 	"""
+	
+	if generated_chunks_background.has(Vector2(chunk_x, chunk_y)) and not regenerate:
+		# Chunk already exists, do not generate it again.
+		# I may add an override if someone wants to regenerate it later.
+		
+		# A different function will handle loading the world from save.
+		return
+		
+	generated_chunks_background.append(Vector2(chunk_x, chunk_y))
 	
 	world_grid.clear() # Empty World_Grid for New Data
 	
@@ -212,22 +231,3 @@ func set_seed(random_seed: String) -> int:
 	# If Pure Integer (in String form), then convert to Integer Type
 	seed(int(world_seed)) # Activate Random Generator With Seed
 	return int(world_seed)
-	
-# NOTE (IMPORTANT): I may set a spawn location using the world generator and then have spawn_player retrieve it (using map_to_world). The spawn location will be saved with the world data.
-func world_get_tile(world_coordinate: Vector2) -> Vector2:
-	"""
-		Get Tile's Coordinates Relative to Foreground Tilemap
-		
-		Specify World Coordinates as Vector2
-	"""
-	
-	return world_to_map(world_coordinate)
-	
-func world_get_tile_background(world_coordinate: Vector2) -> Vector2:
-	"""
-		Get Tile's Coordinates Relative to Background Tilemap
-		
-		Specify World Coordinates as Vector2
-	"""
-	
-	return background_tilemap.world_to_map(world_coordinate)

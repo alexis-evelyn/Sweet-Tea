@@ -5,7 +5,8 @@ signal cleanup_worlds
 
 # Chunk Loading (like in Minecraft) is perfectly possible with Godot - https://www.reddit.com/r/godot/comments/8shad4/how_do_large_open_worlds_work_in_godot/
 # I ultimately plan on having multiple worlds which the players can join on the server. As for singleplayer, it is going to be a server that refuses connections unless the player opens it up to other players.
-# I also want to have a "home" that players spawn at before they join the starting_world (like how Starbound has a spaceship. but I want my home to be an actual world that will be the player's home world. The player can then use portals to join the server world.
+# I also want to have a "home" that players spawn at before they join the world_template (like how Starbound has a spaceship. but I want my home to be an actual world that will be the player's home world. The player can then use portals to join the server world.
+var world_template : String = "res://WorldGen/WorldTemplate.tscn" # What Scene to use to instance the world into
 var starting_world : String = "Not Set" # Basically Server Spawn
 var starting_world_name : String = "Not Set" # Spawn World's Name
 
@@ -13,6 +14,8 @@ var starting_world_name : String = "Not Set" # Spawn World's Name
 var loaded_worlds : Dictionary = {}
 
 var file_check : File = File.new() # Check to see if world's file path exists
+
+var world_data_dict : Dictionary = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -51,7 +54,7 @@ func _load_world_server() -> void:
 		
 		return
 	
-	var spawn_resource : Resource = load(starting_world)
+	var spawn_resource : Resource = load(world_template)
 	
 	if spawn_resource == null:
 		print("World is Missing!!!")
@@ -102,9 +105,9 @@ func _load_world_client() -> void:
 	var worlds : Node = Node.new()
 	worlds.name = "Worlds"
 	
-	if file_check.file_exists(starting_world):
-			var spawn : Node = load(starting_world).instance()
-			print("Saved Seed: ", spawn.get_node("Viewport/WorldGrid/WorldGen").world_seed)
+	if file_check.file_exists(world_template):
+			var spawn : Node = load(world_template).instance()
+			#print("Saved Seed: ", spawn.get_node("Viewport/WorldGrid/WorldGen").world_seed)
 			
 			worlds.add_child(spawn)
 			get_tree().get_root().add_child(worlds)
@@ -154,22 +157,60 @@ func load_world(net_id: int, location: String) -> String:
 	return "" # World failed to load
 	
 func save_world(world: Node):
-	var save_path = "user://%s.tscn" % world.name
-	#var save_path = "user://worlds/".plus_file(world.name).plus_file("/world.tscn")
+	var world_generator = world.get_node("Viewport/WorldGrid/WorldGen")
+	var world_generator_background = world_generator.get_node("Background")
 	
-	var scene = PackedScene.new()
-	var result = scene.pack(world)
+	var world_folder_path = "user://worlds/%s" % world.name
+	var save_path = world_folder_path.plus_file("world.json")
+	var save_path_backup = save_path + ".backup"
 	
-	if result == OK:
-		print("Saving: ", save_path)
+	var file_op : Directory = Directory.new() # Allows Performing Operations on Files (like moving or deleting a file)
+	var world_data : File = File.new()
+	
+	# Make World Folder Directory (if it does not exist)
+	if not file_op.dir_exists(world_folder_path):
+		file_op.make_dir_recursive(world_folder_path)
 		
-		#var saved = ResourceSaver.save(save_path), scene)
-		var saved = ResourceSaver.save(save_path, scene)
+	# We are overwriting the world save regardless of what was previously in it. First we want to backup world incase of power failure.
+	
+	# Remove previous backup (if any)
+	if file_op.file_exists(save_path_backup):
+		file_op.remove(save_path_backup)
+	
+	# Move old save to backup (if any) - Faster than copy (unless backup somehow ends up on another partition/drive)
+	if file_op.file_exists(save_path):
+		file_op.rename(save_path, save_path_backup)
+	
+	# Open World Data File to Save to
+	world_data.open(save_path, File.WRITE) # Open Save File For Reading/Writing
+	
+	# Store Seed
+	world_data_dict["seed"] = str(world_generator.world_seed)
+	
+	# Store Used Cells (Everything but Air - Air uses the same tile id as a non-existant tile, so there is no reason to save it. Tile chunks will be recorded in a separate array.)
+	world_data_dict["tiles_foreground"] = get_tiles(world_generator)
+	world_data_dict["tiles_background"] = get_tiles(world_generator_background)
+	
+	world_data_dict["chunks_foreground"] = world_generator.generated_chunks_foreground
+	world_data_dict["chunks_background"] = world_generator.generated_chunks_background
+	
+	# Save World to Drive
+	world_data.store_string(to_json(world_data_dict))
+	
+# Get Tiles From TileMap
+func get_tiles(tilemap: TileMap) -> Dictionary:
+	var cells = tilemap.get_used_cells()
+	
+	if cells.size() == 0:
+		return {}
+	
+	var tiles = {}
+	
+	for cell in cells:
+		#print("Cell: ", cell)
+		tiles[str(cell)] = tilemap.get_cellv(cell)
 		
-		if saved == OK:
-			print("Hooray!!!")
-		else:
-			print("Something Went Wrong!!!")
+	return tiles
 	
 # Cleanup World Handler
 func cleanup() -> void:
