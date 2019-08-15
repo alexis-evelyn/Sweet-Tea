@@ -54,9 +54,10 @@ func _load_world_server() -> void:
 		
 		return
 	
-	var spawn_resource : Resource = load(world_template)
+	get_tree().get_root().add_child(worlds)
+	var world = load_world(-1, starting_world) # Specify -1 (server only) to let server know the spawn world doesn't have the server player yet (gui only)
 	
-	if spawn_resource == null:
+	if world == "":
 		print("World is Missing!!!")
 		
 		# Cleans Up Connection on Error
@@ -65,23 +66,9 @@ func _load_world_server() -> void:
 		get_tree().set_network_peer(null) # Disable Network Peer
 		
 		return
-		
-	var spawn : Node = spawn_resource.instance()
 	
-	#print("World Loader: ", spawn.get_node("Viewport/WorldGrid/WorldGen").world_seed)
-	
-	# Add Spawn World to Loaded World's Dictionary
-	starting_world_name = spawn.name
-	loaded_worlds[starting_world] = starting_world_name
-	
-	# Transparent Window Background (if I wanted to use it for some reason) -  https://github.com/godotengine/godot/pull/14622#issue-158077062
-	# Still has to be allowed in project settings first
-	#spawn.get_node("Viewport").set_transparent_background(true)
-	#OS.window_per_pixel_transparency_enabled = true
-	#get_tree().get_root().set_transparent_background(true)
-	
-	worlds.add_child(spawn)
-	get_tree().get_root().add_child(worlds)
+	# Sets Starting World Name to Pass to Spawn Handler
+	starting_world_name = world
 	
 	# Unload Current Scene (either Network Menu or Single Player Menu)
 	get_tree().get_current_scene().queue_free()
@@ -115,7 +102,7 @@ func _load_world_client() -> void:
 			get_tree().get_current_scene().queue_free()
 	
 # Load Template to Instance World Into
-func load_template(net_id: int, location: String) -> String:
+func load_template(net_id: int, location: String, name: String) -> Node:
 	#print("Change World Loading")
 	
 	# Checks to Make sure World isn't already loaded
@@ -123,12 +110,12 @@ func load_template(net_id: int, location: String) -> String:
 		var world : Node = get_tree().get_root().get_node("Worlds").get_node(loaded_worlds[location])
 		var player : bool = world.get_node("Viewport/WorldGrid/Players").has_node(str(gamestate.net_id))
 		
-		if (net_id == gamestate.net_id) or (player):
+		if (net_id == gamestate.net_id) or (player) or (net_id == -1):
 			world.visible = true
 		else:
 			world.visible = false
 			
-		return world.name
+		return world
 	
 	# NOTE: I forgot groups existed (could of added all worlds to group). Try to use groups when handling projectiles and mobs.
 	if file_check.file_exists(location):
@@ -143,31 +130,65 @@ func load_template(net_id: int, location: String) -> String:
 				loaded_world.queue_free()
 		else:
 			# Makes sure the viewport (world) is only visible (to the server player) if the server player is changing worlds
-			if net_id == gamestate.net_id:
+			if (net_id == gamestate.net_id) or (net_id == -1):
 				world.visible = true
 			else:
 				world.visible = false
 		
+		world.name = name # Sets World's Name
 		worlds.add_child(world) # Add Loaded World to Worlds node
 		
 		# Add Loaded World to Dictionary of Loaded Worlds
 		loaded_worlds[location] = world.name
 		
-		return world.name # Return World Name to Help Track Client Location
-	return "" # World failed to load
+		return world # Return World Name to Help Track Client Location
+	return null # World failed to load
 
 # Load World to Send Player To
 func load_world(net_id: int, location: String) -> String:
+	# Apparently setting a default value either requires the default to be on the end of the arguments list or for all arguments to have a default value.
+	# When this is fixed, set net_id to default to -1.
+	
 	# Named world_meta because this will eventually just list things like seed and name (not tiles)
+	# Tiles will be split into files that match the corresponding chunk
 	var world_meta = location.plus_file("world.json")
+	var world_file : File = File.new()
 	
 	# If world's metadata does not exist, do not even attempt to load the world
 	if not file_check.file_exists(world_meta):
 		return ""
+	
+	world_file.open(world_meta, File.READ)
+	var json : JSONParseResult = JSON.parse(world_file.get_as_text())
+	
+	# Checks to Make Sure JSON was Parsed
+	if json.error != OK:
+		# Failed to Parse JSON
+		return ""
 		
-	var template = load_template(net_id, "res://Worlds/World2.tscn")
+	if typeof(json.result) == TYPE_DICTIONARY:
+		var results = json.result
 		
-	return template
+		# Ternary Operator (basically a shorthand if statement) - This does not validate that the world name is a string (but it has to be a string unless somebody else manually modified it - or some really weird glitch happens on someone's computer')
+		var world_name : String = results.world if results.has("name") else "Name Missing"
+		var template = load_template(net_id, world_template, world_name)
+		# If world fails to load, then notify world changer (or commands if server).
+		if template == null:
+			return ""
+			
+		var generator = template.get_node("Viewport/WorldGrid/WorldGen")
+		
+		if not results.has("seed"):
+			# If the world seed is missing, there is no way for the generator to accurately generate the world
+			return ""
+			
+		# This won't work as world is already loaded.
+		# TODO: Make sure to load world manually after setting variables.
+		generator.world_seed = results.seed
+		return template.name
+	else:
+		# Unknown JSON Format
+		return ""
 
 func save_world(world: Node):
 	var world_generator = world.get_node("Viewport/WorldGrid/WorldGen")

@@ -81,7 +81,7 @@ func _ready() -> void:
 	
 	for chunk_x in range(-world_size.x/2, world_size.x/2):
 		for chunk_y in range(-world_size.y/2, world_size.y/2):
-			generate_foreground(chunk_x, chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
+			#generate_foreground(chunk_x, chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
 			generate_background(chunk_x, chunk_y) # Generate The Background (Tiles Player Can Pass Through)
 	
 
