@@ -207,7 +207,7 @@ func calculate_results() -> void:
 	var result = expression.execute([], null, false) # Setting show_error to false keeps the parser from complaining about dividing by 0.
 	if not expression.has_execute_failed():
 		screen.bbcode_text = "[right]" + str(result)
-		calculated = true
+		#calculated = true
 	else:
 		screen.bbcode_text = "[right]" + "Cannot Divide by Zero!!!"
 		calculated = true
