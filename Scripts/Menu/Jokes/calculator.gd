@@ -180,6 +180,11 @@ func clear_screen() -> void:
 # Erases Character From Right Side of Screen
 func erase_character() -> void:
 	#print("<Erase Character>")
+	if calculated:
+		calculated = false
+		clear_screen()
+		return
+	
 	screen.bbcode_text = "[right]" + screen.text.substr(0, screen.text.length()-1)
 
 # Calculate Results
@@ -187,18 +192,24 @@ func calculate_results() -> void:
 	#print("Calculating...")
 	#print("Formula: ", screen.text)
 	
+	if calculated:
+		calculated = false
+		clear_screen()
+	
 	# https://docs.godotengine.org/en/3.1/classes/class_expression.html#description
 	# Using expressions allows handling code without crashing the game because of errors (like syntax errors).
-	# Dividing by zero still causes errors to show up in debug log, but at least it doesn't crash the game.
 	var error = expression.parse(screen.text, [])
 	
 	if error != OK:
 		#print(expression.get_error_text())
 		return
 		
-	var result = expression.execute([], null, true)
+	var result = expression.execute([], null, false) # Setting show_error to false keeps the parser from complaining about dividing by 0.
 	if not expression.has_execute_failed():
 		screen.bbcode_text = "[right]" + str(result)
+		calculated = true
+	else:
+		screen.bbcode_text = "[right]" + "Cannot Divide by Zero!!!"
 		calculated = true
 		
 
@@ -217,7 +228,14 @@ func _about_to_show() -> void:
 
 # Show Calculator Window
 func popup_calc() -> void:
-	get_tree().set_input_as_handled()
+	#get_tree().set_input_as_handled()
+	
+	#print("Get Rect: ", self.get_rect().size)
+	
+	var calc_x = (ProjectSettings.get_setting("display/window/size/width")/2) - (self.get_rect().size.x/2)
+	var calc_y = (ProjectSettings.get_setting("display/window/size/height")/2) - (self.get_rect().size.x/2)
+
+	self.set_position(Vector2(calc_x, calc_y))
 	self.call_deferred("show")
 
 # Sets Calculator's Theme
