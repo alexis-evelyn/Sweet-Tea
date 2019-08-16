@@ -147,7 +147,7 @@ func erase_character() -> void:
 
 # Calculate Results
 func calculate_results() -> void:
-	print("Calculating...")
+	#print("Calculating...")
 	#print("Formula: ", screen.text)
 	
 	# https://godotengine.org/qa/339/does-gdscript-have-method-to-execute-string-code-exec-python?show=362#a362
@@ -179,6 +179,7 @@ func _about_to_show() -> void:
 
 # Show Calculator Window
 func popup_calc() -> void:
+	get_tree().set_input_as_handled()
 	self.call_deferred("show")
 
 func set_theme(theme: Theme) -> void:
