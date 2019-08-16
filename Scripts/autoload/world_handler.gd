@@ -103,20 +103,6 @@ func _load_world_client() -> void:
 	
 # Load Template to Instance World Into
 func load_template(net_id: int, location: String) -> Node:
-	#print("Change World Loading")
-	
-	# Checks to Make sure World isn't already loaded
-	if loaded_worlds.has(location):
-		var world : Node = get_tree().get_root().get_node("Worlds").get_node(loaded_worlds[location])
-		var player : bool = world.get_node("Viewport/WorldGrid/Players").has_node(str(gamestate.net_id))
-		
-		if (net_id == gamestate.net_id) or (player) or (net_id == -1):
-			world.visible = true
-		else:
-			world.visible = false
-			
-		return world
-	
 	# NOTE: I forgot groups existed (could of added all worlds to group). Try to use groups when handling projectiles and mobs.
 	if file_check.file_exists(location):
 		var world_file : Resource = load(location) # Load World From File Location
@@ -134,13 +120,7 @@ func load_template(net_id: int, location: String) -> Node:
 				world.visible = true
 			else:
 				world.visible = false
-		
-		world.name = name # Sets World's Name
-		#worlds.add_child(world) # Moved to Load Worlds function as more work is needed before the world is added to the scene tree
-		
-		# Add Loaded World to Dictionary of Loaded Worlds
-		loaded_worlds[location] = world.name
-		
+				
 		return world # Return World Name to Help Track Client Location
 	return null # World failed to load
 
@@ -158,6 +138,18 @@ func load_world(net_id: int, location: String) -> String:
 	# If world's metadata does not exist, do not even attempt to load the world
 	if not file_check.file_exists(world_meta):
 		return ""
+	
+	# Checks to Make sure World isn't already loaded
+	if loaded_worlds.has(world_meta):
+		var world : Node = get_tree().get_root().get_node("Worlds").get_node(loaded_worlds[world_meta])
+		var player : bool = world.get_node("Viewport/WorldGrid/Players").has_node(str(gamestate.net_id))
+		
+		if (net_id == gamestate.net_id) or (player) or (net_id == -1):
+			world.visible = true
+		else:
+			world.visible = false
+			
+		return world.name
 	
 	world_file.open(world_meta, File.READ)
 	var json : JSONParseResult = JSON.parse(world_file.get_as_text())
@@ -185,11 +177,12 @@ func load_world(net_id: int, location: String) -> String:
 		var generator = template.get_node("Viewport/WorldGrid/WorldGen")
 		generator.world_seed = results.seed
 		
-		# Ternary Operator (basically a shorthand if statement) - This does not validate that the world name is a string (but it has to be a string unless somebody else manually modified it - or some really weird glitch happens on someone's computer')
-		#var world_name : String = results.world if results.has("name") else "Name Missing" # Default to Name Missing if name not in Save File
-		
 		template.name = results.name # Set World's Name
 		worlds.add_child(template) # Add Loaded World to Worlds node
+		
+		# Add Loaded World to Dictionary of Loaded Worlds
+		loaded_worlds[world_meta] = template.name
+		
 		return template.name
 	else:
 		# Unknown JSON Format
@@ -225,6 +218,7 @@ func save_world(world: Node):
 	
 	# Store Seed
 	world_data_dict["seed"] = str(world_generator.world_seed)
+	world_data_dict["name"] = str(world.name)
 	
 	# Store Used Cells (Everything but Air - Air uses the same tile id as a non-existant tile, so there is no reason to save it. Tile chunks will be recorded in a separate array.)
 	world_data_dict["tiles_foreground"] = get_tiles(world_generator)

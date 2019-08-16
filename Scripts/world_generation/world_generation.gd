@@ -105,6 +105,9 @@ func generate_foreground(chunk_x: int, chunk_y: int, regenerate: bool = false) -
 		
 	generated_chunks_foreground.append(Vector2(chunk_x, chunk_y))
 	
+	# The server could be handling multiple worlds at once (so, this makes sure the correct seed is loaded in the generator). This isn't my fault that the generator is global.
+	set_seed(world_seed)
+	
 	world_grid.clear() # Empty World_Grid for New Data
 	var noise = OpenSimplexNoise.new() # Create New SimplexNoise Generator
 	
@@ -158,6 +161,9 @@ func generate_background(chunk_x: int, chunk_y: int, regenerate: bool = false):
 		return
 		
 	generated_chunks_background.append(Vector2(chunk_x, chunk_y))
+	
+	# The server could be handling multiple worlds at once (so, this makes sure the correct seed is loaded in the generator). This isn't my fault that the generator is global.
+	set_seed(world_seed)
 	
 	world_grid.clear() # Empty World_Grid for New Data
 	
