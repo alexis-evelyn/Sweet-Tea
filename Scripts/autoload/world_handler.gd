@@ -148,7 +148,6 @@ func load_world(net_id: int, location: String) -> String:
 			if net_id != -1:
 				worlds.get_node(spawn_handler.get_world(net_id)).visible = false
 				
-			
 			world.visible = true
 		else:
 			world.visible = false
@@ -245,7 +244,6 @@ func save_world(world: Node):
 	# Save World to Drive
 	world_data.store_string(to_json(world_data_dict))
 	
-# NEEDS TO BE TESTED!!!!
 func create_world(net_id: int = -1, world_seed: String = ""):
 	# Creates A World From Scratch
 	var worlds : Node # Worlds Node
@@ -282,9 +280,14 @@ func create_world(net_id: int = -1, world_seed: String = ""):
 	if get_tree().is_network_server():
 		# Makes sure the viewport (world) is only visible (to the server player) if the server player is changing worlds
 		if (net_id == gamestate.net_id) or (net_id == -1):
+			if net_id != -1:
+				worlds.get_node(spawn_handler.get_world(net_id)).visible = false
+			
 			template.visible = true
 		else:
 			template.visible = false
+	
+	return template.name
 	
 # Get Tiles From TileMap
 func get_tiles(tilemap: TileMap) -> Dictionary:

@@ -77,6 +77,8 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 			return shutdown_server(net_id, message)
 		"changeworld":
 			return change_player_world(net_id, message)
+		"createworld":
+			return create_world(net_id, message)
 		_: # Default Result - Put at Bottom of Match Results
 			if command == "":
 				return ""
@@ -198,6 +200,25 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 		spawn_handler.change_world(world_name, world_path)
 		
 	return "Player " + str(net_id) + " Changing World to: " + str(world_name)
+	
+# Change Player's World - Server Side Only
+func create_world(net_id: int, message: PoolStringArray) -> String:
+	"""
+		Creates New World and
+		Changes Player's World Command
+		
+		This Command is Meant for Debug
+		
+		Not Meant to Be Called Directly
+	"""
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	# TODO (IMPORTANT): Make sure to restrict access with permission levels!!!
+	
+	# NOTE (IMPORTANT) - Setup so client can change world (in spawn handler)
+	var world = world_handler.create_world(net_id)
+	
+	return "Created New World Named %s!!!" % world
 	
 # TODO: Add Restart Command
 # Shutdown Server Command
