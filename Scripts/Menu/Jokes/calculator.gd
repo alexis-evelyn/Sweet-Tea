@@ -4,22 +4,48 @@ extends WindowDialog
 
 # Declare member variables here. Examples:
 onready var screen = $Screen
+onready var buttons = $Buttons
 onready var expression = Expression.new()
+
+var calculated : bool = false # Determine if the last action was a calculation.
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	# Sadly I have to iterate through each and every node (I cannot just iterate through the parents).
+	# Allows Attaching Calculator Button Presses to Function
+	for columns in buttons.get_children():
+		for rows in columns.get_children():
+			for button in rows.get_children():
+				button.connect("pressed", self, "_button_pressed", [button])
+	
+	# Listens for cleanup_ui signal. Allows cleaning up on server shutdown.
 	get_tree().get_root().get_node("PlayerUI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
 	
 	# Sets the Calculator's Theme
 	set_theme(gamestate.game_theme)
 	
+	# Show Calculator
 	popup_calc()
-	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(_delta) -> void:
 #	pass
-			
+
+# Calculator Button Was Pressed
+func _button_pressed(button: Node) -> void:
+	#print("Pressed: ", button.name)
+	
+	# Should I Add A Backspace Button?
+	if button.name != "Equals" and button.name != "Clear" and button.name != "Multiply":
+		write_to_screen(button.text)
+	elif button.name == "Equals":
+		calculate_results()
+	elif button.name == "Clear":
+		clear_screen()
+	elif button.name == "Multiply":
+		write_to_screen("*")
+
+# Handle Keyboard and Mouse Input
 func _input(event) -> void:
 	if event is InputEventMouseButton:
 		set_focus_mode(Control.FOCUS_ALL)
@@ -133,6 +159,11 @@ func _input(event) -> void:
 # Write to Calculator Screen
 func write_to_screen(character: String) -> void:
 	#print(character)
+	# Checks to See If Last Action Was Calculation and Clears Screen if True
+	if calculated:
+		clear_screen()
+		calculated = false
+	
 	screen.add_text(character)
 	
 	# Remove Leading zeros if character pressed was not a zero.
@@ -167,6 +198,8 @@ func calculate_results() -> void:
 	var result = expression.execute([], null, true)
 	if not expression.has_execute_failed():
 		screen.bbcode_text = "[right]" + str(result)
+		calculated = true
+		
 
 # Close Calculator
 func close_calculator() -> void:
@@ -186,6 +219,7 @@ func popup_calc() -> void:
 	get_tree().set_input_as_handled()
 	self.call_deferred("show")
 
+# Sets Calculator's Theme
 func set_theme(theme: Theme) -> void:
 	# https://docs.godotengine.org/en/3.1/getting_started/scripting/gdscript/gdscript_basics.html#inheritance
 	.set_theme(theme) # This is Godot's version of a super
