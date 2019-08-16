@@ -58,6 +58,9 @@ export(String) var world_seed : String # World's Seed (used by generator to prod
 export(Array) var generated_chunks_foreground : Array # Store Generated Chunks IDs to Make Sure Not To Generate Them Again
 export(Array) var generated_chunks_background : Array # Store Generated Chunks IDs to Make Sure Not To Generate Them Again
 
+# This gives the each instance of the world generator access to its own exclusive random number generator so it will not be interfered with by other generators.
+var generator : RandomNumberGenerator = RandomNumberGenerator.new()
+
 # TODO (IMPORTANT): Generate chunks array on world load instead of reading from file!!!
 # Also, currently seeds aren't loaded from world handler, so they are generated new every time.
 
@@ -77,7 +80,8 @@ func _ready() -> void:
 	# Seed should be set by world loader (if pre-existing world)
 	if world_seed.empty():
 		print("Generate Seed: ", generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
-		#print("Set Seed: ", set_seed("436123424")) # Converts Seed to Int and Applies to Generator
+	else:
+		print("Set Seed: ", set_seed(world_seed)) # Converts Seed to Int and Applies to Generator
 	
 	for chunk_x in range(-world_size.x/2, world_size.x/2):
 		for chunk_y in range(-world_size.y/2, world_size.y/2):
@@ -106,7 +110,7 @@ func generate_foreground(chunk_x: int, chunk_y: int, regenerate: bool = false) -
 	generated_chunks_foreground.append(Vector2(chunk_x, chunk_y))
 	
 	# The server could be handling multiple worlds at once (so, this makes sure the correct seed is loaded in the generator). This isn't my fault that the generator is global.
-	#set_seed(world_seed) - Will keep resetting seed generator to first value.
+	#set_seed(world_seed) # - Will keep resetting seed generator to first value.
 	
 	world_grid.clear() # Empty World_Grid for New Data
 	var noise = OpenSimplexNoise.new() # Create New SimplexNoise Generator
@@ -118,7 +122,7 @@ func generate_foreground(chunk_x: int, chunk_y: int, regenerate: bool = false) -
 	# World Gen Code
 	for coor_x in range((horizontal - quadrant_size), horizontal):
 		# Configure Simplex Noise Generator (runs every x coordinate)
-		noise.seed = randi()
+		noise.seed = generator.randi()
 		noise.octaves = 4
 		noise.period = 20.0
 		noise.lacunarity = 1.5
@@ -163,16 +167,16 @@ func generate_background(chunk_x: int, chunk_y: int, regenerate: bool = false):
 	generated_chunks_background.append(Vector2(chunk_x, chunk_y))
 	
 	# The server could be handling multiple worlds at once (so, this makes sure the correct seed is loaded in the generator). This isn't my fault that the generator is global.
-	#set_seed(world_seed) - Will keep resetting seed generator to first value.
+	#set_seed(world_seed) # - Will keep resetting seed generator to first value.
 	
-	world_grid.clear() # Empty World_Grid for New Data
+	#world_grid.clear() # Empty World_Grid for New Data
 	
 	# Get Chunk Generation Coordinates (allows finding where to spawn chunk)
 	var horizontal : int = chunk_size.x + (quadrant_size * chunk_x)
 	var vertical : int = chunk_size.y + (quadrant_size * chunk_y)
 
 	# NOTE (Important): This is for testing the chunk selection process
-	var random_block : int = randi() % (block.size() - 1)
+	var random_block : int = generator.randi() % (block.size() - 1)
 
 	# World Gen Code
 	for coor_x in range((horizontal - quadrant_size), horizontal):
@@ -217,11 +221,11 @@ func generate_seed() -> int:
 		Generates a Seed and Set as World's Seed
 	"""
 	
-	randomize() # This is void, and I cannot get the seed directly, so I have to improvise.
-	var random_seed : int = randi() # Generate a random int to use as a seed
+	generator.randomize() # This is void, and I cannot get the seed directly, so I have to improvise.
+	var random_seed : int = generator.randi() # Generate a random int to use as a seed
 	
 	world_seed = str(random_seed)
-	seed(random_seed) # Activate Random Generator With Seed
+	generator.seed = random_seed # Activate Random Generator With Seed
 	
 	return random_seed # Returns seed for saving for player and inputting into generator later
 
@@ -234,9 +238,9 @@ func set_seed(random_seed: String) -> int:
 	
 	# If Not A Pure Integer (in String form), then Hash String To Integer
 	if not world_seed.is_valid_integer():
-		seed(world_seed.hash()) # Activate Random Generator With Seed
+		generator.seed = world_seed.hash() # Activate Random Generator With Seed
 		return world_seed.hash()
 		
 	# If Pure Integer (in String form), then convert to Integer Type
-	seed(int(world_seed)) # Activate Random Generator With Seed
+	generator.seed = int(world_seed) # Activate Random Generator With Seed
 	return int(world_seed)

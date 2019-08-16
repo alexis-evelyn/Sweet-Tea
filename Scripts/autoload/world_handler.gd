@@ -144,6 +144,11 @@ func load_world(net_id: int, location: String) -> String:
 		var player : bool = world.get_node("Viewport/WorldGrid/Players").has_node(str(gamestate.net_id))
 		
 		if (net_id == gamestate.net_id) or (player) or (net_id == -1):
+			# Make sure previous world was made invisible
+			if net_id != -1:
+				worlds.get_node(spawn_handler.get_world(net_id)).visible = false
+				
+			
 			world.visible = true
 		else:
 			world.visible = false
@@ -184,6 +189,10 @@ func load_world(net_id: int, location: String) -> String:
 		if get_tree().is_network_server():
 			# Makes sure the viewport (world) is only visible (to the server player) if the server player is changing worlds
 			if (net_id == gamestate.net_id) or (net_id == -1):
+				# Make sure previous world was made invisible
+				if net_id != -1:
+					worlds.get_node(spawn_handler.get_world(net_id)).visible = false
+					
 				template.visible = true
 			else:
 				template.visible = false
