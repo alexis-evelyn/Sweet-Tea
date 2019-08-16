@@ -8,7 +8,6 @@ __meta__ = {
 }
 
 [node name="CalculatorWindow" type="WindowDialog" parent="."]
-visible = true
 margin_right = 300.0
 margin_bottom = 230.0
 rect_min_size = Vector2( 300, 230 )
