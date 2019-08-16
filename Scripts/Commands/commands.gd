@@ -208,17 +208,24 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 		Changes Player's World Command
 		
 		This Command is Meant for Debug
+		This command only works server side (for now)
 		
 		Not Meant to Be Called Directly
 	"""
-	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
-	# TODO (IMPORTANT): Make sure to restrict access with permission levels!!!
-	
-	# NOTE (IMPORTANT) - Setup so client can change world (in spawn handler)
-	var world = world_handler.create_world(net_id)
-	
-	return "Created New World Named %s!!!" % world
+	if net_id == 1:
+		var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+		#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+		# TODO (IMPORTANT): Make sure to restrict access with permission levels!!!
+		
+		# NOTE (IMPORTANT) - Setup so client can change world (in spawn handler)
+		var world_name = world_handler.create_world(net_id)
+		
+		spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
+		player_registrar.players[net_id].current_world = world_name # Update World Player is In (server-side)
+		spawn_handler.spawn_player_server(gamestate.player_info) # Will be moved to spawn handler
+		
+		return "Created New World Named %s!!!" % world_name
+	return "You are not the server!!!"
 	
 # TODO: Add Restart Command
 # Shutdown Server Command

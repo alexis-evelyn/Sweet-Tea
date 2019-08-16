@@ -59,7 +59,7 @@ func _load_world_server() -> void:
 	var world = load_world(-1, starting_world) # Specify -1 (server only) to let server know the spawn world doesn't have the server player yet (gui only)
 	
 	if world == "":
-		print("World is Missing!!!")
+		print("World is Missing (on Server Start)!!! Check Player Save File!!!")
 		
 		# Cleans Up Connection on Error
 		player_registrar.cleanup()
@@ -136,6 +136,7 @@ func load_world(net_id: int, location: String) -> String:
 	
 	# If world's metadata does not exist, do not even attempt to load the world
 	if not file_check.file_exists(world_meta):
+		printerr("Failed To Find world.json When Loading World!!!")
 		return ""
 	
 	# Checks to Make sure World isn't already loaded
@@ -160,6 +161,7 @@ func load_world(net_id: int, location: String) -> String:
 	# Checks to Make Sure JSON was Parsed
 	if json.error != OK:
 		# Failed to Parse JSON
+		printerr("Failed To Parse JSON When Loading World!!!")
 		return ""
 		
 	if typeof(json.result) == TYPE_DICTIONARY:
@@ -168,16 +170,27 @@ func load_world(net_id: int, location: String) -> String:
 			# Check if world save file has seed and name (name is because having a missing name makes saving data occur in the wrong folder)
 			# If the world seed is missing, there is no way for the generator to accurately generate the world
 			# So don't even bother loading the world.
+			printerr("Failed To Find Seed or World Name When Loading World!!!")
+			return ""
+			
+		if not results.has("chunks_foreground") or not results.has("chunks_background"):
+			# Chunk data is missing, don't want to accidentally overwrite player world.
+			printerr("Failed To Find Chunks Foreground or Chunks Background When Loading World!!!")
 			return ""
 		
 		var template = load_template(world_template)
 		if template == null:
 			# If world fails to load, then notify world changer (or commands if server).
+			printerr("Failed To Load Template When Loading World!!!")
 			return ""
 			
 		# Set World's Metadata
 		var generator = template.get_node("Viewport/WorldGrid/WorldGen")
 		generator.world_seed = results.seed # Set World's Seed
+		
+		# Load Generated Chunk Location into Memory (this should be replaced by a chunk loading system later)
+		generator.load_chunks_foreground(results["chunks_foreground"])
+		generator.load_chunks_background(results["chunks_background"])
 		
 		template.name = results.name # Set World's Name
 		worlds.add_child(template) # Add Loaded World to Worlds node
@@ -207,6 +220,7 @@ func load_world(net_id: int, location: String) -> String:
 		return template.name
 	else:
 		# Unknown JSON Format
+		printerr("Failed To Parse JSON (Unknown Format) When Loading World!!!")
 		return ""
 
 func save_world(world: Node):
@@ -247,9 +261,9 @@ func save_world(world: Node):
 	world_data_dict["tiles_foreground"] = get_tiles(world_generator)
 	world_data_dict["tiles_background"] = get_tiles(world_generator_background)
 	
-	# Shouldn't Be Necessary to Save Generated Chunks (world loader should repopulate the list)
-	#world_data_dict["chunks_foreground"] = world_generator.generated_chunks_foreground
-	#world_data_dict["chunks_background"] = world_generator.generated_chunks_background
+	# This is saved incase the player manually cleans out a chunk (if I tried to guess which chunk was previously generated and it was completely emptied out, the guess would consider it to not be generated).
+	world_data_dict["chunks_foreground"] = world_generator.generated_chunks_foreground
+	world_data_dict["chunks_background"] = world_generator.generated_chunks_background
 	
 	# Save World to Drive
 	world_data.store_string(to_json(world_data_dict))
@@ -273,6 +287,7 @@ func create_world(net_id: int = -1, world_seed: String = ""):
 	var template = load_template(world_template)
 	if template == null:
 		# If world fails to load, then notify world changer (or commands if server).
+		printerr("Failed To Load Template When Creating World!!!")
 		return ""
 		
 	# Set World's Metadata
@@ -283,6 +298,7 @@ func create_world(net_id: int = -1, world_seed: String = ""):
 	
 	template.name = world_name # Set World's Name
 	worlds.add_child(template) # Add Loaded World to Worlds node
+	generator.generate_new_world() # Called World Generation Code
 	
 	# Add Loaded World to Dictionary of Loaded Worlds
 	loaded_worlds[world_meta] = template.name

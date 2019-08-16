@@ -82,16 +82,20 @@ func _ready() -> void:
 		print("Generate Seed: ", generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
 	else:
 		print("Set Seed: ", set_seed(world_seed)) # Converts Seed to Int and Applies to Generator
-	
-	for chunk_x in range(-world_size.x/2, world_size.x/2):
-		for chunk_y in range(-world_size.y/2, world_size.y/2):
-			#generate_foreground(chunk_x, chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
-			#generate_background(chunk_x, chunk_y) # Generate The Background (Tiles Player Can Pass Through)
-			pass # Disabled because testing world loading from file.
+
+	#generate_new_world()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta: float):
 #	pass
+
+# Generate's a New World
+func generate_new_world():
+	for chunk_x in range(-world_size.x/2, world_size.x/2):
+		for chunk_y in range(-world_size.y/2, world_size.y/2):
+			generate_foreground(chunk_x, chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
+			generate_background(chunk_x, chunk_y) # Generate The Background (Tiles Player Can Pass Through)
+			pass # Disabled because testing world loading from file.
 
 func generate_foreground(chunk_x: int, chunk_y: int, regenerate: bool = false) -> void:
 	"""
@@ -159,6 +163,7 @@ func generate_background(chunk_x: int, chunk_y: int, regenerate: bool = false):
 		# I may add an override if someone wants to regenerate it later.
 		
 		# A different function will handle loading the world from save.
+		print("Ran 2!!!")
 		return
 		
 	generated_chunks_background.append(Vector2(chunk_x, chunk_y))
@@ -212,22 +217,25 @@ func apply_background() -> void:
 
 # This will be replaced by a chunk loading system later.
 func load_foreground(tiles: Dictionary):
-	# Chunk Coordinates (not same a world coordinates)
-	var chunk_x : int
-	var chunk_y : int
-	
-	# Convert Coordinates From Save to Vector2
+#	# Chunk Coordinates (not same a world coordinates)
+#	var chunk_x : int
+#	var chunk_y : int
+#
+#	# Convert Coordinates From Save to Vector2
 	var coor : Vector2
 	
 	for tile in tiles:
 		# I have to explicitly specify that it is a Vector2 - https://github.com/godotengine/godot/issues/11438#issuecomment-330821814
 		coor = str2var("Vector2" + tile)
-		
-		# TODO (IMPORTANT): Figure out what's wrong with this!!!
-		chunk_x = -quadrant_size * (chunk_size.x - coor.x)
-		chunk_y = -quadrant_size * (chunk_size.x - coor.y)
-		
-		generated_chunks_foreground.append(Vector2(chunk_x, chunk_y))
+
+#		# I was going to use this to dynamically create chunk data, then I realized "What if the user manually cleared the chunk?"
+#		chunk_x = (coor.x - chunk_size.x) / quadrant_size
+#		chunk_y = (coor.y - chunk_size.y) / quadrant_size
+#
+#		#print("Foreground Chunk Load: (%s, %s)" % [chunk_x, chunk_y])
+#
+#		if not generated_chunks_foreground.has(Vector2(chunk_x, chunk_y)):
+#			generated_chunks_foreground.append(Vector2(chunk_x, chunk_y))
 		
 		if not world_grid.has(coor.x):
 			world_grid[coor.x] = {}
@@ -239,9 +247,9 @@ func load_foreground(tiles: Dictionary):
 	
 # This will be replaced by a chunk loading system later.
 func load_background(tiles: Dictionary):
-	# Chunk Coordinates (not same a world coordinates)
-	var chunk_x : int
-	var chunk_y : int
+#	# Chunk Coordinates (not same a world coordinates)
+#	var chunk_x : int
+#	var chunk_y : int
 	
 	# Convert Coordinates From Save to Vector2
 	var coor : Vector2
@@ -250,18 +258,21 @@ func load_background(tiles: Dictionary):
 		# I have to explicitly specify that it is a Vector2 - https://github.com/godotengine/godot/issues/11438#issuecomment-330821814
 		coor = str2var("Vector2" + tile)
 		
-		# TODO (IMPORTANT): Figure out what's wrong with this!!!
-		chunk_x = -quadrant_size * (chunk_size.x - coor.x)
-		chunk_y = -quadrant_size * (chunk_size.x - coor.y)
-		
-		generated_chunks_background.append(Vector2(chunk_x, chunk_y))
+		# I was going to use this to dynamically create chunk data, then I realized "What if the user manually cleared the chunk?"
+#		chunk_x = (coor.x - chunk_size.x) / quadrant_size
+#		chunk_y = (coor.y - chunk_size.y) / quadrant_size
+#
+#		#print("Background Chunk Load: (%s, %s)" % [chunk_x, chunk_y])
+#
+#		if not generated_chunks_background.has(Vector2(chunk_x, chunk_y)):
+#			generated_chunks_background.append(Vector2(chunk_x, chunk_y))
 		
 		if not world_grid.has(coor.x):
 			world_grid[coor.x] = {}
 		
 		world_grid[coor.x][coor.y] = tiles[str(tile)]
 		#print("Tile: ", world_grid[coor.x][coor.y])
-		
+	
 	apply_background()
 
 func generate_seed() -> int:
@@ -292,3 +303,23 @@ func set_seed(random_seed: String) -> int:
 	# If Pure Integer (in String form), then convert to Integer Type
 	generator.seed = int(world_seed) # Activate Random Generator With Seed
 	return int(world_seed)
+
+# Convert Chunks From File to Vector2
+func load_chunks_foreground(chunks: Array) -> void:
+	var chunk_coor : Vector2
+	
+	for chunk in chunks:
+		chunk_coor = str2var("Vector2" + chunk)
+		
+		if not generated_chunks_foreground.has(chunk_coor):
+			generated_chunks_foreground.append(chunk_coor)
+
+# Convert Chunks From File to Vector2
+func load_chunks_background(chunks: Array) -> void:
+	var chunk_coor : Vector2
+	
+	for chunk in chunks:
+		chunk_coor = str2var("Vector2" + chunk)
+		
+		if not generated_chunks_background.has(chunk_coor):
+			generated_chunks_background.append(chunk_coor)
