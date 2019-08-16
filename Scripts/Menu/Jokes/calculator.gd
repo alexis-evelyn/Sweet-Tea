@@ -1,5 +1,7 @@
 extends WindowDialog
 
+# This is a joke program meant to be an easter egg in the game.
+
 # Declare member variables here. Examples:
 onready var screen = $Screen
 
@@ -21,68 +23,107 @@ func _input(event) -> void:
 	if event is InputEventMouseButton:
 		set_focus_mode(Control.FOCUS_ALL)
 	
-	if event is InputEventKey:
-		if event.pressed:
-			match event.scancode:
-				KEY_0:
-					write_to_screen("0")
+	if event is InputEventKey and event.pressed:
+		match event.scancode:
+			KEY_0:
+				if event.shift:
+					# Doesn't have its own scancode on a standard keyboard
+					write_to_screen(")")
 					return
-				KEY_1:
-					write_to_screen("1")
-					return
-				KEY_2:
-					write_to_screen("2")
-					return
-				KEY_3:
-					write_to_screen("3")
-					return
-				KEY_4:
-					write_to_screen("4")
-					return
-				KEY_5:
-					write_to_screen("5")
-					return
-				KEY_6:
-					write_to_screen("6")
-					return
-				KEY_7:
-					write_to_screen("7")
-					return
-				KEY_8:
-					write_to_screen("8")
-					return
-				KEY_9:
-					write_to_screen("9")
-					return
-				KEY_ASTERISK:
-					write_to_screen("*")
-					return
-				KEY_DIVISION:
-					write_to_screen("/")
-					return
-				KEY_PLUS:
-					write_to_screen("+")
-					return
-				KEY_MINUS:
-					write_to_screen("-")
-					return
-				KEY_PERCENT:
+				
+				write_to_screen("0")
+				return
+			KEY_1:
+				write_to_screen("1")
+				return
+			KEY_2:
+				write_to_screen("2")
+				return
+			KEY_3:
+				write_to_screen("3")
+				return
+			KEY_4:
+				write_to_screen("4")
+				return
+			KEY_5:
+				if event.shift:
+					# Doesn't have its own scancode on a standard keyboard
 					write_to_screen("%")
 					return
-				KEY_ENTER:
-					calculate_results()
+				
+				write_to_screen("5")
+				return
+			KEY_6:
+				write_to_screen("6")
+				return
+			KEY_7:
+				write_to_screen("7")
+				return
+			KEY_8:
+				if event.shift:
+					# Doesn't have its own scancode on a standard keyboard
+					write_to_screen("*")
 					return
-				KEY_C:
-					clear_screen()
+				
+				write_to_screen("8")	
+				return
+			KEY_9:
+				if event.shift:
+					# Doesn't have its own scancode on a standard keyboard
+					write_to_screen("(")
 					return
-				KEY_BACKSPACE:
-					erase_character()
+				
+				write_to_screen("9")
+				return
+			KEY_ENTER:
+				calculate_results()
+				return
+			KEY_C:
+				clear_screen()
+				return
+			# Handle Non-Numeric Keys
+			KEY_BACKSPACE:
+				erase_character()
+				return
+			KEY_ESCAPE:
+				close_calculator()
+				return
+			KEY_ASTERISK:
+				# Untested
+				write_to_screen("*")
+				return
+			KEY_SLASH:
+				write_to_screen("/")
+				return
+			KEY_PLUS:
+				# Untested
+				write_to_screen("+")
+				return
+			KEY_MINUS:
+				write_to_screen("-")
+				return
+			KEY_PERCENT:
+				# Untested
+				write_to_screen("%")
+				return
+			KEY_PARENLEFT:
+				# Untested
+				write_to_screen("(")
+				return
+			KEY_PARENRIGHT:
+				# Untested
+				write_to_screen(")")
+				return
+			KEY_EQUAL:
+				if event.shift:
+					write_to_screen("+")
 					return
-				KEY_ESCAPE:
-					close_calculator()
-					return
-				_: # Default Result - Put at Bottom of Match Results
-					pass
+				
+				calculate_results()
+				return
+			_: # Default Result - Put at Bottom of Match Results
+				#write_to_screen(OS.get_scancode_string(event.scancode))
+				pass
 
 # Write to Calculator Screen
 func write_to_screen(character: String) -> void:
@@ -107,6 +148,20 @@ func erase_character() -> void:
 # Calculate Results
 func calculate_results() -> void:
 	print("Calculating...")
+	#print("Formula: ", screen.text)
+	
+	# https://godotengine.org/qa/339/does-gdscript-have-method-to-execute-string-code-exec-python?show=362#a362
+	# Not exactly safe, but we are only taking in input from user.
+	var math_eval = GDScript.new()
+	math_eval.set_source_code("func calc():\n\treturn " + screen.text)
+	math_eval.reload()
+	
+	var math = Reference.new()
+	math.set_script(math_eval)
+	
+	#print(math.calc())
+	
+	screen.bbcode_text = "[right]" + str(math.calc())
 	pass # Replace with function body.
 
 # Close Calculator
