@@ -5,6 +5,8 @@ onready var screen = $Screen
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	get_tree().get_root().get_node("PlayerUI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
+	
 	# Sets the Calculator's Theme
 	set_theme(gamestate.game_theme)
 	
@@ -114,9 +116,7 @@ func close_calculator() -> void:
 	if get_focus_owner() != null: # Prevents p_node is null error when not on any node.
 		# Checks If Window or Children of Window Has Focus
 		if has_focus() or is_a_parent_of(get_focus_owner()):
-			#print("Close Calculator...")
-			self.hide() # Hides Calculator Window
-			self.queue_free() # Frees Calculator From Memory
+			cleanup()
 
 # Do Something Immediately Before Calc Shows
 func _about_to_show() -> void:
@@ -129,3 +129,9 @@ func popup_calc() -> void:
 func set_theme(theme: Theme) -> void:
 	# https://docs.godotengine.org/en/3.1/getting_started/scripting/gdscript/gdscript_basics.html#inheritance
 	.set_theme(theme) # This is Godot's version of a super
+
+# Cleanup Calculator and Free Itself From Memory
+func cleanup():
+	#print("Close Calculator...")
+	self.hide() # Hides Calculator Window
+	get_parent().queue_free() # Frees Calculator From Memory
