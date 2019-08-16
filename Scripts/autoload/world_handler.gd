@@ -37,11 +37,13 @@ func _load_world_server() -> void:
 	# This is important, because if the server is not running headless,
 	# then having multiple worlds loaded can causes problems for the server player.
 	
+	if not get_tree().get_root().has_node("Worlds"):
+		var worlds : Node = Node.new()
+		worlds.name = "Worlds"
+		get_tree().get_root().add_child(worlds)
+	
 	# TODO: If Headless Make Sure Loaded, but Not Displayed
 	# The server needs to keep all worlds (chunks surrounding players when infinite) loaded that has players inside. Eventually after game release options to keep specific worlds loaded regardless will be available to server owners that can support it.
-	var worlds : Node = Node.new()
-	worlds.name = "Worlds"
-	
 	if gamestate.player_info.has("starting_world"):
 		starting_world = gamestate.player_info.starting_world
 	else:
@@ -54,7 +56,6 @@ func _load_world_server() -> void:
 		
 		return
 	
-	get_tree().get_root().add_child(worlds)
 	var world = load_world(-1, starting_world) # Specify -1 (server only) to let server know the spawn world doesn't have the server player yet (gui only)
 	
 	if world == "":
@@ -89,20 +90,24 @@ func _load_world_client() -> void:
 	# This will be changed to load from world (chunks?) sent by server
 	# The client should only handle one world at a time (given worlds are everchanging, there is no reason to cache it - except if I can streamline performance with cached worlds)
 	# If Saved World Exists, Then Load it Instead
-	var worlds : Node = Node.new()
-	worlds.name = "Worlds"
+	var worlds : Node # Worlds Node
 	
+	if get_tree().get_root().has_node("Worlds"):
+		worlds = get_tree().get_root().get_node("Worlds") # Get Worlds node
+	else:
+		worlds = Node.new()
+		worlds.name = "Worlds"
+		get_tree().get_root().add_child(worlds)
+
 	if file_check.file_exists(world_template):
 			var spawn : Node = load(world_template).instance()
 			#print("Saved Seed: ", spawn.get_node("Viewport/WorldGrid/WorldGen").world_seed)
 			
 			worlds.add_child(spawn)
-			get_tree().get_root().add_child(worlds)
-			
 			get_tree().get_current_scene().queue_free()
 	
 # Load Template to Instance World Into
-func load_template(net_id: int, location: String) -> Node:
+func load_template(location: String) -> Node:
 	# NOTE: I forgot groups existed (could of added all worlds to group). Try to use groups when handling projectiles and mobs.
 	if file_check.file_exists(location):
 		var world_file : Resource = load(location) # Load World From File Location
@@ -114,12 +119,6 @@ func load_template(net_id: int, location: String) -> Node:
 		if not get_tree().is_network_server():
 			for loaded_world in worlds.get_children():
 				loaded_world.queue_free()
-		else:
-			# Makes sure the viewport (world) is only visible (to the server player) if the server player is changing worlds
-			if (net_id == gamestate.net_id) or (net_id == -1):
-				world.visible = true
-			else:
-				world.visible = false
 				
 		return world # Return World Name to Help Track Client Location
 	return null # World failed to load
@@ -167,21 +166,27 @@ func load_world(net_id: int, location: String) -> String:
 			# So don't even bother loading the world.
 			return ""
 		
-		var template = load_template(net_id, world_template)
+		var template = load_template(world_template)
 		if template == null:
 			# If world fails to load, then notify world changer (or commands if server).
 			return ""
 			
-		# This won't work as world is already loaded.
-		# TODO: Make sure to load world manually after setting variables.
+		# Set World's Metadata
 		var generator = template.get_node("Viewport/WorldGrid/WorldGen")
-		generator.world_seed = results.seed
+		generator.world_seed = results.seed # Set World's Seed
 		
 		template.name = results.name # Set World's Name
 		worlds.add_child(template) # Add Loaded World to Worlds node
 		
 		# Add Loaded World to Dictionary of Loaded Worlds
 		loaded_worlds[world_meta] = template.name
+		
+		if get_tree().is_network_server():
+			# Makes sure the viewport (world) is only visible (to the server player) if the server player is changing worlds
+			if (net_id == gamestate.net_id) or (net_id == -1):
+				template.visible = true
+			else:
+				template.visible = false
 		
 		return template.name
 	else:
@@ -230,6 +235,47 @@ func save_world(world: Node):
 	
 	# Save World to Drive
 	world_data.store_string(to_json(world_data_dict))
+	
+# NEEDS TO BE TESTED!!!!
+func create_world(net_id: int = -1, world_seed: String = ""):
+	# Creates A World From Scratch
+	var worlds : Node # Worlds Node
+	var world_name : String = uuid.v4()
+	var location = "user://worlds/".plus_file(world_name)
+	var world_meta = location.plus_file("world.json")
+	var world_file : File = File.new()
+	
+	if get_tree().get_root().has_node("Worlds"):
+		worlds = get_tree().get_root().get_node("Worlds") # Get Worlds node
+	else:
+		# Creates Worlds Node if It Does Not Exist
+		worlds = Node.new()
+		worlds.name = "Worlds"
+		get_tree().get_root().add_child(worlds)
+	
+	var template = load_template(world_template)
+	if template == null:
+		# If world fails to load, then notify world changer (or commands if server).
+		return ""
+		
+	# Set World's Metadata
+	var generator = template.get_node("Viewport/WorldGrid/WorldGen")
+	
+	if world_seed != "":
+		generator.world_seed = world_seed # Set World's Seed
+	
+	template.name = world_name # Set World's Name
+	worlds.add_child(template) # Add Loaded World to Worlds node
+	
+	# Add Loaded World to Dictionary of Loaded Worlds
+	loaded_worlds[world_meta] = template.name
+	
+	if get_tree().is_network_server():
+		# Makes sure the viewport (world) is only visible (to the server player) if the server player is changing worlds
+		if (net_id == gamestate.net_id) or (net_id == -1):
+			template.visible = true
+		else:
+			template.visible = false
 	
 # Get Tiles From TileMap
 func get_tiles(tilemap: TileMap) -> Dictionary:

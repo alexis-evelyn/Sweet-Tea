@@ -32,6 +32,7 @@ player_registrar="*res://Scripts/autoload/player_registrar.gd"
 world_handler="*res://Scripts/autoload/world_handler.gd"
 spawn_handler="*res://Scripts/autoload/spawn_handler.gd"
 GameJoltAPI="*res://Custom/GameJoltAPI.tscn"
+uuid="*res://Scripts/autoload/third_party/uuid.gd"
 
 [debug]
 
