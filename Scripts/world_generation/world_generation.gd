@@ -86,8 +86,8 @@ func _ready() -> void:
 	for chunk_x in range(-world_size.x/2, world_size.x/2):
 		for chunk_y in range(-world_size.y/2, world_size.y/2):
 			#generate_foreground(chunk_x, chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
-			generate_background(chunk_x, chunk_y) # Generate The Background (Tiles Player Can Pass Through)
-	
+			#generate_background(chunk_x, chunk_y) # Generate The Background (Tiles Player Can Pass Through)
+			pass # Disabled because testing world loading from file.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta: float):
@@ -108,9 +108,6 @@ func generate_foreground(chunk_x: int, chunk_y: int, regenerate: bool = false) -
 		return
 		
 	generated_chunks_foreground.append(Vector2(chunk_x, chunk_y))
-	
-	# The server could be handling multiple worlds at once (so, this makes sure the correct seed is loaded in the generator). This isn't my fault that the generator is global.
-	#set_seed(world_seed) # - Will keep resetting seed generator to first value.
 	
 	world_grid.clear() # Empty World_Grid for New Data
 	var noise = OpenSimplexNoise.new() # Create New SimplexNoise Generator
@@ -166,10 +163,7 @@ func generate_background(chunk_x: int, chunk_y: int, regenerate: bool = false):
 		
 	generated_chunks_background.append(Vector2(chunk_x, chunk_y))
 	
-	# The server could be handling multiple worlds at once (so, this makes sure the correct seed is loaded in the generator). This isn't my fault that the generator is global.
-	#set_seed(world_seed) # - Will keep resetting seed generator to first value.
-	
-	#world_grid.clear() # Empty World_Grid for New Data
+	world_grid.clear() # Empty World_Grid for New Data
 	
 	# Get Chunk Generation Coordinates (allows finding where to spawn chunk)
 	var horizontal : int = chunk_size.x + (quadrant_size * chunk_x)
@@ -215,6 +209,60 @@ func apply_background() -> void:
 		for coor_y in world_grid[coor_x].keys():
 			#print("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
 			background_tilemap.set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
+
+# This will be replaced by a chunk loading system later.
+func load_foreground(tiles: Dictionary):
+	# Chunk Coordinates (not same a world coordinates)
+	var chunk_x : int
+	var chunk_y : int
+	
+	# Convert Coordinates From Save to Vector2
+	var coor : Vector2
+	
+	for tile in tiles:
+		# I have to explicitely specify that it is a Vector2 - https://github.com/godotengine/godot/issues/11438#issuecomment-330821814
+		coor = str2var("Vector2" + tile)
+		
+		# TODO (IMPORTANT): Figure out what's wrong with this!!!
+		chunk_x = -quadrant_size * (chunk_size.x - coor.x)
+		chunk_y = -quadrant_size * (chunk_size.x - coor.y)
+		
+		generated_chunks_background.append(Vector2(chunk_x, chunk_y))
+		
+		if not world_grid.has(coor.x):
+			world_grid[coor.x] = {}
+		
+		world_grid[coor.x][coor.y] = tiles[str(tile)]
+		#print("Tile: ", world_grid[coor.x][coor.y])
+	
+	apply_foreground()
+	
+# This will be replaced by a chunk loading system later.
+func load_background(tiles: Dictionary):
+	# Chunk Coordinates (not same a world coordinates)
+	var chunk_x : int
+	var chunk_y : int
+	
+	# Convert Coordinates From Save to Vector2
+	var coor : Vector2
+	
+	for tile in tiles:
+		# I have to explicitely specify that it is a Vector2 - https://github.com/godotengine/godot/issues/11438#issuecomment-330821814
+		coor = str2var("Vector2" + tile)
+		
+		# TODO (IMPORTANT): Figure out what's wrong with this!!!
+		chunk_x = -quadrant_size * (chunk_size.x - coor.x)
+		chunk_y = -quadrant_size * (chunk_size.x - coor.y)
+		
+		generated_chunks_background.append(Vector2(chunk_x, chunk_y))
+		
+		if not world_grid.has(coor.x):
+			world_grid[coor.x] = {}
+		
+		world_grid[coor.x][coor.y] = tiles[str(tile)]
+		#print("Tile: ", world_grid[coor.x][coor.y])
+		
+	apply_background()
 
 func generate_seed() -> int:
 	"""

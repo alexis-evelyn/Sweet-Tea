@@ -185,6 +185,14 @@ func load_world(net_id: int, location: String) -> String:
 		# Add Loaded World to Dictionary of Loaded Worlds
 		loaded_worlds[world_meta] = template.name
 		
+		# This will be replaced by a chunk loading system later.
+		if results.has("tiles_foreground"):
+			generator.load_foreground(results["tiles_foreground"])
+			
+		# This will be replaced by a chunk loading system later.
+		if results.has("tiles_background"):
+			generator.load_background(results["tiles_background"])
+		
 		if get_tree().is_network_server():
 			# Makes sure the viewport (world) is only visible (to the server player) if the server player is changing worlds
 			if (net_id == gamestate.net_id) or (net_id == -1):
@@ -202,6 +210,8 @@ func load_world(net_id: int, location: String) -> String:
 		return ""
 
 func save_world(world: Node):
+	world_data_dict.clear() # Clears Dictionary From Previous Uses
+	
 	var world_generator = world.get_node("Viewport/WorldGrid/WorldGen")
 	var world_generator_background = world_generator.get_node("Background")
 	
