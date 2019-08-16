@@ -227,7 +227,7 @@ func load_foreground(tiles: Dictionary):
 		chunk_x = -quadrant_size * (chunk_size.x - coor.x)
 		chunk_y = -quadrant_size * (chunk_size.x - coor.y)
 		
-		generated_chunks_background.append(Vector2(chunk_x, chunk_y))
+		generated_chunks_foreground.append(Vector2(chunk_x, chunk_y))
 		
 		if not world_grid.has(coor.x):
 			world_grid[coor.x] = {}
