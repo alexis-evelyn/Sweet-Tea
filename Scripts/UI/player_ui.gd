@@ -6,6 +6,7 @@ signal cleanup_ui
 # Declare member variables here. Examples:
 onready var panelPlayerList : Node = $panelPlayerList
 onready var panelChat : Node = $panelChat
+# warning-ignore:unused_class_variable
 onready var panelStats : Node = $panelPlayerStats
 
 # Called when the node enters the scene tree for the first time.

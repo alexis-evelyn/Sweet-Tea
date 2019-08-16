@@ -5,6 +5,9 @@ extends Panel
 var max_lines : int = 500 # Max lines in chat before lines are deleted) - Should be settable by user
 var max_characters : int = 500 # Max number of characters in line before cut off - Should be settable by user and server (server overrides user)
 
+var internal_reply : String # For internal commands only
+var arguments : PoolStringArray # To Convert Message into Arguments
+
 # The NWSC is used to break up BBCode submitted by user without deleting characters - Should be able to be disabled by Server Request
 var NWSC : String = PoolByteArray(['U+8203']).get_string_from_utf8() # No Width Space Character (Used to be called RawArray?) - https://docs.godotengine.org/en/3.1/classes/class_poolbytearray.html
 
@@ -94,9 +97,13 @@ func _on_userChat_gui_input(event) -> void:
 		if Input.is_action_just_pressed("chat_send") and chatInput.text.rstrip(" ").lstrip(" ") != "":
 			# TODO (IMPORTANT): Create Way to Store Command History (maybe full chat history?)
 			
-			#print("Enter Key Pressed!!!")
-			rpc_unreliable_id(1, "chat_message_server", chatInput.text)
-			chatInput.text = ""
+			arguments = chatInput.text.split(" ", false, 0) # Convert Message into Arguments
+			internal_reply = process_commands(arguments)
+			if internal_reply == "":
+				rpc_unreliable_id(1, "chat_message_server", chatInput.text)
+				chatInput.text = ""
+			else:
+				chat_message_client(internal_reply)
 
 # When URLs are Clicked in Chat Window
 func _on_chatMessages_meta_clicked(meta: String) -> void:
@@ -139,3 +146,19 @@ func cleanup() -> void:
 	
 	self.visible = false # Hides PlayerChat
 	chatMessages.clear() # Clear Chat Messages
+	
+func process_commands(message: PoolStringArray) -> String:
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+
+	match command:
+		"calc":
+			return open_calculator(message)
+		_:
+			return ""
+			
+# warning-ignore:unused_argument
+func open_calculator(message: PoolStringArray) -> String:
+	var calc : Node = load("res://Menus/Jokes/Calculator.tscn").instance()
+	get_tree().get_root().add_child(calc)
+	
+	return "Opening Calculator..."

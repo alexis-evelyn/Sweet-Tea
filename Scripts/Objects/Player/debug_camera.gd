@@ -12,11 +12,11 @@ var cam_speed = 70
 var player
 onready var coor_label = $PlayerCoordinates
 onready var cam_coor_label = $CameraCoordinates
+# warning-ignore:unused_class_variable
 onready var crosshair = $Crosshair
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	set_theme(gamestate.game_theme)
 	set_physics_process(true)
 	
 	player = get_player_node()
@@ -25,7 +25,7 @@ func _ready() -> void:
 #func _process(delta: float) -> void:
 #	pass
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if Input.is_action_pressed("debug_up"):
 		translate(Vector2(0, -cam_speed))
 	if Input.is_action_pressed("debug_down"):
@@ -47,16 +47,6 @@ func _physics_process(delta: float) -> void:
 	
 	# Prints center of screen's position in world
 	cam_coor_label.text = "Camera: " + str(cross_coor)
-
-# Sets Debug Label's Theme
-func set_theme(theme: Theme) -> void:
-	#get_node("Coordinates").set_theme(theme)
-	#coor_label.align = Label.ALIGN_CENTER # Aligns the Text To Center
-	
-	# Something here is broken.
-	coor_label.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
-	cam_coor_label.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
-	crosshair.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
 
 func get_player_node() -> Node:
 	print("Parent: ", get_parent().name)

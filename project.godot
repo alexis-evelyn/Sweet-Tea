@@ -36,7 +36,8 @@ uuid="*res://Scripts/autoload/third_party/uuid.gd"
 
 [debug]
 
-gdscript/warnings/enable=false
+gdscript/warnings/return_value_discarded=false
+gdscript/warnings/unsafe_cast=true
 
 [display]
 

@@ -1,6 +1,7 @@
 extends Node
 
 signal server_started(gamestate_player_info) # Server Started Up and World is Loaded - Spawns Server Player
+# warning-ignore:unused_signal
 signal cleanup_worlds
 
 # Chunk Loading (like in Minecraft) is perfectly possible with Godot - https://www.reddit.com/r/godot/comments/8shad4/how_do_large_open_worlds_work_in_godot/
@@ -274,6 +275,7 @@ func create_world(net_id: int = -1, world_seed: String = ""):
 	var world_name : String = uuid.v4()
 	var location = "user://worlds/".plus_file(world_name)
 	var world_meta = location.plus_file("world.json")
+	# warning-ignore:unused_variable
 	var world_file : File = File.new()
 	
 	if get_tree().get_root().has_node("Worlds"):

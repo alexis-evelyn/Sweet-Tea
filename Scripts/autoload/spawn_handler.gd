@@ -23,7 +23,9 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 		print("Character Unique ID: " + pinfo.char_unique_id)
 	
 	# Currently Coordinates are Randomly Chosen
+	# warning-ignore:narrowing_conversion
 	var coor_x : int = rand_range(100,900)
+	# warning-ignore:narrowing_conversion
 	var coor_y : int = rand_range(100,500)
 	var coordinates : Vector2 = Vector2(coor_x, coor_y)
 	

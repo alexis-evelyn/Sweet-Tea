@@ -33,16 +33,10 @@ var server_info : Dictionary = {
 
 # Main Function - Registers Event Handling (Handled By Both Client And Server)
 func _ready() -> void:
-	# Why don't we have block ignore warnings?
-	#warning-ignore:return_value_discarded
 	get_tree().connect("network_peer_connected", self, "_on_player_connected")
-	#warning-ignore:return_value_discarded
 	get_tree().connect("network_peer_disconnected", self, "_on_player_disconnected")
-	#warning-ignore:return_value_discarded
 	get_tree().connect("connected_to_server", self, "_on_connected_to_server")
-	#warning-ignore:return_value_discarded
 	get_tree().connect("connection_failed", self, "_on_connection_failed")
-	#warning-ignore:return_value_discarded
 	get_tree().connect("server_disconnected", self, "close_connection")
 
 # Attempt to Create Server
@@ -144,6 +138,7 @@ puppet func player_kicked(message: String) -> void:
 	print("Kick Message: ", message)
 
 # Server (and Client) Notified When A New Client Connects (Player Has Not Registered Yet, So, There Is No Player Data)
+# warning-ignore:unused_argument
 func _on_player_connected(id: int) -> void:
 	
 	# Only the server should check if client is banned
@@ -220,6 +215,7 @@ master func server_ping(message: String) -> void:
 	rpc_unreliable_id(int(get_tree().get_rpc_sender_id()), "client_ping", message)
 	
 # Receive Ping Back From Server
+# warning-ignore:unused_argument
 puppet func client_ping(message: String) -> void:
 	#print("Message From Server: ", message)
 	pass

@@ -143,6 +143,7 @@ func set_dominant_color(color: Color) -> void:
 	$CollisionShape2D/Sprite.modulate = color # Changes the Player's Color in the World
 	
 # I put debug camera here as it is guaranteed that the player is placed in a loaded world by this point
+# warning-ignore:unused_argument
 func debug_camera(activated : bool = true):
 	# The camera is automatically cleaned up when the world is unloaded
 	camera = load("res://Objects/Players/DebugCamera.tscn").instance()

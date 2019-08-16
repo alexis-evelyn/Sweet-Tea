@@ -4,6 +4,7 @@ extends Node
 # I always start development on server/client by starting with the server, so all of my notes will be there.
 
 # Declare member variables here. Examples:
+# warning-ignore:unused_class_variable
 var dh = preload("diffie-hellman.gd").new() # Preload Diffie-Hellman Script (Math is Exact Same No Matter if Client or Server)
 
 # Called when the node enters the scene tree for the first time.

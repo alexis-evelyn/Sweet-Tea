@@ -74,6 +74,7 @@ func ban_player() -> void:
 		Specify Net ID as Integer (will be changed when authentication is available)
 	"""
 	
+# warning-ignore:unused_variable
 	var ban_message : String = "Player Banned!!!" # Will be replaced by a function argument
 	
 	var net : NetworkedMultiplayerENet = get_tree().get_network_peer() # Grab the existing Network Peer Node
@@ -102,6 +103,7 @@ func ban_player_ip() -> void:
 		Specify IP Address as String
 	"""
 	
+# warning-ignore:unused_variable
 	var ban_message : String = "IP Banned!!!" # Will be replaced by a function argument
 	
 	var net : NetworkedMultiplayerENet = get_tree().get_network_peer() # Grab the existing Network Peer Node

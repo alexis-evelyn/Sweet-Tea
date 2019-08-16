@@ -76,6 +76,7 @@ extends Node
 # The client and server will increment their counter from the same starting point every session and they will transfer the key over diffie-hellman.
 
 # Declare member variables here. Examples:
+# warning-ignore:unused_class_variable
 var dh = preload("diffie-hellman.gd").new() # Preload Diffie-Hellman Script (Math is Exact Same No Matter if Client or Server)
 
 # Called when the node enters the scene tree for the first time.

@@ -26,6 +26,8 @@ var supported_commands : Dictionary = {
 "shutdown": {"description": "Shuts Down Server", "permission": server_owner}
 }
 
+var arguments : PoolStringArray # To Convert Message into Arguments
+
 # Process the Command and Return Result if Any
 func process_command(net_id: int, message: String) -> void:
 	"""
@@ -34,9 +36,7 @@ func process_command(net_id: int, message: String) -> void:
 		Only Meant to Be Called By RPC (and by server)
 	"""
 	#print("UserID: " + str(net_id) + " Command: " + message)
-	
-	var arguments : PoolStringArray = PoolStringArray()
-	arguments = message.split(" ", false, 0)
+	arguments = message.split(" ", false, 0) # Convert Message into Arguments
 	
 	var response : String = check_command(net_id, arguments)
 	
@@ -86,6 +86,8 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 				return "Command, " + command + ", Not Found!!!"
 
 # Help Command
+# warning-ignore:unused_argument
+# warning-ignore:unused_argument
 func help_command(net_id, message) -> String:
 	"""
 		Help Command
@@ -112,6 +114,7 @@ func help_command(net_id, message) -> String:
 	return str(output)
 	
 # Kick Player Command
+# warning-ignore:unused_argument
 func kick_player(net_id: int, message: PoolStringArray) -> String:
 	"""
 		Kick Command
@@ -126,6 +129,7 @@ func kick_player(net_id: int, message: PoolStringArray) -> String:
 	return "Kick Player and Optional Message - Permission Needed: " + str(permission_level)
 	
 # Kick Player by IP Command
+# warning-ignore:unused_argument
 func kick_player_ip(net_id: int, message: PoolStringArray) -> String:
 	"""
 		Kick By IP Command
@@ -134,6 +138,7 @@ func kick_player_ip(net_id: int, message: PoolStringArray) -> String:
 	"""
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+# warning-ignore:unused_variable
 	var ip_address : String = str(message[1]) # Check to make sure IP Address is Specified
 	
 	# player_control
@@ -141,6 +146,7 @@ func kick_player_ip(net_id: int, message: PoolStringArray) -> String:
 	return "Kick Player By IP and Optional Message - Permission Needed: " + str(permission_level)
 
 # Ban Player Command
+# warning-ignore:unused_argument
 func ban_player(net_id: int, message: PoolStringArray) -> String:
 	"""
 		Ban Command
@@ -155,6 +161,7 @@ func ban_player(net_id: int, message: PoolStringArray) -> String:
 	return "Ban Player and Optional Message - Permission Needed: " + str(permission_level)
 
 # Ban Player By IP Command
+# warning-ignore:unused_argument
 func ban_player_ip(net_id: int, message: PoolStringArray) -> String:
 	"""
 		Ban By IP Command
@@ -177,6 +184,7 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 		
 		Not Meant to Be Called Directly
 	"""
+# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
@@ -213,6 +221,7 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 		Not Meant to Be Called Directly
 	"""
 	if net_id == 1:
+# warning-ignore:unused_variable
 		var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 		#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 		# TODO (IMPORTANT): Make sure to restrict access with permission levels!!!
@@ -229,6 +238,7 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 	
 # TODO: Add Restart Command
 # Shutdown Server Command
+# warning-ignore:unused_argument
 func shutdown_server(net_id: int, message: PoolStringArray) -> String:
 	"""
 		Shutdown Server Command

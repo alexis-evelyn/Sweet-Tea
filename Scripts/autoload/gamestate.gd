@@ -8,7 +8,9 @@ var backups_save_file : String = "characters_%date%.json" # Backup Save File Nam
 
 var game_version : String = ProjectSettings.get_setting("application/config/Version")
 
+# warning-ignore:unused_class_variable
 var game_theme : Theme = load("res://Themes/default_theme.tres")
+# warning-ignore:unused_class_variable
 var server_mode : bool = false
 
 # Player Info Dictionary
@@ -21,7 +23,9 @@ var player_info : Dictionary = {
 	saved_world = "" # Functionally the same thing as current_world, but meant for Single Player Only (the one exception is, the single player world is loaded on client when connected to server. Similar idea to Starbound's Spaceship on Servers) - Loads Player In Last Saved World
 }
 
+# warning-ignore:unused_class_variable
 var net_id : int = 1 # Player's ID
+# warning-ignore:unused_class_variable
 var debug_camera = false
 
 # A Note On Saving
@@ -55,6 +59,7 @@ func save_player(slot: int) -> void:
 	
 	# Make Save File Backup Directory (if it does not exist)
 	if not file_op.dir_exists(backup_path):
+# warning-ignore:return_value_discarded
 		file_op.make_dir(backup_path)
 	
 	var save_data : File = File.new()
@@ -63,15 +68,20 @@ func save_player(slot: int) -> void:
 	if save_data.file_exists(save_path):
 		#print("Save File Exists!!!")
 		
+# warning-ignore:return_value_discarded
 		save_data.open(save_path, File.READ_WRITE) # Open Save File For Reading/Writing
 		players_data = JSON.parse(save_data.get_as_text()) # Load existing Save File as JSON
 	
 		# Backup The Save File (I Want It To Back Up Regardless of if It Is Corrupted)
+# warning-ignore:return_value_discarded
 		file_op.copy(save_path, save_path_backup) # Copy Save File to Backup	
 	
 		# Checks to Make Sure JSON was Parsed
+# warning-ignore:unsafe_property_access
+# warning-ignore:unsafe_property_access
 		if players_data.error == OK and typeof(players_data.result) == TYPE_DICTIONARY:
 			#print("Save File Read and Imported As Dictionary!!!")
+# warning-ignore:unsafe_property_access
 			players_data_result = players_data.result # Grabs Result From JSON (this is done now so I can grab the error code from earlier)
 			
 			# Should I merge this and the code from new save into a single function?
@@ -84,6 +94,7 @@ func save_player(slot: int) -> void:
 			save_data.store_string(to_json(players_data_result))
 	else:
 		#print("Save File Does Not Exist!!! Creating!!!")
+# warning-ignore:return_value_discarded
 		save_data.open(save_path, File.WRITE) # Open Save File For Writing
 		
 		# Should I merge this and the code from existing save into a single function?
@@ -111,6 +122,7 @@ func load_player(slot: int) -> int:
 		#print("Save File Does Not Exist!!! New Player?")
 		return -1 # Returns -1 to signal that loading save file failed (for reasons of non-existence)
 	
+# warning-ignore:return_value_discarded
 	save_data.open(save_directory.plus_file(save_file), File.READ)
 	var json : JSONParseResult = JSON.parse(save_data.get_as_text())
 		
@@ -118,15 +130,22 @@ func load_player(slot: int) -> int:
 	if json.error == OK:
 		#print("Save File Read!!!")
 		
+# warning-ignore:unsafe_property_access
+# warning-ignore:unsafe_property_access
 		if typeof(json.result) == TYPE_DICTIONARY:
 			#print("Save File Imported As Dictionary!!!")
 			
+# warning-ignore:unsafe_property_access
 			if json.result.has("game_version"):
+# warning-ignore:unsafe_property_access
+# warning-ignore:unsafe_property_access
 				print("Game Version That Saved File Was: " + json.result["game_version"])
 			else:
 				print("Unknown What Game Version Saved File!!!")
 			
+# warning-ignore:unsafe_property_access
 			if json.result.has(str(slot)):
+# warning-ignore:unsafe_property_access
 				player_info = json.result[str(slot)]
 			else:
 				printerr("Player Slot Does Not Exist: " + str(slot))
@@ -141,6 +160,7 @@ func load_player(slot: int) -> int:
 	return 0
 	
 # Delete Player From Save
+# warning-ignore:unused_argument
 func delete_player(slot: int):
 	pass
 	
@@ -152,12 +172,16 @@ func check_if_slot_exists(slot: int) -> bool:
 		#print("Save File Does Not Exist!!! So, Slot Does Not Exist!!!")
 		return false
 	
+# warning-ignore:return_value_discarded
 	save_data.open(save_directory.plus_file(save_file), File.READ)
 	var json : JSONParseResult = JSON.parse(save_data.get_as_text())
 		
 	# Checks to Make Sure JSON was Parsed
 	if json.error == OK:
+# warning-ignore:unsafe_property_access
+# warning-ignore:unsafe_property_access
 		if typeof(json.result) == TYPE_DICTIONARY:
+# warning-ignore:unsafe_property_access
 			if json.result.has(str(slot)):
 				#print("Slot Exists: " + str(slot))
 				return true

@@ -12,11 +12,14 @@ func set_theme(theme: Theme) -> void:
 		Supply Theme Resource
 	"""
 	
+	.set_theme(theme) # Godot's Version of a super - https://docs.godotengine.org/en/3.1/getting_started/scripting/gdscript/gdscript_basics.html#inheritance
+	
 	# Different Panels In Network Menu - Will Be Changed After Character Creation is Implemented
 	$panelHost.set_theme(theme)
 	$panelJoin.set_theme(theme)
 	$panelPlayer.set_theme(theme)
 
+# warning-ignore:unused_argument
 func _on_btColor_color_changed(color: Color) -> void:
 	"""
 		(Deprecated) - Change Player's Color Live
@@ -114,6 +117,7 @@ func set_game_data() -> void:
 	"""
 	
 	# Set Character's Name
+# warning-ignore:unused_variable
 	var loaded : int = gamestate.load_player(0)
 	
 	if gamestate.player_info.has("name"):

@@ -6,6 +6,7 @@ extends Node
 
 # It's not necessary to add signal arguments here, but it helps when studying the code
 # Signals - Used to Connect to Other GDScripts
+# warning-ignore:unused_signal
 signal player_removed(pinfo, id) # A Player Was Removed From The Player List
 
 # Currently Registered Players
@@ -71,6 +72,7 @@ remote func unregister_player(id: int) -> void:
 	if players.has(id):
 		#print("Removing player ", players[id].name, " from internal table")
 		
+	# warning-ignore:unused_variable
 		var pinfo : Dictionary = players[id] # Cache player info for removal process
 		players.erase(id) # Remove Player From Player List
 
