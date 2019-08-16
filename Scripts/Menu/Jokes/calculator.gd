@@ -16,7 +16,8 @@ func _ready() -> void:
 	for columns in buttons.get_children():
 		for rows in columns.get_children():
 			for button in rows.get_children():
-				button.connect("pressed", self, "_button_pressed", [button])
+				button.enabled_focus_mode = Control.FOCUS_NONE # Disables Keyboard and Mouse Focus
+				button.connect("pressed", self, "_button_pressed", [button]) # Connects Button to Function
 	
 	# Listens for cleanup_ui signal. Allows cleaning up on server shutdown.
 	get_tree().get_root().get_node("PlayerUI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
