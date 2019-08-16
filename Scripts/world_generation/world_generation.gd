@@ -63,7 +63,7 @@ export(Array) var generated_chunks_background : Array # Store Generated Chunks I
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	#print("World Generator Seed: ", world_seed)
+	print("World Generator Seed: ", world_seed)
 	
 	gamestate.debug_camera = true # Turns on Debug Camera - Useful for Debugging World Gen
 	

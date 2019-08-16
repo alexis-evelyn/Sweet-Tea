@@ -102,7 +102,7 @@ func _load_world_client() -> void:
 			get_tree().get_current_scene().queue_free()
 	
 # Load Template to Instance World Into
-func load_template(net_id: int, location: String, name: String) -> Node:
+func load_template(net_id: int, location: String) -> Node:
 	#print("Change World Loading")
 	
 	# Checks to Make sure World isn't already loaded
@@ -136,7 +136,7 @@ func load_template(net_id: int, location: String, name: String) -> Node:
 				world.visible = false
 		
 		world.name = name # Sets World's Name
-		worlds.add_child(world) # Add Loaded World to Worlds node
+		#worlds.add_child(world) # Moved to Load Worlds function as more work is needed before the world is added to the scene tree
 		
 		# Add Loaded World to Dictionary of Loaded Worlds
 		loaded_worlds[location] = world.name
@@ -151,6 +151,7 @@ func load_world(net_id: int, location: String) -> String:
 	
 	# Named world_meta because this will eventually just list things like seed and name (not tiles)
 	# Tiles will be split into files that match the corresponding chunk
+	var worlds : Node = get_tree().get_root().get_node("Worlds") # Get Worlds node
 	var world_meta = location.plus_file("world.json")
 	var world_file : File = File.new()
 	
@@ -168,23 +169,27 @@ func load_world(net_id: int, location: String) -> String:
 		
 	if typeof(json.result) == TYPE_DICTIONARY:
 		var results = json.result
-		
-		# Ternary Operator (basically a shorthand if statement) - This does not validate that the world name is a string (but it has to be a string unless somebody else manually modified it - or some really weird glitch happens on someone's computer')
-		var world_name : String = results.world if results.has("name") else "Name Missing"
-		var template = load_template(net_id, world_template, world_name)
-		# If world fails to load, then notify world changer (or commands if server).
-		if template == null:
-			return ""
-			
-		var generator = template.get_node("Viewport/WorldGrid/WorldGen")
-		
-		if not results.has("seed"):
+		if not results.has("seed") or not results.has("name"):
+			# Check if world save file has seed and name (name is because having a missing name makes saving data occur in the wrong folder)
 			# If the world seed is missing, there is no way for the generator to accurately generate the world
+			# So don't even bother loading the world.
+			return ""
+		
+		var template = load_template(net_id, world_template)
+		if template == null:
+			# If world fails to load, then notify world changer (or commands if server).
 			return ""
 			
 		# This won't work as world is already loaded.
 		# TODO: Make sure to load world manually after setting variables.
+		var generator = template.get_node("Viewport/WorldGrid/WorldGen")
 		generator.world_seed = results.seed
+		
+		# Ternary Operator (basically a shorthand if statement) - This does not validate that the world name is a string (but it has to be a string unless somebody else manually modified it - or some really weird glitch happens on someone's computer')
+		#var world_name : String = results.world if results.has("name") else "Name Missing" # Default to Name Missing if name not in Save File
+		
+		template.name = results.name # Set World's Name
+		worlds.add_child(template) # Add Loaded World to Worlds node
 		return template.name
 	else:
 		# Unknown JSON Format
