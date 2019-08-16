@@ -220,7 +220,7 @@ func load_foreground(tiles: Dictionary):
 	var coor : Vector2
 	
 	for tile in tiles:
-		# I have to explicitely specify that it is a Vector2 - https://github.com/godotengine/godot/issues/11438#issuecomment-330821814
+		# I have to explicitly specify that it is a Vector2 - https://github.com/godotengine/godot/issues/11438#issuecomment-330821814
 		coor = str2var("Vector2" + tile)
 		
 		# TODO (IMPORTANT): Figure out what's wrong with this!!!
@@ -247,7 +247,7 @@ func load_background(tiles: Dictionary):
 	var coor : Vector2
 	
 	for tile in tiles:
-		# I have to explicitely specify that it is a Vector2 - https://github.com/godotengine/godot/issues/11438#issuecomment-330821814
+		# I have to explicitly specify that it is a Vector2 - https://github.com/godotengine/godot/issues/11438#issuecomment-330821814
 		coor = str2var("Vector2" + tile)
 		
 		# TODO (IMPORTANT): Figure out what's wrong with this!!!
