@@ -4,6 +4,7 @@ extends WindowDialog
 
 # Declare member variables here. Examples:
 onready var screen = $Screen
+onready var expression = Expression.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -88,6 +89,10 @@ func _input(event) -> void:
 			KEY_ESCAPE:
 				close_calculator()
 				return
+			KEY_PERIOD:
+				# Untested
+				write_to_screen(".")
+				return
 			KEY_ASTERISK:
 				# Untested
 				write_to_screen("*")
@@ -150,19 +155,18 @@ func calculate_results() -> void:
 	#print("Calculating...")
 	#print("Formula: ", screen.text)
 	
-	# https://godotengine.org/qa/339/does-gdscript-have-method-to-execute-string-code-exec-python?show=362#a362
-	# Not exactly safe, but we are only taking in input from user.
-	var math_eval = GDScript.new()
-	math_eval.set_source_code("func calc():\n\treturn " + screen.text)
-	math_eval.reload()
+	# https://docs.godotengine.org/en/3.1/classes/class_expression.html#description
+	# Using expressions allows handling code without crashing the game because of errors (like syntax errors).
+	# Dividing by zero still causes errors to show up in debug log, but at least it doesn't crash the game.
+	var error = expression.parse(screen.text, [])
 	
-	var math = Reference.new()
-	math.set_script(math_eval)
-	
-	#print(math.calc())
-	
-	screen.bbcode_text = "[right]" + str(math.calc())
-	pass # Replace with function body.
+	if error != OK:
+		#print(expression.get_error_text())
+		return
+		
+	var result = expression.execute([], null, true)
+	if not expression.has_execute_failed():
+		screen.bbcode_text = "[right]" + str(result)
 
 # Close Calculator
 func close_calculator() -> void:
