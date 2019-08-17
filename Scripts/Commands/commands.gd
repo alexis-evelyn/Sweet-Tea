@@ -189,7 +189,7 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
 	var world_path : String = "user://worlds/World 2"
-	var world_name : String = world_handler.load_world(net_id, world_path)
+	var world_name : String = world_handler.load_world_server(net_id, world_path)
 	
 	if world_name == "":
 		# TODO: Replace world_path in error message with name user gave!!!

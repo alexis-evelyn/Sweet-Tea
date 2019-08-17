@@ -28,7 +28,8 @@ var server_info : Dictionary = {
 	bind_address = "*",
 	used_port = 0, # Host Port
 	ssl_bind_address = "*",
-	ssl_port = 4344 # StreamPeerSSL Port
+	ssl_port = 4344, # StreamPeerSSL Port
+	max_chunks = 3 # Max chunks to send to client (client does not request, server sends based on position of client - this helps mitigate DOS abuse)
 }
 
 # Main Function - Registers Event Handling (Handled By Both Client And Server)
@@ -172,7 +173,6 @@ func _on_connected_to_server() -> void:
 	keep_alive = Thread.new()
 	keep_alive.start(self, "start_ping", "Test Connection")
 	
-	emit_signal("connection_success") # Allows Loading World From Server on Successful Connection
 	playerList.loadPlayerList() # Load PlayerList
 
 	gamestate.net_id = get_tree().get_network_unique_id() # Record Network ID
@@ -180,6 +180,7 @@ func _on_connected_to_server() -> void:
 	
 	# Server will send current_world to client through the register_player function. The above line of code makes sure to already have a copy of player info registered before calling the server's register_player function
 	player_registrar.rpc_unreliable_id(1, "register_player", gamestate.player_info, gamestate.net_id) # Ask Server To Update Player Dictionary - Server ID is Always 1
+	emit_signal("connection_success") # Allows Loading World From Server on Successful Connection
 	
 	#print("Connected Current World: ", player_registrar.has_current_world())
 	

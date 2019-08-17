@@ -20,12 +20,12 @@ var world_data_dict : Dictionary = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	network.connect("server_created", self, "_load_world_server")
-	network.connect("connection_success", self, "_load_world_client")
+	network.connect("server_created", self, "start_server")
+	network.connect("connection_success", self, "load_world_client")
 	network.connect("cleanup_worlds", self, "cleanup")
 
-# Server World Loading Function
-func _load_world_server() -> void:
+# Server Starting Function
+func start_server() -> void:
 	#print("Server Loading World")
 	# Load World From Drive
 	# For Simplicity, We Are Starting Off Non Infinite So The Whole World Will Be Loaded At Once
@@ -57,7 +57,7 @@ func _load_world_server() -> void:
 		
 		return
 	
-	var world = load_world(-1, starting_world) # Specify -1 (server only) to let server know the spawn world doesn't have the server player yet (gui only)
+	var world = load_world_server(-1, starting_world) # Specify -1 (server only) to let server know the spawn world doesn't have the server player yet (gui only)
 	
 	if world == "":
 		print("World is Missing (on Server Start)!!! Check Player Save File!!!")
@@ -80,8 +80,8 @@ func _load_world_server() -> void:
 		player_registrar.register_player(gamestate.player_info, 0)
 		emit_signal("server_started", gamestate.player_info) # Sends Server Player's Info To Spawn Code
 
-# Client World Loading Code
-func _load_world_client() -> void:
+# Client World Loading Code (client side only)
+puppet func load_world_client() -> void:
 	# Download World, Resources, Scripts, etc... From Server
 	# Should I Use HTTP or Should I Send Data by RPC?
 	# If RPC, I may have to have client initiate download and then call signal to load worlds in a different function from here (below this function). I may not need to call signal, just load function.
@@ -91,21 +91,29 @@ func _load_world_client() -> void:
 	# This will be changed to load from world (chunks?) sent by server
 	# The client should only handle one world at a time (given worlds are everchanging, there is no reason to cache it - except if I can streamline performance with cached worlds)
 	# If Saved World Exists, Then Load it Instead
-	var worlds : Node # Worlds Node
-	
-	if get_tree().get_root().has_node("Worlds"):
-		worlds = get_tree().get_root().get_node("Worlds") # Get Worlds node
-	else:
-		worlds = Node.new()
+	# Creates A World From Scratch
+	if not get_tree().get_root().has_node("Worlds"):
+		var worlds : Node = Node.new()
 		worlds.name = "Worlds"
 		get_tree().get_root().add_child(worlds)
 
-	if file_check.file_exists(world_template):
-			var spawn : Node = load(world_template).instance()
-			#print("Saved Seed: ", spawn.get_node("Viewport/WorldGrid/WorldGen").world_seed)
-			
-			worlds.add_child(spawn)
-			get_tree().get_current_scene().queue_free()
+		# This code will be replaced by a new world from template filled in with chunks from server
+		# ---------------------------------------------------------------------------------------------------
+		# Sets Starting World Name to Pass to Spawn Handler
+		starting_world = "res://WorldGen/WorldTemplate.tscn"
+		starting_world_name = "d11e4114-186a-4d6b-881d-60f901c85919" # I may have to rearrange the client loading code so player registry gets called before this function.
+		var spawn = load(starting_world).instance()
+		spawn.name = starting_world_name
+		
+		worlds.add_child(spawn)
+		# ---------------------------------------------------------------------------------------------------
+	
+	# Unload Network Menu (cannot use get_current_scene() from rpc call)
+	if get_tree().get_root().has_node("NetworkMenu"):
+		get_tree().get_root().get_node("NetworkMenu").queue_free()
+	
+	# Now that the current world has been set, ask server to spawn player
+	spawn_handler.rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
 	
 # Load Template to Instance World Into
 func load_template(location: String) -> Node:
@@ -124,8 +132,8 @@ func load_template(location: String) -> Node:
 		return world # Return World Name to Help Track Client Location
 	return null # World failed to load
 
-# Load World to Send Player To
-func load_world(net_id: int, location: String) -> String:
+# Load World to Send Player To (server-side only)
+func load_world_server(net_id: int, location: String) -> String:
 	# Apparently setting a default value either requires the default to be on the end of the arguments list or for all arguments to have a default value.
 	# When this is fixed, set net_id to default to -1.
 	

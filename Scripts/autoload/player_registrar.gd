@@ -78,11 +78,10 @@ remote func unregister_player(id: int) -> void:
 
 # Get current world name to download from server
 puppet func set_current_world(current_world: String) -> void:
-	players[int(gamestate.net_id)].current_world = current_world
+	players[int(gamestate.net_id)].current_world = current_world # Set World to Download From Server
 	#print("Set Connected Current World: ", players[int(gamestate.net_id)].current_world)
 	
-	# Now that the current world has been set, ask server to spawn player
-	spawn_handler.rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
+	world_handler.load_world_client() # Download World From Server
 
 # Send client a copy of players in new world - net_id is who I am sending the info to
 func update_players(net_id: int, id: int) -> void:

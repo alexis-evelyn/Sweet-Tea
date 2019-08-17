@@ -176,7 +176,7 @@ remote func change_world(world_name: String, world_path: String) -> void:
 	# The Server Would Have Already Updated World Name - No Need to Set Twice
 	if not get_tree().is_network_server():
 		set_world(world_name)
-		var loaded_world = world_handler.load_world(gamestate.net_id, world_path)
+		var loaded_world = world_handler.load_world_server(gamestate.net_id, world_path)
 		
 		if loaded_world == "":
 			print("Failed to Load World %s For %s" % [world_path, gamestate.net_id])

@@ -87,7 +87,8 @@ func _physics_process(_delta: float) -> void:
 			motion.y = lerp(motion.y, 0, 0.2)
 			friction = false
 		
-		if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))):
+		#if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))):
+		if motion.abs() != Vector2(0, 0):
 			#print("Motion: (", abs(motion.x), ", ", abs(motion.y), ")")
 			motion = move_and_slide(motion)
 			send_to_clients(motion)
