@@ -111,7 +111,7 @@ func send_to_clients(mot: Vector2) -> void:
 
 # puppet (formerly slave) sets for all devices except master (the calling client)
 puppet func move_player(mot: Vector2) -> void:
-	# https://github.com/godotengine/godot/blob/master/servers/physics_2d/physics_2d_server_sw.cpp#L1071
+	# https://github.com/godotengine/godot/blob/71a6d2cd17b9b48027a6a36b4e7b8adee0eb373c/servers/physics_2d/physics_2d_server_sw.cpp#L1064
 	# Condition ' body->get_space()->is_locked() ' is true. returned: false
 	# This error is heavily dependent on how smoothly the client can move (the faster the timer ends on correcting coordinates, the less of this error that will show up when a player decides to change to the opposite direction all of a sudden).
 	# I think this error is a movement check (making sure the KinematicBody2d is not stuck). Hence, why it triggers on move_and_slide(...). It fails the space locked test in body_test_ray_separation of Godot's physics engine code.
