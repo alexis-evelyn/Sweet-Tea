@@ -60,6 +60,7 @@ export(Array) var generated_chunks_background : Array # Store Generated Chunks I
 
 # This gives the each instance of the world generator access to its own exclusive random number generator so it will not be interfered with by other generators.
 var generator : RandomNumberGenerator = RandomNumberGenerator.new()
+var background_shader : ShaderMaterial = load("res://Assets/Materials/background.tres")
 
 # TODO (IMPORTANT): Generate chunks array on world load instead of reading from file!!!
 # Also, currently seeds aren't loaded from world handler, so they are generated new every time.
@@ -74,6 +75,7 @@ func _ready() -> void:
 		self.tile_set = debug_tileset
 		background_tilemap.tile_set = debug_tileset
 	
+	set_shader_background_tiles() # Set Shader for Background Tiles
 	background_tilemap.set_owner(world_node) # Set world as owner of Background Tilemap (allows saving Tilemap to world when client saves world)
 	print("Background TileMap's Owner: ", background_tilemap.get_owner().name) # Debug Statement to list Background TileMap's Owner's Name
 	
@@ -88,6 +90,15 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta: float):
 #	pass
+
+# Set Shader for Background Tiles
+func set_shader_background_tiles():
+	# TODO (IMPORTANT): How Do I Make Background and Foreground Use Different Instances of the Same Tileset???
+	# Right now, the shader sets for both foreground and background because of sharing same tileset and using load(...) twice does not solve the issue.
+	
+	# Loops Through Tiles in Tileset and Applies Shader(s)
+	for tile in background_tilemap.tile_set.get_tiles_ids():
+		background_tilemap.tile_set.tile_set_material(tile, background_shader)
 
 # Load or Generate New Chunks for Player
 func load_chunks(net_id: int, position: Vector2):
@@ -109,7 +120,6 @@ func generate_new_world():
 		for chunk_y in range(-world_size.y/2, world_size.y/2):
 			generate_foreground(chunk_x, chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
 			generate_background(chunk_x, chunk_y) # Generate The Background (Tiles Player Can Pass Through)
-			pass # Disabled because testing world loading from file.
 
 func generate_foreground(chunk_x: int, chunk_y: int, regenerate: bool = false) -> void:
 	"""
