@@ -68,9 +68,9 @@ var generator : RandomNumberGenerator = RandomNumberGenerator.new()
 func _ready() -> void:
 	print("World Generator Seed: ", world_seed)
 	
-	#gamestate.debug_camera = true # Turns on Debug Camera - Useful for Debugging World Gen
+	#gamestate.debug = true # Turns on Debug Camera - Useful for Debugging World Gen
 	
-	if gamestate.debug_camera:
+	if gamestate.debug:
 		self.tile_set = debug_tileset
 		background_tilemap.tile_set = debug_tileset
 	

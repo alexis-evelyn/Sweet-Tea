@@ -53,8 +53,9 @@ func _ready() -> void:
 		correct_coordinates_timer.start() # Start Timer
 		
 	# Activate Debug Camera if Gamestate Debug Camera Boolean is True
-	if gamestate.debug_camera:
-		debug_camera(true)
+	if is_network_master():
+		if gamestate.debug:
+			debug_camera(true)
 
 # Called before every rendered frame.
 func _process(_delta: float) -> void:
