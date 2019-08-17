@@ -106,6 +106,8 @@ func set_shader_background_tiles():
 		background_tilemap.tile_set.tile_set_material(tile, background_shader)
 
 # Load or Generate New Chunks for Player
+# warning-ignore:unused_argument
+# warning-ignore:unused_argument
 func load_chunks(net_id: int, position: Vector2):
 	# How Minecraft's Server-Client Chunk Transmission Works - https://github.com/ORelio/Minecraft-Console-Client/issues/140#issuecomment-207971227
 	# Potential Problem With Minecraft's Server-Client Chunk Transmission - https://bugs.mojang.com/plugins/servlet/mobile#issue/MC-145813
@@ -146,9 +148,9 @@ func generate_foreground(chunk_x: int, chunk_y: int, regenerate: bool = false) -
 	var noise = OpenSimplexNoise.new() # Create New SimplexNoise Generator
 	
 	# Get Chunk Generation Coordinates (allows finding where to spawn chunk)
-# warning-ignore:narrowing_conversion
+	# warning-ignore:narrowing_conversion
 	var horizontal : int = chunk_size.x + (quadrant_size * chunk_x)
-# warning-ignore:narrowing_conversion
+	# warning-ignore:narrowing_conversion
 	var vertical : int = chunk_size.y + (quadrant_size * chunk_y)
 	
 	# World Gen Code
@@ -202,9 +204,9 @@ func generate_background(chunk_x: int, chunk_y: int, regenerate: bool = false):
 	world_grid.clear() # Empty World_Grid for New Data
 	
 	# Get Chunk Generation Coordinates (allows finding where to spawn chunk)
-# warning-ignore:narrowing_conversion
+	# warning-ignore:narrowing_conversion
 	var horizontal : int = chunk_size.x + (quadrant_size * chunk_x)
-# warning-ignore:narrowing_conversion
+	# warning-ignore:narrowing_conversion
 	var vertical : int = chunk_size.y + (quadrant_size * chunk_y)
 
 	# NOTE (Important): This is for testing the chunk selection process

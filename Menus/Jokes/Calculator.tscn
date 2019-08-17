@@ -233,3 +233,4 @@ margin_right = 72.0
 margin_bottom = 156.0
 text = "+"
 [connection signal="about_to_show" from="CalculatorWindow" to="CalculatorWindow" method="_about_to_show"]
+[connection signal="hide" from="CalculatorWindow" to="CalculatorWindow" method="_calc_hide"]

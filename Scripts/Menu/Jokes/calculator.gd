@@ -212,7 +212,6 @@ func calculate_results() -> void:
 	else:
 		screen.bbcode_text = "[right]" + "Cannot Divide by Zero!!!"
 		calculated = true
-		
 
 # Close Calculator
 func close_calculator() -> void:
@@ -226,6 +225,10 @@ func close_calculator() -> void:
 # Do Something Immediately Before Calc Shows
 func _about_to_show() -> void:
 	pass # Replace with function body.
+
+# Detect When X Button is Pressed on Calculator
+func _calc_hide():
+	close_calculator()
 
 # Show Calculator Window
 func popup_calc() -> void:
