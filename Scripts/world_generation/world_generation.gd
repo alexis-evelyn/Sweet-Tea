@@ -91,6 +91,15 @@ func _ready() -> void:
 
 # Load or Generate New Chunks for Player
 func load_chunks(net_id: int, position: Vector2):
+	# How Minecraft's Server-Client Chunk Transmission Works - https://github.com/ORelio/Minecraft-Console-Client/issues/140#issuecomment-207971227
+	# Potential Problem With Minecraft's Server-Client Chunk Transmission - https://bugs.mojang.com/plugins/servlet/mobile#issue/MC-145813
+	
+	# Because the client is not allowed to request chunks (for security and performance reasons), the server has no way of knowing if a client has unloaded chunks.
+	# The client could abuse the server if it was allowed to request chunks again, so the server has to keep track of what chunks should be loaded on the client's side.
+	# Basically, what this function needs to do (before determining if it should load or generate chunks) is take a given amount of chunks (say world height times 10 chunks horizontally)...
+	# and then do math from the client's coordinates (which the server has authority over) to determine which chunks to load/generate and then send to the client.
+	# It is the client's job to make sure it doesn't unload chunks that it should keep track of.
+	
 	#print("Player %s has Position %s!!!" % [net_id, position])
 	pass
 
