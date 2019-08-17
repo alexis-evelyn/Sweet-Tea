@@ -100,7 +100,7 @@ func _physics_process(_delta: float) -> void:
 			
 			# Load Chunks to Send to Server Player
 			if get_tree().is_network_server():
-				world_generator.load_chunks(self.position)
+				world_generator.load_chunks(gamestate.net_id, self.position)
 
 # Handles relaying client's position to other clients in same world
 func send_to_clients(mot: Vector2) -> void:
@@ -128,7 +128,7 @@ puppet func move_player(mot: Vector2) -> void:
 	
 	# Load Chunks to Send to Client
 	if get_tree().is_network_server():
-		world_generator.load_chunks(self.position)
+		world_generator.load_chunks(get_tree().get_rpc_sender_id(), self.position)
 	
 # Called by Timer to Correct Client's Coordinates
 func correct_coordinates_server() -> void:

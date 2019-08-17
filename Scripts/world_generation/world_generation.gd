@@ -90,7 +90,8 @@ func _ready() -> void:
 #	pass
 
 # Load or Generate New Chunks for Player
-func load_chunks(position: Vector2):
+func load_chunks(net_id: int, position: Vector2):
+	#print("Player %s has Position %s!!!" % [net_id, position])
 	pass
 
 # Generate's a New World
