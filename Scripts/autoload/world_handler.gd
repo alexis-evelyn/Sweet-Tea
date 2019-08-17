@@ -7,9 +7,9 @@ signal cleanup_worlds
 # Chunk Loading (like in Minecraft) is perfectly possible with Godot - https://www.reddit.com/r/godot/comments/8shad4/how_do_large_open_worlds_work_in_godot/
 # I ultimately plan on having multiple worlds which the players can join on the server. As for singleplayer, it is going to be a server that refuses connections unless the player opens it up to other players.
 # I also want to have a "home" that players spawn at before they join the world_template (like how Starbound has a spaceship. but I want my home to be an actual world that will be the player's home world. The player can then use portals to join the server world.
-var world_template : String = "res://WorldGen/WorldTemplate.tscn" # What Scene to use to instance the world into
-var starting_world : String = "Not Set" # Basically Server Spawn
-var starting_world_name : String = "Not Set" # Spawn World's Name
+var world_template : String = "res://WorldGen/WorldTemplate.tscn" # What Scene to use to instance the world into (Client Side)
+var starting_world : String = "Not Set" # Template From World (Server Side - Includes Single Player)
+var starting_world_name : String = "Not Set" # Spawn World's Name (Server Side - Includes Single Player)
 
 # Server Gets Currently Loaded Worlds
 var loaded_worlds : Dictionary = {}
@@ -21,8 +21,9 @@ var world_data_dict : Dictionary = {}
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	network.connect("server_created", self, "start_server")
-	network.connect("connection_success", self, "load_world_client")
 	network.connect("cleanup_worlds", self, "cleanup")
+	
+	#player_registrar.connect("world_set", self, "load_world_client") # The player has to be registered to download the world information.
 
 # Server Starting Function
 func start_server() -> void:
@@ -100,16 +101,14 @@ puppet func load_world_client() -> void:
 		# This code will be replaced by a new world from template filled in with chunks from server
 		# ---------------------------------------------------------------------------------------------------
 		# Sets Starting World Name to Pass to Spawn Handler
-		starting_world = "res://WorldGen/WorldTemplate.tscn"
-		starting_world_name = "d11e4114-186a-4d6b-881d-60f901c85919" # I may have to rearrange the client loading code so player registry gets called before this function.
-		var spawn = load(starting_world).instance()
-		spawn.name = starting_world_name
+		var spawn = load(world_template).instance()
+		spawn.name = "d11e4114-186a-4d6b-881d-60f901c85919"
 		
 		worlds.add_child(spawn)
 		# ---------------------------------------------------------------------------------------------------
 	
 	# Unload Network Menu (cannot use get_current_scene() from rpc call)
-	if get_tree().get_root().has_node("NetworkMenu"):
+	if get_tree().get_root().has_node("NetworkMenu"): # Sometimes this node is removed before we get to this line of code (only if the player keeps clicking join when a server is not online)
 		get_tree().get_root().get_node("NetworkMenu").queue_free()
 	
 	# Now that the current world has been set, ask server to spawn player
@@ -150,8 +149,8 @@ func load_world_server(net_id: int, location: String) -> String:
 	
 	# Checks to Make sure World isn't already loaded
 	if loaded_worlds.has(world_meta):
-		var world : Node = get_tree().get_root().get_node("Worlds").get_node(loaded_worlds[world_meta])
-		var player : bool = world.get_node("Viewport/WorldGrid/Players").has_node(str(gamestate.net_id))
+		var world : Node = get_tree().get_root().get_node("Worlds").get_node(loaded_worlds[world_meta]) # World was already loaded (as tracked in loaded_worlds Array)
+		var player : bool = world.get_node("Viewport/WorldGrid/Players").has_node(str(gamestate.net_id)) # If already in same world, keep visible
 		
 		if (net_id == gamestate.net_id) or (player) or (net_id == -1):
 			# Make sure previous world was made invisible

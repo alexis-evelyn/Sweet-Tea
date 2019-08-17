@@ -184,7 +184,7 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 		
 		Not Meant to Be Called Directly
 	"""
-# warning-ignore:unused_variable
+	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	

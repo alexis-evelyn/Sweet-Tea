@@ -8,6 +8,7 @@ extends Node
 # Signals - Used to Connect to Other GDScripts
 # warning-ignore:unused_signal
 signal player_removed(pinfo, id) # A Player Was Removed From The Player List
+signal world_set # Server World Name Was Set
 
 # Currently Registered Players
 var players : Dictionary = {}
@@ -72,7 +73,7 @@ remote func unregister_player(id: int) -> void:
 	if players.has(id):
 		#print("Removing player ", players[id].name, " from internal table")
 		
-	# warning-ignore:unused_variable
+		# warning-ignore:unused_variable
 		var pinfo : Dictionary = players[id] # Cache player info for removal process
 		players.erase(id) # Remove Player From Player List
 
@@ -81,10 +82,16 @@ puppet func set_current_world(current_world: String) -> void:
 	players[int(gamestate.net_id)].current_world = current_world # Set World to Download From Server
 	#print("Set Connected Current World: ", players[int(gamestate.net_id)].current_world)
 	
-	world_handler.load_world_client() # Download World From Server
+	emit_signal("world_set") # Allows Loading World From Server on Successful Connection
 
 # Send client a copy of players in new world - net_id is who I am sending the info to
 func update_players(net_id: int, id: int) -> void:
+	if not players.has(int(id)):
+		print("Update Players Failed: ID does not exists: '%s', id")
+		return
+		
+	# Can I check if an RPC id exists? I could indirectly with player registration.
+	
 	print("Update Players - Player: ", id, " World: ", players[int(id)].current_world)
 	if net_id != 1:
 		rpc_unreliable_id(net_id, "register_player", players[int(id)], id)
@@ -99,8 +106,24 @@ func has(id: int) -> bool:
 	
 # Returns Player's Name
 func name(id: int) -> String:
+	if not players.has(id):
+		print("Return Player Name Failed: Player ID '%s' Not Registered!!!" % str(id))
+		return ""
+	
+	if not players[id].has("name"):
+		print("Return Player Name Failed: Player Name for ID '%s' Is Not Set!!!" % str(id))
+		return "Not Set - Failed Name Lookup"
+	
 	return players[id].name
 	
 # Returns Player's Character's Color
 func color(id: int) -> Color:
+	if not players.has(id):
+		print("Return Player Color Failed: Player ID '%s' Not Registered!!!" % str(id))
+		return Color.firebrick
+	
+	if not players[id].has("char_color"):
+		print("Return Player Color Failed: Player Color for ID '%s' Not Set!!!" % str(id))
+		return Color.white # This could potentially happen. Set it to default color.
+	
 	return Color(players[id].char_color)

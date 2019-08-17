@@ -96,6 +96,10 @@ func _physics_process(_delta: float) -> void:
 # Handles relaying client's position to other clients in same world
 func send_to_clients(mot: Vector2) -> void:
 	# Get All Players in This Player's World
+	if not get_tree().get_root().has_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/Players/"):
+		print("Send_To_Clients: Couldn't Find Players Node for World '%s'" % player_current_world)
+		return
+		
 	players = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/Players/")
 	
 	# Loop Through All Players

@@ -1,7 +1,6 @@
 extends Node
 
 # Signals
-signal connection_success # Joining Server Was Successful
 signal server_created # Server Was Successfully Created
 signal cleanup_worlds # Cleanup World Handler
 
@@ -180,7 +179,6 @@ func _on_connected_to_server() -> void:
 	
 	# Server will send current_world to client through the register_player function. The above line of code makes sure to already have a copy of player info registered before calling the server's register_player function
 	player_registrar.rpc_unreliable_id(1, "register_player", gamestate.player_info, gamestate.net_id) # Ask Server To Update Player Dictionary - Server ID is Always 1
-	emit_signal("connection_success") # Allows Loading World From Server on Successful Connection
 	
 	#print("Connected Current World: ", player_registrar.has_current_world())
 	

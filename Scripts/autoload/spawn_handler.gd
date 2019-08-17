@@ -3,6 +3,9 @@ extends Node
 # Signals
 signal player_list_changed # Player's Spawned in World
 
+# Load the scene and create an instance
+var player_class : Resource = load("res://Objects/Players/Player.tscn") # Load Default Player
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	world_handler.connect("server_started", self, "spawn_player_server") # Spawn Server's Player's Character on Emission of Signal
@@ -48,11 +51,13 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 			# Spawn Existing Players for New Client (Not New Player)
 			# All clients' coordinates (in same world) (including server's coordinates) get sent to new client (except for the new client)
 			if (id != net_id) and (get_world(id) == player_registrar.players[int(net_id)].current_world):
-				var player : Node = get_players(str(get_world(id))).get_node(str(id) + "/KinematicBody2D") # Grab Existing Player's Object (Server Only)
-				print("Existing: ", id, " For: ", net_id, " At Coordinates: ", player.position, " World: ", get_world(id)) # player.position grabs existing player's coordinates
-				
-				player_registrar.update_players(int(net_id), int(id)) # Updates Client's Player Registry to let it know about clients already in the world
-				rpc_unreliable_id(net_id, "spawn_player", player_registrar.players[int(id)], id, player.position) # Send Existing Clients' Info to New Client
+				var player : Node # Player Object
+				if get_players(str(get_world(id))).has_node(str(id)):
+					player = get_players(str(get_world(id))).get_node(str(id) + "/KinematicBody2D") # Grab Existing Player's Object (Server Only)
+					print("Existing: ", id, " For: ", net_id, " At Coordinates: ", player.position, " World: ", get_world(id)) # player.position grabs existing player's coordinates
+					
+					player_registrar.update_players(int(net_id), int(id)) # Updates Client's Player Registry to let it know about clients already in the world
+					rpc_unreliable_id(net_id, "spawn_player", player_registrar.players[int(id)], id, player.position) # Send Existing Clients' Info to New Client
 				
 			# Spawn the new player within the currently iterated player as long it's not the server
 			# Because the server's list already contains the new player, that one will also get itself!
@@ -75,10 +80,8 @@ puppet func spawn_player(pinfo: Dictionary, net_id: int, coordinates: Vector2) -
 
 # Spawns Player in World (Client and Server)
 func add_player(pinfo: Dictionary, net_id: int, coordinates: Vector2) -> void:
-	# Load the scene and create an instance
-	var player_class : Resource = load("res://Objects/Players/Player.tscn") # Load Default Player
-	if pinfo.has("actor_path"):
-		player_class = load(pinfo.actor_path)
+	#if pinfo.has("actor_path"):
+	#	player_class = load(pinfo.actor_path)
 		
 	var new_actor : Node = player_class.instance()
 	
@@ -152,7 +155,9 @@ remote func despawn_player(net_id: int) -> void:
 			#print("World Already Cleaned Up!!!")
 			return
 		
-		var player_node : Node = players.get_node(str(net_id)) # Grab Existing Player's Node (Server and Client)
+		var player_node : Node # Player Object
+		if players.has_node(str(net_id)): # Check to Make Sure Node Exists
+			player_node = players.get_node(str(net_id)) # Grab Existing Player's Node (Server and Client)
 	
 		if (!player_node):
 			printerr("Failed To Find Player To Despawn")
@@ -207,16 +212,25 @@ func set_world(world_name: String) -> void:
 	
 # Gets Player's Current World Name - Added To Make Code More Legible
 func get_world(net_id: int) -> String:
+	if not player_registrar.players.has(int(net_id)) or not player_registrar.players[int(net_id)].has("current_world"):
+		return ""
+	
 	return str(player_registrar.players[int(net_id)].current_world)
 	
 # Get World Grid Node - Added To Make Code More Legible
 func get_world_grid(world: String) -> Node:
+	if not get_tree().get_root().has_node("Worlds/" + world + "/Viewport/WorldGrid/"):
+		return null
+	
 	return get_tree().get_root().get_node("Worlds/" + world + "/Viewport/WorldGrid/")
 	
 # Check for Players Node - Added To Make Code More Legible
 func has_players(world: String) -> bool:
-	return get_tree().get_root().get_node("Worlds/" + world + "/Viewport/WorldGrid/").has_node("Players")
+	return get_world_grid(world).has_node("Players")
 	
 # Get Players Node - Added To Make Code More Legible
 func get_players(world: String) -> Node:
+	if not get_tree().get_root().has_node("Worlds/" + world + "/Viewport/WorldGrid/Players/"):
+		return null
+		
 	return get_tree().get_root().get_node("Worlds/" + world + "/Viewport/WorldGrid/Players/")

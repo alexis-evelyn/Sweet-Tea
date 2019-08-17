@@ -9,7 +9,7 @@ extends Camera2D
 
 # Declare member variables here. Examples:
 var cam_speed = 70
-var player
+var player : Node
 onready var coor_label = $PlayerCoordinates
 onready var cam_coor_label = $CameraCoordinates
 # warning-ignore:unused_class_variable
@@ -51,6 +51,8 @@ func _physics_process(_delta: float) -> void:
 func get_player_node() -> Node:
 	print("Parent: ", get_parent().name)
 	
-	var players = get_parent().get_node("WorldGrid/Players")
+	var players : Node
+	if get_parent().has_node("WorldGrid/Players"):
+		players = get_parent().get_node("WorldGrid/Players")
 	
 	return players.get_node(str(gamestate.net_id)).get_node("KinematicBody2D")
