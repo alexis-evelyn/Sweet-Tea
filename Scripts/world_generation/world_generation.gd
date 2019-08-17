@@ -53,6 +53,7 @@ var world_size : Vector2 = Vector2(10, 10)
 
 onready var world_node = self.get_owner() # Gets The Current World's Node
 onready var background_tilemap : TileMap = get_node("Background") # Gets The Background Tilemap
+var background_shader : ShaderMaterial = load("res://Assets/Materials/background.tres") # ShaderMaterial (for shading background tilemap)
 
 export(String) var world_seed : String # World's Seed (used by generator to produce consistent results)
 export(Array) var generated_chunks_foreground : Array # Store Generated Chunks IDs to Make Sure Not To Generate Them Again
@@ -60,7 +61,6 @@ export(Array) var generated_chunks_background : Array # Store Generated Chunks I
 
 # This gives the each instance of the world generator access to its own exclusive random number generator so it will not be interfered with by other generators.
 var generator : RandomNumberGenerator = RandomNumberGenerator.new()
-var background_shader : ShaderMaterial = load("res://Assets/Materials/background.tres")
 
 # TODO (IMPORTANT): Generate chunks array on world load instead of reading from file!!!
 # Also, currently seeds aren't loaded from world handler, so they are generated new every time.
@@ -73,7 +73,7 @@ func _ready() -> void:
 	
 	if gamestate.debug:
 		self.tile_set = debug_tileset
-		background_tilemap.tile_set = debug_tileset
+		background_tilemap.tile_set = debug_tileset.duplicate() # Duplicate makes resource unique (basically makes a copy of it in memory so it can be manipulated separately from other copies of the resource)
 	
 	set_shader_background_tiles() # Set Shader for Background Tiles
 	background_tilemap.set_owner(world_node) # Set world as owner of Background Tilemap (allows saving Tilemap to world when client saves world)
@@ -93,6 +93,11 @@ func _ready() -> void:
 
 # Set Shader for Background Tiles
 func set_shader_background_tiles():
+	# Without explicitly making the resource unique, the same reference is just passed around no matter how many times it is loaded
+	# Godot making this an explicit request helps make saving memory easy (as one does not need to handle passing around references).
+	#print("FG: ", self.tile_set)
+	#print("BG: ", background_tilemap.tile_set)
+	
 	# TODO (IMPORTANT): How Do I Make Background and Foreground Use Different Instances of the Same Tileset???
 	# Right now, the shader sets for both foreground and background because of sharing same tileset and using load(...) twice does not solve the issue.
 	
