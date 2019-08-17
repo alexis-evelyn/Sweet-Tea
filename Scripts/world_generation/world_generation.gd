@@ -89,6 +89,10 @@ func _ready() -> void:
 #func _process(delta: float):
 #	pass
 
+# Load or Generate New Chunks for Player
+func load_chunks(position: Vector2):
+	pass
+
 # Generate's a New World
 func generate_new_world():
 	for chunk_x in range(-world_size.x/2, world_size.x/2):

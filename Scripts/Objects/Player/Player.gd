@@ -17,16 +17,21 @@ var friction : bool = false
 var motion : Vector2 = Vector2()
 
 var player_name: String
-var player_current_world: String
 var players: Node
+var world_generator: Node
 
 var camera: Node
 
 # Called everytime player is spawned 
 func _ready() -> void:
+	# Get Player's ID
 	player_name = get_node("..").name
-	player_current_world = get_node("../../../../../").name # Get Current World's Name (for this player node - used by server-side)
-	#print("(Player) Current World: ", player_current_world)
+	
+	# Get All Players in This Player's World
+	players = get_parent().get_parent()
+	
+	# Get's World Generator Node (of Current World)
+	world_generator = get_parent().get_parent().get_parent().get_node("WorldGen")
 
 	# Checks to See if in Server/Client Mode (I may have a server always started, but refuse connections in single player. That is still up to debate).
 	if not get_tree().has_network_peer():
@@ -92,16 +97,13 @@ func _physics_process(_delta: float) -> void:
 			#print("Motion: (", abs(motion.x), ", ", abs(motion.y), ")")
 			motion = move_and_slide(motion)
 			send_to_clients(motion)
+			
+			# Load Chunks to Send to Server Player
+			if get_tree().is_network_server():
+				world_generator.load_chunks(self.position)
 
 # Handles relaying client's position to other clients in same world
 func send_to_clients(mot: Vector2) -> void:
-	# Get All Players in This Player's World
-	if not get_tree().get_root().has_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/Players/"):
-		print("Send_To_Clients: Couldn't Find Players Node for World '%s'" % player_current_world)
-		return
-		
-	players = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/Players/")
-	
 	# Loop Through All Players
 	for player in players.get_children():
 		# Make sure to not send to self or server (server will be told about it later)
@@ -124,14 +126,15 @@ puppet func move_player(mot: Vector2) -> void:
 	# Can test_move(...) be used to make is_locked() stop complaining? This function is server side as the player's client is the master of this node.
 	move_and_slide(mot) # This works because this move_and_slide is tied to this node (even on the other clients).
 	
+	# Load Chunks to Send to Client
+	if get_tree().is_network_server():
+		world_generator.load_chunks(self.position)
+	
 # Called by Timer to Correct Client's Coordinates
 func correct_coordinates_server() -> void:
 	#rpc_unreliable("correct_coordinates", self.position)
 		
 	#if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))): # Can be used to only send rpc if client is moving (will be slightly off due to latency)
-	
-	# Get All Players in This Player's World
-	players = get_tree().get_root().get_node("Worlds/" + player_current_world + "/Viewport/WorldGrid/Players/")
 	
 	# Loop Through All Players
 	for player in players.get_children():

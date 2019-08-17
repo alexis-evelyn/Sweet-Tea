@@ -23,7 +23,7 @@ func _ready() -> void:
 	network.connect("server_created", self, "start_server")
 	network.connect("cleanup_worlds", self, "cleanup")
 	
-	#player_registrar.connect("world_set", self, "load_world_client") # The player has to be registered to download the world information.
+	player_registrar.connect("world_set", self, "load_world_client") # The player has to be registered to download the world information.
 
 # Server Starting Function
 func start_server() -> void:
@@ -93,6 +93,7 @@ puppet func load_world_client() -> void:
 	# The client should only handle one world at a time (given worlds are everchanging, there is no reason to cache it - except if I can streamline performance with cached worlds)
 	# If Saved World Exists, Then Load it Instead
 	# Creates A World From Scratch
+	
 	if not get_tree().get_root().has_node("Worlds"):
 		var worlds : Node = Node.new()
 		worlds.name = "Worlds"

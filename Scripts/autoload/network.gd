@@ -123,7 +123,8 @@ func close_connection() -> void:
 		get_tree().set_network_peer(null) # Disable Network Peer
 	
 	# Frees All Worlds From Memory (1 World if Client, All if Server)
-	worlds.queue_free()
+	if worlds != null:
+		worlds.queue_free()
 	
 	emit_signal("cleanup_worlds")
 	
@@ -161,6 +162,14 @@ func _on_connected_to_server() -> void:
 	#print("Connected To Server")
 	
 	# Setup Encryption Script
+	# If EncryptionClient already exists, then recreate it (old EncryptionClient wasn't removed correctly).
+	if get_tree().get_root().has_node("EncryptionClient"):
+		get_tree().get_root().get_node("EncryptionClient").free()
+	
+	# If ping timer already exists, then recreate it (old timer wasn't removed correctly).
+	if get_tree().get_root().has_node("ping_timer"):
+		get_tree().get_root().get_node("ping_timer").free()
+		
 	var encryption = Node.new()
 	encryption.set_script(load(enc_client)) # Attach A Script to Node
 	encryption.set_name("EncryptionClient") # Give Node A Unique ID
