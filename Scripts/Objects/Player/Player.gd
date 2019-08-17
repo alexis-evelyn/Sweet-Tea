@@ -155,14 +155,17 @@ func set_dominant_color(color: Color) -> void:
 # I put debug camera here as it is guaranteed that the player is placed in a loaded world by this point
 # warning-ignore:unused_argument
 func debug_camera(activated : bool = true):
-	# The camera is automatically cleaned up when the world is unloaded
-	camera = load("res://Objects/Players/DebugCamera.tscn").instance()
-	
-	# This allows me to align camera to World
-	get_tree().get_root().get_node("Worlds").get_node(player_registrar.players[gamestate.net_id].current_world).get_node("Viewport").add_child(camera)
-	
-	# This allows me to align camera to Player
-	#add_child(camera)
+	# The camera is automatically cleaned up when the player is unloaded (e.g. world change)
+	if not get_tree().get_root().get_node("Worlds").get_node(player_registrar.players[gamestate.net_id].current_world).get_node("Viewport").has_node("DebugCamera"):
+		# Check to Make Sure Camera isn't Already Loaded - Prevents Duplicate Cameras (to save memory)
+		camera = load("res://Objects/Players/DebugCamera.tscn").instance()
+		camera.name = "DebugCamera"
+		
+		# This allows me to align camera to World
+		get_tree().get_root().get_node("Worlds").get_node(player_registrar.players[gamestate.net_id].current_world).get_node("Viewport").add_child(camera)
+		
+		# This allows me to align camera to Player
+		#add_child(camera)
 
 # Disable the camera when the player is despawned
 func _exit_tree() -> void:
