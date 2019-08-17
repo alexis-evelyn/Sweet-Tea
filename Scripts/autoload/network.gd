@@ -24,10 +24,8 @@ var server_info : Dictionary = {
 	website = "https://sweet-tea.senorcontento.com/", # Server Owner's Website (to display rules, purchases, etc...)
 	num_player = 0, # Display Current Number of Connected Players (so client can see how busy a server is)
 	max_players = 0, # Maximum Number of Players (including server player)
-	bind_address = "*",
+	bind_address = "*", # IP Address to Bind To (Use). Asterisk (*) means all available IPs to the Computer.
 	used_port = 0, # Host Port
-	ssl_bind_address = "*",
-	ssl_port = 4344, # StreamPeerSSL Port
 	max_chunks = 3 # Max chunks to send to client (client does not request, server sends based on position of client - this helps mitigate DOS abuse)
 }
 

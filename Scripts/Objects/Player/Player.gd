@@ -121,6 +121,7 @@ puppet func move_player(mot: Vector2) -> void:
 	# I think this error is a movement check (making sure the KinematicBody2d is not stuck). Hence, why it triggers on move_and_slide(...). It fails the space locked test in body_test_ray_separation of Godot's physics engine code.
 	# Adjust timer to your needs. The faster the timer, the smoother the player movement on client side. The slower the timer, the less processing power the server needs to correct coordinates. Timer will cause jerky movement when lagging.
 	
+	# Can test_move(...) be used to make is_locked() stop complaining? This function is server side as the player's client is the master of this node.
 	move_and_slide(mot) # This works because this move_and_slide is tied to this node (even on the other clients).
 	
 # Called by Timer to Correct Client's Coordinates
