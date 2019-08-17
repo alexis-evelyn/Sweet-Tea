@@ -56,6 +56,8 @@ func _ready() -> void:
 	if is_network_master():
 		if gamestate.debug:
 			debug_camera(true)
+		else:
+			player_camera(true)
 
 # Called before every rendered frame.
 func _process(_delta: float) -> void:
@@ -166,6 +168,18 @@ func debug_camera(activated : bool = true):
 		
 		# This allows me to align camera to Player
 		#add_child(camera)
+
+# I put player camera here as it is guaranteed that the player is placed in a loaded world by this point
+# warning-ignore:unused_argument
+func player_camera(activated : bool = true):
+	# The camera is automatically cleaned up when the player is unloaded (e.g. world change)
+	if not has_node("PlayerCamera"):
+		# Check to Make Sure Camera isn't Already Loaded - Prevents Duplicate Cameras (to save memory)
+		camera = load("res://Objects/Players/PlayerCamera.tscn").instance()
+		camera.name = "PlayerCamera"
+		
+		# This allows me to align camera to Player
+		add_child(camera)
 
 # Disable the camera when the player is despawned
 func _exit_tree() -> void:

@@ -227,7 +227,7 @@ func _about_to_show() -> void:
 	pass # Replace with function body.
 
 # Detect When X Button is Pressed on Calculator
-func _calc_hide():
+func _calc_hide() -> void:
 	close_calculator()
 
 # Show Calculator Window
@@ -236,8 +236,8 @@ func popup_calc() -> void:
 	
 	#print("Get Rect: ", self.get_rect().size)
 	
-	var calc_x = (ProjectSettings.get_setting("display/window/size/width")/2) - (self.get_rect().size.x/2)
-	var calc_y = (ProjectSettings.get_setting("display/window/size/height")/2) - (self.get_rect().size.x/2)
+	var calc_x : float = (ProjectSettings.get_setting("display/window/size/width")/2) - (self.get_rect().size.x/2)
+	var calc_y : float = (ProjectSettings.get_setting("display/window/size/height")/2) - (self.get_rect().size.x/2)
 
 	self.set_position(Vector2(calc_x, calc_y))
 	self.call_deferred("show")

@@ -43,7 +43,8 @@ const block : Dictionary = {
 	'grass': 2
 }
 
-# Debug Tileset
+# Tilesets
+var default_tileset : TileSet = load("res://Objects/Blocks/Default.tres")
 var debug_tileset : TileSet = load("res://Objects/Blocks/Default-Debug.tres")
 
 # Set's Worldgen size (Tilemap's Origin is Fixed to Same Spot as World Origin - I doubt I am changing this. Not unless changing it improves performance)
@@ -74,6 +75,9 @@ func _ready() -> void:
 	if gamestate.debug:
 		self.tile_set = debug_tileset
 		background_tilemap.tile_set = debug_tileset.duplicate() # Duplicate makes resource unique (basically makes a copy of it in memory so it can be manipulated separately from other copies of the resource)
+	else:
+		self.tile_set = default_tileset
+		background_tilemap.tile_set = default_tileset.duplicate() # Duplicate makes resource unique (basically makes a copy of it in memory so it can be manipulated separately from other copies of the resource)
 	
 	set_shader_background_tiles() # Set Shader for Background Tiles
 	background_tilemap.set_owner(world_node) # Set world as owner of Background Tilemap (allows saving Tilemap to world when client saves world)
