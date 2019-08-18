@@ -193,6 +193,9 @@ func calculate_results() -> void:
 	#print("Calculating...")
 	#print("Formula: ", screen.text)
 	
+	# How to deal with Integer Divison? Modulus only Works With Integers (otherwise a parse error).
+	# Symbols to Look For (, ), %, /, *, +, -
+	
 	if calculated:
 		calculated = false
 		clear_screen()
