@@ -1,5 +1,8 @@
 extends TileMap
 
+# * IDEA: What if I had the game in three dimensions (horizontal and vertical axes plus time). Use 3d rendering to show the time axis with a special in game item...
+# * Also build a time manipulating boss!!! Research Spacetime to decide how to implement this.
+
 # Note (IMPORTANT): World Origin is Top Left of Starting Screen - This May Change
 
 # Non-Tilemap Generation - https://www.youtube.com/watch?v=skln7GPdB_A&list=PL0t9iz007UitFwiu33Vx4ZnjYQHH9th2r
@@ -303,7 +306,7 @@ func apply_background() -> void:
 
 # This will be replaced by a chunk loading system later.
 func load_foreground(tiles: Dictionary):
-#	# Chunk Coordinates (not same a world coordinates)
+#	# Chunk Coordinates (not same as world coordinates)
 #	var chunk_x : int
 #	var chunk_y : int
 #
@@ -333,7 +336,7 @@ func load_foreground(tiles: Dictionary):
 	
 # This will be replaced by a chunk loading system later.
 func load_background(tiles: Dictionary):
-#	# Chunk Coordinates (not same a world coordinates)
+#	# Chunk Coordinates (not same as world coordinates)
 #	var chunk_x : int
 #	var chunk_y : int
 	
