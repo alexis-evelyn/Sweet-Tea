@@ -30,6 +30,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="ChunkPosition" type="RichTextLabel" parent="."]
+margin_left = 665.0
+margin_top = 114.798
+margin_right = 1015.0
+margin_bottom = 154.798
+text = "Chunk Position..."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WorldName" type="RichTextLabel" parent="."]
+margin_left = 665.0
+margin_top = 166.491
+margin_right = 1015.0
+margin_bottom = 206.491
+text = "World Name..."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Crosshair" type="RichTextLabel" parent="."]
 margin_left = 502.0
 margin_top = 290.0

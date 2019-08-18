@@ -31,6 +31,8 @@ extends TileMap
 # This does mean world manipulation will be more complicated, but performance cannot be passed up.
 # I am using SteinCode's Tumblr Article to help me get started.
 
+signal chunk_change(chunk_pos) # Allows Other nodes to know when player has entered a new chunk
+
 # Declare member variables here. Examples:
 var world_grid : Dictionary = {} # I use a dictionary so I can have negative coordinates.
 
@@ -54,6 +56,7 @@ var debug_tileset : TileSet = load("res://Objects/Blocks/Default-Debug.tres")
 var quadrant_size : int = get_quadrant_size() # Default 16
 var chunk_size : Vector2 = Vector2(quadrant_size, quadrant_size) # Tilemap is 32x32 (the size of a standard block) pixels per tile.
 var world_size : Vector2 = Vector2(10, 10) # These numbers will be split on the negative and positive axes. The chunk gen will favor the negative side of the axes if the numbers are even.
+var standard_pixel_size : Vector2 = Vector2(32, 32) # This doesn't mean anything other than calculations, but having it as a variable can help update the equations more easily (say if standard blocks use more/less pixels)
 
 onready var world_node = self.get_owner() # Gets The Current World's Node
 onready var background_tilemap : TileMap = get_node("Background") # Gets The Background Tilemap
@@ -105,9 +108,6 @@ func set_shader_background_tiles():
 	#print("FG: ", self.tile_set)
 	#print("BG: ", background_tilemap.tile_set)
 	
-	# TODO (IMPORTANT): How Do I Make Background and Foreground Use Different Instances of the Same Tileset???
-	# Right now, the shader sets for both foreground and background because of sharing same tileset and using load(...) twice does not solve the issue.
-	
 	# Loops Through Tiles in Tileset and Applies Shader(s)
 	for tile in background_tilemap.tile_set.get_tiles_ids():
 		background_tilemap.tile_set.tile_set_material(tile, background_shader)
@@ -137,6 +137,34 @@ func load_chunks(net_id: int, position: Vector2, render_distance: Vector2 = Vect
 	
 	# * - Looping the world on the horizontal access only applies to non-infinite worlds. Release will only support non-infinite worlds (afterwards if the game does well, I will work on infinite worlds). 
 	#print("Player %s has Position %s!!!" % [net_id, position])
+	
+	# The tilemap and world coordinates share the same origin, so no conversion is needed.
+	
+	# x = 16 + (16 * y)
+	# var horizontal : int = chunk_size.x + (quadrant_size * chunk_x)
+	
+	# 16y = 16 - x
+	# y = (16 - x)/16
+	var chunk_x : int
+	var chunk_y : int
+	
+	if position.x >= 0:
+		# warning-ignore:narrowing_conversion
+		chunk_x = (position.x / standard_pixel_size.x / chunk_size.x)
+	else:
+		# warning-ignore:narrowing_conversion
+		chunk_x = (position.x / standard_pixel_size.x / chunk_size.x) - 1
+		
+	if  position.y >= 0:
+		# warning-ignore:narrowing_conversion
+		chunk_y = (position.y / standard_pixel_size.y / chunk_size.y)
+	else:
+		# warning-ignore:narrowing_conversion
+		chunk_y = (position.y / standard_pixel_size.y / chunk_size.y) - 1
+	
+	#print("Player %s is in Chunk %s!!!" % [net_id, Vector2(chunk_x, chunk_y)])
+	emit_signal("chunk_change", Vector2(chunk_x, chunk_y))
+	
 	pass
 
 # Generate's a New World

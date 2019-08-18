@@ -37,8 +37,17 @@ func _ready() -> void:
 	if not get_tree().has_network_peer():
 		return # Should Be Connected Here
 	
+	# Activate Debug Camera if Gamestate Debug Camera Boolean is True
+	if is_network_master():
+		if gamestate.debug:
+			debug_camera(true)
+		else:
+			player_camera(true)
+	
 	# Server corrects coordinates of client to keep in sync
 	if get_tree().is_network_server():
+		world_generator.load_chunks(int(player_name), self.position) # Allows Getting Chunks Before Moving
+		
 		var correct_coordinates_timer : Timer = Timer.new()
 		correct_coordinates_timer.name = "correct_coordinates_timer"
 		
@@ -51,13 +60,6 @@ func _ready() -> void:
 		# This still needs to be tested in an environment with real latency. The Wait Time Should Be Configurable.
 		correct_coordinates_timer.set_wait_time(0.05) # Execute Every Fifth of a Second (almost completely smooth and keeps laptop cool with just one client)
 		correct_coordinates_timer.start() # Start Timer
-		
-	# Activate Debug Camera if Gamestate Debug Camera Boolean is True
-	if is_network_master():
-		if gamestate.debug:
-			debug_camera(true)
-		else:
-			player_camera(true)
 
 # Called before every rendered frame.
 func _process(_delta: float) -> void:
