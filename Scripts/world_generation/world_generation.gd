@@ -53,7 +53,7 @@ var debug_tileset : TileSet = load("res://Objects/Blocks/Default-Debug.tres")
 # Set's Worldgen size (Tilemap's Origin is Fixed to Same Spot as World Origin - I doubt I am changing this. Not unless changing it improves performance)
 var quadrant_size : int = get_quadrant_size() # Default 16
 var chunk_size : Vector2 = Vector2(quadrant_size, quadrant_size) # Tilemap is 32x32 (the size of a standard block) pixels per tile.
-var world_size : Vector2 = Vector2(10, 10) # (Whole numbers) Odd numbers will be rounded down to the nearest (Whole) even number.
+var world_size : Vector2 = Vector2(10, 10) # These numbers will be split on the negative and positive axes. The chunk gen will favor the negative side of the axes if the numbers are even.
 
 onready var world_node = self.get_owner() # Gets The Current World's Node
 onready var background_tilemap : TileMap = get_node("Background") # Gets The Background Tilemap
