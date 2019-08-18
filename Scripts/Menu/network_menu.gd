@@ -117,8 +117,7 @@ func set_game_data() -> void:
 	"""
 	
 	# Set Character's Name
-# warning-ignore:unused_variable
-	var loaded : int = gamestate.load_player(0)
+	gamestate.load_player(0)
 	
 	if gamestate.player_info.has("name"):
 		$panelPlayer/txtPlayerName.text = gamestate.player_info.name

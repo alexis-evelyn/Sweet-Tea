@@ -440,3 +440,13 @@ func load_chunks_background(chunks: Array) -> void:
 		
 		if not generated_chunks_background.has(chunk_coor):
 			generated_chunks_background.append(chunk_coor)
+
+# Find safe spawn location - bound to change with world gen code
+func find_safe_spawn(player: Node) -> Vector2:
+	# This function will take a random player's position (chosen by any spawn code) and return a vector2 which is considered safe.
+	# The vector2 is the new set of coordinates to use for spawning the player.
+	# Since gravity will be enabled in the released game, the goal is to spawn the player right above the safe block.
+	
+	
+	
+	return player.position

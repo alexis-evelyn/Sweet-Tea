@@ -99,11 +99,17 @@ puppet func load_world_client() -> void:
 		worlds.name = "Worlds"
 		get_tree().get_root().add_child(worlds)
 
+		if not gamestate.player_info.has("current_world"):
+			print("Never Got Current World From Server!!! Not Going to Bother Finishing Connection!!!")
+			emit_signal("cleanup_worlds")
+			return
+		
+		print("World (Load Client): ", gamestate.player_info.current_world)
 		# This code will be replaced by a new world from template filled in with chunks from server
 		# ---------------------------------------------------------------------------------------------------
 		# Sets Starting World Name to Pass to Spawn Handler
 		var spawn = load(world_template).instance()
-		spawn.name = "d11e4114-186a-4d6b-881d-60f901c85919"
+		spawn.name = gamestate.player_info.current_world
 		
 		worlds.add_child(spawn)
 		# ---------------------------------------------------------------------------------------------------

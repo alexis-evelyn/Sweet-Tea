@@ -219,6 +219,8 @@ func get_world(net_id: int) -> String:
 	
 # Get World Grid Node - Added To Make Code More Legible
 func get_world_grid(world: String) -> Node:
+	print("WorldGrid: ", world)
+	
 	if not get_tree().get_root().has_node("Worlds/" + world + "/Viewport/WorldGrid/"):
 		return null
 	
@@ -230,7 +232,7 @@ func has_players(world: String) -> bool:
 	
 # Get Players Node - Added To Make Code More Legible
 func get_players(world: String) -> Node:
-	if not get_tree().get_root().has_node("Worlds/" + world + "/Viewport/WorldGrid/Players/"):
+	if not get_world_grid(world).has_node("Players"):
 		return null
 		
-	return get_tree().get_root().get_node("Worlds/" + world + "/Viewport/WorldGrid/Players/")
+	return get_world_grid(world).get_node("Players")
