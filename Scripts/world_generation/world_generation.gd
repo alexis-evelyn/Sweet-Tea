@@ -50,7 +50,7 @@ var debug_tileset : TileSet = load("res://Objects/Blocks/Default-Debug.tres")
 # Set's Worldgen size (Tilemap's Origin is Fixed to Same Spot as World Origin - I doubt I am changing this. Not unless changing it improves performance)
 var quadrant_size : int = get_quadrant_size() # Default 16
 var chunk_size : Vector2 = Vector2(quadrant_size, quadrant_size) # Tilemap is 32x32 (the size of a standard block) pixels per tile.
-var world_size : Vector2 = Vector2(10, 10)
+var world_size : Vector2 = Vector2(10, 10) # (Whole numbers) Odd numbers will be rounded down to the nearest (Whole) even number.
 
 onready var world_node = self.get_owner() # Gets The Current World's Node
 onready var background_tilemap : TileMap = get_node("Background") # Gets The Background Tilemap
@@ -109,10 +109,13 @@ func set_shader_background_tiles():
 	for tile in background_tilemap.tile_set.get_tiles_ids():
 		background_tilemap.tile_set.tile_set_material(tile, background_shader)
 
-# Load or Generate New Chunks for Player
+# Load or Generate New Chunks for Player (Server Side)
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
-func load_chunks(net_id: int, position: Vector2):
+# warning-ignore:unused_argument
+func load_chunks(net_id: int, position: Vector2, render_distance: Vector2 = Vector2(7, 5)):
+	# render_distance - This is different from the world_size as this is generating/loading the world from the player's position and won't be halved (will be configurable). Halving it will make it only able to load an even number of chunks.
+	
 	# How Minecraft's Server-Client Chunk Transmission Works - https://github.com/ORelio/Minecraft-Console-Client/issues/140#issuecomment-207971227
 	# Potential Problem With Minecraft's Server-Client Chunk Transmission - https://bugs.mojang.com/plugins/servlet/mobile#issue/MC-145813
 	
@@ -122,15 +125,65 @@ func load_chunks(net_id: int, position: Vector2):
 	# and then do math from the client's coordinates (which the server has authority over) to determine which chunks to load/generate and then send to the client.
 	# It is the client's job to make sure it doesn't unload chunks that it should keep track of.
 	
+	# NOTE (IMPORTANT): When using player camera, the player can see at most 3 chunks on one axis. At most 9 chunks total.
+	# Render distance does not exist because this is a 2D game. The server render distance will override the client's distance. If the client has a higher distance, it will just cache the chunks for later.
+	# This means that the chunk loader will load and send at least 9 chunks in all directions (providing we did not hit the ceiling or floor - I plan on looping the world on the horizontal axis*).
+	# To be help with NPCs moving offscreen, I will make the chunk loader add one chunk to each side of both axes by default (can be configurable). This will result in a total of 13 chunks loaded and sent by server.
+	
+	# Actually, let's do two extra chunks for the x-axis and 1 extra chunk for the y-axis (results in Vector2(7, 5)).
+	
+	# * - Looping the world on the horizontal access only applies to non-infinite worlds. Release will only support non-infinite worlds (afterwards if the game does well, I will work on infinite worlds). 
 	#print("Player %s has Position %s!!!" % [net_id, position])
 	pass
 
 # Generate's a New World
 func generate_new_world():
-	for chunk_x in range(-world_size.x/2, world_size.x/2):
-		for chunk_y in range(-world_size.y/2, world_size.y/2):
-			generate_foreground(chunk_x, chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
-			generate_background(chunk_x, chunk_y) # Generate The Background (Tiles Player Can Pass Through)
+	# Convert Vector2 values from floats to integers (as modulus cannot perform on an other type than an integer in GDScript).
+	# warning-ignore:narrowing_conversion
+	var x_axis : int = world_size.x
+	# warning-ignore:narrowing_conversion
+	var y_axis : int = world_size.y
+	
+	# This if statement setup is so an odd number of can be generated (based on world size).
+	# This setup favors generating chunks on the negative axes (left and top).
+	if x_axis % 2 == 0: # This can either equal 0 or 1. 0 means even and 1 means odd.
+		# Even X Axis
+		# warning-ignore:integer_division
+		# warning-ignore:integer_division
+		for chunk_x in range(-x_axis/2, x_axis/2):
+			if y_axis % 2 == 0:
+				# Even Y Axis (Even X Axis)
+				# warning-ignore:integer_division
+				# warning-ignore:integer_division
+				for chunk_y in range(-y_axis/2, y_axis/2):
+					generate_foreground(chunk_x, chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
+					generate_background(chunk_x, chunk_y) # Generate The Background (Tiles Player Can Pass Through)
+			else:
+				# Odd X Axis (Even X Axis)
+				# warning-ignore:integer_division
+				# warning-ignore:integer_division
+				for chunk_y in range((-y_axis/2)-1, (y_axis/2)):
+					generate_foreground(chunk_x, chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
+					generate_background(chunk_x, chunk_y) # Generate The Background (Tiles Player Can Pass Through)
+	else:
+		# Odd X Axis
+		# warning-ignore:integer_division
+		# warning-ignore:integer_division
+		for chunk_x in range((-x_axis/2)-1, (x_axis/2)):
+			if y_axis % 2 == 0:
+				# Even Y Axis (Odd X Axis)
+				# warning-ignore:integer_division
+				# warning-ignore:integer_division
+				for chunk_y in range(-y_axis/2, y_axis/2):
+					generate_foreground(chunk_x, chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
+					generate_background(chunk_x, chunk_y) # Generate The Background (Tiles Player Can Pass Through)
+			else:
+				# Odd Y Axis (Odd X Axis)
+				# warning-ignore:integer_division
+				# warning-ignore:integer_division
+				for chunk_y in range((-y_axis/2)-1, (y_axis/2)):
+					generate_foreground(chunk_x, chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
+					generate_background(chunk_x, chunk_y) # Generate The Background (Tiles Player Can Pass Through)
 
 func generate_foreground(chunk_x: int, chunk_y: int, regenerate: bool = false) -> void:
 	"""
@@ -166,16 +219,10 @@ func generate_foreground(chunk_x: int, chunk_y: int, regenerate: bool = false) -
 		noise.lacunarity = 1.5
 		noise.persistence = 0.8
 		
-		# Debug Chunk Location (places grass blocks at beginning of chunk)
-		if coor_x % quadrant_size == 0:
-			world_grid[coor_x] = {}
-			world_grid[coor_x][vertical] = block.grass
-			world_grid[coor_x][vertical - quadrant_size] = block.grass
-			continue
-		
 		# How do I force this to be in the chunk? Should I force this to a chunk? I think yes.
 		var noise_output : int = int(floor(noise.get_noise_2d(vertical, vertical + quadrant_size) * 5)) + 15
 		#var noise_output : int = int(floor(noise.get_noise_2d((get_global_transform().origin.x + coor_x) * 0.1, 0) * vertical * 0.2)) - Modified From Non-Tilemap Generation Video (does not translate well :P)
+		
 		world_grid[coor_x] = {} # I set the Dictionary here because I may move away from the coor_x variable for custom worldgen types
 		
 		if noise_output < 0:
