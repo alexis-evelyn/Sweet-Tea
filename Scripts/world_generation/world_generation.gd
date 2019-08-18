@@ -68,6 +68,7 @@ export(Array) var generated_chunks_background : Array # Store Generated Chunks I
 
 # This gives the each instance of the world generator access to its own exclusive random number generator so it will not be interfered with by other generators.
 var generator : RandomNumberGenerator = RandomNumberGenerator.new()
+var player_chunks : Dictionary = {} # Used to keep track of what chunks a player already has
 
 # TODO (IMPORTANT): Generate chunks array on world load instead of reading from file!!!
 # Also, currently seeds aren't loaded from world handler, so they are generated new every time.
@@ -116,7 +117,7 @@ func set_shader_background_tiles():
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
-func load_chunks(net_id: int, position: Vector2, render_distance: Vector2 = Vector2(7, 5)):
+func load_chunks(net_id: int, position: Vector2, render_distance: Vector2 = Vector2(3, 3)):
 	# render_distance - This is different from the world_size as this is generating/loading the world from the player's position and won't be halved (will be configurable). Halving it will make it only able to load an even number of chunks.
 	
 	# How Minecraft's Server-Client Chunk Transmission Works - https://github.com/ORelio/Minecraft-Console-Client/issues/140#issuecomment-207971227
@@ -135,14 +136,53 @@ func load_chunks(net_id: int, position: Vector2, render_distance: Vector2 = Vect
 	
 	# Actually, let's do two extra chunks for the x-axis and 1 extra chunk for the y-axis (results in Vector2(7, 5)).
 	
+	# Completely toss any math said above, I accidentally made this double on both axes and I am sticking with it.
+	
 	# * - Looping the world on the horizontal access only applies to non-infinite worlds. Release will only support non-infinite worlds (afterwards if the game does well, I will work on infinite worlds). 
 	#print("Player %s has Position %s!!!" % [net_id, position])
+	
+	var load_chunks : Thread = Thread.new()
+	load_chunks.start(self, "load_chunks_threaded", [net_id, position, render_distance])
+	load_chunks.wait_to_finish()
+	
+# Putting Load Chunks on Separate Thread
+func load_chunks_threaded(thread_data: Array):
+	var net_id: int = thread_data[0]
+	var position: Vector2 = thread_data[1]
+	var render_distance: Vector2 = thread_data[2]
+	
+	# Make sure player_chunks has player id in database
+	if not player_chunks.has(net_id):
+		player_chunks[net_id] = {}
 	
 	var chunk : Vector2
 	if net_id != gamestate.net_id:
 		chunk = center_chunk(position)
 	else:
 		chunk = center_chunk(position, true)
+		
+	#var generate_loc : Vector2 = chunk + render_distance
+	#print("Generate: ", generate_loc)
+		
+	# Generate Chunks (will not override without explicit request)
+	for chunk_x in range(-render_distance.x, render_distance.x):
+		for chunk_y in range(-render_distance.y, render_distance.y):
+			var surrounding_chunk : Vector2 = Vector2(int(chunk.x - chunk_x), int(chunk.y - chunk_y))
+			#print("Generating: ", Vector2(chunk.x - chunk_x, chunk.y - chunk_y))
+			
+			if not player_chunks[net_id].has(surrounding_chunk):
+				# warning-ignore:narrowing_conversion
+				# warning-ignore:narrowing_conversion
+				generate_foreground(chunk.x - chunk_x, chunk.y - chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
+				# warning-ignore:narrowing_conversion
+				# warning-ignore:narrowing_conversion
+				generate_background(chunk.x - chunk_x, chunk.y - chunk_y) # Generate The Background (Tiles Player Can Pass Through)
+	
+				if net_id != gamestate.net_id:
+					send_chunk(net_id, surrounding_chunk)
+
+				player_chunks[net_id][surrounding_chunk] = null
+				OS.delay_msec(1000)
 
 func center_chunk(position: Vector2, update_debug: bool = false) -> Vector2:
 	# We use world coordinates to spawn blocks. No conversion needed.
@@ -178,6 +218,38 @@ func center_chunk(position: Vector2, update_debug: bool = false) -> Vector2:
 		emit_signal("chunk_change", chunk) # Used to update Debug Info
 		
 	return chunk # Used by Calling Function
+
+func send_chunk(net_id: int, chunk: Vector2) -> void:
+	var chunk_grid_foreground : Dictionary = {}
+	var chunk_grid_background : Dictionary = {}
+	
+	# warning-ignore:narrowing_conversion
+	var horizontal : int = chunk_size.x + (quadrant_size * chunk.x)
+	# warning-ignore:narrowing_conversion
+	var vertical : int = chunk_size.y + (quadrant_size * chunk.y)
+	
+	for coor_x in range((horizontal - quadrant_size), horizontal):
+		chunk_grid_foreground[coor_x] = {}
+		chunk_grid_background[coor_x] = {}
+		for coor_y in range((vertical - quadrant_size), vertical):
+			chunk_grid_foreground[coor_x][coor_y] = get_cell(coor_x, coor_y)
+			chunk_grid_background[coor_x][coor_y] = background_tilemap.get_cell(coor_x, coor_y)
+
+	rpc_unreliable_id(net_id, "receive_chunk", true, chunk_grid_foreground)
+	rpc_unreliable_id(net_id, "receive_chunk", false, chunk_grid_background)
+	
+puppet func receive_chunk(foreground: bool, chunk_grid : Dictionary) -> void:
+	# Set's Tile ID in Tilemap from World Grid
+	for coor_x in chunk_grid.keys():
+		for coor_y in chunk_grid[coor_x].keys():
+			#print("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
+	
+			if foreground:
+				#print("Chunk Grid (Foreground): ", chunk_grid)
+				set_cell(coor_x, coor_y, chunk_grid[coor_x][coor_y])
+			else:
+				#print("Chunk Grid (Background): ", chunk_grid)
+				background_tilemap.set_cell(coor_x, coor_y, chunk_grid[coor_x][coor_y])
 
 # Generate's a New World
 func generate_new_world():
@@ -290,7 +362,6 @@ func generate_background(chunk_x: int, chunk_y: int, regenerate: bool = false):
 		# I may add an override if someone wants to regenerate it later.
 		
 		# A different function will handle loading the world from save.
-		print("Ran 2!!!")
 		return
 		
 	generated_chunks_background.append(Vector2(chunk_x, chunk_y))
