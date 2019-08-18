@@ -462,6 +462,8 @@ func find_safe_spawn(position: Vector2) -> Vector2:
 	var unsafe : bool = true
 	var count : int = 0
 	
+	#return Vector2(-100, -100) # Useful for debugging camera positioning
+	
 	# Spawn below 440 y-axis (up).
 	
 	print("Position: ", position)

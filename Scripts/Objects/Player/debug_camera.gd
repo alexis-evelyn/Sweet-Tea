@@ -29,6 +29,8 @@ func _ready() -> void:
 	set_physics_process(true)
 	
 	player = get_player_node()
+	
+	update_camera_pos(player.position)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta: float) -> void:
@@ -76,3 +78,10 @@ func update_camera_pos_label() -> void:
 	
 	# Prints center of screen's position in world
 	cam_coor_label.text = "Camera: " + str(cross_coor)
+
+# Relocate Camera to this Specified Position (in middle of screen)
+func update_camera_pos(position: Vector2) -> void:
+	var cross_x = position.x - (ProjectSettings.get_setting("display/window/size/width")/2)
+	var cross_y = position.y - (ProjectSettings.get_setting("display/window/size/height")/2)
+	
+	self.position = Vector2(cross_x, cross_y)
