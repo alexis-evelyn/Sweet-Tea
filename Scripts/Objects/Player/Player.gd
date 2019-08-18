@@ -60,6 +60,8 @@ func _ready() -> void:
 		# This still needs to be tested in an environment with real latency. The Wait Time Should Be Configurable.
 		correct_coordinates_timer.set_wait_time(0.05) # Execute Every Fifth of a Second (almost completely smooth and keeps laptop cool with just one client)
 		correct_coordinates_timer.start() # Start Timer
+	elif is_network_master() and gamestate.debug:
+		world_generator.center_chunk(self.position, true) # Allows DebugCamera to be Updated on Chunk Position
 
 # Called before every rendered frame.
 func _process(_delta: float) -> void:
@@ -106,6 +108,8 @@ func _physics_process(_delta: float) -> void:
 			# Load Chunks to Send to Server Player
 			if get_tree().is_network_server():
 				world_generator.load_chunks(gamestate.net_id, self.position)
+			elif is_network_master() and gamestate.debug:
+				world_generator.center_chunk(self.position, true) # Allows DebugCamera to be Updated on Chunk Position
 
 # Handles relaying client's position to other clients in same world
 func send_to_clients(mot: Vector2) -> void:

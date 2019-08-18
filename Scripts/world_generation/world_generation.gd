@@ -138,6 +138,13 @@ func load_chunks(net_id: int, position: Vector2, render_distance: Vector2 = Vect
 	# * - Looping the world on the horizontal access only applies to non-infinite worlds. Release will only support non-infinite worlds (afterwards if the game does well, I will work on infinite worlds). 
 	#print("Player %s has Position %s!!!" % [net_id, position])
 	
+	var chunk : Vector2
+	if net_id != gamestate.net_id:
+		chunk = center_chunk(position)
+	else:
+		chunk = center_chunk(position, true)
+
+func center_chunk(position: Vector2, update_debug: bool = false) -> Vector2:
 	# The tilemap and world coordinates share the same origin, so no conversion is needed.
 	
 	# x = 16 + (16 * y)
@@ -145,8 +152,9 @@ func load_chunks(net_id: int, position: Vector2, render_distance: Vector2 = Vect
 	
 	# 16y = 16 - x
 	# y = (16 - x)/16
-	var chunk_x : int
-	var chunk_y : int
+	var chunk_x : float
+	var chunk_y : float
+	var chunk : Vector2
 	
 	if position.x >= 0:
 		# warning-ignore:narrowing_conversion
@@ -162,10 +170,14 @@ func load_chunks(net_id: int, position: Vector2, render_distance: Vector2 = Vect
 		# warning-ignore:narrowing_conversion
 		chunk_y = (position.y / standard_pixel_size.y / chunk_size.y) - 1
 	
-	#print("Player %s is in Chunk %s!!!" % [net_id, Vector2(chunk_x, chunk_y)])
-	emit_signal("chunk_change", Vector2(chunk_x, chunk_y))
+	chunk = Vector2(chunk_x, chunk_y)
 	
-	pass
+	#print("Player %s is in Chunk %s!!!" % [net_id, Vector2(chunk_x, chunk_y)])
+	
+	if update_debug:
+		emit_signal("chunk_change", chunk) # Used to update Debug Info
+		
+	return chunk # Used by Calling Function
 
 # Generate's a New World
 func generate_new_world():

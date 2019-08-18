@@ -100,7 +100,7 @@ puppet func load_world_client() -> void:
 		get_tree().get_root().add_child(worlds)
 
 		if not gamestate.player_info.has("current_world"):
-			print("Never Got Current World From Server!!! Not Going to Bother Finishing Connection!!!")
+			printerr("Never Got Current World From Server!!! Not Going to Bother Finishing Connection!!!")
 			emit_signal("cleanup_worlds")
 			return
 		
