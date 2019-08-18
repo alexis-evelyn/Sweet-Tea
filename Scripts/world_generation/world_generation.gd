@@ -129,7 +129,7 @@ func load_chunks(net_id: int, position: Vector2, render_distance: Vector2 = Vect
 	# It is the client's job to make sure it doesn't unload chunks that it should keep track of.
 	
 	# NOTE (IMPORTANT): When using player camera, the player can see at most 3 chunks on one axis. At most 9 chunks total.
-	# Render distance does not exist because this is a 2D game. The server render distance will override the client's distance. If the client has a higher distance, it will just cache the chunks for later.
+	# The server render distance will override the client's distance. If the client has a higher distance, it will just cache the chunks for later.
 	# This means that the chunk loader will load and send at least 9 chunks in all directions (providing we did not hit the ceiling or floor - I plan on looping the world on the horizontal axis*).
 	# To be help with NPCs moving offscreen, I will make the chunk loader add one chunk to each side of both axes by default (can be configurable). This will result in a total of 13 chunks loaded and sent by server.
 	
@@ -145,7 +145,7 @@ func load_chunks(net_id: int, position: Vector2, render_distance: Vector2 = Vect
 		chunk = center_chunk(position, true)
 
 func center_chunk(position: Vector2, update_debug: bool = false) -> Vector2:
-	# The tilemap and world coordinates share the same origin, so no conversion is needed.
+	# We use world coordinates to spawn blocks. No conversion needed.
 	
 	# x = 16 + (16 * y)
 	# var horizontal : int = chunk_size.x + (quadrant_size * chunk_x)
@@ -454,11 +454,36 @@ func load_chunks_background(chunks: Array) -> void:
 			generated_chunks_background.append(chunk_coor)
 
 # Find safe spawn location - bound to change with world gen code
-func find_safe_spawn(player: Node) -> Vector2:
+func find_safe_spawn(position: Vector2) -> Vector2:
 	# This function will take a random player's position (chosen by any spawn code) and return a vector2 which is considered safe.
 	# The vector2 is the new set of coordinates to use for spawning the player.
 	# Since gravity will be enabled in the released game, the goal is to spawn the player right above the safe block.
+	var player_cell : Vector2 = self.world_to_map(position)
+	var unsafe : bool = true
+	var count : int = 0
 	
+	# Spawn below 440 y-axis (up).
 	
+	print("Position: ", position)
+	print("Cell Position: ", player_cell)
 	
-	return player.position
+	while unsafe and count < 100:
+		count = count + 1 # Keeps from infinite loop
+		
+		for coor_x in range(player_cell.x - 2, player_cell.x + 2):
+			for coor_y in range(player_cell.y, player_cell.y + 2):
+				#print("Cell (%s, %s): %s" % [coor_x, coor_y, self.get_cell(coor_x, coor_y)])
+				
+				if self.get_cell(coor_x, coor_y) != -1:
+					# This is a start to picking a decent spawn location
+					player_cell = player_cell + Vector2(rand_range(-5, 5), rand_range(-2, 0)) # Remember, the y axis is inverted (not my choice).
+					unsafe = true
+					break
+				else:
+					unsafe = false
+	
+#		if get_cellv(player_cell - Vector2(0, -1)) == -1:
+#			unsafe = true
+	
+	position = map_to_world(player_cell)
+	return position

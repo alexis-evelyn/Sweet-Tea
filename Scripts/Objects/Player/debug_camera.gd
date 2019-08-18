@@ -48,7 +48,7 @@ func _physics_process(_delta: float) -> void:
 	update_camera_pos_label()
 
 func get_player_node() -> Node:
-	print("Parent: ", get_parent().name)
+	#print("Parent: ", get_parent().name)
 	
 	var players : Node
 	if get_parent().has_node("WorldGrid/Players"):

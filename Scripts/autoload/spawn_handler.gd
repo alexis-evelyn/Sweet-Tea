@@ -25,17 +25,17 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 	if pinfo.has("char_unique_id"):
 		print("Character Unique ID: " + pinfo.char_unique_id)
 	
+	if get_tree().get_rpc_sender_id() == 0:
+		net_id = gamestate.net_id
+	else:
+		net_id = get_tree().get_rpc_sender_id()
+	
 	# Currently Coordinates are Randomly Chosen
 	# warning-ignore:narrowing_conversion
 	var coor_x : int = rand_range(100,900)
 	# warning-ignore:narrowing_conversion
 	var coor_y : int = rand_range(100,500)
-	var coordinates : Vector2 = Vector2(coor_x, coor_y)
-	
-	if get_tree().get_rpc_sender_id() == 0:
-		net_id = gamestate.net_id
-	else:
-		net_id = get_tree().get_rpc_sender_id()
+	var coordinates : Vector2 = get_world_generator(get_world(net_id)).find_safe_spawn(Vector2(coor_x, coor_y))
 		
 	if (get_tree().is_network_server()):
 		# We Are The Server and The New Player is Not The Server
@@ -219,7 +219,7 @@ func get_world(net_id: int) -> String:
 	
 # Get World Grid Node - Added To Make Code More Legible
 func get_world_grid(world: String) -> Node:
-	print("WorldGrid: ", world)
+	#print("WorldGrid: ", world)
 	
 	if not get_tree().get_root().has_node("Worlds/" + world + "/Viewport/WorldGrid/"):
 		return null
@@ -236,3 +236,9 @@ func get_players(world: String) -> Node:
 		return null
 		
 	return get_world_grid(world).get_node("Players")
+
+func get_world_generator(world: String) -> Node:
+	if not get_world_grid(world).has_node("WorldGen"):
+		return null
+	
+	return get_world_grid(world).get_node("WorldGen")
