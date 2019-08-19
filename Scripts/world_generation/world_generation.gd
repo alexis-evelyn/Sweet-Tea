@@ -34,7 +34,7 @@ extends TileMap
 signal chunk_change(chunk_pos) # Allows Other nodes to know when player has entered a new chunk
 
 # Declare member variables here. Examples:
-var world_grid : Dictionary = {} # I use a dictionary so I can have negative coordinates.
+#var world_grid : Dictionary = {} # I use a dictionary so I can have negative coordinates.
 
 # Tilemap uses ints to store tile ids. This means I do not have an infinite number of blocks.
 # This will make things difficult if there are 100+ mods (all adding new blocks).
@@ -117,6 +117,7 @@ func set_shader_background_tiles():
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
+var load_chunks : Thread = Thread.new()
 func load_chunks(net_id: int, position: Vector2, instant_load: bool = false, render_distance: Vector2 = Vector2(3, 3)):
 	# render_distance - This is different from the world_size as this is generating/loading the world from the player's position and won't be halved (will be configurable). Halving it will make it only able to load an even number of chunks.
 	
@@ -141,9 +142,10 @@ func load_chunks(net_id: int, position: Vector2, instant_load: bool = false, ren
 	# * - Looping the world on the horizontal access only applies to non-infinite worlds. Release will only support non-infinite worlds (afterwards if the game does well, I will work on infinite worlds). 
 	#print("Player %s has Position %s!!!" % [net_id, position])
 	
-	var load_chunks : Thread = Thread.new()
 	#load_chunks.start(self, "load_chunks_threaded", [net_id, position, render_distance, instant_load])
 	#load_chunks.wait_to_finish()
+	
+	load_chunks_threaded([net_id, position, render_distance, instant_load])
 	
 # Putting Load Chunks on Separate Thread
 func load_chunks_threaded(thread_data: Array):
@@ -173,9 +175,9 @@ func load_chunks_threaded(thread_data: Array):
 	for chunk_x in range(-render_distance.x, render_distance.x):
 		for chunk_y in range(-render_distance.y, render_distance.y):
 			var surrounding_chunk : Vector2 = Vector2(int(chunk.x - chunk_x), int(chunk.y - chunk_y))
-			#print("Generating: ", Vector2(chunk.x - chunk_x, chunk.y - chunk_y))
 			
 			if not player_chunks[net_id].has(surrounding_chunk):
+				print("Generating: ", Vector2(chunk.x - chunk_x, chunk.y - chunk_y))
 				# warning-ignore:narrowing_conversion
 				# warning-ignore:narrowing_conversion
 				generate_foreground(chunk.x - chunk_x, chunk.y - chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
@@ -314,6 +316,7 @@ func generate_foreground(chunk_x: int, chunk_y: int, regenerate: bool = false) -
 		
 		Dumps Tiles to World Grid
 	"""
+	var world_grid : Dictionary = {}
 	
 	if generated_chunks_foreground.has(Vector2(chunk_x, chunk_y)) and not regenerate:
 		# Chunk already exists, do not generate it again.
@@ -324,7 +327,6 @@ func generate_foreground(chunk_x: int, chunk_y: int, regenerate: bool = false) -
 		
 	generated_chunks_foreground.append(Vector2(chunk_x, chunk_y))
 	
-	world_grid.clear() # Empty World_Grid for New Data
 	var noise = OpenSimplexNoise.new() # Create New SimplexNoise Generator
 	
 	# Get Chunk Generation Coordinates (allows finding where to spawn chunk)
@@ -355,7 +357,7 @@ func generate_foreground(chunk_x: int, chunk_y: int, regenerate: bool = false) -
 		
 		#print(noise_output)
 
-	apply_foreground() # Apply World Grid to TileMap
+	apply_foreground(world_grid) # Apply World Grid to TileMap
 
 # Generates The Background Tiles
 func generate_background(chunk_x: int, chunk_y: int, regenerate: bool = false):
@@ -364,6 +366,7 @@ func generate_background(chunk_x: int, chunk_y: int, regenerate: bool = false):
 		
 		Dumps Tiles to World Grid
 	"""
+	var world_grid : Dictionary = {}
 	
 	if generated_chunks_background.has(Vector2(chunk_x, chunk_y)) and not regenerate:
 		# Chunk already exists, do not generate it again.
@@ -373,8 +376,6 @@ func generate_background(chunk_x: int, chunk_y: int, regenerate: bool = false):
 		return
 		
 	generated_chunks_background.append(Vector2(chunk_x, chunk_y))
-	
-	world_grid.clear() # Empty World_Grid for New Data
 	
 	# Get Chunk Generation Coordinates (allows finding where to spawn chunk)
 	# warning-ignore:narrowing_conversion
@@ -392,9 +393,9 @@ func generate_background(chunk_x: int, chunk_y: int, regenerate: bool = false):
 		for coor_y in range((vertical - quadrant_size), vertical):
 			world_grid[coor_x][coor_y] = random_block
 
-	apply_background() # Apply World Grid to TileMap
+	apply_background(world_grid) # Apply World Grid to TileMap
 
-func apply_foreground() -> void:
+func apply_foreground(world_grid: Dictionary) -> void:
 	"""
 		Applies World Grid to Foreground TileMap
 		
@@ -407,7 +408,7 @@ func apply_foreground() -> void:
 			#print("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
 			set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
 
-func apply_background() -> void:
+func apply_background(world_grid: Dictionary) -> void:
 	"""
 		Applies World Grid to Background TileMap
 		
@@ -425,6 +426,8 @@ func apply_background() -> void:
 
 # This will be replaced by a chunk loading system later.
 func load_foreground(tiles: Dictionary):
+	var world_grid : Dictionary = {}
+	
 #	# Chunk Coordinates (not same as world coordinates)
 #	var chunk_x : int
 #	var chunk_y : int
@@ -451,10 +454,12 @@ func load_foreground(tiles: Dictionary):
 		world_grid[coor.x][coor.y] = tiles[str(tile)]
 		#print("Tile: ", world_grid[coor.x][coor.y])
 	
-	apply_foreground()
+	apply_foreground(world_grid)
 	
 # This will be replaced by a chunk loading system later.
 func load_background(tiles: Dictionary):
+	var world_grid : Dictionary = {}
+	
 #	# Chunk Coordinates (not same as world coordinates)
 #	var chunk_x : int
 #	var chunk_y : int
@@ -481,7 +486,7 @@ func load_background(tiles: Dictionary):
 		world_grid[coor.x][coor.y] = tiles[str(tile)]
 		#print("Tile: ", world_grid[coor.x][coor.y])
 	
-	apply_background()
+	apply_background(world_grid)
 
 func generate_seed() -> int:
 	"""
