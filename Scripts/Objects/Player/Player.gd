@@ -46,7 +46,7 @@ func _ready() -> void:
 	
 	# Server corrects coordinates of client to keep in sync
 	if get_tree().is_network_server():
-		world_generator.load_chunks(int(player_name), self.position) # Allows Getting Chunks Before Moving
+		world_generator.load_chunks(int(player_name), self.position, true) # Allows Getting Chunks Before Moving
 		
 		var correct_coordinates_timer : Timer = Timer.new()
 		correct_coordinates_timer.name = "correct_coordinates_timer"

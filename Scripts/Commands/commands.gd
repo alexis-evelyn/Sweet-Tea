@@ -193,7 +193,7 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	
 	if world_name == "":
 		# TODO: Replace world_path in error message with name user gave!!!
-		return "Failed to Load World %s For Player ID %s" % [world_path, net_id]
+		return "failed to Load World %s For Player ID %s" % [world_path, net_id]
 	
 	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 	
@@ -202,10 +202,10 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	# TODO: Replace World Path with World Name (When the client can download worlds from server, the client will want to request the world by name
 	if net_id != 1:
 		#print("NetID Change World: ", net_id)
-		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name, world_path)
+		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name)
 	else:
 		#print("Server Change World: ", net_id)
-		spawn_handler.change_world(world_name, world_path)
+		spawn_handler.change_world(world_name)
 		
 	return "Player " + str(net_id) + " Changing World to: " + str(world_name)
 	

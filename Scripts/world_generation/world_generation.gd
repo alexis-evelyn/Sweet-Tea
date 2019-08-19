@@ -117,7 +117,7 @@ func set_shader_background_tiles():
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
-func load_chunks(net_id: int, position: Vector2, render_distance: Vector2 = Vector2(3, 3)):
+func load_chunks(net_id: int, position: Vector2, instant_load: bool = false, render_distance: Vector2 = Vector2(3, 3)):
 	# render_distance - This is different from the world_size as this is generating/loading the world from the player's position and won't be halved (will be configurable). Halving it will make it only able to load an even number of chunks.
 	
 	# How Minecraft's Server-Client Chunk Transmission Works - https://github.com/ORelio/Minecraft-Console-Client/issues/140#issuecomment-207971227
@@ -142,14 +142,19 @@ func load_chunks(net_id: int, position: Vector2, render_distance: Vector2 = Vect
 	#print("Player %s has Position %s!!!" % [net_id, position])
 	
 	var load_chunks : Thread = Thread.new()
-	load_chunks.start(self, "load_chunks_threaded", [net_id, position, render_distance])
-	load_chunks.wait_to_finish()
+	#load_chunks.start(self, "load_chunks_threaded", [net_id, position, render_distance, instant_load])
+	#load_chunks.wait_to_finish()
 	
 # Putting Load Chunks on Separate Thread
 func load_chunks_threaded(thread_data: Array):
 	var net_id: int = thread_data[0]
 	var position: Vector2 = thread_data[1]
 	var render_distance: Vector2 = thread_data[2]
+	var instant_load : bool = false
+	
+	if thread_data.size() >= 3:
+		instant_load = thread_data[3]
+		#print("Instant: ", instant_load)
 	
 	# Make sure player_chunks has player id in database
 	if not player_chunks.has(net_id):
@@ -182,7 +187,10 @@ func load_chunks_threaded(thread_data: Array):
 					send_chunk(net_id, surrounding_chunk)
 
 				player_chunks[net_id][surrounding_chunk] = null
-				OS.delay_msec(1000)
+				
+				if not instant_load:
+					yield(get_tree().create_timer(1.0), "timeout")
+					#OS.delay_msec(1000)
 
 func center_chunk(position: Vector2, update_debug: bool = false) -> Vector2:
 	# We use world coordinates to spawn blocks. No conversion needed.

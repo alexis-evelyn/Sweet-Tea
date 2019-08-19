@@ -170,7 +170,7 @@ remote func despawn_player(net_id: int) -> void:
 		printerr("Player Registrar Missing ", net_id, " Cannot Locate Player Node to Despawn!!!")
 		
 # Changing Worlds - Perform Cleanup and Load World
-remote func change_world(world_name: String, world_path: String) -> void:
+remote func change_world(world_name: String) -> void:
 	#print("Player ", gamestate.net_id, " Change World: ", get_world(gamestate.net_id))
 	get_tree().get_root().get_node("PlayerUI/panelPlayerList").cleanup() # Cleanup Player List
 
@@ -180,13 +180,16 @@ remote func change_world(world_name: String, world_path: String) -> void:
 
 	# The Server Would Have Already Updated World Name - No Need to Set Twice
 	if not get_tree().is_network_server():
-		set_world(world_name)
-		var loaded_world = world_handler.load_world_server(gamestate.net_id, world_path)
+		var worlds = get_tree().get_root().get_node("Worlds")
+		worlds.get_node(get_world(gamestate.net_id)).queue_free() # Frees the World and It's Children From Memory (Client Side Only)
 		
-		if loaded_world == "":
-			print("Failed to Load World %s For %s" % [world_path, gamestate.net_id])
-		else:
-			rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Request Server Spawn
+		set_world(world_name)
+		
+		var spawn = load(world_handler.world_template).instance()
+		spawn.name = world_name
+		
+		worlds.add_child(spawn)
+		rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Request Server Spawn
 	elif get_tree().is_network_server():
 		# There's a bug specific to the server player changing to a world with existing clients
 		# The existing clients won't see the server player (this does not affect a client with existing clients)
