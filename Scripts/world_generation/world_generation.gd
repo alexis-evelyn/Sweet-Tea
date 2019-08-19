@@ -117,7 +117,7 @@ func set_shader_background_tiles():
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
-var load_chunks : Thread = Thread.new()
+var load_chunks_thread : Thread = Thread.new()
 func load_chunks(net_id: int, position: Vector2, instant_load: bool = false, render_distance: Vector2 = Vector2(3, 3)):
 	# render_distance - This is different from the world_size as this is generating/loading the world from the player's position and won't be halved (will be configurable). Halving it will make it only able to load an even number of chunks.
 	
@@ -183,7 +183,7 @@ func load_chunks_threaded(thread_data: Array):
 				generate_foreground(chunk.x - chunk_x, chunk.y - chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
 				# warning-ignore:narrowing_conversion
 				# warning-ignore:narrowing_conversion
-				generate_background(chunk.x - chunk_x, chunk.y - chunk_y) # Generate The Background (Tiles Player Can Pass Through)
+				#generate_background(chunk.x - chunk_x, chunk.y - chunk_y) # Generate The Background (Tiles Player Can Pass Through)
 	
 				if net_id != gamestate.net_id:
 					send_chunk(net_id, surrounding_chunk)

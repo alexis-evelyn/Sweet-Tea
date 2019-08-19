@@ -50,20 +50,23 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 		for id in player_registrar.players:
 			# Spawn Existing Players for New Client (Not New Player)
 			# All clients' coordinates (in same world) (including server's coordinates) get sent to new client (except for the new client)
+			# There's a bug where if a client crashes during spawn, then somehow the server tries to rpc itself. This won't crash the server but it can unnecessarily add to the server log.
+			
 			if (id != net_id) and (get_world(id) == player_registrar.players[int(net_id)].current_world):
 				var player : Node # Player Object
 				if get_players(str(get_world(id))).has_node(str(id)):
 					player = get_players(str(get_world(id))).get_node(str(id) + "/KinematicBody2D") # Grab Existing Player's Object (Server Only)
-					print("Existing: ", id, " For: ", net_id, " At Coordinates: ", player.position, " World: ", get_world(id)) # player.position grabs existing player's coordinates
+					#print("Existing: ", id, " For: ", net_id, " At Coordinates: ", player.position, " World: ", get_world(id)) # player.position grabs existing player's coordinates
 					
 					player_registrar.update_players(int(net_id), int(id)) # Updates Client's Player Registry to let it know about clients already in the world
+					#print("YOURSELF: ", net_id)
 					rpc_unreliable_id(net_id, "spawn_player", player_registrar.players[int(id)], id, player.position) # Send Existing Clients' Info to New Client
 				
 			# Spawn the new player within the currently iterated player as long it's not the server
 			# Because the server's list already contains the new player, that one will also get itself!
 			# New Player's Coordinates gets sent to all clients (within the same world) (including new player/client) except the server
 			if (id != 1) and (get_world(id) == get_world(net_id)):
-				print("New: ", id, " For: ", net_id, " At Coordinates: ", coordinates, " World: ", get_world(id))
+				#print("New: ", id, " For: ", net_id, " At Coordinates: ", coordinates, " World: ", get_world(id))
 				player_registrar.update_players(int(id), int(net_id)) # Updates Client's Player Registry to let it know about new client joining world
 				rpc_unreliable_id(id, "spawn_player", pinfo, net_id, coordinates) # Send New Client's Info to Existing Clients
 				
@@ -235,7 +238,8 @@ func has_players(world: String) -> bool:
 	
 # Get Players Node - Added To Make Code More Legible
 func get_players(world: String) -> Node:
-	if not get_world_grid(world).has_node("Players"):
+	# This can cause crash (changeworld client first, then server)
+	if get_world_grid(world) == null or not get_world_grid(world).has_node("Players"):
 		return null
 		
 	return get_world_grid(world).get_node("Players")
