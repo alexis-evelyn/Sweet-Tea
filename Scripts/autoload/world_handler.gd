@@ -104,15 +104,13 @@ puppet func load_world_client() -> void:
 			emit_signal("cleanup_worlds")
 			return
 		
-		print("World (Load Client): ", gamestate.player_info.current_world)
-		# This code will be replaced by a new world from template filled in with chunks from server
-		# ---------------------------------------------------------------------------------------------------
+		#print("World (Load Client): ", gamestate.player_info.current_world)
+		
 		# Sets Starting World Name to Pass to Spawn Handler
 		var spawn = load(world_template).instance()
 		spawn.name = gamestate.player_info.current_world
 		
 		worlds.add_child(spawn)
-		# ---------------------------------------------------------------------------------------------------
 	
 	# Unload Network Menu (cannot use get_current_scene() from rpc call)
 	if get_tree().get_root().has_node("NetworkMenu"): # Sometimes this node is removed before we get to this line of code (only if the player keeps clicking join when a server is not online)

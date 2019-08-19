@@ -225,7 +225,7 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 		
 		Not Meant to Be Called Directly
 	"""
-	if net_id == 1:
+	if net_id != -1:
 		# warning-ignore:unused_variable
 		var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 		#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
@@ -241,7 +241,14 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 		
 		spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 		player_registrar.players[net_id].current_world = world_name # Update World Player is In (server-side)
-		spawn_handler.spawn_player_server(gamestate.player_info) # Will be moved to spawn handler
+		#spawn_handler.spawn_player_server(gamestate.player_info) # Will be moved to spawn handler
+		
+		if net_id != 1:
+			#print("NetID Change World: ", net_id)
+			spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name)
+		else:
+			#print("Server Change World: ", net_id)
+			spawn_handler.change_world(world_name)
 		
 		return "Created New World Named %s!!!" % world_name
 	return "You are not the server!!!"

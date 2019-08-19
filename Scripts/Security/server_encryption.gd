@@ -97,15 +97,16 @@ func load_key():
 # This is to test a custom module I compiled Godot with for encryption that I can use with RPC.
 # Lets Hope it Works
 func test_module():
-	var Cripte = cripter.new()
-
-	var key = "My not secret key"
-
-	var gcm_add = "adicional data is: port: 316"
-	var gcm_input = var2bytes("The cow goes muuuu")
-	
-	var encrypted_array_gcm = Cripte.encrypt_byte_GCM(gcm_input, key, gcm_add)
-	var decrypted_array_gcm = Cripte.decrypt_byte_GCM(encrypted_array_gcm, key, gcm_add) 
-
-	print("Encrypted: ", encrypted_array_gcm.get_string_from_ascii())
-	print("Decrypted: ", bytes2var(decrypted_array_gcm))
+#	var Cripte = cripter.new()
+#
+#	var key = "My not secret key"
+#
+#	var gcm_add = "adicional data is: port: 316"
+#	var gcm_input = var2bytes("The cow goes muuuu")
+#
+#	var encrypted_array_gcm = Cripte.encrypt_byte_GCM(gcm_input, key, gcm_add)
+#	var decrypted_array_gcm = Cripte.decrypt_byte_GCM(encrypted_array_gcm, key, gcm_add) 
+#
+#	print("Encrypted: ", encrypted_array_gcm.get_string_from_ascii())
+#	print("Decrypted: ", bytes2var(decrypted_array_gcm))
+	pass

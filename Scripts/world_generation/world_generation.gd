@@ -422,11 +422,18 @@ func apply_background(world_grid: Dictionary) -> void:
 	# Set's Tile ID in Tilemap from World Grid
 	for coor_x in world_grid.keys():
 		for coor_y in world_grid[coor_x].keys():
-			#print("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
+			print("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
 			
 			# The null check does not work on either foreground or background
 			# https://www.reddit.com/r/godot/comments/csbptd/help_tracking_down_cause_of_two_errors_which/
+			
+			# Errors That Cause Segfault with set_cell(...) caused by client and crashes server
+			# E 0:01:20:0414 Condition ' p_elem->_static && p_with->_static ' is true. <C Source> servers/physics_2d/broad_phase_2d_hash_grid.cpp:40 @ _pair_attempt() - https://github.com/godotengine/godot/blob/3cbd4337ce5bd3d589cd96e1a371d417be781841/servers/physics_2d/broad_phase_2d_hash_grid.cpp#L40
+			# ERROR: set_static: Condition ' !E ' is true. At: servers/physics_2d/broad_phase_2d_hash_grid.cpp:364 - https://github.com/godotengine/godot/blob/12ae7a4c02c186e9f136a7d4a8ea9f6f4805f718/servers/physics_2d/broad_phase_2d_hash_grid.cpp#L364
+			
+			print("Background Tilemap: ", background_tilemap)
 			if background_tilemap != null:
+				print("Set Cell!!!")
 				background_tilemap.set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
 
 # This will be replaced by a chunk loading system later.
