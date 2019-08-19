@@ -578,3 +578,10 @@ func find_safe_spawn(position: Vector2) -> Vector2:
 	
 	position = map_to_world(player_cell)
 	return position
+
+func clear_player_chunks(net_id: int) -> bool:
+	if not player_chunks.has(net_id):
+		return false
+		
+	player_chunks.erase(net_id)
+	return true

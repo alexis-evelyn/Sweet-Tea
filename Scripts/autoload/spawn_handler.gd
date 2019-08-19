@@ -115,8 +115,11 @@ func add_player(pinfo: Dictionary, net_id: int, coordinates: Vector2) -> void:
 		var player_current_world : String = get_world(net_id)
 		var world_grid : Node = get_world_grid(player_current_world)
 		
+#		if world_grid == null:
+#			return
+		
 		# Add Players Node (just a plain node) to put Players in
-		if not world_grid.has_node("Players"):
+		if get_players(player_current_world) == null:
 			var players_node : Node = Node.new()
 			players_node.name = "Players"
 			
@@ -184,7 +187,7 @@ remote func change_world(world_name: String) -> void:
 	# The Server Would Have Already Updated World Name - No Need to Set Twice
 	if not get_tree().is_network_server():
 		var worlds = get_tree().get_root().get_node("Worlds")
-		worlds.get_node(get_world(gamestate.net_id)).queue_free() # Frees the World and It's Children From Memory (Client Side Only)
+		worlds.get_node(get_world(gamestate.net_id)).free() # Frees the World and It's Children From Memory (Client Side Only)
 		
 		set_world(world_name)
 		

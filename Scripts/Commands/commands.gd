@@ -191,6 +191,11 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	var world_path : String = "user://worlds/World 2"
 	var world_name : String = world_handler.load_world_server(net_id, world_path)
 	
+	# Clears Loaded Chunks From Previous World Generator's Memory
+	var world_generation = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
+	world_generation.clear_player_chunks(net_id)
+	#print("Previous World: ", spawn_handler.get_world(net_id))
+	
 	if world_name == "":
 		# TODO: Replace world_path in error message with name user gave!!!
 		return "failed to Load World %s For Player ID %s" % [world_path, net_id]
@@ -225,6 +230,11 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 		var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 		#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 		# TODO (IMPORTANT): Make sure to restrict access with permission levels!!!
+		
+		# Clears Loaded Chunks From Previous World Generator's Memory
+		var world_generation = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
+		world_generation.clear_player_chunks(net_id)
+		#print("Previous World: ", spawn_handler.get_world(net_id))
 		
 		# NOTE (IMPORTANT) - Setup so client can change world (in spawn handler)
 		var world_name = world_handler.create_world(net_id)
