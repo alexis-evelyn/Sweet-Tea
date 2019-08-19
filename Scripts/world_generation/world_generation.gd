@@ -180,10 +180,10 @@ func load_chunks_threaded(thread_data: Array):
 				print("Generating: ", Vector2(chunk.x - chunk_x, chunk.y - chunk_y))
 				# warning-ignore:narrowing_conversion
 				# warning-ignore:narrowing_conversion
-				generate_foreground(chunk.x - chunk_x, chunk.y - chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
+				#generate_foreground(chunk.x - chunk_x, chunk.y - chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
 				# warning-ignore:narrowing_conversion
 				# warning-ignore:narrowing_conversion
-				#generate_background(chunk.x - chunk_x, chunk.y - chunk_y) # Generate The Background (Tiles Player Can Pass Through)
+				generate_background(chunk.x - chunk_x, chunk.y - chunk_y) # Generate The Background (Tiles Player Can Pass Through)
 	
 				if net_id != gamestate.net_id:
 					send_chunk(net_id, surrounding_chunk)
@@ -421,8 +421,8 @@ func apply_background(world_grid: Dictionary) -> void:
 	# Set's Tile ID in Tilemap from World Grid
 	for coor_x in world_grid.keys():
 		for coor_y in world_grid[coor_x].keys():
-			#print("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
-			background_tilemap.set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
+			print("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
+			#background_tilemap.set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
 
 # This will be replaced by a chunk loading system later.
 func load_foreground(tiles: Dictionary):
