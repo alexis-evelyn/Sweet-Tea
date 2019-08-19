@@ -177,7 +177,7 @@ func load_chunks_threaded(thread_data: Array):
 			var surrounding_chunk : Vector2 = Vector2(int(chunk.x - chunk_x), int(chunk.y - chunk_y))
 			
 			if not player_chunks[net_id].has(surrounding_chunk):
-				print("Generating: ", Vector2(chunk.x - chunk_x, chunk.y - chunk_y))
+				#print("Generating: ", Vector2(chunk.x - chunk_x, chunk.y - chunk_y))
 				# warning-ignore:narrowing_conversion
 				# warning-ignore:narrowing_conversion
 				#generate_foreground(chunk.x - chunk_x, chunk.y - chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
@@ -406,7 +406,8 @@ func apply_foreground(world_grid: Dictionary) -> void:
 	for coor_x in world_grid.keys():
 		for coor_y in world_grid[coor_x].keys():
 			#print("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
-			set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
+			if self != null:
+				set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
 
 func apply_background(world_grid: Dictionary) -> void:
 	"""
@@ -421,8 +422,12 @@ func apply_background(world_grid: Dictionary) -> void:
 	# Set's Tile ID in Tilemap from World Grid
 	for coor_x in world_grid.keys():
 		for coor_y in world_grid[coor_x].keys():
-			print("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
-			#background_tilemap.set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
+			#print("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
+			
+			# The null check does not work on either foreground or background
+			# https://www.reddit.com/r/godot/comments/csbptd/help_tracking_down_cause_of_two_errors_which/
+			if background_tilemap != null:
+				background_tilemap.set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
 
 # This will be replaced by a chunk loading system later.
 func load_foreground(tiles: Dictionary):
