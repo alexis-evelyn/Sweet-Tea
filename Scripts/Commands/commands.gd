@@ -225,12 +225,13 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 		
 		Not Meant to Be Called Directly
 	"""
-	if net_id != -1:
-		# warning-ignore:unused_variable
-		var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-		#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
-		# TODO (IMPORTANT): Make sure to restrict access with permission levels!!!
-		
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	# TODO (IMPORTANT): Make sure to restrict access with permission levels!!!
+	
+	# When Permission Levels are implemented, the net_id == 1 check will be replaced
+	if net_id == 1:
 		# Clears Loaded Chunks From Previous World Generator's Memory
 		var world_generation = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
 		world_generation.clear_player_chunks(net_id)

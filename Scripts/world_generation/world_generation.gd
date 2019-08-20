@@ -62,9 +62,9 @@ onready var world_node = self.get_owner() # Gets The Current World's Node
 onready var background_tilemap : TileMap = get_node("Background") # Gets The Background Tilemap
 var background_shader : ShaderMaterial = load("res://Assets/Materials/background.tres") # ShaderMaterial (for shading background tilemap)
 
-export(String) var world_seed : String # World's Seed (used by generator to produce consistent results)
-export(Array) var generated_chunks_foreground : Array # Store Generated Chunks IDs to Make Sure Not To Generate Them Again
-export(Array) var generated_chunks_background : Array # Store Generated Chunks IDs to Make Sure Not To Generate Them Again
+var world_seed : String # World's Seed (used by generator to produce consistent results)
+var generated_chunks_foreground : Array # Store Generated Chunks IDs to Make Sure Not To Generate Them Again
+var generated_chunks_background : Array # Store Generated Chunks IDs to Make Sure Not To Generate Them Again
 
 # This gives the each instance of the world generator access to its own exclusive random number generator so it will not be interfered with by other generators.
 var generator : RandomNumberGenerator = RandomNumberGenerator.new()
@@ -177,13 +177,22 @@ func load_chunks_threaded(thread_data: Array):
 			var surrounding_chunk : Vector2 = Vector2(int(chunk.x - chunk_x), int(chunk.y - chunk_y))
 			
 			if not player_chunks[net_id].has(surrounding_chunk):
-				#print("Generating: ", Vector2(chunk.x - chunk_x, chunk.y - chunk_y))
-				# warning-ignore:narrowing_conversion
-				# warning-ignore:narrowing_conversion
-				#generate_foreground(chunk.x - chunk_x, chunk.y - chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
-				# warning-ignore:narrowing_conversion
-				# warning-ignore:narrowing_conversion
-				generate_background(chunk.x - chunk_x, chunk.y - chunk_y) # Generate The Background (Tiles Player Can Pass Through)
+				print("Chunk.x - chunk_x: %s - %s = %s" % [chunk.x, chunk_x, (int(chunk.x - chunk_x))])
+				print("Chunk.y - chunk_y: %s - %s = %s" % [chunk.y, chunk_y, (int(chunk.y - chunk_y))])
+				print("Surrounding Chunk: %s\n" % surrounding_chunk)
+				
+				# Because of a bug that causes a segfault (when a client causes new chunks to be generated), I am disabling movement based chunk generation for now.
+				# The bug does not occur when the server player moves, so I am leaving server player's chunk gen on if debug mode is enabled.
+				# Movement Based Chunk Gen Segfault - https://github.com/godotengine/godot/issues/31477
+				
+				if net_id == 1 and gamestate.debug:
+					#print("Generating: ", Vector2(chunk.x - chunk_x, chunk.y - chunk_y))
+					# warning-ignore:narrowing_conversion
+					# warning-ignore:narrowing_conversion
+					generate_foreground(chunk.x - chunk_x, chunk.y - chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
+					# warning-ignore:narrowing_conversion
+					# warning-ignore:narrowing_conversion
+					generate_background(chunk.x - chunk_x, chunk.y - chunk_y) # Generate The Background (Tiles Player Can Pass Through)
 	
 				if net_id != gamestate.net_id:
 					send_chunk(net_id, surrounding_chunk)
@@ -434,7 +443,11 @@ func apply_background(world_grid: Dictionary) -> void:
 			print("Background Tilemap: ", background_tilemap)
 			if background_tilemap != null:
 				print("Set Cell!!!")
-				background_tilemap.set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
+				#background_tilemap.set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
+				# Number of Tiles in WorldGrid is 16^16 (16 chunks)
+				var cell = world_grid[coor_x][coor_y]
+				background_tilemap.set_cell(coor_x, coor_y, cell)
+				pass
 
 # This will be replaced by a chunk loading system later.
 func load_foreground(tiles: Dictionary):
@@ -558,7 +571,7 @@ func find_safe_spawn(position: Vector2) -> Vector2:
 	var unsafe : bool = true
 	var count : int = 0
 	
-	#return Vector2(-100, -100) # Useful for debugging camera positioning
+	# return Vector2(-2532, 192) # Useful for debugging camera positioning
 	
 	# Spawn below 440 y-axis (up).
 	
