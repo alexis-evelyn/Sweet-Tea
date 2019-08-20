@@ -18,6 +18,8 @@ var file_check : File = File.new() # Check to see if world's file path exists
 
 var world_data_dict : Dictionary = {}
 
+var load_world_start_server = Thread.new() # Thread for Loading Spawn World
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	network.connect("server_created", self, "start_server")
@@ -58,7 +60,12 @@ func start_server() -> void:
 		
 		return
 	
-	var world = load_world_server(-1, starting_world) # Specify -1 (server only) to let server know the spawn world doesn't have the server player yet (gui only)
+	if not load_world_start_server.is_active():
+		# https://github.com/godotengine/godot-demo-projects/blob/master/misc/threads/thread.gd
+		load_world_start_server.start(self, "load_world_server_thread", [-1, starting_world]) # Specify -1 (server only) to let server know the spawn world doesn't have the server player yet (gui only)
+
+func load_world_server_thread_done():
+	var world = load_world_start_server.wait_to_finish()
 	
 	if world == "":
 		print("World is Missing (on Server Start)!!! Check Player Save File!!!")
@@ -80,6 +87,17 @@ func start_server() -> void:
 	if not gamestate.server_mode:
 		player_registrar.register_player(gamestate.player_info, 0)
 		emit_signal("server_started", gamestate.player_info) # Sends Server Player's Info To Spawn Code
+
+func load_world_server_thread(parameters: Array) -> String:
+	if parameters.size() < 2:
+		return ""
+		
+	var net_id : int = parameters[0]
+	var world_path : String = parameters[1]
+		
+	var world = load_world_server(net_id, world_path)
+	call_deferred("load_world_server_thread_done")
+	return world
 
 # Client World Loading Code (client side only)
 puppet func load_world_client() -> void:
