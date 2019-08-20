@@ -79,6 +79,8 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 			return change_player_world(net_id, message)
 		"createworld":
 			return create_world(net_id, message)
+		"spawn":
+			return server_spawn(net_id, message)
 		_: # Default Result - Put at Bottom of Match Results
 			if command == "":
 				return ""
@@ -204,7 +206,6 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	
 	player_registrar.players[net_id].current_world = world_name # Update World Player is In (server-side)
 	
-	# TODO: Replace World Path with World Name (When the client can download worlds from server, the client will want to request the world by name
 	if net_id != 1:
 		#print("NetID Change World: ", net_id)
 		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name)
@@ -268,3 +269,38 @@ func shutdown_server(net_id: int, message: PoolStringArray) -> String:
 	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
 	return "Shutdown Command Not Implemented - Permission Needed: " + str(permission_level)
+	
+func server_spawn(net_id: int, message: PoolStringArray) -> String:
+	"""
+		Teleport To Server Spawn Command
+		
+		Not Meant to Be Called Directly
+	"""
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	
+	var world_path : String = world_handler.starting_world
+	var world_name : String = world_handler.load_world_server(net_id, world_path)
+	
+	# Clears Loaded Chunks From Previous World Generator's Memory
+	var world_generation = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
+	world_generation.clear_player_chunks(net_id)
+	#print("Previous World: ", spawn_handler.get_world(net_id))
+	
+	if world_name == "":
+		# TODO: Replace world_path in error message with name user gave!!!
+		return "(Server Spawn) failed to Load World %s For Player ID %s" % [world_path, net_id]
+	
+	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
+	
+	player_registrar.players[net_id].current_world = world_name # Update World Player is In (server-side)
+	
+	if net_id != 1:
+		#print("NetID Change World: ", net_id)
+		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name)
+	else:
+		#print("Server Change World: ", net_id)
+		spawn_handler.change_world(world_name)
+		
+	return "Teleported to Spawn"

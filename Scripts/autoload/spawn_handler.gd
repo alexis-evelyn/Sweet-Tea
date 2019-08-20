@@ -60,7 +60,10 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 					
 					player_registrar.update_players(int(net_id), int(id)) # Updates Client's Player Registry to let it know about clients already in the world
 					#print("YOURSELF: ", net_id)
-					rpc_unreliable_id(net_id, "spawn_player", player_registrar.players[int(id)], id, player.position) # Send Existing Clients' Info to New Client
+					if net_id != 1:
+						rpc_unreliable_id(net_id, "spawn_player", player_registrar.players[int(id)], id, player.position) # Send Existing Clients' Info to New Client
+					else:
+						spawn_player(player_registrar.players[int(id)], id, player.position) # Send Existing Clients' Info to New Client
 				
 			# Spawn the new player within the currently iterated player as long it's not the server
 			# Because the server's list already contains the new player, that one will also get itself!

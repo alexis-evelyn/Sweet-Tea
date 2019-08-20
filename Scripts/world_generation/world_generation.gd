@@ -177,9 +177,9 @@ func load_chunks_threaded(thread_data: Array):
 			var surrounding_chunk : Vector2 = Vector2(int(chunk.x - chunk_x), int(chunk.y - chunk_y))
 			
 			if not player_chunks[net_id].has(surrounding_chunk):
-				print("Chunk.x - chunk_x: %s - %s = %s" % [chunk.x, chunk_x, (int(chunk.x - chunk_x))])
-				print("Chunk.y - chunk_y: %s - %s = %s" % [chunk.y, chunk_y, (int(chunk.y - chunk_y))])
-				print("Surrounding Chunk: %s\n" % surrounding_chunk)
+#				print("Chunk.x - chunk_x: %s - %s = %s" % [chunk.x, chunk_x, (int(chunk.x - chunk_x))])
+#				print("Chunk.y - chunk_y: %s - %s = %s" % [chunk.y, chunk_y, (int(chunk.y - chunk_y))])
+#				print("Surrounding Chunk: %s\n" % surrounding_chunk)
 				
 				# Because of a bug that causes a segfault (when a client causes new chunks to be generated), I am disabling movement based chunk generation for now.
 				# The bug does not occur when the server player moves, so I am leaving server player's chunk gen on if debug mode is enabled.
