@@ -271,7 +271,9 @@ puppet func receive_chunk(foreground: bool, chunk_grid : Dictionary) -> void:
 				background_tilemap.set_cell(coor_x, coor_y, chunk_grid[coor_x][coor_y])
 
 # Generate's a New World
-func generate_new_world():
+func generate_new_world(size : Vector2 = world_size):
+	world_size = size # Set's World Size (in infinite world, this would be the pre-generated chunks)
+	
 	# Convert Vector2 values from floats to integers (as modulus cannot perform on an other type than an integer in GDScript).
 	# warning-ignore:narrowing_conversion
 	var x_axis : int = world_size.x

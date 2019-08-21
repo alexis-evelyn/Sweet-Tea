@@ -238,8 +238,7 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 		world_generation.clear_player_chunks(net_id)
 		#print("Previous World: ", spawn_handler.get_world(net_id))
 		
-		# NOTE (IMPORTANT) - Setup so client can change world (in spawn handler)
-		var world_name = world_handler.create_world(net_id)
+		var world_name = world_handler.create_world(net_id, "") # Run's createworld function
 		
 		spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 		player_registrar.players[net_id].current_world = world_name # Update World Player is In (server-side)

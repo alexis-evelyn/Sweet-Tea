@@ -281,7 +281,7 @@ func save_world(world: Node):
 	# Save World to Drive
 	world_data.store_string(to_json(world_data_dict))
 	
-func create_world(net_id: int = -1, world_seed: String = ""):
+func create_world(net_id: int = -1, world_seed: String = "", world_size: Vector2 = Vector2(0, 0)):
 	# Creates A World From Scratch
 	var worlds : Node # Worlds Node
 	var world_name : String = uuid.v4()
@@ -312,7 +312,13 @@ func create_world(net_id: int = -1, world_seed: String = ""):
 	
 	template.name = world_name # Set World's Name
 	worlds.add_child(template) # Add Loaded World to Worlds node
-	generator.generate_new_world() # Called World Generation Code
+	
+	if world_size == Vector2(0, 0):
+		# Sets world size to be default size
+		generator.generate_new_world() # Called World Generation Code
+	else:
+		# Sets Custom World Size
+		generator.generate_new_world(world_size) # Called World Generation Code
 	
 	# Add Loaded World to Dictionary of Loaded Worlds
 	loaded_worlds[world_meta] = template.name
