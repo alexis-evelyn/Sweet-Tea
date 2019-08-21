@@ -117,7 +117,7 @@ func set_shader_background_tiles():
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
-var load_chunks_thread : Thread = Thread.new()
+#var load_chunks_thread : Thread = Thread.new()
 func load_chunks(net_id: int, position: Vector2, instant_load: bool = false, render_distance: Vector2 = Vector2(3, 3)):
 	# render_distance - This is different from the world_size as this is generating/loading the world from the player's position and won't be halved (will be configurable). Halving it will make it only able to load an even number of chunks.
 	
@@ -200,7 +200,10 @@ func load_chunks_threaded(thread_data: Array):
 				player_chunks[net_id][surrounding_chunk] = null
 				
 				if not instant_load:
-					yield(get_tree().create_timer(1.0), "timeout")
+					# https://godotengine.org/qa/8656/how-properly-stop-yield-from-resuming-after-the-class-freed
+					var timer : SceneTreeTimer = get_tree().create_timer(1.0) # Creates a One Shot Timer (One Shot means it only runs once)
+					yield(timer, "timeout")
+					timer.queue_free() # Prevents Resume Failed From Object Class Being Expired
 					#OS.delay_msec(1000)
 
 func center_chunk(position: Vector2, update_debug: bool = false) -> Vector2:
