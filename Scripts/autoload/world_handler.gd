@@ -129,6 +129,9 @@ func load_template(location: String) -> Node:
 		var world : Node = world_file.instance() # Instance Loaded World
 		
 		# If Client, Unload Previous World
+		# TODO: Keep Client only worlds loaded when inviting players to client worlds is implemnted.
+		# I mau put client worlds in a separate node so they cannot conflict with server world names.
+		# Actually, that could help a lot with separate RPC calls (as server will not be allowed to force someone into client's worlds)
 		if not get_tree().is_network_server():
 			for loaded_world in worlds.get_children():
 				loaded_world.queue_free()
