@@ -1,8 +1,7 @@
 extends Control
 
 # Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+var scene : String = "" # Menu to load if set
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -13,6 +12,10 @@ func _ready() -> void:
 #func _process(_delta: float):
 #	pass
 
+# Used to set a menu to load after loading character.
+func set_menu(set_scene: String) -> void:
+	scene = set_scene
+
 func check_existing_slots() -> void:
 	"""
 		Check Save Data for Existing Slots
@@ -22,6 +25,8 @@ func check_existing_slots() -> void:
 	
 	#print("Checking For Existing Slots")
 	
+	# This was intentionally setup so a modder can just add more slots.
+	# Once I create a modding API (currently I am just going to load PackedScenes, but I will add an actual API later), then I will set this up so adding slots is trivial.
 	for slot in $PlayerSelectionWindow/PlayerSlots.get_child_count():
 		#print("Checking Slot: " + str(slot))
 		
@@ -41,7 +46,26 @@ func _character_slot_pressed(button: Node) -> void:
 		Not Meant to Be Called Directly
 	"""
 	
-	print("Character Slot Pressed: " + str(button.get_index()))
+	# If I figure out how to add metadata to a button, I may replace the index method so a modder can display the character load button in more than one place at the same time.
+	var slot : int = button.get_index()
+	var slot_exists : bool = gamestate.check_if_slot_exists(int(slot))
+	
+	#print("Character Slot Pressed: %s" % slot)
+	
+	if slot_exists:
+		print("Loading Character and World!!!")
+		gamestate.load_player(slot) # Load Character To Memory
+		print("Character Pressed: %s" % gamestate.player_info.name)
+		
+		network.server_info.max_players = 5
+		network.start_server()
+	else:
+		print("Creating Character and World!!!")
+		return # This will be replaced by a coroutine which will pull up a character creation menu
+		
+	# Load's menu after selecting player (may have to move to make Player Creation Screen Work).
+	if scene != "":
+		get_tree().change_scene(scene)
 
 func _on_PlayerSelectionWindow_about_to_show() -> void:
 	"""

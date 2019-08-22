@@ -203,7 +203,7 @@ func load_chunks_threaded(thread_data: Array):
 					# https://godotengine.org/qa/8656/how-properly-stop-yield-from-resuming-after-the-class-freed
 					var timer : SceneTreeTimer = get_tree().create_timer(1.0) # Creates a One Shot Timer (One Shot means it only runs once)
 					yield(timer, "timeout")
-					timer.queue_free() # Prevents Resume Failed From Object Class Being Expired
+					timer.call_deferred('free') # Prevents Resume Failed From Object Class Being Expired (Have to Use Call Deferred Free or it will crash free() causes an attempted to remove reference error and queue_free() does not exist)
 					#OS.delay_msec(1000)
 
 func center_chunk(position: Vector2, update_debug: bool = false) -> Vector2:

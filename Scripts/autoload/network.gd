@@ -24,7 +24,7 @@ var server_info : Dictionary = {
 	website = "https://sweet-tea.senorcontento.com/", # Server Owner's Website (to display rules, purchases, etc...)
 	num_player = 0, # Display Current Number of Connected Players (so client can see how busy a server is)
 	max_players = 0, # Maximum Number of Players (including server player)
-	bind_address = "*", # IP Address to Bind To (Use). Asterisk (*) means all available IPs to the Computer.
+	bind_address = "127.0.0.1", # IP Address to Bind To (Use). Asterisk (*) means all available IPs to the Computer.
 	used_port = 0, # Host Port
 	max_chunks = 3 # Max chunks to send to client (client does not request, server sends based on position of client - this helps mitigate DOS abuse)
 }
@@ -38,8 +38,11 @@ func _ready() -> void:
 	get_tree().connect("server_disconnected", self, "close_connection")
 
 # Attempt to Create Server
-func create_server() -> void:
-	# TODO: Godot supports UPNP hole punching, so this could be useful for non-technical players
+func start_server() -> void:
+	set_port() # Choose A Port to Use
+	print("Port: ", server_info.used_port) # Print Current Port
+	
+	# TODO: Godot supports UDP hole punching and/or UPNP, so this could be useful for non-technical players
 	
 	# Setup Encryption Script
 	var encryption = Node.new()
@@ -49,14 +52,20 @@ func create_server() -> void:
 	
 	#print("Attempting to Create Server on Port ", server_info.used_port)
 	var net = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
+	#print("Port: ", net.get_port())
 	
 	# https://docs.godotengine.org/en/3.1/classes/class_networkedmultiplayerenet.html
 	net.set_bind_ip(server_info.bind_address) # Sets the IP Address the Server Binds to
 	
 	# Could Not Create Server (probably port already in use or Failed Permissions)
 	if (net.create_server(server_info.used_port, server_info.max_players) != OK):
-		#print("Failed to create server")
+		print("Failed to create server")
 		return
+	
+	#print("Port: ", net.get_port())
+	
+	# Ensures UDP Packets are Ordered (Has less overhead than TCP)
+	net.set_always_ordered(NetworkedMultiplayerPeer.TRANSFER_MODE_UNRELIABLE_ORDERED)
 	
 	get_tree().set_network_peer(net) # Assign NetworkedMultiplayerENet as Handler of Network - https://docs.godotengine.org/en/3.1/classes/class_multiplayerapi.html?highlight=set_network_peer#class-multiplayerapi-property-network-peer
 	
@@ -227,3 +236,10 @@ puppet func client_ping(message: String) -> void:
 	pass
 	
 	# Track Last Ping Back and Do Something if Ping Back Fails
+
+# Pick A Port to Use
+func set_port() -> int:
+	var port = int(floor(rand_range(1025, 65535.1))) # Currently, there is no way of knowing what port is used by querying net, so I have to pick one myself and hope it is unused (setting port 0 tells the system to give you a port) - The .1 allows using 65535 after being processed by floor()
+	server_info.used_port = port # Sets Port
+	
+	return port
