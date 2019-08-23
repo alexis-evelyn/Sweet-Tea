@@ -70,12 +70,19 @@ var generated_chunks_background : Array # Store Generated Chunks IDs to Make Sur
 var generator : RandomNumberGenerator = RandomNumberGenerator.new()
 var player_chunks : Dictionary = {} # Used to keep track of what chunks a player already has
 
+var delay_packet_processing_timer : Timer = Timer.new() # Delay Processing Chunk
+var delay_packet_processing_time_seconds : float = 1.0 # Amount of Time To Delay Processing Chunk
+
 # TODO (IMPORTANT): Generate chunks array on world load instead of reading from file!!!
 # Also, currently seeds aren't loaded from world handler, so they are generated new every time.
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	print("World Generator Seed: ", world_seed)
+	
+	# Handle's Chunk Generation Delay
+	delay_packet_processing_timer.name = "ChunkTimer"
+	add_child(delay_packet_processing_timer) # Add as child to own node
 	
 	#gamestate.debug = true # Turns on Debug Camera - Useful for Debugging World Gen
 	
@@ -201,10 +208,17 @@ func load_chunks_threaded(thread_data: Array):
 				
 				if not instant_load:
 					# https://godotengine.org/qa/8656/how-properly-stop-yield-from-resuming-after-the-class-freed
-					var timer : SceneTreeTimer = get_tree().create_timer(1.0) # Creates a One Shot Timer (One Shot means it only runs once)
-					yield(timer, "timeout")
-					timer.call_deferred('free') # Prevents Resume Failed From Object Class Being Expired (Have to Use Call Deferred Free or it will crash free() causes an attempted to remove reference error and queue_free() does not exist)
+#					var timer : SceneTreeTimer = get_tree().create_timer(1.0) # Creates a One Shot Timer (One Shot means it only runs once)
+#					yield(timer, "timeout")
+#					timer.call_deferred('free') # Prevents Resume Failed From Object Class Being Expired (Have to Use Call Deferred Free or it will crash free() causes an attempted to remove reference error and queue_free() does not exist)
 					#OS.delay_msec(1000)
+					
+#					print("Setting Timer")
+					delay_packet_processing_timer.set_wait_time(delay_packet_processing_time_seconds) # Amoutn of time to delay for.
+					delay_packet_processing_timer.start() # Start Timer
+
+					yield(delay_packet_processing_timer, "timeout") # Pause World Generation/Loading until timer runs out!
+#					print("Timer Finished")
 
 func center_chunk(position: Vector2, update_debug: bool = false) -> Vector2:
 	# We use world coordinates to spawn blocks. No conversion needed.

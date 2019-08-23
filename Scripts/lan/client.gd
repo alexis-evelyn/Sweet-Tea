@@ -1,6 +1,5 @@
 extends Node
 
-# Lan Server Finder - EXTREMELY BUGGY
 # PacketPeerUDP Example - https://godotengine.org/qa/20026/to-send-a-udp-packet-godot-3?show=20262#a20262
 
 # Declare member variables here. Examples:
@@ -10,7 +9,7 @@ var udp_peer = PacketPeerUDP.new()
 var packet_buffer_size : int = 30
 
 var client : Thread = Thread.new()
-var calling_card : String = "Nihlistic Sweet Tea: %s" # Text Server watches for (includes game version to determine compatibility).
+var calling_card : String = "Nihilistic Sweet Tea: %s" # Text Server watches for (includes game version to determine compatibility).
 var delay_broadcast_time_seconds : float = 5.0 # 5 seconds
 var search_timer : float = 30 # Only search for servers for 30 seconds until refresh is pressed.
 
@@ -25,7 +24,7 @@ var addresses : Array = [localhost_address, broadcast_address] # Addresses to Br
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set_server_port() # Sets Port to Broadcast to
-	#search_for_servers() # Start searching for Servers
+	search_for_servers() # Start searching for Servers
 	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -46,7 +45,7 @@ func find_servers(udp_peer: PacketPeerUDP) -> void:
 		timer.call_deferred('free') # Prevents Resume Failed From Object Class Being Expired (Have to Use Call Deferred Free or it will crash free() causes an attempted to remove reference error and queue_free() does not exist)
 
 		if udp_peer.get_available_packet_count() > 0:
-			print("Received Packet!!!")
+#			print("Received Packet!!!")
 			var bytes = udp_peer.get_packet()
 			var client_ip = udp_peer.get_packet_ip()
 			var client_port = udp_peer.get_packet_port()
