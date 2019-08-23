@@ -47,8 +47,8 @@ func test():
 	
 	var gamejolt_auth = File.new()
 	
-	print("Credentials: ", gamejolt_auth.file_exists(gamejolt_auth_path))
-	print("Path: ", gamejolt_auth_path)
+	logger.verbose("Credentials: %s" % gamejolt_auth.file_exists(gamejolt_auth_path))
+	logger.verbose("Path: %s" % gamejolt_auth_path)
 
 	if gamejolt_auth.file_exists(gamejolt_auth_path):
 		gamejolt_auth.open(gamejolt_auth_path, File.READ)
@@ -75,7 +75,7 @@ func test():
 			toggle_trophy("109979")
 			yield(self, "function_finished") # Wait Until Function is Finished
 	else:
-		print("GameJolt File Not Found")
+		logger.verbose("GameJolt File Not Found")
 	
 func login(name: String, token: String):
 	# There's a user friendly token on GameJolt's site. This token functions in place of the one inside the gamejolt file.
@@ -83,7 +83,7 @@ func login(name: String, token: String):
 	
 	var result = yield(api, 'gamejolt_request_completed')
 	if api.is_ok(result):
-		print("Successful Login: ", result.responseBody.success)
+		logger.verbose("Successful Login: %s" % result.responseBody.success)
 	else:
 		api.print_error(result)
 		
@@ -93,7 +93,7 @@ func get_gj_time():
 	api.fetch_time()
 	var result = yield(api, 'gamejolt_request_completed')
 	if api.is_ok(result):
-		print("GameJolt's Server's Time: ", result.responseBody.timestamp)
+		logger.verbose("GameJolt's Server's Time: %s" % result.responseBody.timestamp)
 	else:
 		api.print_error(result)
 		
@@ -111,7 +111,7 @@ func get_trophies():
 	
 func loop_trophies(trophies: Array):
 	for trophy in trophies:
-		print("Trophy Name: ", trophy.title, " - ID: ", trophy.id, " - Achieved: ", trophy.achieved)
+		logger.verbose("Trophy Name: %s - ID: %s - Achieved: %s" % [trophy.title, trophy.id, trophy.achieved])
 
 func toggle_trophy(trophy: String):
 	api.fetch_trophy(trophy)
@@ -124,10 +124,10 @@ func toggle_trophy(trophy: String):
 			
 			if achieved == "false":
 				api.set_trophy_achieved(trophy)
-				print("Trophy Achieved: ", trophies[0].title)
+				logger.verbose("Trophy Achieved: %s" % trophies[0].title)
 			else:
 				api.remove_trophy_achieved(trophy)
-				print("Trophy Removed: ", trophies[0].title)
+				logger.verbose("Trophy Removed: %s" % trophies[0].title)
 	else:
 		api.print_error(result)
 		

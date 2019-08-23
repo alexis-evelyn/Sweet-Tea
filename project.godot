@@ -34,6 +34,7 @@ spawn_handler="*res://Scripts/autoload/spawn_handler.gd"
 GameJoltAPI="*res://Custom/GameJoltAPI.tscn"
 uuid="*res://Scripts/autoload/third_party/uuid.gd"
 load_settings="*res://Scripts/autoload/load_settings.gd"
+logger="*res://Scripts/autoload/logger.gd"
 
 [debug]
 

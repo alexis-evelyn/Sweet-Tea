@@ -41,7 +41,7 @@ func _ready() -> void:
 
 # Process Chat Messages from Server
 sync func chat_message_client(message: String) -> void:
-	#print("Client Message: ", message)
+	#logger.verbose("Client Message: ", message)
 	
 	# Only Update ChatBox if Not Headless
 	if not gamestate.server_mode:
@@ -59,7 +59,7 @@ master func chat_message_server(message: String) -> int:
 	var chat_color : String = "red" # Default Chat Color
 	
 	# Record Chat Message in Server Log (e.g. if harassment needs to be reported)
-	#print("Chat Message: ", message) - May Replace With Saving To File (dependent on server owner settings)
+	#logger.verbose("Chat Message: ", message) - May Replace With Saving To File (dependent on server owner settings)
 	
 	# Check and Shorten The Length of Characters in Message
 	if message.length() > max_characters:
@@ -115,24 +115,24 @@ func _on_userChat_gui_input(event) -> void:
 # When URLs are Clicked in Chat Window
 func _on_chatMessages_meta_clicked(meta: String) -> void:
 	if typeof(meta) == TYPE_STRING:
-		#print("URL Text: ", meta)
+		#logger.verbose("URL Text: ", meta)
 		
 		var json : JSONParseResult = JSON.parse(meta)
 		
 		# Checks to Make Sure JSON was Parsed
 		if json.error == OK:
-			#print("JSON Type: ", typeof(json.result))
+			#logger.verbose("JSON Type: ", typeof(json.result))
 			
 			# JSON will either be a Dictionary or Array. If it is an object, you forgot to call json.result (instead you called json)
 			match typeof(json.result): # Similar to Switch Statement
 				TYPE_DICTIONARY:
-					#print("JSON is Dictionary")
+					#logger.verbose("JSON is Dictionary")
 					handle_url_click(json.result) # Send to another function to process
 				TYPE_ARRAY:
-					#print("JSON is Array")
+					#logger.verbose("JSON is Array")
 					pass # I may add a handler for this later, but to be honest, a dictionary is much more useful in this context
 				TYPE_OBJECT:
-					printerr("JSON is Object and it Shouldn't Be")
+					logger.error("JSON is Object and it Shouldn't Be")
 				
 # Handles Client Clicking on URL
 func handle_url_click(dictionary: Dictionary) -> void:
@@ -142,14 +142,14 @@ func handle_url_click(dictionary: Dictionary) -> void:
 		
 		# Checks if Players Dictionary Has Net_ID (player could have disconnected by then)
 		if player_registrar.has(int(net_id)):
-			#print("Clicked Player Name: " + player_registrar.name(int(net_id)) + " Player ID: " + net_id)
+			#logger.verbose("Clicked Player Name: " + player_registrar.name(int(net_id)) + " Player ID: " + net_id)
 			chat_message_client("Clicked Player Name: " + player_registrar.name(int(net_id)) + " Player ID: " + str(net_id))
 		else:
-			print("The Players Dictionary is Missing ID: ", net_id)
+			logger.verbose("The Players Dictionary is Missing ID: %s" % net_id)
 			
 # Cleanup PlayerChat - Meant to be Called by PlayerUI
 func cleanup() -> void:
-	#print("Clearing PlayerChat")
+	#logger.verbose("Clearing PlayerChat")
 	
 	self.visible = false # Hides PlayerChat
 	chatMessages.clear() # Clear Chat Messages

@@ -10,7 +10,7 @@ func _ready() -> void:
 	
 # Load Player List - Called When Player Joins Server
 func loadPlayerList() -> void:
-	#print("Player List")
+	#logger.verbose("Player List")
 
 	# Do Not Run Below Code if Headless
 	localPlayer = $lblLocalPlayer
@@ -26,7 +26,7 @@ func loadPlayerList() -> void:
 func _on_player_list_changed() -> void:
 	# TODO: Replace the player list with a rich text label to implement clicking on player names (and add player icons (profile pics?))
 	
-	#print("Player List Changed!!!")
+	#logger.verbose("Player List Changed!!!")
 	
 	# Remove Nodes From Boxlist
 	for node in $boxList.get_children():
@@ -34,12 +34,12 @@ func _on_player_list_changed() -> void:
 	
 	world = get_players(get_world(gamestate.net_id))
 	
-	#print("World: ", get_world(gamestate.net_id))
+	#logger.verbose("World: ", get_world(gamestate.net_id))
 	
 	if world != null:
 		# Populate Boxlist With Player Names
 		for player in world.get_children(): # for player in player_registrar.players: - Old code, used to get every player on server
-			#print("Player: ", player.name)
+			#logger.verbose("Player: ", player.name)
 			if (int(player.name) != gamestate.net_id):
 				var connectedPlayerLabel : Node = Label.new()
 				connectedPlayerLabel.align = Label.ALIGN_CENTER # Aligns the Text To Center

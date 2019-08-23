@@ -78,7 +78,7 @@ var delay_packet_processing_time_seconds : float = 1.0 # Amount of Time To Delay
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	print("World Generator Seed: ", world_seed)
+	logger.verbose("World Generator Seed: " % world_seed)
 	
 	# Handle's Chunk Generation Delay
 	delay_packet_processing_timer.name = "ChunkTimer"
@@ -95,13 +95,13 @@ func _ready() -> void:
 	
 	set_shader_background_tiles() # Set Shader for Background Tiles
 	background_tilemap.set_owner(world_node) # Set world as owner of Background Tilemap (allows saving Tilemap to world when client saves world)
-	print("Background TileMap's Owner: ", background_tilemap.get_owner().name) # Debug Statement to list Background TileMap's Owner's Name
+	logger.verbose("Background TileMap's Owner: ", background_tilemap.get_owner().name) # Debug Statement to list Background TileMap's Owner's Name
 	
 	# Seed should be set by world loader (if pre-existing world)
 	if world_seed.empty():
-		print("Generate Seed: ", generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
+		logger.verbose("Generate Seed: ", generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
 	else:
-		print("Set Seed: ", set_seed(world_seed)) # Converts Seed to Int and Applies to Generator
+		logger.verbose("Set Seed: ", set_seed(world_seed)) # Converts Seed to Int and Applies to Generator
 
 	#generate_new_world()
 
@@ -113,8 +113,8 @@ func _ready() -> void:
 func set_shader_background_tiles():
 	# Without explicitly making the resource unique, the same reference is just passed around no matter how many times it is loaded
 	# Godot making this an explicit request helps make saving memory easy (as one does not need to handle passing around references).
-	#print("FG: ", self.tile_set)
-	#print("BG: ", background_tilemap.tile_set)
+	#logger.verbose("FG: ", self.tile_set)
+	#logger.verbose("BG: ", background_tilemap.tile_set)
 	
 	# Loops Through Tiles in Tileset and Applies Shader(s)
 	for tile in background_tilemap.tile_set.get_tiles_ids():
@@ -147,7 +147,7 @@ func load_chunks(net_id: int, position: Vector2, instant_load: bool = false, ren
 	# Completely toss any math said above, I accidentally made this double on both axes and I am sticking with it.
 	
 	# * - Looping the world on the horizontal access only applies to non-infinite worlds. Release will only support non-infinite worlds (afterwards if the game does well, I will work on infinite worlds). 
-	#print("Player %s has Position %s!!!" % [net_id, position])
+	#logger.verbose("Player %s has Position %s!!!" % [net_id, position])
 	
 	#load_chunks.start(self, "load_chunks_threaded", [net_id, position, render_distance, instant_load])
 	#load_chunks.wait_to_finish()
@@ -163,7 +163,7 @@ func load_chunks_threaded(thread_data: Array):
 	
 	if thread_data.size() >= 3:
 		instant_load = thread_data[3]
-		#print("Instant: ", instant_load)
+		#logger.verbose("Instant: ", instant_load)
 	
 	# Make sure player_chunks has player id in database
 	if not player_chunks.has(net_id):
@@ -176,7 +176,7 @@ func load_chunks_threaded(thread_data: Array):
 		chunk = center_chunk(position, true)
 		
 	#var generate_loc : Vector2 = chunk + render_distance
-	#print("Generate: ", generate_loc)
+	#logger.verbose("Generate: ", generate_loc)
 		
 	# Generate Chunks (will not override without explicit request)
 	for chunk_x in range(-render_distance.x, render_distance.x):
@@ -184,16 +184,16 @@ func load_chunks_threaded(thread_data: Array):
 			var surrounding_chunk : Vector2 = Vector2(int(chunk.x - chunk_x), int(chunk.y - chunk_y))
 			
 			if not player_chunks[net_id].has(surrounding_chunk):
-#				print("Chunk.x - chunk_x: %s - %s = %s" % [chunk.x, chunk_x, (int(chunk.x - chunk_x))])
-#				print("Chunk.y - chunk_y: %s - %s = %s" % [chunk.y, chunk_y, (int(chunk.y - chunk_y))])
-#				print("Surrounding Chunk: %s\n" % surrounding_chunk)
+#				logger.verbose("Chunk.x - chunk_x: %s - %s = %s" % [chunk.x, chunk_x, (int(chunk.x - chunk_x))])
+#				logger.verbose("Chunk.y - chunk_y: %s - %s = %s" % [chunk.y, chunk_y, (int(chunk.y - chunk_y))])
+#				logger.verbose("Surrounding Chunk: %s\n" % surrounding_chunk)
 				
 				# Because of a bug that causes a segfault (when a client causes new chunks to be generated), I am disabling movement based chunk generation for now.
 				# The bug does not occur when the server player moves, so I am leaving server player's chunk gen on if debug mode is enabled.
 				# Movement Based Chunk Gen Segfault - https://github.com/godotengine/godot/issues/31477
 				
 				if net_id == 1 and gamestate.debug:
-					#print("Generating: ", Vector2(chunk.x - chunk_x, chunk.y - chunk_y))
+					#logger.verbose("Generating: ", Vector2(chunk.x - chunk_x, chunk.y - chunk_y))
 					# warning-ignore:narrowing_conversion
 					# warning-ignore:narrowing_conversion
 					generate_foreground(chunk.x - chunk_x, chunk.y - chunk_y) # Generate The Foreground (Tiles Player Can Stand On and Collide With)
@@ -213,12 +213,12 @@ func load_chunks_threaded(thread_data: Array):
 #					timer.call_deferred('free') # Prevents Resume Failed From Object Class Being Expired (Have to Use Call Deferred Free or it will crash free() causes an attempted to remove reference error and queue_free() does not exist)
 					#OS.delay_msec(1000)
 					
-#					print("Setting Timer")
+#					logger.verbose("Setting Timer")
 					delay_packet_processing_timer.set_wait_time(delay_packet_processing_time_seconds) # Amoutn of time to delay for.
 					delay_packet_processing_timer.start() # Start Timer
 
 					yield(delay_packet_processing_timer, "timeout") # Pause World Generation/Loading until timer runs out!
-#					print("Timer Finished")
+#					logger.verbose("Timer Finished")
 
 func center_chunk(position: Vector2, update_debug: bool = false) -> Vector2:
 	# We use world coordinates to spawn blocks. No conversion needed.
@@ -248,7 +248,7 @@ func center_chunk(position: Vector2, update_debug: bool = false) -> Vector2:
 	
 	chunk = Vector2(chunk_x, chunk_y)
 	
-	#print("Player %s is in Chunk %s!!!" % [net_id, Vector2(chunk_x, chunk_y)])
+	#logger.verbose("Player %s is in Chunk %s!!!" % [net_id, Vector2(chunk_x, chunk_y)])
 	
 	if update_debug:
 		emit_signal("chunk_change", chunk) # Used to update Debug Info
@@ -278,13 +278,13 @@ puppet func receive_chunk(foreground: bool, chunk_grid : Dictionary) -> void:
 	# Set's Tile ID in Tilemap from World Grid
 	for coor_x in chunk_grid.keys():
 		for coor_y in chunk_grid[coor_x].keys():
-			#print("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
+			#logger.verbose("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
 	
 			if foreground:
-				#print("Chunk Grid (Foreground): ", chunk_grid)
+				#logger.verbose("Chunk Grid (Foreground): ", chunk_grid)
 				set_cell(coor_x, coor_y, chunk_grid[coor_x][coor_y])
 			else:
-				#print("Chunk Grid (Background): ", chunk_grid)
+				#logger.verbose("Chunk Grid (Background): ", chunk_grid)
 				background_tilemap.set_cell(coor_x, coor_y, chunk_grid[coor_x][coor_y])
 
 # Generate's a New World
@@ -383,7 +383,7 @@ func generate_foreground(chunk_x: int, chunk_y: int, regenerate: bool = false) -
 		else:
 			world_grid[coor_x][noise_output] = block.dirt
 		
-		#print(noise_output)
+		#logger.verbose(noise_output)
 
 	apply_foreground(world_grid) # Apply World Grid to TileMap
 
@@ -433,7 +433,7 @@ func apply_foreground(world_grid: Dictionary) -> void:
 	# Set's Tile ID in Tilemap from World Grid
 	for coor_x in world_grid.keys():
 		for coor_y in world_grid[coor_x].keys():
-			#print("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
+			#logger.verbose("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
 			if self != null:
 				set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
 
@@ -450,7 +450,7 @@ func apply_background(world_grid: Dictionary) -> void:
 	# Set's Tile ID in Tilemap from World Grid
 	for coor_x in world_grid.keys():
 		for coor_y in world_grid[coor_x].keys():
-			print("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
+			logger.verbose("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
 			
 			# The null check does not work on either foreground or background
 			# https://www.reddit.com/r/godot/comments/csbptd/help_tracking_down_cause_of_two_errors_which/
@@ -459,9 +459,9 @@ func apply_background(world_grid: Dictionary) -> void:
 			# E 0:01:20:0414 Condition ' p_elem->_static && p_with->_static ' is true. <C Source> servers/physics_2d/broad_phase_2d_hash_grid.cpp:40 @ _pair_attempt() - https://github.com/godotengine/godot/blob/3cbd4337ce5bd3d589cd96e1a371d417be781841/servers/physics_2d/broad_phase_2d_hash_grid.cpp#L40
 			# ERROR: set_static: Condition ' !E ' is true. At: servers/physics_2d/broad_phase_2d_hash_grid.cpp:364 - https://github.com/godotengine/godot/blob/12ae7a4c02c186e9f136a7d4a8ea9f6f4805f718/servers/physics_2d/broad_phase_2d_hash_grid.cpp#L364
 			
-			print("Background Tilemap: ", background_tilemap)
+			logger.verbose("Background Tilemap: ", background_tilemap)
 			if background_tilemap != null:
-				print("Set Cell!!!")
+				logger.verbose("Set Cell!!!")
 				#background_tilemap.set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
 				# Number of Tiles in WorldGrid is 16^16 (16 chunks)
 				var cell = world_grid[coor_x][coor_y]
@@ -487,7 +487,7 @@ func load_foreground(tiles: Dictionary):
 #		chunk_x = (coor.x - chunk_size.x) / quadrant_size
 #		chunk_y = (coor.y - chunk_size.y) / quadrant_size
 #
-#		#print("Foreground Chunk Load: (%s, %s)" % [chunk_x, chunk_y])
+#		#logger.verbose("Foreground Chunk Load: (%s, %s)" % [chunk_x, chunk_y])
 #
 #		if not generated_chunks_foreground.has(Vector2(chunk_x, chunk_y)):
 #			generated_chunks_foreground.append(Vector2(chunk_x, chunk_y))
@@ -496,7 +496,7 @@ func load_foreground(tiles: Dictionary):
 			world_grid[coor.x] = {}
 		
 		world_grid[coor.x][coor.y] = tiles[str(tile)]
-		#print("Tile: ", world_grid[coor.x][coor.y])
+		#logger.verbose("Tile: ", world_grid[coor.x][coor.y])
 	
 	apply_foreground(world_grid)
 	
@@ -519,7 +519,7 @@ func load_background(tiles: Dictionary):
 #		chunk_x = (coor.x - chunk_size.x) / quadrant_size
 #		chunk_y = (coor.y - chunk_size.y) / quadrant_size
 #
-#		#print("Background Chunk Load: (%s, %s)" % [chunk_x, chunk_y])
+#		#logger.verbose("Background Chunk Load: (%s, %s)" % [chunk_x, chunk_y])
 #
 #		if not generated_chunks_background.has(Vector2(chunk_x, chunk_y)):
 #			generated_chunks_background.append(Vector2(chunk_x, chunk_y))
@@ -528,7 +528,7 @@ func load_background(tiles: Dictionary):
 			world_grid[coor.x] = {}
 		
 		world_grid[coor.x][coor.y] = tiles[str(tile)]
-		#print("Tile: ", world_grid[coor.x][coor.y])
+		#logger.verbose("Tile: ", world_grid[coor.x][coor.y])
 	
 	apply_background(world_grid)
 
@@ -594,15 +594,15 @@ func find_safe_spawn(position: Vector2) -> Vector2:
 	
 	# Spawn below 440 y-axis (up).
 	
-	print("Position: ", position)
-	print("Cell Position: ", player_cell)
+	logger.verbose("Position: ", position)
+	logger.verbose("Cell Position: ", player_cell)
 	
 	while unsafe and count < 100:
 		count = count + 1 # Keeps from infinite loop
 		
 		for coor_x in range(player_cell.x - 2, player_cell.x + 2):
 			for coor_y in range(player_cell.y, player_cell.y + 2):
-				#print("Cell (%s, %s): %s" % [coor_x, coor_y, self.get_cell(coor_x, coor_y)])
+				#logger.verbose("Cell (%s, %s): %s" % [coor_x, coor_y, self.get_cell(coor_x, coor_y)])
 				
 				if self.get_cell(coor_x, coor_y) != -1:
 					# This is a start to picking a decent spawn location

@@ -107,6 +107,6 @@ func test_module():
 #	var encrypted_array_gcm = Cripte.encrypt_byte_GCM(gcm_input, key, gcm_add)
 #	var decrypted_array_gcm = Cripte.decrypt_byte_GCM(encrypted_array_gcm, key, gcm_add) 
 #
-#	print("Encrypted: ", encrypted_array_gcm.get_string_from_ascii())
-#	print("Decrypted: ", bytes2var(decrypted_array_gcm))
+#	logger.verbose("Encrypted: ", encrypted_array_gcm.get_string_from_ascii())
+#	logger.verbose("Decrypted: ", bytes2var(decrypted_array_gcm))
 	pass

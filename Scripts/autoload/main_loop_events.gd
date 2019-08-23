@@ -20,10 +20,10 @@ func _notification(what: int) -> void:
 			# When I Was Rewriting the Save Player function, I crashed the game.
 			# This print statement was added to stdout, so I know it works.
 			# What I can do is save debug info to the hard drive and next time the user loads the game, I can request them to send the info to me.
-			print("Game Is About to Crash!!!")
+			logger.verbose("Game Is About to Crash!!!")
 			quit(397) # Sets Exit Code to 397 to indicate to script game has crashed. I may add more codes and an enum to identify what type of crash it is (if it is something unavoidable, like the system is broken, etc...)
 		MainLoop.NOTIFICATION_WM_ABOUT:
-			print("Specific to Mac!!! Pull up about Game info (button will be on MainMenu too)")
+			logger.verbose("Specific to Mac!!! Pull up about Game info (button will be on MainMenu too)")
 		_: # Default Result - Put at Bottom of Match Results
 			pass
 
@@ -31,5 +31,5 @@ func _notification(what: int) -> void:
 func quit(error: int = 0):
 	OS.set_exit_code(error) # Sets the Exit Code The Game Will Quit With (can be checked with "echo $?" after executing game from shell)
 	
-	print("Quit Game!!!")
+	logger.verbose("Quit Game!!!")
 	get_tree().quit()

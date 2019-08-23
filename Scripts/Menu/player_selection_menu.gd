@@ -23,12 +23,12 @@ func check_existing_slots() -> void:
 		Updates Player Selection Buttons
 	"""
 	
-	#print("Checking For Existing Slots")
+	#logger.verbose("Checking For Existing Slots")
 	
 	# This was intentionally setup so a modder can just add more slots.
 	# Once I create a modding API (currently I am just going to load PackedScenes, but I will add an actual API later), then I will set this up so adding slots is trivial.
 	for slot in $PlayerSelectionWindow/PlayerSlots.get_child_count():
-		#print("Checking Slot: " + str(slot))
+		#logger.verbose("Checking Slot: " + str(slot))
 		
 		var slot_exists : bool = gamestate.check_if_slot_exists(int(slot))
 		
@@ -50,19 +50,19 @@ func _character_slot_pressed(button: Node) -> void:
 	var slot : int = button.get_index()
 	var slot_exists : bool = gamestate.check_if_slot_exists(int(slot))
 	
-	#print("Character Slot Pressed: %s" % slot)
+	#logger.verbose("Character Slot Pressed: %s" % slot)
 	
 	if slot_exists:
-		print("Loading Character and World!!!")
+		logger.verbose("Loading Character and World!!!")
 		gamestate.load_player(slot) # Load Character To Memory
-		print("Character Pressed: %s" % gamestate.player_info.name)
+		logger.verbose("Character Pressed: %s" % gamestate.player_info.name)
 		
 		# Only load world if a scene to load is not selected.
 		if scene == "":
 			network.server_info.max_players = 2
 			network.start_server()
 	else:
-		print("Creating Character and World!!!")
+		logger.verbose("Creating Character and World!!!")
 		return # This will be replaced by a coroutine which will pull up a character creation menu
 		
 	# Load's menu after selecting player (may have to move to make Player Creation Screen Work).

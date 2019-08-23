@@ -33,12 +33,12 @@ func _ready():
 
 func find_servers(peer: PacketPeerUDP) -> void:
 	peer.listen(0, "*", packet_buffer_size) # Listen for replies from server (the server knows your port, so )
-	print("Starting To Search for Servers!!!")
+	logger.verbose("Starting To Search for Servers!!!")
 	
 	var search_timer : SceneTreeTimer = get_tree().create_timer(search_time) # Creates a One Shot Timer (One Shot means it only runs once)
 
 	while peer.is_listening() and search_timer.time_left > 0:
-		#print("Time Left: ", search_timer.time_left)
+		#logger.verbose("Time Left: ", search_timer.time_left)
 		poll_for_servers(peer)
 		
 		var timer : SceneTreeTimer = get_tree().create_timer(delay_broadcast_time_seconds) # Creates a One Shot Timer (One Shot means it only runs once)
@@ -46,7 +46,7 @@ func find_servers(peer: PacketPeerUDP) -> void:
 		timer.call_deferred('free') # Prevents Resume Failed From Object Class Being Expired (Have to Use Call Deferred Free or it will crash free() causes an attempted to remove reference error and queue_free() does not exist)
 
 		if peer.get_available_packet_count() > 0:
-			#print("Received Packet!!!")
+			#logger.verbose("Received Packet!!!")
 			var bytes : PoolByteArray = peer.get_packet()
 			var server_ip : String = peer.get_packet_ip()
 			var server_port : int = peer.get_packet_port()
@@ -57,16 +57,16 @@ func find_servers(peer: PacketPeerUDP) -> void:
 
 # Parse Dictionary Sent By Server
 func parse_server_info(server_ip: String, server_port: int, json: Dictionary) -> void:
-	print("---------------------------------------------------")
-	print("Server Finder Helper: %s:%s" % [server_ip, server_port])
+	logger.verbose("---------------------------------------------------")
+	logger.verbose("Server Finder Helper: %s:%s" % [server_ip, server_port])
 	for key in json.keys():
-		print("%s: %s" % [key, json.get(key)])
-	print("---------------------------------------------------")
+		logger.verbose("%s: %s" % [key, json.get(key)])
+	logger.verbose("---------------------------------------------------")
 
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
 func process_message(server_ip: String, server_port: int, bytes: PoolByteArray):
-	#print("Server Reply: ", bytes.get_string_from_ascii())
+	#logger.verbose("Server Reply: ", bytes.get_string_from_ascii())
 	
 	var json : JSONParseResult = JSON.parse(bytes.get_string_from_ascii())
 		

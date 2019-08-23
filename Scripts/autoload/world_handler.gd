@@ -27,7 +27,7 @@ func _ready() -> void:
 
 # Server Starting Function
 func start_server() -> void:
-	#print("Server Loading World")
+	#logger.verbose("Server Loading World")
 	# Load World From Drive
 	# For Simplicity, We Are Starting Off Non Infinite So The Whole World Will Be Loaded At Once
 	# QUESTION: Do I want to Use Scenes For World Data Or Just To Populate A Scene From A Save File?
@@ -49,7 +49,7 @@ func start_server() -> void:
 	if gamestate.player_info.has("starting_world"):
 		starting_world = gamestate.player_info.starting_world
 	else:
-		print("This should never be reached (once character creation exists). This is because Host Server will not be in network menu anymore.")
+		logger.verbose("This should never be reached (once character creation exists). This is because Host Server will not be in network menu anymore.")
 		
 		# Cleans Up Connection on Error
 		player_registrar.cleanup()
@@ -61,7 +61,7 @@ func start_server() -> void:
 	var world = load_world_server(-1, starting_world) # Specify -1 (server only) to let server know the spawn world doesn't have the server player yet (gui only)
 	
 	if world == "":
-		print("World is Missing (on Server Start)!!! Check Player Save File!!!")
+		logger.verbose("World is Missing (on Server Start)!!! Check Player Save File!!!")
 		
 		# Cleans Up Connection on Error
 		player_registrar.cleanup()
@@ -100,11 +100,11 @@ puppet func load_world_client() -> void:
 		get_tree().get_root().add_child(worlds)
 
 		if not gamestate.player_info.has("current_world"):
-			printerr("Never Got Current World From Server!!! Not Going to Bother Finishing Connection!!!")
+			logger.error("Never Got Current World From Server!!! Not Going to Bother Finishing Connection!!!")
 			emit_signal("cleanup_worlds")
 			return
 		
-		#print("World (Load Client): ", gamestate.player_info.current_world)
+		#logger.verbose("World (Load Client): ", gamestate.player_info.current_world)
 		
 		# Sets Starting World Name to Pass to Spawn Handler
 		var spawn = load(world_template).instance()
@@ -152,7 +152,7 @@ func load_world_server(net_id: int, location: String) -> String:
 	
 	# If world's metadata does not exist, do not even attempt to load the world
 	if not file_check.file_exists(world_meta):
-		printerr("Failed To Find world.json When Loading World!!!")
+		logger.error("Failed To Find world.json When Loading World!!!")
 		return ""
 	
 	# Checks to Make sure World isn't already loaded
@@ -177,7 +177,7 @@ func load_world_server(net_id: int, location: String) -> String:
 	# Checks to Make Sure JSON was Parsed
 	if json.error != OK:
 		# Failed to Parse JSON
-		printerr("Failed To Parse JSON When Loading World!!!")
+		logger.error("Failed To Parse JSON When Loading World!!!")
 		return ""
 		
 	if typeof(json.result) == TYPE_DICTIONARY:
@@ -186,18 +186,18 @@ func load_world_server(net_id: int, location: String) -> String:
 			# Check if world save file has seed and name (name is because having a missing name makes saving data occur in the wrong folder)
 			# If the world seed is missing, there is no way for the generator to accurately generate the world
 			# So don't even bother loading the world.
-			printerr("Failed To Find Seed or World Name When Loading World!!!")
+			logger.error("Failed To Find Seed or World Name When Loading World!!!")
 			return ""
 			
 		if not results.has("chunks_foreground") or not results.has("chunks_background"):
 			# Chunk data is missing, don't want to accidentally overwrite player world.
-			printerr("Failed To Find Chunks Foreground or Chunks Background When Loading World!!!")
+			logger.error("Failed To Find Chunks Foreground or Chunks Background When Loading World!!!")
 			return ""
 		
 		var template = load_template(world_template)
 		if template == null:
 			# If world fails to load, then notify world changer (or commands if server).
-			printerr("Failed To Load Template When Loading World!!!")
+			logger.error("Failed To Load Template When Loading World!!!")
 			return ""
 			
 		# Set World's Metadata
@@ -236,7 +236,7 @@ func load_world_server(net_id: int, location: String) -> String:
 		return template.name
 	else:
 		# Unknown JSON Format
-		printerr("Failed To Parse JSON (Unknown Format) When Loading World!!!")
+		logger.error("Failed To Parse JSON (Unknown Format) When Loading World!!!")
 		return ""
 
 func save_world(world: Node):
@@ -304,7 +304,7 @@ func create_world(net_id: int = -1, world_seed: String = "", world_size: Vector2
 	var template = load_template(world_template)
 	if template == null:
 		# If world fails to load, then notify world changer (or commands if server).
-		printerr("Failed To Load Template When Creating World!!!")
+		logger.error("Failed To Load Template When Creating World!!!")
 		return ""
 		
 	# Set World's Metadata
@@ -348,7 +348,7 @@ func get_tiles(tilemap: TileMap) -> Dictionary:
 	var tiles = {}
 	
 	for cell in cells:
-		#print("Cell: ", cell)
+		#logger.verbose("Cell: ", cell)
 		tiles[str(cell)] = tilemap.get_cellv(cell)
 		
 	return tiles

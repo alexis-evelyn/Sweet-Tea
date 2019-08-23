@@ -47,7 +47,7 @@ func _process(_delta: float) -> void:
 
 # Cleanup PlayerUI
 func cleanup() -> void:
-	#print("Cleanup PlayerUI")
+	#logger.verbose("Cleanup PlayerUI")
 	emit_signal("cleanup_ui") # Both Standard Code and Modded Code Should Listen for this Signal
 
 # Sets PlayerUI Theme

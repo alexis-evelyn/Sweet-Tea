@@ -39,13 +39,13 @@ func generate_secret(public_base: int, public_modulus: int, private_exponent: in
 	return convert(pow(public_base, private_exponent), TYPE_INT) % public_modulus
 
 func test():
-	print("Diffie-Hellman Test")
+	logger.verbose("Diffie-Hellman Test")
 	
 	# Generate Base (smaller than modulus) and Modulus to Share Across Clearnet
 	var public_base = 20 # This does not need to be prime
 	var public_modulus = 23 # This has to be a prime number - https://crypto.stackexchange.com/questions/30328/why-does-the-modulus-of-diffie-hellman-need-to-be-a-prime#comment70299_30333
 	
-	print("Public Base: ", public_base, " Public Modulus: ", public_modulus)
+	logger.verbose("Public Base: %s Public Modulus: %s" % [public_base, public_modulus])
 	
 	# Public Base and Public Modulus should be Shared Between Both Computers
 	
@@ -53,13 +53,13 @@ func test():
 	var private_key_a = 4
 	var private_key_b = 3
 	
-	print("Private Key A: ", private_key_a, " Private Key B: ", private_key_b)
+	logger.verbose("Private Key A: %s Private Key B: %s" % [private_key_a, private_key_b])
 	
 	# Generate Secrets to Share Across Clearnet
 	var shared_secret_a = generate_secret(public_base, public_modulus, private_key_a)
 	var shared_secret_b = generate_secret(public_base, public_modulus, private_key_b)
 
-	print("Shared Secret A: ", shared_secret_a, " Shared Secret B: ", shared_secret_b)
+	logger.verbose("Shared Secret A: %s Shared Secret B: %s" % [shared_secret_a, shared_secret_b])
 	
 	# Shared Secret A and B would be exchanged with each other here
 	# The idea is that the secret can be safely shared while the keys are never sent
@@ -72,9 +72,9 @@ func test():
 
 	# The Keys Are Supposed to Match - This is Done Without Sharing private_key_a/b or secret_key_a/b
 	# Only public_base/modulus and shared_secret_a/b should be shared with each other
-	print("Secret Key A: ", secret_key_a, " Secret Key B: ", secret_key_b)
+	logger.verbose("Secret Key A: %s Secret Key B: %s" % [secret_key_a, secret_key_b])
 	
 	if secret_key_a == secret_key_b:
-		print("Test Successful!!!")
+		logger.verbose("Test Successful!!!")
 	else:
-		print("Test Failed!!!")
+		logger.fatal("Test Failed!!!")

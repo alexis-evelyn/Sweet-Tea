@@ -192,7 +192,7 @@ func is_ok(requestResults):
 	)
 
 func print_error(requestResults):
-	print('GameJolt error.'
+	logger.verbose('GameJolt error.'
 	+ ' RequestError: ' + str(requestResults.requestError)
 	+ ' ResponseResult: ' + str(requestResults.responseResult)
 	+ ' JsonParseError: ' + str(requestResults.jsonParseError)
@@ -284,4 +284,4 @@ func _next_call_from_queue():
 
 func _verbose(message):
 	if verbose:
-		print('[GAMEJOLT] ' + message)
+		logger.verbose('[GAMEJOLT] ' + message)

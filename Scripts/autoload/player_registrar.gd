@@ -16,7 +16,7 @@ var players : Dictionary = {}
 # Clients Notified To Add Player to Player List (Client and Server Side)
 remote func register_player(pinfo: Dictionary, net_id: int, new_world : bool = false) -> int:
 	# new_world is for spawn handler to make sure player is registered (this is if registry failed through normal rpc call - makes game more robust in the event of packet loss)
-	#print("Registering Player")
+	#logger.verbose("Registering Player")
 	
 	# Only check new_world if caller is self - prevents net_id spoofing
 	if (get_tree().get_rpc_sender_id() == 0) and (new_world == false):
@@ -31,7 +31,7 @@ remote func register_player(pinfo: Dictionary, net_id: int, new_world : bool = f
 	if players.has(int(net_id)) and get_tree().get_rpc_sender_id() != 1:
 		return -1
 	
-	#print("Registering player ", pinfo.name, " (", net_id, ") to internal player table")
+	#logger.verbose("Registering player ", pinfo.name, " (", net_id, ") to internal player table")
 	players[int(net_id)] = pinfo # Add Newly Joined Client to Dictionary of Clients
 	
 	if get_tree().is_network_server():
@@ -71,7 +71,7 @@ remote func unregister_player(id: int) -> void:
 	# The Disconnect Function Already Takes Care of Validating This Data (for the server)
 	# Still Validating For Client to Prevent Crash
 	if players.has(id):
-		#print("Removing player ", players[id].name, " from internal table")
+		#logger.verbose("Removing player ", players[id].name, " from internal table")
 		
 		# warning-ignore:unused_variable
 		var pinfo : Dictionary = players[id] # Cache player info for removal process
@@ -80,19 +80,19 @@ remote func unregister_player(id: int) -> void:
 # Get current world name to download from server
 puppet func set_current_world(current_world: String) -> void:
 	players[int(gamestate.net_id)].current_world = current_world # Set World to Download From Server
-	#print("Set Connected Current World: ", players[int(gamestate.net_id)].current_world)
+	#logger.verbose("Set Connected Current World: ", players[int(gamestate.net_id)].current_world)
 	
 	emit_signal("world_set") # Allows Loading World From Server on Successful Connection
 
 # Send client a copy of players in new world - net_id is who I am sending the info to
 func update_players(net_id: int, id: int) -> void:
 	if not players.has(int(id)):
-		print("Update Players Failed: ID does not exists: '%s', id")
+		logger.verbose("Update Players Failed: ID does not exists: '%s', id")
 		return
 		
 	# Can I check if an RPC id exists? I could indirectly with player registration.
 	
-	print("Update Players - Player: ", id, " World: ", players[int(id)].current_world)
+	logger.verbose("Update Players - Player: %s World: %s" % [id, players[int(id)].current_world])
 	if net_id != 1:
 		rpc_unreliable_id(net_id, "register_player", players[int(id)], id)
 
@@ -107,11 +107,11 @@ func has(id: int) -> bool:
 # Returns Player's Name
 func name(id: int) -> String:
 	if not players.has(id):
-		print("Return Player Name Failed: Player ID '%s' Not Registered!!!" % str(id))
+		logger.error("Return Player Name Failed: Player ID '%s' Not Registered!!!" % str(id))
 		return ""
 	
 	if not players[id].has("name"):
-		print("Return Player Name Failed: Player Name for ID '%s' Is Not Set!!!" % str(id))
+		logger.warning("Return Player Name Failed: Player Name for ID '%s' Is Not Set!!!" % str(id))
 		return "Not Set - Failed Name Lookup"
 	
 	return players[id].name
@@ -119,11 +119,11 @@ func name(id: int) -> String:
 # Returns Player's Character's Color
 func color(id: int) -> Color:
 	if not players.has(id):
-		print("Return Player Color Failed: Player ID '%s' Not Registered!!!" % str(id))
+		logger.error("Return Player Color Failed: Player ID '%s' Not Registered!!!" % str(id))
 		return Color.firebrick
 	
 	if not players[id].has("char_color"):
-		print("Return Player Color Failed: Player Color for ID '%s' Not Set!!!" % str(id))
+		logger.warning("Return Player Color Failed: Player Color for ID '%s' Not Set!!!" % str(id))
 		return Color.white # This could potentially happen. Set it to default color.
 	
 	return Color(players[id].char_color)

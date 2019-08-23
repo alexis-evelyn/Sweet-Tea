@@ -21,25 +21,25 @@ func _ready():
 # warning-ignore:unused_argument
 func listen_for_clients(thread_data) -> void:
 	if udp_peer.listen(set_port(), network.server_info.bind_address, packet_buffer_size) != OK:
-		print("Failed to Bind to Port %s for Clients to Poll!!! Clients will not find you in LAN!!!" % used_port)
+		logger.verbose("Failed to Bind to Port %s for Clients to Poll!!! Clients will not find you in LAN!!!" % used_port)
 		return
 	
-	print("Starting To Listen For Clients!!!")
+	logger.verbose("Starting To Listen For Clients!!!")
 	while udp_peer.is_listening():
 		udp_peer.wait() # Makes PacketPeerUDP wait until it receives a packet (to save on CPU usage) - This works because listen_for_clients(...) is on a different thread.
-#		print("Listening!!!")
+#		logger.verbose("Listening!!!")
 		
 		while udp_peer.get_available_packet_count() > 0:
-#			print("Received Packet!!!")
+#			logger.verbose("Received Packet!!!")
 			var bytes : PoolByteArray = udp_peer.get_packet()
 			var client_ip : String = udp_peer.get_packet_ip()
 			var client_port : int = udp_peer.get_packet_port()
 			
 			var reply = process_message(client_ip, client_port, bytes) # Process Message From Client
 			
-			#print("Reply: ", typeof(reply)) # https://docs.godotengine.org/en/3.1/classes/class_@globalscope.html#enum-globalscope-variant-type
+			#logger.verbose("Reply: ", typeof(reply)) # https://docs.godotengine.org/en/3.1/classes/class_@globalscope.html#enum-globalscope-variant-type
 			if typeof(reply) == TYPE_RAW_ARRAY: # PoolByteArray
-#				print("Sending Reply!!!")
+#				logger.verbose("Sending Reply!!!")
 				udp_peer.set_dest_address(client_ip, client_port) # Set Client as Receiver of Response
 				udp_peer.put_packet(reply) # Send response back to client
 				
@@ -49,17 +49,17 @@ func listen_for_clients(thread_data) -> void:
 func process_message(client_ip: String, client_port: int, bytes: PoolByteArray):
 	# If Failed to Retrieve Client Info, Then Don't Continue
 	if client_ip == null or client_port == 0:
-		print("(Lan Server - Client Finder) Couldn't Get Packet's Source IP and/or Port!!! Packets Sender looks Like: %s:%s" % [client_ip, client_port])
+		logger.verbose("(Lan Server - Client Finder) Couldn't Get Packet's Source IP and/or Port!!! Packets Sender looks Like: %s:%s" % [client_ip, client_port])
 		return false
 	
 	var message : String = bytes.get_string_from_ascii()
 	
 	if calling_card in message:
 		var split_message : PoolStringArray = message.split(":", true, 1)
-		print("(%s:%s) Client's Game Version: '%s'" % [client_ip, str(client_port), split_message[1].trim_prefix(" ").trim_suffix(" ")])
-		return JSON.print(network.server_info).to_ascii() # This converts dictionary to json, which then gets converted to a PoolByteArray to be sent as a packet.
+		logger.verbose("(%s:%s) Client's Game Version: '%s'" % [client_ip, str(client_port), split_message[1].trim_prefix(" ").trim_suffix(" ")])
+		return JSON.logger.verbose(network.server_info).to_ascii() # This converts dictionary to json, which then gets converted to a PoolByteArray to be sent as a packet.
 	else:
-		print("Unknown Message: " + message)
+		logger.verbose("Unknown Message: %s" % message)
 	
 	return false # Nothing to reply to? Let server know.
 	

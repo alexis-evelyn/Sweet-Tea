@@ -43,7 +43,7 @@ func _ready() -> void:
 # Attempt to Create Server
 func start_server() -> void:
 	set_port() # Choose A Port to Use
-	print("Port: ", server_info.used_port) # Print Current Port
+	logger.verbose("Port: %s" % server_info.used_port) # Print Current Port
 	
 	# TODO: Godot supports UDP hole punching and/or UPNP, so this could be useful for non-technical players
 	
@@ -53,19 +53,19 @@ func start_server() -> void:
 	encryption.set_name("EncryptionServer") # Give Node A Unique ID
 	get_tree().get_root().add_child(encryption)
 	
-	#print("Attempting to Create Server on Port ", server_info.used_port)
+	#logger.verbose("Attempting to Create Server on Port ", server_info.used_port)
 	var net = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
-	#print("Port: ", net.get_port())
+	#logger.verbose("Port: ", net.get_port())
 	
 	# https://docs.godotengine.org/en/3.1/classes/class_networkedmultiplayerenet.html
 	net.set_bind_ip(server_info.bind_address) # Sets the IP Address the Server Binds to
 	
 	# Could Not Create Server (probably port already in use or Failed Permissions)
 	if (net.create_server(server_info.used_port, server_info.max_players) != OK):
-		print("Failed to create server")
+		logger.verbose("Failed to create server")
 		return
 	
-	#print("Port: ", net.get_port())
+	#logger.verbose("Port: ", net.get_port())
 	
 	# Ensures UDP Packets are Ordered (Has less overhead than TCP)
 	net.set_always_ordered(NetworkedMultiplayerPeer.TRANSFER_MODE_UNRELIABLE_ORDERED)
@@ -87,13 +87,13 @@ func start_server() -> void:
 
 # Attempt to Join Server (Not Connected Yet)
 func join_server(ip: String, port: int) -> void:
-	#print("Attempting To Join Server")
+	#logger.verbose("Attempting To Join Server")
 	
 	var net : NetworkedMultiplayerENet = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
 	
 	# Attempt to Create Client (does not guarantee that joining is successful)
 	if (net.create_client(ip, port) != OK):
-		#print("Cannot Create Client!!!")
+		#logger.verbose("Cannot Create Client!!!")
 		return
 	
 	# Assign NetworkedMultiplayerENet as Handler of Network - https://docs.godotengine.org/en/3.1/classes/class_multiplayerapi.html?highlight=set_network_peer#class-multiplayerapi-property-network-peer
@@ -104,7 +104,7 @@ func join_server(ip: String, port: int) -> void:
 
 # Closes Connection - Client and Server
 func close_connection() -> void:
-	#print("Close Connection")
+	#logger.verbose("Close Connection")
 	
 	# Clears PlayerUI on Disconnect
 	playerUI.cleanup()
@@ -150,13 +150,13 @@ func close_connection() -> void:
 	
 	emit_signal("cleanup_worlds")
 	
-	#print("Attempt to Change Scene Tree")
+	#logger.verbose("Attempt to Change Scene Tree")
 	# TODO: Maybe Pull Up A Disconnected Message GUI (which will then go to NetworkMenu)
 	get_tree().change_scene("res://Menus/MainMenu.tscn")
 
 # Notifies Player as to Why They Were Kicked (does not need to call disconnect)
 puppet func player_kicked(message: String) -> void:
-	print("Kick Message: ", message)
+	logger.verbose("Kick Message: %s" % message)
 
 # Server (and Client) Notified When A New Client Connects (Player Has Not Registered Yet, So, There Is No Player Data)
 # warning-ignore:unused_argument
@@ -164,7 +164,7 @@ func _on_player_connected(id: int) -> void:
 	
 	# Only the server should check if client is banned
 	if get_tree().is_network_server():
-		#print("Player ", str(id), " Connected to Server")
+		#logger.verbose("Player ", str(id), " Connected to Server")
 		#player_control.check_if_banned(id)
 		
 		# Used to keep track of number of players currently on server
@@ -174,7 +174,7 @@ func _on_player_connected(id: int) -> void:
 # Server Notified When A Client Disconnects
 func _on_player_disconnected(id: int) -> void:
 	if player_registrar.has(id):
-		#print("Player ", player_registrar.name(id), " Disconnected from Server")
+		#logger.verbose("Player ", player_registrar.name(id), " Disconnected from Server")
 	
 		# Update the player tables
 		if (get_tree().is_network_server()):
@@ -188,7 +188,7 @@ func _on_player_disconnected(id: int) -> void:
 
 # Successfully Joined Server (Client Side Only)
 func _on_connected_to_server() -> void:
-	#print("Connected To Server")
+	#logger.verbose("Connected To Server")
 	
 	# Setup Encryption Script
 	# If EncryptionClient already exists, then recreate it (old EncryptionClient wasn't removed correctly).
@@ -216,14 +216,14 @@ func _on_connected_to_server() -> void:
 	# Server will send current_world to client through the register_player function. The above line of code makes sure to already have a copy of player info registered before calling the server's register_player function
 	player_registrar.rpc_unreliable_id(1, "register_player", gamestate.player_info, gamestate.net_id) # Ask Server To Update Player Dictionary - Server ID is Always 1
 	
-	#print("Connected Current World: ", player_registrar.has_current_world())
+	#logger.verbose("Connected Current World: ", player_registrar.has_current_world())
 	
 	# Callbacks would be nice - waiting on current world to be set. see player_registrar.gd
 	# spawn_handler.rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
 
 # Failed To Connect To Server
 func _on_connection_failed() -> void:
-	#print("Joining Server Failed!!!")
+	#logger.verbose("Joining Server Failed!!!")
 	close_connection()
 	
 # Start Timer to Send Pings to Server
@@ -241,18 +241,18 @@ func start_ping(message: String = "Ping") -> void:
 	
 # Send Ping to Server
 func send_ping(message: String = "Ping") -> void:
-	#print("Send Ping: ", message)
+	#logger.verbose("Send Ping: ", message)
 	rpc_unreliable_id(1, "server_ping", message)
 	
 # Recieve Ping From Client (and send ping back)
 master func server_ping(message: String) -> void:
-	#print("Received Ping: ", message)
+	#logger.verbose("Received Ping: ", message)
 	rpc_unreliable_id(int(get_tree().get_rpc_sender_id()), "client_ping", message)
 	
 # Receive Ping Back From Server
 # warning-ignore:unused_argument
 puppet func client_ping(message: String) -> void:
-	#print("Message From Server: ", message)
+	#logger.verbose("Message From Server: ", message)
 	pass
 	
 	# Track Last Ping Back and Do Something if Ping Back Fails

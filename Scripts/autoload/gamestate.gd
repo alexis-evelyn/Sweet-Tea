@@ -51,7 +51,7 @@ func save_player(slot: int) -> void:
 	var save_path_backup : String = save_directory.plus_file(backups_dir.plus_file(backups_save_file.replace("%date%", str(OS.get_unix_time())))) # Save File Backup Path - OS.get_unix_time() is Unix Time Stamp
 	var backup_path : String = save_directory.plus_file(backups_dir) # Backup Directory Path
 
-	#print("Game Version: " + game_version)
+	#logger.verbose("Game Version: " + game_version)
 	var players_data : JSONParseResult # Data To Save
 	var players_data_result : Dictionary # players_data's Result
 	
@@ -66,7 +66,7 @@ func save_player(slot: int) -> void:
 	
 	# Checks to See If Save File Exists
 	if save_data.file_exists(save_path):
-		#print("Save File Exists!!!")
+		#logger.verbose("Save File Exists!!!")
 		
 		# warning-ignore:return_value_discarded
 		save_data.open(save_path, File.READ_WRITE) # Open Save File For Reading/Writing
@@ -80,7 +80,7 @@ func save_player(slot: int) -> void:
 		# warning-ignore:unsafe_property_access
 		# warning-ignore:unsafe_property_access
 		if players_data.error == OK and typeof(players_data.result) == TYPE_DICTIONARY:
-			#print("Save File Read and Imported As Dictionary!!!")
+			#logger.verbose("Save File Read and Imported As Dictionary!!!")
 			# warning-ignore:unsafe_property_access
 			players_data_result = players_data.result # Grabs Result From JSON (this is done now so I can grab the error code from earlier)
 			
@@ -90,10 +90,10 @@ func save_player(slot: int) -> void:
 			# Note: Key has to be a string, otherwise Godot bugs out and adds duplicate keys to Dictionary
 			players_data_result[str(slot)] = player_info # Replaces Key In Dictionary With Updated Player_Info
 			
-			#print(to_json(players_data)) # Print Save Data to stdout (Debug)
+			#logger.verbose(to_json(players_data)) # Print Save Data to stdout (Debug)
 			save_data.store_string(to_json(players_data_result))
 	else:
-		#print("Save File Does Not Exist!!! Creating!!!")
+		#logger.verbose("Save File Does Not Exist!!! Creating!!!")
 		# warning-ignore:return_value_discarded
 		save_data.open(save_path, File.WRITE) # Open Save File For Writing
 		
@@ -105,21 +105,21 @@ func save_player(slot: int) -> void:
 		# Note: Key has to be a string, otherwise Godot bugs out and adds duplicate keys to Dictionary
 		players_data_result[str(slot)] = player_info
 		
-		#print(to_json(players_data)) # Print Save Data to stdout (Debug)
+		#logger.verbose(to_json(players_data)) # Print Save Data to stdout (Debug)
 		save_data.store_string(to_json(players_data_result))
 		
 	save_data.close()
 
 # Load Game Data
 func load_player(slot: int) -> int:
-	#print("Game Version: " + game_version)
-	#print("Save Data Location: " + OS.get_user_data_dir())
+	#logger.verbose("Game Version: " + game_version)
+	#logger.verbose("Save Data Location: " + OS.get_user_data_dir())
 	#OS.shell_open(str("file://", OS.get_user_data_dir())) # Use this to open up user save data location (say to backup saves or downloaded resources/mods)
 	
 	var save_data : File = File.new()
 	
 	if not save_data.file_exists(save_directory.plus_file(save_file)): # Check If Save File Exists
-		#print("Save File Does Not Exist!!! New Player?")
+		#logger.verbose("Save File Does Not Exist!!! New Player?")
 		return -1 # Returns -1 to signal that loading save file failed (for reasons of non-existence)
 	
 	# warning-ignore:return_value_discarded
@@ -128,20 +128,20 @@ func load_player(slot: int) -> int:
 		
 	# Checks to Make Sure JSON was Parsed
 	if json.error == OK:
-		#print("Save File Read!!!")
+		#logger.verbose("Save File Read!!!")
 		
 		# warning-ignore:unsafe_property_access
 		# warning-ignore:unsafe_property_access
 		if typeof(json.result) == TYPE_DICTIONARY:
-			#print("Save File Imported As Dictionary!!!")
+			#logger.verbose("Save File Imported As Dictionary!!!")
 			
 			# warning-ignore:unsafe_property_access
 			if json.result.has("game_version"):
 				# warning-ignore:unsafe_property_access
 				# warning-ignore:unsafe_property_access
-				print("Game Version That Saved File Was: " + json.result["game_version"])
+				logger.verbose("Game Version That Saved File Was: " + json.result["game_version"])
 			else:
-				print("Unknown What Game Version Saved File!!!")
+				logger.verbose("Unknown What Game Version Saved File!!!")
 			
 			# warning-ignore:unsafe_property_access
 			if json.result.has(str(slot)):
@@ -152,13 +152,13 @@ func load_player(slot: int) -> int:
 				if player_info.has("debug"):
 					debug = bool(player_info.debug)
 			else:
-				printerr("Player Slot Does Not Exist: " + str(slot))
+				logger.warn("Player Slot Does Not Exist: %s" % slot)
 				return -2 # Returns -2 to signal that player slot does not exist
 		else:
-			printerr("Save Format Is Not A Dictionary!!! It Probably is An Array!!")
+			logger.error("Save Format Is Not A Dictionary!!! It Probably is An Array!!")
 			return -3 # Returns -3 to signal that JSON cannot be interpreted as a Dictionary
 	else:
-		printerr("Cannot Interpret Save!!! Invalid JSON!!!")
+		logger.error("Cannot Interpret Save!!! Invalid JSON!!!")
 		
 	save_data.close()
 	return 0
@@ -173,7 +173,7 @@ func check_if_slot_exists(slot: int) -> bool:
 	var save_data : File = File.new()
 	
 	if not save_data.file_exists(save_directory.plus_file(save_file)): # Check If Save File Exists
-		#print("Save File Does Not Exist!!! So, Slot Does Not Exist!!!")
+		#logger.verbose("Save File Does Not Exist!!! So, Slot Does Not Exist!!!")
 		return false
 	
 # warning-ignore:return_value_discarded
@@ -187,10 +187,10 @@ func check_if_slot_exists(slot: int) -> bool:
 		if typeof(json.result) == TYPE_DICTIONARY:
 			# warning-ignore:unsafe_property_access
 			if json.result.has(str(slot)):
-				#print("Slot Exists: " + str(slot))
+				#logger.verbose("Slot Exists: " + str(slot))
 				return true
 			else:
-				#print("Slot Does Not Exist: " + str(slot))
+				#logger.verbose("Slot Does Not Exist: " + str(slot))
 				return false
 				
 	return false
