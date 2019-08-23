@@ -8,7 +8,7 @@ var used_server_port: int
 var udp_peer = PacketPeerUDP.new()
 var packet_buffer_size : int = 30
 
-var client : Thread = Thread.new()
+var client : Thread = Thread.new() # I cannot switch to to OS.delay_msec(...) like I did for the server as then the client will not be able to set one way collisions and will crash. More info can be found at https://www.reddit.com/r/godot/comments/cu8jed/where_is_the_best_place_i_can_get_help_with/
 var calling_card : String = "Nihilistic Sweet Tea: %s" # Text Server watches for (includes game version to determine compatibility).
 var delay_broadcast_time_seconds : float = 5.0 # 5 seconds
 var search_timer : float = 30 # Only search for servers for 30 seconds until refresh is pressed.
@@ -45,7 +45,7 @@ func find_servers(udp_peer: PacketPeerUDP) -> void:
 		timer.call_deferred('free') # Prevents Resume Failed From Object Class Being Expired (Have to Use Call Deferred Free or it will crash free() causes an attempted to remove reference error and queue_free() does not exist)
 
 		if udp_peer.get_available_packet_count() > 0:
-#			print("Received Packet!!!")
+			print("Received Packet!!!")
 			var bytes = udp_peer.get_packet()
 			var client_ip = udp_peer.get_packet_ip()
 			var client_port = udp_peer.get_packet_port()
