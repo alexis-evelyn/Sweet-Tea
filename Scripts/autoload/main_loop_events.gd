@@ -22,7 +22,7 @@ func _notification(what: int) -> void:
 			# When I Was Rewriting the Save Player function, I crashed the game.
 			# This print statement was added to stdout, so I know it works.
 			# What I can do is save debug info to the hard drive and next time the user loads the game, I can request them to send the info to me.
-			logger.trace("Game Is About to Crash!!! Here is Stack Trace: %s" % get_stack())
+			logger.trace("Game Is About to Crash!!!")
 			quit(397) # Sets Exit Code to 397 to indicate to script game has crashed. I may add more codes and an enum to identify what type of crash it is (if it is something unavoidable, like the system is broken, etc...)
 		MainLoop.NOTIFICATION_WM_ABOUT:
 			logger.verbose("Specific to Mac!!! Pull up about Game info (button will be on MainMenu too)")
