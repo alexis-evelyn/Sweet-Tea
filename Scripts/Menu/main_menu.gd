@@ -24,6 +24,9 @@ extends Control
 func _ready() -> void:
 	# Sets Window's Title
 	OS.set_window_title("This is a Title")
+	#logger.trace("Main Menu Test!!!")
+	
+	logger.verbose("MainLoop: %s" % Engine.get_main_loop().get_class()) # Prints Current MainLoop Type
 	
 	# Supposed to Request Window Attention - Probably Only Works if Window is Out of Focus
 	#OS.request_attention()

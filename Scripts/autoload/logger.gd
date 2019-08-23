@@ -25,13 +25,14 @@ func verbose(statement: String = ""):
 	print(statement)
 	
 func warn(statement: String = ""):
-	printerr(statement)
+	printerr("Warning: %s" % statement)
 	
 func error(statement: String = ""):
-	printerr(statement)
+	printerr("Error: %s" % statement)
 	
 func fatal(statement: String = ""):
-	printerr(statement)
+	printerr("Fatal: %s" % statement)
 	
 func trace(statement: String = ""):
-	printerr(statement)
+	printerr("If trace does not show up, it means Godot still doesn't support stacktraces in exported games. Try breaking the game in the Godot editor (you will need the source code at https://github.com/alex-evelyn/Sweet-Tea)")
+	printerr("Error: '%s' Trace: '%s'" % [statement, get_stack()])
