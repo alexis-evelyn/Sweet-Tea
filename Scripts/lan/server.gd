@@ -38,7 +38,7 @@ func listen_for_clients(thread_data) -> void:
 			var reply = process_message(client_ip, client_port, bytes) # Process Message From Client
 			
 			#print("Reply: ", typeof(reply)) # https://docs.godotengine.org/en/3.1/classes/class_@globalscope.html#enum-globalscope-variant-type
-			if typeof(reply) == TYPE_RAW_ARRAY: # 
+			if typeof(reply) == TYPE_RAW_ARRAY: # PoolByteArray
 #				print("Sending Reply!!!")
 				udp_peer.set_dest_address(client_ip, client_port) # Set Client as Receiver of Response
 				udp_peer.put_packet(reply) # Send response back to client
