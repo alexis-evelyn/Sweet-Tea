@@ -215,11 +215,6 @@ func _on_connected_to_server() -> void:
 	
 	# Server will send current_world to client through the register_player function. The above line of code makes sure to already have a copy of player info registered before calling the server's register_player function
 	player_registrar.rpc_unreliable_id(1, "register_player", gamestate.player_info, gamestate.net_id) # Ask Server To Update Player Dictionary - Server ID is Always 1
-	
-	#logger.verbose("Connected Current World: ", player_registrar.has_current_world())
-	
-	# Callbacks would be nice - waiting on current world to be set. see player_registrar.gd
-	# spawn_handler.rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
 
 # Failed To Connect To Server
 func _on_connection_failed() -> void:

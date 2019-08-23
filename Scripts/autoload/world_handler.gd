@@ -204,6 +204,10 @@ func load_world_server(net_id: int, location: String) -> String:
 		var generator = template.get_node("Viewport/WorldGrid/WorldGen")
 		generator.world_seed = results.seed # Set World's Seed
 		
+		if results.has("spawn"):
+			generator.spawn_set = true # Set World Spawn to True
+			generator.spawn_coor = str2var("Vector2" + results.spawn) # Loads Spawn Coordinates From File As Vector2
+		
 		# Load Generated Chunk Location into Memory (this should be replaced by a chunk loading system later)
 		generator.load_chunks_foreground(results["chunks_foreground"])
 		generator.load_chunks_background(results["chunks_background"])
@@ -272,6 +276,10 @@ func save_world(world: Node):
 	# Store Seed
 	world_data_dict["seed"] = str(world_generator.world_seed)
 	world_data_dict["name"] = str(world.name)
+	
+	# Store World Spawn (if set)
+	if world_generator.spawn_set:
+		world_data_dict["spawn"] = str(world_generator.spawn_coor)
 	
 	# Store Used Cells (Everything but Air - Air uses the same tile id as a non-existant tile, so there is no reason to save it. Tile chunks will be recorded in a separate array.)
 	world_data_dict["tiles_foreground"] = get_tiles(world_generator)

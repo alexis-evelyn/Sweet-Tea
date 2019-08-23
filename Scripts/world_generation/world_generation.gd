@@ -73,12 +73,15 @@ var player_chunks : Dictionary = {} # Used to keep track of what chunks a player
 var delay_packet_processing_timer : Timer = Timer.new() # Delay Processing Chunk
 var delay_packet_processing_time_seconds : float = 1.0 # Amount of Time To Delay Processing Chunk
 
+var spawn_set : bool = false # Determine if Spawn Was Set
+var spawn_coor : Vector2 # World's Spawn Coordinates (Defaults to Origin)
+
 # TODO (IMPORTANT): Generate chunks array on world load instead of reading from file!!!
 # Also, currently seeds aren't loaded from world handler, so they are generated new every time.
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	logger.verbose("World Generator Seed: " % world_seed)
+	logger.verbose("World Generator Seed: %s" % world_seed)
 	
 	# Handle's Chunk Generation Delay
 	delay_packet_processing_timer.name = "ChunkTimer"
@@ -95,13 +98,13 @@ func _ready() -> void:
 	
 	set_shader_background_tiles() # Set Shader for Background Tiles
 	background_tilemap.set_owner(world_node) # Set world as owner of Background Tilemap (allows saving Tilemap to world when client saves world)
-	logger.verbose("Background TileMap's Owner: ", background_tilemap.get_owner().name) # Debug Statement to list Background TileMap's Owner's Name
+	logger.verbose("Background TileMap's Owner: %s" % background_tilemap.get_owner().name) # Debug Statement to list Background TileMap's Owner's Name
 	
 	# Seed should be set by world loader (if pre-existing world)
 	if world_seed.empty():
-		logger.verbose("Generate Seed: ", generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
+		logger.verbose("Generate Seed: %s" % generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
 	else:
-		logger.verbose("Set Seed: ", set_seed(world_seed)) # Converts Seed to Int and Applies to Generator
+		logger.verbose("Set Seed: %s" % set_seed(world_seed)) # Converts Seed to Int and Applies to Generator
 
 	#generate_new_world()
 
@@ -450,7 +453,7 @@ func apply_background(world_grid: Dictionary) -> void:
 	# Set's Tile ID in Tilemap from World Grid
 	for coor_x in world_grid.keys():
 		for coor_y in world_grid[coor_x].keys():
-			logger.verbose("Coordinate: (", coor_x, ", ", coor_y, ") - Value: ", world_grid[coor_x][coor_y])
+			logger.verbose("Coordinate: (%s, %s) - Value: %s" % [coor_x, coor_y, world_grid[coor_x][coor_y]])
 			
 			# The null check does not work on either foreground or background
 			# https://www.reddit.com/r/godot/comments/csbptd/help_tracking_down_cause_of_two_errors_which/
@@ -459,7 +462,7 @@ func apply_background(world_grid: Dictionary) -> void:
 			# E 0:01:20:0414 Condition ' p_elem->_static && p_with->_static ' is true. <C Source> servers/physics_2d/broad_phase_2d_hash_grid.cpp:40 @ _pair_attempt() - https://github.com/godotengine/godot/blob/3cbd4337ce5bd3d589cd96e1a371d417be781841/servers/physics_2d/broad_phase_2d_hash_grid.cpp#L40
 			# ERROR: set_static: Condition ' !E ' is true. At: servers/physics_2d/broad_phase_2d_hash_grid.cpp:364 - https://github.com/godotengine/godot/blob/12ae7a4c02c186e9f136a7d4a8ea9f6f4805f718/servers/physics_2d/broad_phase_2d_hash_grid.cpp#L364
 			
-			logger.verbose("Background Tilemap: ", background_tilemap)
+			logger.verbose("Background Tilemap: %s" % background_tilemap)
 			if background_tilemap != null:
 				logger.verbose("Set Cell!!!")
 				#background_tilemap.set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
@@ -582,7 +585,7 @@ func load_chunks_background(chunks: Array) -> void:
 			generated_chunks_background.append(chunk_coor)
 
 # Find safe spawn location - bound to change with world gen code
-func find_safe_spawn(position: Vector2) -> Vector2:
+func find_safe_spawn(position: Vector2, world_spawn: bool = false) -> Vector2:
 	# This function will take a random player's position (chosen by any spawn code) and return a vector2 which is considered safe.
 	# The vector2 is the new set of coordinates to use for spawning the player.
 	# Since gravity will be enabled in the released game, the goal is to spawn the player right above the safe block.
@@ -590,12 +593,14 @@ func find_safe_spawn(position: Vector2) -> Vector2:
 	var unsafe : bool = true
 	var count : int = 0
 	
-	# return Vector2(-2532, 192) # Useful for debugging camera positioning
+	# If looking for world spawn, then return world spawn coordinates
+	if spawn_set and world_spawn:
+		return spawn_coor
 	
 	# Spawn below 440 y-axis (up).
 	
-	logger.verbose("Position: ", position)
-	logger.verbose("Cell Position: ", player_cell)
+	logger.verbose("Position: %s" % position)
+	logger.verbose("Cell Position: %s" % player_cell)
 	
 	while unsafe and count < 100:
 		count = count + 1 # Keeps from infinite loop
@@ -624,3 +629,8 @@ func clear_player_chunks(net_id: int) -> bool:
 		
 	player_chunks.erase(net_id)
 	return true
+
+# Sets World's Spawn
+func set_spawn(coordinates: Vector2) -> void:
+	spawn_coor = coordinates
+	spawn_set = true
