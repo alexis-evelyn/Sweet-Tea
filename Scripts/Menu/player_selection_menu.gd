@@ -57,8 +57,10 @@ func _character_slot_pressed(button: Node) -> void:
 		gamestate.load_player(slot) # Load Character To Memory
 		print("Character Pressed: %s" % gamestate.player_info.name)
 		
-		network.server_info.max_players = 5
-		network.start_server()
+		# Only load world if a scene to load is not selected.
+		if scene == "":
+			network.server_info.max_players = 5
+			network.start_server()
 	else:
 		print("Creating Character and World!!!")
 		return # This will be replaced by a coroutine which will pull up a character creation menu

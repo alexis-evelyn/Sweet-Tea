@@ -1,8 +1,18 @@
 extends Control
 
+var lan_client : String = "res://Scripts/lan/client.gd"
+
 # Main Function - Registers Event Handling (Handled By Both Client And Server)
 func _ready() -> void:
-	set_theme(gamestate.game_theme)	
+	set_theme(gamestate.game_theme)
+	find_servers()
+	
+func find_servers() -> void:
+	# Setup Broadcast Listener Script
+	var server_finder = Node.new()
+	server_finder.set_script(load(lan_client)) # Attach A Script to Node
+	server_finder.set_name("ServerFinder") # Give Node A Unique ID
+	add_child(server_finder)
 
 func set_theme(theme: Theme) -> void:
 	"""

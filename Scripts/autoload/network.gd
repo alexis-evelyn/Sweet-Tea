@@ -7,6 +7,9 @@ signal cleanup_worlds # Cleanup World Handler
 # Keep Alive Thread
 var keep_alive: Thread
 
+# Lan Broadcast Listener
+var lan_server : String = "res://Scripts/lan/server.gd"
+
 # StreamPeerSSL
 var enc_server : String = "res://Scripts/Security/server_encryption.gd"
 var enc_client : String = "res://Scripts/Security/client_encryption.gd"
@@ -24,7 +27,7 @@ var server_info : Dictionary = {
 	website = "https://sweet-tea.senorcontento.com/", # Server Owner's Website (to display rules, purchases, etc...)
 	num_player = 0, # Display Current Number of Connected Players (so client can see how busy a server is)
 	max_players = 0, # Maximum Number of Players (including server player)
-	bind_address = "127.0.0.1", # IP Address to Bind To (Use). Asterisk (*) means all available IPs to the Computer.
+	bind_address = "*", # IP Address to Bind To (Use). Asterisk (*) means all available IPs to the Computer.
 	used_port = 0, # Host Port
 	max_chunks = 3 # Max chunks to send to client (client does not request, server sends based on position of client - this helps mitigate DOS abuse)
 }
@@ -72,6 +75,12 @@ func start_server() -> void:
 	# The world_handler loader is intentionally before registering the server player so that the server player will have a current world marked
 	emit_signal("server_created") # Notify world_handler That Server Was Created
 	
+	# Setup Broadcast Listener Script
+	var broacast_listener = Node.new()
+	broacast_listener.set_script(load(lan_server)) # Attach A Script to Node
+	broacast_listener.set_name("BroadcastListener") # Give Node A Unique ID
+	get_tree().get_root().add_child(broacast_listener)
+	
 	# Activate PlayerList Since Server is Close to Finishing Loading
 	if not gamestate.server_mode:
 		playerList.loadPlayerList() # Load PlayerList
@@ -100,28 +109,30 @@ func close_connection() -> void:
 	# Clears PlayerUI on Disconnect
 	playerUI.cleanup()
 	
-	var worlds = get_tree().get_root().get_node("Worlds")
-	
 	if(get_tree().get_network_peer() != null):
 		# Do different things depending on if server or client
 		if get_tree().is_network_server():
 			# Server Side Only
 			
 			# Saves Worlds to Disk (in a separate folder per world)
-			for world in worlds.get_children():
-				world_handler.save_world(world)
+			if get_tree().get_root().has_node("Worlds"):
+				var worlds = get_tree().get_root().get_node("Worlds")
+				for world in worlds.get_children():
+					world_handler.save_world(world)
 			
 			if get_tree().get_root().has_node("EncryptionServer"):
 				get_tree().get_root().get_node("EncryptionServer").queue_free()
+				
+			if get_tree().get_root().has_node("BroadcastListener"):
+				get_tree().get_root().get_node("BroadcastListener").queue_free()
 		else:
 			# Client Side Only
 			# Free Up Resources and Save Data (Client Side)
-			
-			# If Client - Cleanup Ping Timer Thread (server doesn't have one).
-			keep_alive.wait_to_finish()
 		
 			# If has ping_timer, remove it
 			if get_tree().get_root().has_node("ping_timer"):
+				# If Client - Cleanup Ping Timer Thread (server doesn't have one).
+				keep_alive.wait_to_finish()
 				get_tree().get_root().get_node("ping_timer").queue_free()
 				
 			if get_tree().get_root().has_node("EncryptionClient"):
@@ -132,14 +143,16 @@ func close_connection() -> void:
 		get_tree().set_network_peer(null) # Disable Network Peer
 	
 	# Frees All Worlds From Memory (1 World if Client, All if Server)
-	if worlds != null:
-		worlds.queue_free()
+	if get_tree().get_root().has_node("Worlds"):
+		var worlds = get_tree().get_root().get_node("Worlds")
+		if worlds != null:
+			worlds.queue_free()
 	
 	emit_signal("cleanup_worlds")
 	
 	#print("Attempt to Change Scene Tree")
 	# TODO: Maybe Pull Up A Disconnected Message GUI (which will then go to NetworkMenu)
-	get_tree().change_scene("res://Menus/NetworkMenu.tscn")
+	get_tree().change_scene("res://Menus/MainMenu.tscn")
 
 # Notifies Player as to Why They Were Kicked (does not need to call disconnect)
 puppet func player_kicked(message: String) -> void:
