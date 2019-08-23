@@ -31,9 +31,9 @@ func listen_for_clients(thread_data) -> void:
 		
 		while udp_peer.get_available_packet_count() > 0:
 #			print("Received Packet!!!")
-			var bytes = udp_peer.get_packet()
-			var client_ip = udp_peer.get_packet_ip()
-			var client_port = udp_peer.get_packet_port()
+			var bytes : PoolByteArray = udp_peer.get_packet()
+			var client_ip : String = udp_peer.get_packet_ip()
+			var client_port : int = udp_peer.get_packet_port()
 			
 			var reply = process_message(client_ip, client_port, bytes) # Process Message From Client
 			
