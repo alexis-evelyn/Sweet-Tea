@@ -48,21 +48,24 @@ func find_servers(peer: PacketPeerUDP) -> void:
 		if peer.get_available_packet_count() > 0:
 			#print("Received Packet!!!")
 			var bytes : PoolByteArray = peer.get_packet()
-			var client_ip : String = peer.get_packet_ip()
-			var client_port : int = peer.get_packet_port()
+			var server_ip : String = peer.get_packet_ip()
+			var server_port : int = peer.get_packet_port()
 			
-			process_message(client_ip, client_port, bytes) # Process Message From Client
+			process_message(server_ip, server_port, bytes) # Process Message From Client
 			
 	search_timer.call_deferred('free') # Prevents Resume Failed From Object Class Being Expired (Have to Use Call Deferred Free or it will crash free() causes an attempted to remove reference error and queue_free() does not exist)
 
 # Parse Dictionary Sent By Server
-func parse_server_info(json: Dictionary) -> void:
-	if json.has("motd"):
-		print("Message of The Day: ", json.get("motd"))
+func parse_server_info(server_ip: String, server_port: int, json: Dictionary) -> void:
+	print("---------------------------------------------------")
+	print("Server Finder Helper: %s:%s" % [server_ip, server_port])
+	for key in json.keys():
+		print("%s: %s" % [key, json.get(key)])
+	print("---------------------------------------------------")
 
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
-func process_message(client_ip: String, client_port: int, bytes: PoolByteArray):
+func process_message(server_ip: String, server_port: int, bytes: PoolByteArray):
 	#print("Server Reply: ", bytes.get_string_from_ascii())
 	
 	var json : JSONParseResult = JSON.parse(bytes.get_string_from_ascii())
@@ -72,7 +75,7 @@ func process_message(client_ip: String, client_port: int, bytes: PoolByteArray):
 		# warning-ignore:unsafe_property_access
 		# warning-ignore:unsafe_property_access
 		if typeof(json.result) == TYPE_DICTIONARY:
-			parse_server_info(json.result)
+			parse_server_info(server_ip, server_port, json.result)
 
 func poll_for_servers(peer: PacketPeerUDP) -> void:
 	# This loops through all addresses to broadcast to and sends a message to see if server replies.

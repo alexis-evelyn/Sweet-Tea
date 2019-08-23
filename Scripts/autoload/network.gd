@@ -166,7 +166,10 @@ func _on_player_connected(id: int) -> void:
 	if get_tree().is_network_server():
 		#print("Player ", str(id), " Connected to Server")
 		#player_control.check_if_banned(id)
-		pass
+		
+		# Used to keep track of number of players currently on server
+		if server_info.has("num_player"):
+			server_info.num_player = server_info.num_player + 1
 
 # Server Notified When A Client Disconnects
 func _on_player_disconnected(id: int) -> void:
@@ -178,6 +181,10 @@ func _on_player_disconnected(id: int) -> void:
 			spawn_handler.despawn_player(id)
 			player_registrar.unregister_player(id) # Remove Player From Server List
 			player_registrar.rpc_unreliable("unregister_player", id) # Notify Clients to do The Same
+			
+			# Used to keep track of number of players currently on server
+			if server_info.has("num_player"):
+				server_info.num_player = server_info.num_player - 1
 
 # Successfully Joined Server (Client Side Only)
 func _on_connected_to_server() -> void:
