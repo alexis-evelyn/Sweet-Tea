@@ -4,8 +4,13 @@ extends Control
 var scene : String = "" # Menu to load if set
 var old_title : String = "" # Title From Before Window Was Shown
 
+var player_creation_menu : String = "res://Menus/PlayerCreationMenu.tscn" # Player Creation Menu
+var creation_menu : Node # Player Creation Menu
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	#$PlayerSelectionWindow.window_title = "Hello" # Can be used for translation code
+	
 	for slot in $PlayerSelectionWindow/PlayerSlots.get_children():
 		slot.connect("pressed", self, "_character_slot_pressed", [slot])
 
@@ -64,8 +69,24 @@ func _character_slot_pressed(button: Node) -> void:
 			network.start_server()
 	else:
 		#logger.verbose("Creating Character and World!!!")
-		return # This will be replaced by a coroutine which will pull up a character creation menu
+		if not has_node("PlayerCreationMenu"):
+			creation_menu = load(player_creation_menu).instance() # Instance Creation Menu
+			creation_menu.set_name("PlayerCreationMenu") # Set's a Name (Basically an ID) to make sure I don't create this twice unless it was freed from memory.
 		
+			add_child(creation_menu) # Add Player Creation Menu As Child of Player Selection Menu
+		
+		if creation_menu != null:
+			if not creation_menu.get_node("PlayerCreationWindow"):
+				logger.error("Player Creation Window Cannot Be Found!!!")
+				return
+				
+			creation_menu.set_slot(slot) # Passes Slot Number to Character Creation Window
+			$PlayerSelectionWindow.hide() # Hide own Popup Window
+			creation_menu.get_node("PlayerCreationWindow").popup_centered() # Open PlayerCreationWindow
+		else:
+			logger.error("Player Creation Menu Cannot Be Found!!!")
+			return
+			
 	# Load's menu after selecting player (may have to move to make Player Creation Screen Work).
 	if scene != "":
 		get_tree().change_scene(scene)
@@ -78,7 +99,7 @@ func _about_to_show() -> void:
 	"""
 	
 	old_title = functions.get_title()
-	functions.set_title("Select A Player")
+	functions.set_title("Select A Character")
 	check_existing_slots()
 
 func _about_to_hide() -> void:

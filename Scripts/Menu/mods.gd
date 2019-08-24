@@ -89,25 +89,26 @@ func check_system():
 	Engine.set_iterations_per_second(30) # Physics FPS - Default 60
 	Engine.set_target_fps(30) # Rendering FPS - Default Unlimited
 	
-	#logger.verbose("Number of Cores: %s" % OS.get_processor_count())
-	#logger.verbose("Multithread Support: %s" % OS.can_use_threads())
+	logger.verbose("Number of Cores: %s" % OS.get_processor_count())
+	logger.verbose("Multithread Support: %s" % OS.can_use_threads())
 	
 	if OS.can_use_threads():
 		# Figure out how to change Rendering Thread Model in GDScript
 		pass
-	
-	# https://godotengine.org/qa/11251/how-to-export-the-project-for-server?show=11253#a11253
-	# Checks if Running on Headless Server (Currently Linux Only? There is a commit where someone added support for OSX, but no official builds)
-	# I compiled Godot's Server Executable and it cannot run the server without the original source code. This could cause problems for execution speed when the binaries are not precompiled.
-	# Also, OS.get_unique_id(), does not work in my Server Executable.
-	# I am going to try to make the game headless compatible without using a separate Godot binary.
-	#logger.verbose("Server Mode: %s" % OS.has_feature("Server"))
 	
 	# It appears my compiled version of Godot's Server cannot use network. It doesn't even show up in Wireshark (and I checked the firewall)
 	if(OS.has_feature("Server") == true):
 		# If using a servermode engine, set game to servermode
 		# I may just listen for command line arguments and not use OS.has_feature(...)
 		gamestate.server_mode = true
+	
+	# https://godotengine.org/qa/11251/how-to-export-the-project-for-server?show=11253#a11253
+	# Checks if Running on Headless Server (Currently Linux Only? There is a commit where someone added support for OSX, but no official builds)
+	# I compiled Godot's Server Executable and it cannot run the server without the original source code. This could cause problems for execution speed when the binaries are not precompiled.
+	# Also, OS.get_unique_id(), does not work in my Server Executable.
+	# I am going to try to make the game headless compatible without using a separate Godot binary.
+	logger.verbose("Server Binary: %s" % OS.has_feature("Server")) # This Determines If Using Godot Server Binary
+	logger.verbose("Set Server Mode: %s" % gamestate.server_mode) # This Determines If Server Mode Was Set (Will Be Able To Be Set In Regular Binary)
 		
 	if gamestate.server_mode:
 		# This simulates a windowless server. I do not know if it will work in a true windowless environment (e.g. a dedicated linux server)

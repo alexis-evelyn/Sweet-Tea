@@ -44,6 +44,7 @@ func _ready() -> void:
 		else:
 			player_camera(true)
 	
+	# Should this be moved to a separate file? - https://www.youtube.com/watch?v=AStJd_Ia2p4
 	# Server corrects coordinates of client to keep in sync
 	if get_tree().is_network_server():
 		world_generator.load_chunks(int(player_name), self.position, true) # Allows Getting Chunks Before Moving

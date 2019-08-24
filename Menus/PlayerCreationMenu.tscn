@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/Menu/player_creation_menu.gd" type="Script" id=1]
+
+[node name="PlayerCreationMenu" type="Control"]
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlayerCreationWindow" type="WindowDialog" parent="."]
+visible = true
+margin_left = 355.057
+margin_top = 87.234
+margin_right = 662.057
+margin_bottom = 542.234
+window_title = "Create Player"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlayerSlots" type="VBoxContainer" parent="PlayerCreationWindow"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Slot 0" type="Button" parent="PlayerCreationWindow/PlayerSlots"]
+margin_right = 307.0
+margin_bottom = 28.0
+text = "New Character"
+flat = true
+[connection signal="about_to_show" from="PlayerCreationWindow" to="." method="_about_to_show"]
+[connection signal="popup_hide" from="PlayerCreationWindow" to="." method="_about_to_hide"]

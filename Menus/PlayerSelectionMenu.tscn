@@ -14,7 +14,7 @@ margin_left = 355.057
 margin_top = 87.234
 margin_right = 662.057
 margin_bottom = 542.234
-window_title = "Select Player"
+window_title = "Select Character"
 __meta__ = {
 "_edit_use_anchors_": false
 }

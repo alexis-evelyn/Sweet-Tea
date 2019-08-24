@@ -75,6 +75,6 @@ func test():
 	#logger.verbose("Secret Key A: %s Secret Key B: %s" % [secret_key_a, secret_key_b])
 	
 	if secret_key_a == secret_key_b:
-		logger.verbose("Test Successful!!!")
+		logger.verbose("Diffie-Hellman Test Successful!!!")
 	else:
-		logger.fatal("Test Failed!!!")
+		logger.fatal("Diffie-Hellman Test Failed!!!")
