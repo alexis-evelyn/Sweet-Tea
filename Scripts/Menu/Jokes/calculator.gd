@@ -35,7 +35,7 @@ func _ready() -> void:
 
 # Calculator Button Was Pressed
 func _button_pressed(button: Node) -> void:
-	#logger.verbose("Pressed: ", button.name)
+	#logger.verbose("Pressed: %s" % button.name)
 	
 	# Should I Add A Backspace Button?
 	if button.name != "Equals" and button.name != "Clear" and button.name != "Multiply":
@@ -160,7 +160,7 @@ func _input(event) -> void:
 
 # Write to Calculator Screen
 func write_to_screen(character: String) -> void:
-	#logger.verbose(character)
+	#logger.verbose("Calc Character: %s" % character)
 	# Checks to See If Last Action Was Calculation and Clears Screen if True
 	if calculated:
 		clear_screen()
@@ -174,13 +174,13 @@ func write_to_screen(character: String) -> void:
 
 # Clear Screen and Buffer
 func clear_screen() -> void:
-	#logger.verbose("<Clear Screen>")
+	#logger.verbose("Calc: <Clear Screen>")
 	screen.clear()
 	screen.bbcode_text = "[right]0" # This uses "corrupted" bbcode on purpose (so I don't waste processing time constantly adding [/right] to the end of a number and erasing all the old end tags.)
 
 # Erases Character From Right Side of Screen
 func erase_character() -> void:
-	#logger.verbose("<Erase Character>")
+	#logger.verbose("Calc: <Erase Character>")
 	if calculated:
 		calculated = false
 		clear_screen()
@@ -191,7 +191,7 @@ func erase_character() -> void:
 # Calculate Results
 func calculate_results() -> void:
 	#logger.verbose("Calculating...")
-	#logger.verbose("Formula: ", screen.text)
+	#logger.verbose("Formula: %s" % screen.text)
 	
 	# How to deal with Integer Divison? Modulus only Works With Integers (otherwise a parse error).
 	# Symbols to Look For (, ), %, /, *, +, -
@@ -205,7 +205,7 @@ func calculate_results() -> void:
 	var error = expression.parse(screen.text, [])
 	
 	if error != OK:
-		#logger.verbose(expression.get_error_text())
+		#logger.verbose("Calc Expression Error: %s" % expression.get_error_text())
 		return
 		
 	var result = expression.execute([], null, false) # Setting show_error to false keeps the parser from complaining about dividing by 0.
@@ -218,8 +218,8 @@ func calculate_results() -> void:
 
 # Close Calculator
 func close_calculator() -> void:
-	#logger.verbose("Focus Owner: ", get_focus_owner())
-	#logger.verbose("Is Child: ", self.is_a_parent_of(get_focus_owner()))
+	#logger.verbose("Focus Owner: %s" % get_focus_owner())
+	#logger.verbose("Is Child: %s" % self.is_a_parent_of(get_focus_owner()))
 	if get_focus_owner() != null: # Prevents p_node is null error when not on any node.
 		# Checks If Window or Children of Window Has Focus
 		if has_focus() or is_a_parent_of(get_focus_owner()):
@@ -237,7 +237,7 @@ func _calc_hide() -> void:
 func popup_calc() -> void:
 	#get_tree().set_input_as_handled()
 	
-	#logger.verbose("Get Rect: ", self.get_rect().size)
+	#logger.verbose("Calc Get Rect: %s" % self.get_rect().size)
 	
 	var calc_x : float = (ProjectSettings.get_setting("display/window/size/width")/2) - (self.get_rect().size.x/2)
 	var calc_y : float = (ProjectSettings.get_setting("display/window/size/height")/2) - (self.get_rect().size.x/2)

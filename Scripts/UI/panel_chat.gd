@@ -41,7 +41,7 @@ func _ready() -> void:
 
 # Process Chat Messages from Server
 sync func chat_message_client(message: String) -> void:
-	#logger.verbose("Client Message: ", message)
+	#logger.verbose("Client Message: %s" % message)
 	
 	# Only Update ChatBox if Not Headless
 	if not gamestate.server_mode:
@@ -59,7 +59,7 @@ master func chat_message_server(message: String) -> int:
 	var chat_color : String = "red" # Default Chat Color
 	
 	# Record Chat Message in Server Log (e.g. if harassment needs to be reported)
-	#logger.verbose("Chat Message: ", message) - May Replace With Saving To File (dependent on server owner settings)
+	#logger.verbose("Chat Message: %s" % message) # May Replace With Saving To File (dependent on server owner settings)
 	
 	# Check and Shorten The Length of Characters in Message
 	if message.length() > max_characters:
@@ -115,13 +115,13 @@ func _on_userChat_gui_input(event) -> void:
 # When URLs are Clicked in Chat Window
 func _on_chatMessages_meta_clicked(meta: String) -> void:
 	if typeof(meta) == TYPE_STRING:
-		#logger.verbose("URL Text: ", meta)
+		#logger.verbose("URL Text: %s" % meta)
 		
 		var json : JSONParseResult = JSON.parse(meta)
 		
 		# Checks to Make Sure JSON was Parsed
 		if json.error == OK:
-			#logger.verbose("JSON Type: ", typeof(json.result))
+			#logger.verbose("JSON Type: %s" % typeof(json.result))
 			
 			# JSON will either be a Dictionary or Array. If it is an object, you forgot to call json.result (instead you called json)
 			match typeof(json.result): # Similar to Switch Statement
@@ -142,7 +142,7 @@ func handle_url_click(dictionary: Dictionary) -> void:
 		
 		# Checks if Players Dictionary Has Net_ID (player could have disconnected by then)
 		if player_registrar.has(int(net_id)):
-			#logger.verbose("Clicked Player Name: " + player_registrar.name(int(net_id)) + " Player ID: " + net_id)
+			#logger.verbose("Clicked Player Name: %s Player ID: %s" % [player_registrar.name(int(net_id)), net_id])
 			chat_message_client("Clicked Player Name: " + player_registrar.name(int(net_id)) + " Player ID: " + str(net_id))
 		else:
 			logger.verbose("The Players Dictionary is Missing ID: %s" % net_id)

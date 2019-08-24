@@ -27,7 +27,7 @@ func _ready() -> void:
 
 # Server Starting Function
 func start_server() -> void:
-	#logger.verbose("Server Loading World")
+	#logger.verbose("Server Loading")
 	# Load World From Drive
 	# For Simplicity, We Are Starting Off Non Infinite So The Whole World Will Be Loaded At Once
 	# QUESTION: Do I want to Use Scenes For World Data Or Just To Populate A Scene From A Save File?
@@ -49,7 +49,7 @@ func start_server() -> void:
 	if gamestate.player_info.has("starting_world"):
 		starting_world = gamestate.player_info.starting_world
 	else:
-		logger.verbose("This should never be reached (once character creation exists). This is because Host Server will not be in network menu anymore.")
+		#logger.verbose("This should never be reached (once character creation exists). This is because Host Server will not be in network menu anymore.")
 		
 		# Cleans Up Connection on Error
 		player_registrar.cleanup()
@@ -61,7 +61,7 @@ func start_server() -> void:
 	var world = load_world_server(-1, starting_world) # Specify -1 (server only) to let server know the spawn world doesn't have the server player yet (gui only)
 	
 	if world == "":
-		logger.verbose("World is Missing (on Server Start)!!! Check Player Save File!!!")
+		#logger.verbose("World is Missing (on Server Start)!!! Check Player Save File!!!")
 		
 		# Cleans Up Connection on Error
 		player_registrar.cleanup()
@@ -104,7 +104,7 @@ puppet func load_world_client() -> void:
 			emit_signal("cleanup_worlds")
 			return
 		
-		#logger.verbose("World (Load Client): ", gamestate.player_info.current_world)
+		#logger.verbose("World (Load Client): %s" % gamestate.player_info.current_world)
 		
 		# Sets Starting World Name to Pass to Spawn Handler
 		var spawn = load(world_template).instance()
@@ -356,7 +356,7 @@ func get_tiles(tilemap: TileMap) -> Dictionary:
 	var tiles = {}
 	
 	for cell in cells:
-		#logger.verbose("Cell: ", cell)
+		#logger.verbose("Cell: %s" % cell)
 		tiles[str(cell)] = tilemap.get_cellv(cell)
 		
 	return tiles

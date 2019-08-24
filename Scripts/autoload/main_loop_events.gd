@@ -25,7 +25,7 @@ func _notification(what: int) -> void:
 			logger.trace("Game Is About to Crash!!!")
 			quit(397) # Sets Exit Code to 397 to indicate to script game has crashed. I may add more codes and an enum to identify what type of crash it is (if it is something unavoidable, like the system is broken, etc...)
 		MainLoop.NOTIFICATION_WM_ABOUT:
-			logger.verbose("Specific to Mac!!! Pull up about Game info (button will be on MainMenu too)")
+			logger.info("Specific to Mac!!! Pull up about Game info (button will be on MainMenu too)")
 		_: # Default Result - Put at Bottom of Match Results
 			pass
 
@@ -47,5 +47,5 @@ func _tree_changed():
 func quit(error: int = 0):
 	OS.set_exit_code(error) # Sets the Exit Code The Game Will Quit With (can be checked with "echo $?" after executing game from shell)
 	
-	logger.verbose("Quit Game!!!")
+	#logger.verbose("Quit Game!!!")
 	get_tree().quit()

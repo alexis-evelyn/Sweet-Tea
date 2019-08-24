@@ -15,6 +15,9 @@ margin_top = 87.234
 margin_right = 662.057
 margin_bottom = 542.234
 window_title = "Select Player"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="PlayerSlots" type="VBoxContainer" parent="PlayerSelectionWindow"]
 anchor_right = 1.0
@@ -46,4 +49,5 @@ margin_right = 307.0
 margin_bottom = 124.0
 text = "New Character"
 flat = true
-[connection signal="about_to_show" from="PlayerSelectionWindow" to="." method="_on_PlayerSelectionWindow_about_to_show"]
+[connection signal="about_to_show" from="PlayerSelectionWindow" to="." method="_about_to_show"]
+[connection signal="popup_hide" from="PlayerSelectionWindow" to="." method="_about_to_hide"]

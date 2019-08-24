@@ -56,10 +56,10 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 				var player : Node # Player Object
 				if get_players(str(get_world(id))).has_node(str(id)):
 					player = get_players(str(get_world(id))).get_node(str(id) + "/KinematicBody2D") # Grab Existing Player's Object (Server Only)
-					#logger.verbose("Existing: ", id, " For: ", net_id, " At Coordinates: ", player.position, " World: ", get_world(id)) # player.position grabs existing player's coordinates
+					#logger.verbose("Existing: %s For: %s At Coordinates: %s World: %s" % [id, net_id, player.position, get_world(id)]) # player.position grabs existing player's coordinates
 					
 					player_registrar.update_players(int(net_id), int(id)) # Updates Client's Player Registry to let it know about clients already in the world
-					#logger.verbose("YOURSELF: ", net_id)
+					#logger.verbose("Your NetID: %s" % net_id)
 					if net_id != 1:
 						rpc_unreliable_id(net_id, "spawn_player", player_registrar.players[int(id)], id, player.position) # Send Existing Clients' Info to New Client
 					else:
@@ -69,19 +69,25 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 			# Because the server's list already contains the new player, that one will also get itself!
 			# New Player's Coordinates gets sent to all clients (within the same world) (including new player/client) except the server
 			if (id != 1) and (get_world(id) == get_world(net_id)):
-				#logger.verbose("New: ", id, " For: ", net_id, " At Coordinates: ", coordinates, " World: ", get_world(id))
+				#logger.verbose("New: %s For: %s At Coordinates: %s World: %s" % [id, net_id, coordinates, get_world(id)])
 				player_registrar.update_players(int(id), int(net_id)) # Updates Client's Player Registry to let it know about new client joining world
 				rpc_unreliable_id(id, "spawn_player", pinfo, net_id, coordinates) # Send New Client's Info to Existing Clients
-				
-	# TODO: Check to see if this is what causes problems with the Headless Server Mode
-	add_player(pinfo, net_id, coordinates)
+	
+	print("NetID: %s Gamestate ID: %s" % [net_id, gamestate.net_id])
+	# Run Specific RPC calls on Player Spawn
+	if net_id == gamestate.net_id:
+		network.set_client_title("Welcome to %s!!!" % player_registrar.players[int(net_id)].current_world) # This won't show up on server start (I think because the player selection menu is lagging behind due to not threading the world loader)
+	else:
+		network.rpc_id(net_id, "set_client_title", "Welcome to %s!!!" % player_registrar.players[int(net_id)].current_world)
+		
+	add_player(pinfo, net_id, coordinates) # TODO: Check to see if this is what causes problems with the Headless Server Mode
 	return 0
 
 # Spawns a new player actor, using the provided player_info structure and the given spawn index
 # http://kehomsforge.com/tutorials/multi/gdMultiplayerSetup/part03/ - "Spawning A Player"
 # For client only
 puppet func spawn_player(pinfo: Dictionary, net_id: int, coordinates: Vector2) -> void:
-	logger.verbose("Spawning Player: " + str(net_id) + " At Coordinates: " + str(coordinates))
+	#logger.verbose("Spawning Player: " + str(net_id) + " At Coordinates: " + str(coordinates))
 	add_player(pinfo, net_id, coordinates)
 
 # Spawns Player in World (Client and Server)
@@ -101,7 +107,7 @@ func add_player(pinfo: Dictionary, net_id: int, coordinates: Vector2) -> void:
 	
 	new_actor.get_node("KinematicBody2D").set_dominant_color(char_color) # The player script is attached to KinematicBody2D, hence retrieving its node
 	
-	logger.verbose("Actor: %s" % net_id)
+	#logger.verbose("Actor: %s" % net_id)
 	new_actor.get_node("KinematicBody2D").position = coordinates # Setup Player's Position
 	
 	new_actor.set_name(str(net_id)) # Set Player's ID (useful for referencing the player object later)
@@ -128,7 +134,7 @@ func add_player(pinfo: Dictionary, net_id: int, coordinates: Vector2) -> void:
 			
 			world_grid.add_child(players_node)
 		
-		#logger.verbose("Player ", net_id, " Current World: ", player_current_world)
+		#logger.verbose("Player %s Current World: %s" % [net_id, player_current_world])
 		
 		# Make sure client does not try to spawn player twice (to cause server crash)
 		if not get_players(player_current_world).has_node(new_actor.name):
@@ -180,7 +186,7 @@ remote func despawn_player(net_id: int) -> void:
 		
 # Changing Worlds - Perform Cleanup and Load World
 remote func change_world(world_name: String) -> void:
-	#logger.verbose("Player ", gamestate.net_id, " Change World: ", get_world(gamestate.net_id))
+	#logger.verbose("Player %s Change World: %s" % [gamestate.net_id, get_world(gamestate.net_id)])
 	get_tree().get_root().get_node("PlayerUI/panelPlayerList").cleanup() # Cleanup Player List
 
 	# Download World using network.gd and Load it using world_handler.gd
@@ -211,7 +217,7 @@ remote func change_world(world_name: String) -> void:
 			var players : Node = get_players(world) # Get Players Node from World
 			
 			for player in players.get_children():
-				logger.verbose("Updating: %s With Server Info!!!" % player.name)
+				#logger.verbose("Updating: %s With Server Info!!!" % player.name)
 				
 				# First argument is who I am sending the update to, second is who's info I am sending
 				player_registrar.update_players(int(player.name), int(gamestate.net_id)) # Updates Client's Player Registry to let it know about server joining world
@@ -231,7 +237,7 @@ func get_world(net_id: int) -> String:
 	
 # Get World Grid Node - Added To Make Code More Legible
 func get_world_grid(world: String) -> Node:
-	#logger.verbose("WorldGrid: ", world)
+	logger.superverbose("WorldGrid: %s" % world)
 	
 	if not get_tree().get_root().has_node("Worlds/" + world + "/Viewport/WorldGrid/"):
 		return null

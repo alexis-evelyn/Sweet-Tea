@@ -21,7 +21,7 @@ func check_if_banned(id: int) -> void:
 	
 	var net : NetworkedMultiplayerENet = get_tree().get_network_peer() # Grab the existing Network Peer Node
 	
-	#logger.verbose("Ban Check - Player ID: ", str(id), " Player IP: ", str(net.get_peer_address(id)))
+	#logger.verbose("Ban Check - Player ID: %s Player IP: %s" % [id, net.get_peer_address(id)])
 	
 	if banned_players.has(id) or banned_ips.has(net.get_peer_address(id)):
 		#logger.verbose("Player Was Previously Banned")

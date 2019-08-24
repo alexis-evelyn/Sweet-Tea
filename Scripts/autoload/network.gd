@@ -43,7 +43,7 @@ func _ready() -> void:
 # Attempt to Create Server
 func start_server() -> void:
 	set_port() # Choose A Port to Use
-	logger.verbose("Port: %s" % server_info.used_port) # Print Current Port
+	#logger.verbose("Port: %s" % server_info.used_port) # Print Current Port
 	
 	# TODO: Godot supports UDP hole punching and/or UPNP, so this could be useful for non-technical players
 	
@@ -53,19 +53,19 @@ func start_server() -> void:
 	encryption.set_name("EncryptionServer") # Give Node A Unique ID
 	get_tree().get_root().add_child(encryption)
 	
-	#logger.verbose("Attempting to Create Server on Port ", server_info.used_port)
+	#logger.verbose("Attempting to Create Server on Port %s" % server_info.used_port)
 	var net = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
-	#logger.verbose("Port: ", net.get_port())
+	# Disabled Because Not Implemented - #logger.verbose("Port: %s" % net.get_port())
 	
 	# https://docs.godotengine.org/en/3.1/classes/class_networkedmultiplayerenet.html
 	net.set_bind_ip(server_info.bind_address) # Sets the IP Address the Server Binds to
 	
 	# Could Not Create Server (probably port already in use or Failed Permissions)
 	if (net.create_server(server_info.used_port, server_info.max_players) != OK):
-		logger.verbose("Failed to create server")
+		#logger.verbose("Failed to create server")
 		return
 	
-	#logger.verbose("Port: ", net.get_port())
+	# Disabled Because Not Implemented - #logger.verbose("Port: %s" % net.get_port())
 	
 	# Ensures UDP Packets are Ordered (Has less overhead than TCP)
 	net.set_always_ordered(NetworkedMultiplayerPeer.TRANSFER_MODE_UNRELIABLE_ORDERED)
@@ -75,11 +75,11 @@ func start_server() -> void:
 	# The world_handler loader is intentionally before registering the server player so that the server player will have a current world marked
 	emit_signal("server_created") # Notify world_handler That Server Was Created
 	
-	# Setup Broadcast Listener Script
-	var broacast_listener = Node.new()
-	broacast_listener.set_script(load(lan_server)) # Attach A Script to Node
-	broacast_listener.set_name("BroadcastListener") # Give Node A Unique ID
-	get_tree().get_root().add_child(broacast_listener)
+	# Setup Broadcast Listener Script (For Clients To Find Server on Lan)
+	var broadcast_listener = Node.new()
+	broadcast_listener.set_script(load(lan_server)) # Attach A Script to Node
+	broadcast_listener.set_name("BroadcastListener") # Give Node A Unique ID
+	get_tree().get_root().add_child(broadcast_listener)
 	
 	# Activate PlayerList Since Server is Close to Finishing Loading
 	if not gamestate.server_mode:
@@ -88,8 +88,10 @@ func start_server() -> void:
 # Attempt to Join Server (Not Connected Yet)
 func join_server(ip: String, port: int) -> void:
 	#logger.verbose("Attempting To Join Server")
-	
 	var net : NetworkedMultiplayerENet = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
+	
+	# Ensures UDP Packets are Ordered (Has less overhead than TCP)
+	net.set_always_ordered(NetworkedMultiplayerPeer.TRANSFER_MODE_UNRELIABLE_ORDERED)
 	
 	# Attempt to Create Client (does not guarantee that joining is successful)
 	if (net.create_client(ip, port) != OK):
@@ -150,13 +152,13 @@ func close_connection() -> void:
 	
 	emit_signal("cleanup_worlds")
 	
-	#logger.verbose("Attempt to Change Scene Tree")
+	#logger.verbose("Attempt to Change Scene Tree To Main Menu")
 	# TODO: Maybe Pull Up A Disconnected Message GUI (which will then go to NetworkMenu)
 	get_tree().change_scene("res://Menus/MainMenu.tscn")
 
 # Notifies Player as to Why They Were Kicked (does not need to call disconnect)
 puppet func player_kicked(message: String) -> void:
-	logger.verbose("Kick Message: %s" % message)
+	logger.info("Kick Message: %s" % message)
 
 # Server (and Client) Notified When A New Client Connects (Player Has Not Registered Yet, So, There Is No Player Data)
 # warning-ignore:unused_argument
@@ -164,7 +166,7 @@ func _on_player_connected(id: int) -> void:
 	
 	# Only the server should check if client is banned
 	if get_tree().is_network_server():
-		#logger.verbose("Player ", str(id), " Connected to Server")
+		#logger.verbose("Player %s Connected to Server" % str(id))
 		#player_control.check_if_banned(id)
 		
 		# Used to keep track of number of players currently on server
@@ -174,7 +176,7 @@ func _on_player_connected(id: int) -> void:
 # Server Notified When A Client Disconnects
 func _on_player_disconnected(id: int) -> void:
 	if player_registrar.has(id):
-		#logger.verbose("Player ", player_registrar.name(id), " Disconnected from Server")
+		#logger.verbose("Player %s Disconnected from Server" % player_registrar.name(id))
 	
 		# Update the player tables
 		if (get_tree().is_network_server()):
@@ -188,6 +190,9 @@ func _on_player_disconnected(id: int) -> void:
 
 # Successfully Joined Server (Client Side Only)
 func _on_connected_to_server() -> void:
+	var net : NetworkedMultiplayerENet = get_tree().get_network_peer()
+	functions.set_title("Connected To %s:%s" % [net.get_peer_address(1), net.get_peer_port(1)]) # 1 is the server's id
+	
 	#logger.verbose("Connected To Server")
 	
 	# Setup Encryption Script
@@ -236,21 +241,25 @@ func start_ping(message: String = "Ping") -> void:
 	
 # Send Ping to Server
 func send_ping(message: String = "Ping") -> void:
-	#logger.verbose("Send Ping: ", message)
+	#logger.verbose("Send Ping: %s" % message)
 	rpc_unreliable_id(1, "server_ping", message)
 	
 # Recieve Ping From Client (and send ping back)
 master func server_ping(message: String) -> void:
-	#logger.verbose("Received Ping: ", message)
+	#logger.verbose("Received Ping: %s" % message)
 	rpc_unreliable_id(int(get_tree().get_rpc_sender_id()), "client_ping", message)
 	
 # Receive Ping Back From Server
 # warning-ignore:unused_argument
 puppet func client_ping(message: String) -> void:
-	#logger.verbose("Message From Server: ", message)
+	#logger.verbose("Message From Server: %s" % message)
 	pass
 	
 	# Track Last Ping Back and Do Something if Ping Back Fails
+
+# Allows the server to set the client's title
+puppet func set_client_title(title: String) -> void:
+	functions.set_title(title)
 
 # Pick A Port to Use
 func set_port() -> int:

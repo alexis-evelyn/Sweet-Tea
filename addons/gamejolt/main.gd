@@ -192,7 +192,7 @@ func is_ok(requestResults):
 	)
 
 func print_error(requestResults):
-	logger.verbose('GameJolt error.'
+	logger.error('GameJolt error.'
 	+ ' RequestError: ' + str(requestResults.requestError)
 	+ ' ResponseResult: ' + str(requestResults.responseResult)
 	+ ' JsonParseError: ' + str(requestResults.jsonParseError)

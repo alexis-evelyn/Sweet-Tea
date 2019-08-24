@@ -34,12 +34,12 @@ func _on_player_list_changed() -> void:
 	
 	world = get_players(get_world(gamestate.net_id))
 	
-	#logger.verbose("World: ", get_world(gamestate.net_id))
+	#logger.verbose("World: %s" % get_world(gamestate.net_id))
 	
 	if world != null:
 		# Populate Boxlist With Player Names
 		for player in world.get_children(): # for player in player_registrar.players: - Old code, used to get every player on server
-			#logger.verbose("Player: ", player.name)
+			#logger.verbose("Player: %s" % player.name)
 			if (int(player.name) != gamestate.net_id):
 				var connectedPlayerLabel : Node = Label.new()
 				connectedPlayerLabel.align = Label.ALIGN_CENTER # Aligns the Text To Center

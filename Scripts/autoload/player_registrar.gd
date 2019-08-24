@@ -31,7 +31,7 @@ remote func register_player(pinfo: Dictionary, net_id: int, new_world : bool = f
 	if players.has(int(net_id)) and get_tree().get_rpc_sender_id() != 1:
 		return -1
 	
-	#logger.verbose("Registering player ", pinfo.name, " (", net_id, ") to internal player table")
+	#logger.verbose("Registering Player %s (%s) to Player Registry" % [pinfo.name, net_id])
 	players[int(net_id)] = pinfo # Add Newly Joined Client to Dictionary of Clients
 	
 	if get_tree().is_network_server():
@@ -71,7 +71,7 @@ remote func unregister_player(id: int) -> void:
 	# The Disconnect Function Already Takes Care of Validating This Data (for the server)
 	# Still Validating For Client to Prevent Crash
 	if players.has(id):
-		#logger.verbose("Removing player ", players[id].name, " from internal table")
+		#logger.verbose("Removing Player %s From Player Registry" % players[id].name)
 		
 		# warning-ignore:unused_variable
 		var pinfo : Dictionary = players[id] # Cache player info for removal process
@@ -80,19 +80,19 @@ remote func unregister_player(id: int) -> void:
 # Get current world name to download from server
 puppet func set_current_world(current_world: String) -> void:
 	players[int(gamestate.net_id)].current_world = current_world # Set World to Download From Server
-	#logger.verbose("Set Connected Current World: ", players[int(gamestate.net_id)].current_world)
+	#logger.verbose("Set Connected Current World: %s" % players[int(gamestate.net_id)].current_world)
 	
 	emit_signal("world_set") # Allows Loading World From Server on Successful Connection
 
 # Send client a copy of players in new world - net_id is who I am sending the info to
 func update_players(net_id: int, id: int) -> void:
 	if not players.has(int(id)):
-		logger.verbose("Update Players Failed: ID does not exists: '%s', id")
+		#logger.verbose("Update Players Failed: ID does not exists: '%s', id")
 		return
 		
 	# Can I check if an RPC id exists? I could indirectly with player registration.
 	
-	logger.verbose("Update Players - Player: %s World: %s" % [id, players[int(id)].current_world])
+	#logger.verbose("Update Players - Player: %s World: %s" % [id, players[int(id)].current_world])
 	if net_id != 1:
 		rpc_unreliable_id(net_id, "register_player", players[int(id)], id)
 

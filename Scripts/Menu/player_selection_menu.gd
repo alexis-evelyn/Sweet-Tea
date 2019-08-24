@@ -2,6 +2,7 @@ extends Control
 
 # Declare member variables here. Examples:
 var scene : String = "" # Menu to load if set
+var old_title : String = "" # Title From Before Window Was Shown
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -28,7 +29,7 @@ func check_existing_slots() -> void:
 	# This was intentionally setup so a modder can just add more slots.
 	# Once I create a modding API (currently I am just going to load PackedScenes, but I will add an actual API later), then I will set this up so adding slots is trivial.
 	for slot in $PlayerSelectionWindow/PlayerSlots.get_child_count():
-		#logger.verbose("Checking Slot: " + str(slot))
+		#logger.verbose("Checking Slot: %s" % str(slot))
 		
 		var slot_exists : bool = gamestate.check_if_slot_exists(int(slot))
 		
@@ -53,27 +54,38 @@ func _character_slot_pressed(button: Node) -> void:
 	#logger.verbose("Character Slot Pressed: %s" % slot)
 	
 	if slot_exists:
-		logger.verbose("Loading Character and World!!!")
+		#logger.verbose("Loading Character and World!!!")
 		gamestate.load_player(slot) # Load Character To Memory
-		logger.verbose("Character Pressed: %s" % gamestate.player_info.name)
+		#logger.verbose("Character Pressed: %s" % gamestate.player_info.name)
 		
 		# Only load world if a scene to load is not selected.
 		if scene == "":
 			network.server_info.max_players = 2
 			network.start_server()
 	else:
-		logger.verbose("Creating Character and World!!!")
+		#logger.verbose("Creating Character and World!!!")
 		return # This will be replaced by a coroutine which will pull up a character creation menu
 		
 	# Load's menu after selecting player (may have to move to make Player Creation Screen Work).
 	if scene != "":
 		get_tree().change_scene(scene)
 
-func _on_PlayerSelectionWindow_about_to_show() -> void:
+func _about_to_show() -> void:
 	"""
 		Check Save Data for Existing Slots
 		
 		Not Meant to Be Called Directly
 	"""
 	
+	old_title = functions.get_title()
+	functions.set_title("Select A Player")
 	check_existing_slots()
+
+func _about_to_hide() -> void:
+	"""
+		Reset Title to Before
+		
+		Not Meant to Be Called Directly
+	"""
+	
+	functions.set_title(old_title)

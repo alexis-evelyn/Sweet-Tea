@@ -37,7 +37,7 @@ func _ready() -> void:
 func check_for_mods() -> bool:
 	# Make Mods Directory (if it does not exist)
 	if not mods_folder_check.dir_exists(mods_folder): # Check If Mods Folder Exists
-		logger.verbose("Mods Folder Does Not Exist!!! Creating!!!")
+		#logger.verbose("Mods Folder Does Not Exist!!! Creating!!!")
 		mods_folder_check.make_dir(mods_folder)
 		return false
 	else:
@@ -49,7 +49,7 @@ func check_for_mods() -> bool:
 			file = mods_folder_check.get_next()
 			
 			if file != "":
-				#logger.debug("File: %s" % file)
+				logger.debug("File: %s" % file)
 				installed_mods.append(file)
 		
 		mods_folder_check.list_dir_end() # Closes Stream for Listing Directories (Not Necessary if get_next() reaches end of directory list) - https://docs.godotengine.org/en/3.1/classes/class_directory.html#class-directory-method-list-dir-end
@@ -66,7 +66,7 @@ func load_mods() -> void:
 	for mod in installed_mods:
 		logger.debug("Mod: %s" % mod)
 		resource = ResourceLoader.load(mods_folder.plus_file(mod), "PackedScene", false) # Only Loads PackedScenes (Apparently can only load PackedScenes even when trying to load a png or wav? Look at ResourceImporter.)
-		#logger.debug("Resource Type: %s" % typeof(resource))
+		logger.debug("Resource Type: %s" % typeof(resource))
 		
 		if resource != null:
 			scene = resource.instance() # Instance the Scene
@@ -89,8 +89,8 @@ func check_system():
 	Engine.set_iterations_per_second(30) # Physics FPS - Default 60
 	Engine.set_target_fps(30) # Rendering FPS - Default Unlimited
 	
-	logger.verbose("Number of Cores: %s" % OS.get_processor_count())
-	logger.verbose("Multithread Support: %s" % OS.can_use_threads())
+	#logger.verbose("Number of Cores: %s" % OS.get_processor_count())
+	#logger.verbose("Multithread Support: %s" % OS.can_use_threads())
 	
 	if OS.can_use_threads():
 		# Figure out how to change Rendering Thread Model in GDScript
@@ -101,7 +101,7 @@ func check_system():
 	# I compiled Godot's Server Executable and it cannot run the server without the original source code. This could cause problems for execution speed when the binaries are not precompiled.
 	# Also, OS.get_unique_id(), does not work in my Server Executable.
 	# I am going to try to make the game headless compatible without using a separate Godot binary.
-	#logger.verbose("Server Mode: ", OS.has_feature("Server"))
+	#logger.verbose("Server Mode: %s" % OS.has_feature("Server"))
 	
 	# It appears my compiled version of Godot's Server cannot use network. It doesn't even show up in Wireshark (and I checked the firewall)
 	if(OS.has_feature("Server") == true):

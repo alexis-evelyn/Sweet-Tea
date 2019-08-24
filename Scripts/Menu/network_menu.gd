@@ -4,6 +4,8 @@ var lan_client : String = "res://Scripts/lan/client.gd"
 
 # Main Function - Registers Event Handling (Handled By Both Client And Server)
 func _ready() -> void:
+	functions.set_title("Connect To A Server")
+	
 	set_theme(gamestate.game_theme)
 	find_servers()
 	

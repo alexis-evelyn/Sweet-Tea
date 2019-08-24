@@ -51,7 +51,7 @@ func save_player(slot: int) -> void:
 	var save_path_backup : String = save_directory.plus_file(backups_dir.plus_file(backups_save_file.replace("%date%", str(OS.get_unix_time())))) # Save File Backup Path - OS.get_unix_time() is Unix Time Stamp
 	var backup_path : String = save_directory.plus_file(backups_dir) # Backup Directory Path
 
-	#logger.verbose("Game Version: " + game_version)
+	#logger.verbose("Game Version: %s" % game_version)
 	var players_data : JSONParseResult # Data To Save
 	var players_data_result : Dictionary # players_data's Result
 	
@@ -112,8 +112,8 @@ func save_player(slot: int) -> void:
 
 # Load Game Data
 func load_player(slot: int) -> int:
-	#logger.verbose("Game Version: " + game_version)
-	#logger.verbose("Save Data Location: " + OS.get_user_data_dir())
+	#logger.verbose("Game Version: %s" % game_version)
+	#logger.verbose("Save Data Location: %s" % OS.get_user_data_dir())
 	#OS.shell_open(str("file://", OS.get_user_data_dir())) # Use this to open up user save data location (say to backup saves or downloaded resources/mods)
 	
 	var save_data : File = File.new()
@@ -187,10 +187,10 @@ func check_if_slot_exists(slot: int) -> bool:
 		if typeof(json.result) == TYPE_DICTIONARY:
 			# warning-ignore:unsafe_property_access
 			if json.result.has(str(slot)):
-				#logger.verbose("Slot Exists: " + str(slot))
+				#logger.verbose("Slot Exists: %s" % str(slot))
 				return true
 			else:
-				#logger.verbose("Slot Does Not Exist: " + str(slot))
+				#logger.verbose("Slot Does Not Exist: %s" % str(slot))
 				return false
 				
 	return false

@@ -33,14 +33,15 @@ func _ready():
 
 func find_servers(peer: PacketPeerUDP) -> void:
 	peer.listen(0, "*", packet_buffer_size) # Listen for replies from server (the server knows your port, so )
-	logger.verbose("Starting To Search for Servers!!!")
+	#logger.verbose("Starting To Search for Servers!!!")
 	
 	var search_timer : SceneTreeTimer = get_tree().create_timer(search_time) # Creates a One Shot Timer (One Shot means it only runs once)
 
 	while peer.is_listening() and search_timer.time_left > 0:
-		#logger.verbose("Time Left: ", search_timer.time_left)
+		#logger.verbose("Find Servers Time Left (Seconds): %s" % search_timer.time_left)
 		poll_for_servers(peer)
 		
+		# TODO: Replace With Node Based Timer
 		var timer : SceneTreeTimer = get_tree().create_timer(delay_broadcast_time_seconds) # Creates a One Shot Timer (One Shot means it only runs once)
 		yield(timer, "timeout")
 		timer.call_deferred('free') # Prevents Resume Failed From Object Class Being Expired (Have to Use Call Deferred Free or it will crash free() causes an attempted to remove reference error and queue_free() does not exist)
@@ -66,7 +67,7 @@ func parse_server_info(server_ip: String, server_port: int, json: Dictionary) ->
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
 func process_message(server_ip: String, server_port: int, bytes: PoolByteArray):
-	#logger.verbose("Server Reply: ", bytes.get_string_from_ascii())
+	#logger.verbose("Server Reply: %s" % bytes.get_string_from_ascii())
 	
 	var json : JSONParseResult = JSON.parse(bytes.get_string_from_ascii())
 		

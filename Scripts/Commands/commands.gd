@@ -35,7 +35,7 @@ func process_command(net_id: int, message: String) -> void:
 		
 		Only Meant to Be Called By RPC (and by server)
 	"""
-	#logger.verbose("UserID: " + str(net_id) + " Command: " + message)
+	#logger.verbose("UserID: %s Command: %s" % [net_id, message])
 	arguments = message.split(" ", false, 0) # Convert Message into Arguments
 	
 	var response : String = check_command(net_id, arguments)
@@ -196,7 +196,7 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	# Clears Loaded Chunks From Previous World Generator's Memory
 	var world_generation = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
 	world_generation.clear_player_chunks(net_id)
-	#logger.verbose("Previous World: ", spawn_handler.get_world(net_id))
+	#logger.verbose("Previous World: %s" % spawn_handler.get_world(net_id))
 	
 	if world_name == "":
 		# TODO: Replace world_path in error message with name user gave!!!
@@ -207,10 +207,10 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	player_registrar.players[net_id].current_world = world_name # Update World Player is In (server-side)
 	
 	if net_id != 1:
-		#logger.verbose("NetID Change World: ", net_id)
+		#logger.verbose("NetID Change World: %s" % net_id)
 		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name)
 	else:
-		#logger.verbose("Server Change World: ", net_id)
+		#logger.verbose("Server Change World: %s" % net_id)
 		spawn_handler.change_world(world_name)
 		
 	return "Player " + str(net_id) + " Changing World to: " + str(world_name)
@@ -236,7 +236,7 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 		# Clears Loaded Chunks From Previous World Generator's Memory
 		var world_generation = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
 		world_generation.clear_player_chunks(net_id)
-		#logger.verbose("Previous World: ", spawn_handler.get_world(net_id))
+		#logger.verbose("Previous World: %s" % spawn_handler.get_world(net_id))
 		
 		var world_name = world_handler.create_world(net_id, "") # Run's createworld function
 		
@@ -245,10 +245,10 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 		#spawn_handler.spawn_player_server(gamestate.player_info) # Will be moved to spawn handler
 		
 		if net_id != 1:
-			#logger.verbose("NetID Change World: ", net_id)
+			#logger.verbose("NetID Change World: %s" % net_id)
 			spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name)
 		else:
-			#logger.verbose("Server Change World: ", net_id)
+			#logger.verbose("Server Change World: %s" % net_id)
 			spawn_handler.change_world(world_name)
 		
 		return "Created New World Named %s!!!" % world_name
@@ -285,7 +285,7 @@ func server_spawn(net_id: int, message: PoolStringArray) -> String:
 	# Clears Loaded Chunks From Previous World Generator's Memory
 	var world_generation = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
 	world_generation.clear_player_chunks(net_id)
-	#logger.verbose("Previous World: ", spawn_handler.get_world(net_id))
+	#logger.verbose("Previous World: %s" % spawn_handler.get_world(net_id))
 	
 	if world_name == "":
 		# TODO: Replace world_path in error message with name user gave!!!
@@ -296,10 +296,10 @@ func server_spawn(net_id: int, message: PoolStringArray) -> String:
 	player_registrar.players[net_id].current_world = world_name # Update World Player is In (server-side)
 	
 	if net_id != 1:
-		#logger.verbose("NetID Change World: ", net_id)
+		#logger.verbose("NetID Change World: %s" % net_id)
 		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name)
 	else:
-		#logger.verbose("Server Change World: ", net_id)
+		#logger.verbose("Server Change World: %s" % net_id)
 		spawn_handler.change_world(world_name)
 		
 	return "Teleported to Spawn"

@@ -75,20 +75,20 @@ func _physics_process(_delta: float) -> void:
 	
 	if is_network_master():
 		if Input.is_action_pressed("move_up") and !panelChat.visible:
-			#logger.verbose("Up")
+#			logger.superverbose("Up")
 			motion.y = max(motion.y - ACCELERATION, -MAX_SPEED)
 		elif Input.is_action_pressed("move_down") and !panelChat.visible:
-			#logger.verbose("Down")
+#			logger.superverbose("Down")
 			motion.y = min(motion.y + ACCELERATION, MAX_SPEED)
 		else:
 			friction = true;
 			#$Sprite.play("Idle");
 			
 		if Input.is_action_pressed("move_left") and !panelChat.visible:
-			#logger.verbose("Left")
+#			logger.superverbose("Left")
 			motion.x = max(motion.x - ACCELERATION, -MAX_SPEED)
 		elif Input.is_action_pressed("move_right") and !panelChat.visible:
-			#logger.verbose("Right")
+#			logger.superverbose("Right")
 			motion.x = min(motion.x + ACCELERATION, MAX_SPEED)
 		else:
 			friction = true;
@@ -101,7 +101,7 @@ func _physics_process(_delta: float) -> void:
 		
 		#if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))):
 		if motion.abs() != Vector2(0, 0):
-			#logger.verbose("Motion: (", abs(motion.x), ", ", abs(motion.y), ")")
+			logger.superverbose("Motion: (%s, %s)" % [abs(motion.x), abs(motion.y)])
 			motion = move_and_slide(motion)
 			send_to_clients(motion)
 			
@@ -117,7 +117,7 @@ func send_to_clients(mot: Vector2) -> void:
 	for player in players.get_children():
 		# Make sure to not send to self or server (server will be told about it later)
 		if (int(gamestate.net_id) != int(player.name)) and (1 != int(player.name)):
-			#logger.verbose("Sending To: ", player.name)
+			#logger.verbose("Sending To: %s" % player.name)
 			rpc_unreliable_id(int(player.name), "move_player", mot)
 
 	# Send copy to server regardless of it is in the world - Server won't update otherwise if not in same world
@@ -153,7 +153,7 @@ func correct_coordinates_server() -> void:
 # Could also be used for teleporting (designed to correct coordinates from lag, etc...)
 # Server is also guilty of getting out of sync with client, but server is arbiter and executor, so it overrides other clients' positions
 remotesync func correct_coordinates(coordinates: Vector2) -> void:
-	#logger.verbose(coordinates)
+	logger.superverbose("Coordinates: %s" % coordinates)
 	self.position = coordinates
 	
 # Sets Player's Color (also sets other players colors too)
