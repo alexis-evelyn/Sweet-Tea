@@ -40,8 +40,21 @@ func _on_btnJoin_pressed() -> void:
 	"""
 	
 	# TODO: Make Sure To Validate Data From User
-	var address : String = $panelNetwork/manualJoin/txtServerAddress.text
-	var ip : String = address.split(":", false, 1)[0]
-	var port : int = int(address.split(":", false, 1)[1])
+	var address : PoolStringArray = ($panelNetwork/manualJoin/txtServerAddress.text).split(":", true, 1)
+	
+	# If IP Address is Empty, Just Return
+	if address.size() == 0 or address[0].rstrip(" ").lstrip(" ") == "":
+		logger.error("IP Address in Network Menu is Empty!!!")
+		return
+	
+	var ip : String = address[0]
+	var port : int
+	
+	if address.size() != 2 or address[1].rstrip(" ").lstrip(" ") == "":
+		# I will be adding support for scanning the server with server finder whos IP address is listed without a port.
+		logger.error("Missing Port Number in Network Menu!!!")
+		return
+	
+	port = int(address[1].rstrip(" ").lstrip(" "))
 	
 	network.join_server(ip, port)
