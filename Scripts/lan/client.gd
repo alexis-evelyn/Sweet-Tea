@@ -107,5 +107,8 @@ func search_for_servers() -> void:
 		client.start(self, "find_servers", udp_peer)
 	
 func _exit_tree():
+	if is_instance_valid(delay_broadcast_search): # Make sure to only attempt to free the timer if the timer wasn't already freed (say due to running out of timer).
+		delay_broadcast_search.queue_free()
+		
 	udp_peer.close()
 	#client.wait_to_finish()

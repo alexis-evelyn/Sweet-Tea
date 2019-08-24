@@ -30,3 +30,4 @@ text = "New Character"
 flat = true
 [connection signal="about_to_show" from="PlayerCreationWindow" to="." method="_about_to_show"]
 [connection signal="popup_hide" from="PlayerCreationWindow" to="." method="_about_to_hide"]
+[connection signal="pressed" from="PlayerCreationWindow/PlayerSlots/Slot 0" to="." method="create_character"]

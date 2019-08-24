@@ -23,11 +23,11 @@ func set_theme(theme: Theme) -> void:
 		Supply Theme Resource
 	"""
 	
-	.set_theme(theme) # Godot's Version of a super - https://docs.godotengine.org/en/3.1/getting_started/scripting/gdscript/gdscript_basics.html#inheritance
+	#.set_theme(theme) # Godot's Version of a super - https://docs.godotengine.org/en/3.1/getting_started/scripting/gdscript/gdscript_basics.html#inheritance
 	
 	# Different Panels In Network Menu - Will Be Changed After Character Creation is Implemented
 	#$panelHost.set_theme(theme)
-	$panelNetwork.set_theme(theme)
+	#$panelNetwork.set_theme(theme)
 	#$panelPlayer.set_theme(theme)
 
 func _on_btnJoin_pressed() -> void:

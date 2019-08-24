@@ -3,6 +3,7 @@ extends Control
 # Declare member variables here. Examples:
 var scene : String = "" # Menu to load if set
 var old_title : String = "" # Title From Before Window Was Shown
+var yielding : bool = false # Prevents data.blocked > 0 crash by preventing yielding more than once
 
 var player_creation_menu : String = "res://Menus/PlayerCreationMenu.tscn" # Player Creation Menu
 var creation_menu : Node # Player Creation Menu
@@ -82,13 +83,32 @@ func _character_slot_pressed(button: Node) -> void:
 				
 			creation_menu.set_slot(slot) # Passes Slot Number to Character Creation Window
 			$PlayerSelectionWindow.hide() # Hide own Popup Window
-			creation_menu.get_node("PlayerCreationWindow").popup_centered() # Open PlayerCreationWindow
+			creation_menu.get_node("PlayerCreationWindow").popup_centered()
+			
+			if yielding:
+				return
+			
+			yielding = true
+			yield(creation_menu, "character_created") # Open PlayerCreationWindow)
+			yielding = false
 		else:
 			logger.error("Player Creation Menu Cannot Be Found!!!")
 			return
-			
-	# Load's menu after selecting player (may have to move to make Player Creation Screen Work).
+	
+	# Yielding causes a catchable crash if this node is moved (including using change_scene). The yielding variable prevents yielding after the first yield, but only prevents it on the first instance of the character slot chosen.
+	# Don't Handle Player Data Here!!! Because yielding only happens on the first instance, the data in this script may be invalid if the user loads selection twice after hitting create character (say if a player chooses another slot).
+	# Thankfully, only the last instance's data will be in player_creation_menu (which gets updated every instance), so the data is valid and up to date there. Handle player data manipulation in player_creation_menu.
+	# I know this may not make since (or maybe it does), but basically, the player_creation_menu is always going to have the right save slot. When handling player creation data, just handle it in the player_creation_menu.
+	
+	# For those that are observant, you may notice that if the player creation menu was loaded and then the user switched to loading a player, a problem may occur.
+	# You would be right. A reference to the thread object (caused by yield) would be lost. That is a non-issue though as any data that was in that thread should be wiped anyway if the player exited the creation screen outside of creating the character.
+	# This lost thread will not cause any issues though (in this specific circumstance). The crash I was referencing was attempting to change the scene while the script was yielding twice.
+	
+	# For more info, the error is "data.blocked > 0". Also, yes, I know losing threads normally means that it runs in the background potentially indefinitely, but that issue is solved by the fact that when the main menu is freed(), then so is every child (including the player creation thread).
+	# This means that the thread is cleaned up, although not in a traditional way.
+	
 	if scene != "":
+		#logger.error("Create Character Trace: %s" % get_stack())
 		get_tree().change_scene(scene)
 
 func _about_to_show() -> void:
