@@ -8,6 +8,7 @@ extends Panel
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	self.hide() # Keeps Player Stats From Stealing Input From Other Nodes in the Menus
 	get_tree().get_root().get_node("PlayerUI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

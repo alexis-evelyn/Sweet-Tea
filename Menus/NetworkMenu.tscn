@@ -18,10 +18,10 @@ __meta__ = {
 }
 
 [node name="manualJoin" type="HBoxContainer" parent="panelNetwork"]
-margin_left = 51.1482
-margin_top = 469.468
-margin_right = 347.148
-margin_bottom = 501.468
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -32.0
 __meta__ = {
 "_edit_group_": true,
 "_edit_use_anchors_": false
