@@ -27,18 +27,8 @@ func set_theme(theme: Theme) -> void:
 	
 	# Different Panels In Network Menu - Will Be Changed After Character Creation is Implemented
 	#$panelHost.set_theme(theme)
-	$panelJoin.set_theme(theme)
+	$panelNetwork.set_theme(theme)
 	#$panelPlayer.set_theme(theme)
-
-# warning-ignore:unused_argument
-func _on_btColor_color_changed(color: Color) -> void:
-	"""
-		(Deprecated) - Change Player's Color Live
-		
-		Not Meant To Be Called Directly
-	"""
-	
-	$panelPlayer/playerIcon.modulate = $panelPlayer/btColor.color
 
 func _on_btnJoin_pressed() -> void:
 	"""
@@ -50,6 +40,8 @@ func _on_btnJoin_pressed() -> void:
 	"""
 	
 	# TODO: Make Sure To Validate Data From User
-	var port : int = int($panelJoin/txtJoinPort.text)
-	var ip : String = $panelJoin/txtJoinIP.text
+	var address : String = $panelNetwork/manualJoin/txtServerAddress.text
+	var ip : String = address.split(":", false, 1)[0]
+	var port : int = int(address.split(":", false, 1)[1])
+	
 	network.join_server(ip, port)

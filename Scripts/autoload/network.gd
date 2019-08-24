@@ -68,7 +68,7 @@ func start_server() -> void:
 	# Disabled Because Not Implemented - #logger.verbose("Port: %s" % net.get_port())
 	
 	# Ensures UDP Packets are Ordered (Has less overhead than TCP)
-	net.set_always_ordered(NetworkedMultiplayerPeer.TRANSFER_MODE_UNRELIABLE_ORDERED)
+	#net.set_always_ordered(NetworkedMultiplayerPeer.TRANSFER_MODE_UNRELIABLE_ORDERED)
 	
 	get_tree().set_network_peer(net) # Assign NetworkedMultiplayerENet as Handler of Network - https://docs.godotengine.org/en/3.1/classes/class_multiplayerapi.html?highlight=set_network_peer#class-multiplayerapi-property-network-peer
 	
@@ -91,7 +91,7 @@ func join_server(ip: String, port: int) -> void:
 	var net : NetworkedMultiplayerENet = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
 	
 	# Ensures UDP Packets are Ordered (Has less overhead than TCP)
-	net.set_always_ordered(NetworkedMultiplayerPeer.TRANSFER_MODE_UNRELIABLE_ORDERED)
+	#net.set_always_ordered(NetworkedMultiplayerPeer.TRANSFER_MODE_UNRELIABLE_ORDERED)
 	
 	# Attempt to Create Client (does not guarantee that joining is successful)
 	if (net.create_client(ip, port) != OK):
