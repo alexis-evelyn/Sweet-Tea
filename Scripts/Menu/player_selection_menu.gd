@@ -108,7 +108,6 @@ func _character_slot_pressed(button: Node) -> void:
 	# This means that the thread is cleaned up, although not in a traditional way.
 	
 	if scene != "":
-		#logger.error("Create Character Trace: %s" % get_stack())
 		get_tree().change_scene(scene)
 
 func _about_to_show() -> void:
