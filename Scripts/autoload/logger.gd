@@ -45,6 +45,9 @@ func error(statement: String = ""):
 func fatal(statement: String = ""):
 	if verbosity >= 0:
 		printerr("Fatal: %s" % statement)
+		
+	# Right now, the only script that uses fatal is the diffie-hellman script.
+	#main_loop_events.quit(9001) # Should I Force Quit The Game On Fatal Error?
 	
 func trace(statement: String = ""):
 	if verbosity >= 0:
