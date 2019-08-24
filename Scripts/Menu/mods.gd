@@ -60,9 +60,10 @@ func load_mods() -> void:
 		resource = ResourceLoader.load(mods_folder.plus_file(mod), "PackedScene", false) # Only Loads PackedScenes (Apparently can only load PackedScenes even when trying to load a png or wav? Look at ResourceImporter.)
 		#logger.debug("Resource Type: %s" % typeof(resource))
 		
-		scene = resource.instance() # Instance the Scene
-		get_tree().get_root().call_deferred("add_child", scene) # Add Scene to Root
-		logger.debug("Loaded Scene: %s" % scene.name)
+		if resource != null:
+			scene = resource.instance() # Instance the Scene
+			get_tree().get_root().call_deferred("add_child", scene) # Add Scene to Root
+			logger.debug("Loaded Scene: %s" % scene.name)
 		
 	get_tree().change_scene(scene_to_change_to)
 
