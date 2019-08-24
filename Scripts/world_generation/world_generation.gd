@@ -101,10 +101,11 @@ func _ready() -> void:
 	#logger.verbose("Background TileMap's Owner: %s" % background_tilemap.get_owner().name) # Debug Statement to list Background TileMap's Owner's Name
 	
 	# Seed should be set by world loader (if pre-existing world)
-	if world_seed.empty():
-		logger.verbose("Generate Seed: %s" % generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
-	else:
-		logger.verbose("Set Seed: %s" % set_seed(world_seed)) # Converts Seed to Int and Applies to Generator
+	if gamestate.net_id == 1: # Clients don't need the seed (and these seeds would be wrong anyway on the client's side)
+		if world_seed.empty():
+			logger.verbose("Generate Seed: %s" % generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
+		else:
+			logger.verbose("Set Seed: %s" % set_seed(world_seed)) # Converts Seed to Int and Applies to Generator
 
 	#generate_new_world()
 
