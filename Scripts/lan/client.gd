@@ -12,6 +12,7 @@ var client : Thread = Thread.new() # I cannot switch to to OS.delay_msec(...) li
 var calling_card : String = "Nihilistic Sweet Tea: %s" # Text Server watches for (includes game version to determine compatibility).
 var delay_broadcast_time_seconds : float = 5.0 # 5 seconds
 var search_time : float = 30.0 # Only search for servers for 30 seconds until refresh is pressed.
+var delay_broadcast_search : Timer # Search For Servers Timer
 
 # Broadcast Addresses - IPV6 Does Not Support Broadcast (only using Multicast)
 var broadcast_address : String = "255.255.255.255" # For Lan networks.
@@ -41,10 +42,13 @@ func find_servers(peer: PacketPeerUDP) -> void:
 		#logger.verbose("Find Servers Time Left (Seconds): %s" % search_timer.time_left)
 		poll_for_servers(peer)
 		
-		# TODO: Replace With Node Based Timer
-		var timer : SceneTreeTimer = get_tree().create_timer(delay_broadcast_time_seconds) # Creates a One Shot Timer (One Shot means it only runs once)
-		yield(timer, "timeout")
-		timer.call_deferred('free') # Prevents Resume Failed From Object Class Being Expired (Have to Use Call Deferred Free or it will crash free() causes an attempted to remove reference error and queue_free() does not exist)
+		delay_broadcast_search = Timer.new() # Create Search For Servers Timer
+		get_tree().get_root().call_deferred("add_child", delay_broadcast_search)
+		
+		delay_broadcast_search.set_wait_time(delay_broadcast_time_seconds) # Execute Every delay_broadcast_time_seconds Seconds
+		delay_broadcast_search.start() # Start Timer
+		yield(delay_broadcast_search, "timeout")
+		delay_broadcast_search.queue_free() # Supposed To Prevent Resume Failed From Object Class Being Expired (It Doesn't)
 
 		if peer.get_available_packet_count() > 0:
 			#logger.verbose("Received Packet!!!")

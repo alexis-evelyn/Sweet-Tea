@@ -73,7 +73,7 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 				player_registrar.update_players(int(id), int(net_id)) # Updates Client's Player Registry to let it know about new client joining world
 				rpc_unreliable_id(id, "spawn_player", pinfo, net_id, coordinates) # Send New Client's Info to Existing Clients
 	
-	print("NetID: %s Gamestate ID: %s" % [net_id, gamestate.net_id])
+	logger.verbose("NetID: %s Gamestate ID: %s" % [net_id, gamestate.net_id])
 	# Run Specific RPC calls on Player Spawn
 	if net_id == gamestate.net_id:
 		network.set_client_title("Welcome to %s!!!" % player_registrar.players[int(net_id)].current_world) # This won't show up on server start (I think because the player selection menu is lagging behind due to not threading the world loader)
@@ -204,6 +204,7 @@ remote func change_world(world_name: String) -> void:
 		spawn.name = world_name
 		
 		worlds.add_child(spawn)
+		# TODO (IMPORTANT): Every once in a blue moon, the client does not spawn it's own player in (after it loads the world) after changing worlds. Figure out why!!!
 		rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Request Server Spawn
 	elif get_tree().is_network_server():
 		# There's a bug specific to the server player changing to a world with existing clients
