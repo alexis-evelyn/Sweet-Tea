@@ -66,7 +66,6 @@ func _character_slot_pressed(button: Node) -> void:
 		
 		# Only load world if a scene to load is not selected.
 		if scene == "":
-			network.server_info.max_players = 2
 			network.start_server()
 	else:
 		#logger.verbose("Creating Character and World!!!")

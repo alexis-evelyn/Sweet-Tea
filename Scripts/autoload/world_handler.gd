@@ -158,7 +158,18 @@ func load_world_server(net_id: int, location: String) -> String:
 	# Checks to Make sure World isn't already loaded
 	if loaded_worlds.has(world_meta):
 		var world : Node = get_tree().get_root().get_node("Worlds").get_node(loaded_worlds[world_meta]) # World was already loaded (as tracked in loaded_worlds Array)
-		var player : bool = world.get_node("Viewport/WorldGrid/Players").has_node(str(gamestate.net_id)) # If already in same world, keep visible
+		var world_grid : Node = spawn_handler.get_world_grid(loaded_worlds[world_meta])
+		
+		if world_grid == null:
+			logger.error("Cannot Load World Grid for World '%s'" % world_meta)
+			return ""
+			
+		if not world_grid.has_node("Players"):
+			var players_node : Node = Node.new()
+			players_node.name = "Players"
+			world_grid.add_child(players_node)
+			
+		var player : bool = world_grid.get_node("Players").has_node(str(gamestate.net_id)) # If already in same world, keep visible
 		
 		if (net_id == gamestate.net_id) or (player) or (net_id == -1):
 			# Make sure previous world was made invisible
@@ -344,7 +355,20 @@ func create_world(net_id: int = -1, world_seed: String = "", world_size: Vector2
 		else:
 			template.visible = false
 	
-	return template.name
+	return template.name # REturns World's Name
+	
+func get_world(worldname: String) -> Node:
+	var worlds : Node
+	
+	if not get_tree().get_root().has_node("Worlds"):
+		return null
+	
+	worlds = get_tree().get_root().get_node("Worlds") # Get Worlds node
+	
+	if worlds.has_node(worldname):
+		return worlds.get_node(worldname)
+	
+	return null
 	
 # Get Tiles From TileMap
 func get_tiles(tilemap: TileMap) -> Dictionary:

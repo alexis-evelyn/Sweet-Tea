@@ -26,7 +26,7 @@ var server_info : Dictionary = {
 	motd = "A Message Will Be Displayed to Clients Using This...", # Display A Message To Clients Before Player Joins Server
 	website = "https://sweet-tea.senorcontento.com/", # Server Owner's Website (to display rules, purchases, etc...)
 	num_player = 0, # Display Current Number of Connected Players (so client can see how busy a server is)
-	max_players = 0, # Maximum Number of Players (including server player)
+	max_players = 5, # Maximum Number of Players (including server player)
 	bind_address = "*", # IP Address to Bind To (Use). Asterisk (*) means all available IPs to the Computer.
 	used_port = 0, # Host Port
 	max_chunks = 3 # Max chunks to send to client (client does not request, server sends based on position of client - this helps mitigate DOS abuse)
@@ -62,7 +62,7 @@ func start_server() -> void:
 	
 	# Could Not Create Server (probably port already in use or Failed Permissions)
 	if (net.create_server(server_info.used_port, server_info.max_players) != OK):
-		#logger.verbose("Failed to create server")
+		logger.fatal("Failed to create server")
 		return
 	
 	# Disabled Because Not Implemented - #logger.verbose("Port: %s" % net.get_port())

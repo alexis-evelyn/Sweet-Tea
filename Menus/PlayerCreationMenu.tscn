@@ -19,15 +19,21 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PlayerSlots" type="VBoxContainer" parent="PlayerCreationWindow"]
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="Interface" type="GridContainer" parent="PlayerCreationWindow"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Slot 0" type="Button" parent="PlayerCreationWindow/PlayerSlots"]
-margin_right = 307.0
+[node name="CreateCharacter" type="Button" parent="PlayerCreationWindow/Interface"]
+margin_right = 142.0
 margin_bottom = 28.0
 text = "New Character"
 flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="about_to_show" from="PlayerCreationWindow" to="." method="_about_to_show"]
 [connection signal="popup_hide" from="PlayerCreationWindow" to="." method="_about_to_hide"]
-[connection signal="pressed" from="PlayerCreationWindow/PlayerSlots/Slot 0" to="." method="create_character"]
+[connection signal="pressed" from="PlayerCreationWindow/Interface/CreateCharacter" to="." method="create_character"]
