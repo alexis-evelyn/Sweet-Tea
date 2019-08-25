@@ -59,40 +59,56 @@ func _character_slot_pressed(button: Node) -> void:
 	
 	#logger.verbose("Character Slot Pressed: %s" % slot)
 	
+	if not has_node("PlayerCreationMenu"):
+		creation_menu = load(player_creation_menu).instance() # Instance Creation Menu
+		creation_menu.set_name("PlayerCreationMenu") # Set's a Name (Basically an ID) to make sure I don't create this twice unless it was freed from memory.
+	
+		add_child(creation_menu) # Add Player Creation Menu As Child of Player Selection Menu
+	
+	if creation_menu == null:
+		logger.error("Player Creation Menu Cannot Be Found!!!")
+		return
+	elif not creation_menu.has_node("PlayerCreationWindow"):
+		logger.error("Player Creation Window Cannot Be Found!!!")
+		return
+	
 	if slot_exists:
 		#logger.verbose("Loading Character and World!!!")
 		gamestate.load_player(slot) # Load Character To Memory
 		#logger.verbose("Character Pressed: %s" % gamestate.player_info.name)
 		
-		# Only load world if a scene to load is not selected.
 		if scene == "":
+			if gamestate.player_info.has("world_seed") and gamestate.player_info.has("world_created"):
+				if gamestate.player_info.world_created == false: # I am leaving the dictionary entries alone if the value was set to something other than false.
+					creation_menu.set_slot(slot) # Passes Slot Number to Character Creation Window
+					creation_menu.set_seed(gamestate.player_info.world_seed) # Tell Character Creation About World Seed To Use (Seed was stored in player data as the character was created on a multiplayer menu)
+					creation_menu.create_world() # Creates world for character
+					
+					# Erase old values that are no longer necessary
+					gamestate.player_info.erase("world_created")
+					gamestate.player_info.erase("world_seed")
+					gamestate.save_player(slot)
+			
+			# Only load world if a scene to load is not selected.
 			network.start_server()
 	else:
 		#logger.verbose("Creating Character and World!!!")
-		if not has_node("PlayerCreationMenu"):
-			creation_menu = load(player_creation_menu).instance() # Instance Creation Menu
-			creation_menu.set_name("PlayerCreationMenu") # Set's a Name (Basically an ID) to make sure I don't create this twice unless it was freed from memory.
+		creation_menu.set_slot(slot) # Passes Slot Number to Character Creation Window
+		creation_menu.set_seed("World Creation Seed")
 		
-			add_child(creation_menu) # Add Player Creation Menu As Child of Player Selection Menu
+		$PlayerSelectionWindow.hide() # Hide own Popup Window
+		creation_menu.get_node("PlayerCreationWindow").popup_centered()
 		
-		if creation_menu != null:
-			if not creation_menu.get_node("PlayerCreationWindow"):
-				logger.error("Player Creation Window Cannot Be Found!!!")
-				return
-				
-			creation_menu.set_slot(slot) # Passes Slot Number to Character Creation Window
-			$PlayerSelectionWindow.hide() # Hide own Popup Window
-			creation_menu.get_node("PlayerCreationWindow").popup_centered()
-			
-			if yielding:
-				return
-			
-			yielding = true
-			yield(creation_menu, "character_created") # Open PlayerCreationWindow)
-			yielding = false
-		else:
-			logger.error("Player Creation Menu Cannot Be Found!!!")
+		if yielding:
 			return
+		
+		if scene == "res://Menus/NetworkMenu.tscn": # Client Mode
+			logger.superverbose("Setting Multiplayer Scene to %s for Player Creation!!!" % scene)
+			creation_menu.set_client()
+		
+		yielding = true
+		yield(creation_menu, "character_created") # Open PlayerCreationWindow)
+		yielding = false
 	
 	# Yielding causes a catchable crash if this node is moved (including using change_scene). The yielding variable prevents yielding after the first yield, but only prevents it on the first instance of the character slot chosen.
 	# Don't Handle Player Data Here!!! Because yielding only happens on the first instance, the data in this script may be invalid if the user loads selection twice after hitting create character (say if a player chooses another slot).

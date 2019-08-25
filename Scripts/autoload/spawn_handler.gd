@@ -124,8 +124,8 @@ func add_player(pinfo: Dictionary, net_id: int, coordinates: Vector2) -> void:
 		var player_current_world : String = get_world(net_id)
 		var world_grid : Node = get_world_grid(player_current_world)
 		
-#		if world_grid == null:
-#			return
+		if world_grid == null:
+			return
 		
 		# Add Players Node (just a plain node) to put Players in
 		if get_players(player_current_world) == null:
@@ -134,7 +134,7 @@ func add_player(pinfo: Dictionary, net_id: int, coordinates: Vector2) -> void:
 			
 			world_grid.add_child(players_node)
 		
-		#logger.verbose("Player %s Current World: %s" % [net_id, player_current_world])
+		#logger.superverbose("Player %s Current World: %s" % [net_id, player_current_world])
 		
 		# Make sure client does not try to spawn player twice (to cause server crash)
 		if not get_players(player_current_world).has_node(new_actor.name):
