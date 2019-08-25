@@ -562,6 +562,11 @@ func load_chunks_background(chunks: Array) -> void:
 		if not generated_chunks_background.has(chunk_coor):
 			generated_chunks_background.append(chunk_coor)
 
+# Finds Initial World Spawn Point Based on World Seed
+func find_world_spawn() -> Vector2:
+	var initial_spawn : Vector2 = Vector2(generator.randi_range(-10000, 10000), generator.randi_range(-10000, 10000))
+	return find_safe_spawn(initial_spawn)
+
 # Find safe spawn location - bound to change with world gen code
 func find_safe_spawn(position: Vector2, world_spawn: bool = false) -> Vector2:
 	# This function will take a random player's position (chosen by any spawn code) and return a vector2 which is considered safe.
@@ -589,7 +594,7 @@ func find_safe_spawn(position: Vector2, world_spawn: bool = false) -> Vector2:
 				
 				if self.get_cell(coor_x, coor_y) != -1:
 					# This is a start to picking a decent spawn location
-					player_cell = player_cell + Vector2(rand_range(-5, 5), rand_range(-2, 0)) # Remember, the y axis is inverted (not my choice).
+					player_cell = player_cell + Vector2(generator.randi_range(-5, 5), generator.randi_range(-2, 0)) # Remember, the y axis is inverted (not my choice).
 					unsafe = true
 					break
 				else:

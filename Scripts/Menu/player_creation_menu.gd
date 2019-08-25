@@ -23,7 +23,7 @@ func create_character() -> void:
 	gamestate.player_info.debug = false
 	gamestate.player_info.name = "Default Name"
 	
-	var world_name = world_handler.create_world(-1, "", Vector2(0, 0))
+	var world_name = world_handler.create_world(-1, "Create Character Seed", Vector2(0, 0))
 	
 	gamestate.player_info.starting_world = "user://worlds/".plus_file(world_name)
 	

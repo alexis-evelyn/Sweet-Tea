@@ -216,8 +216,13 @@ func load_world_server(net_id: int, location: String) -> String:
 		generator.world_seed = results.seed # Set World's Seed
 		
 		if results.has("spawn"):
+			# Retrieve Saved World Spawn
 			generator.spawn_set = true # Set World Spawn to True
 			generator.spawn_coor = str2var("Vector2" + results.spawn) # Loads Spawn Coordinates From File As Vector2
+		else:
+			# Generate A World Spawn Based on World's Seed
+			generator.spawn_set = true # Set World Spawn to True
+			generator.spawn_coor = generator.find_world_spawn()
 		
 		# Load Generated Chunk Location into Memory (this should be replaced by a chunk loading system later)
 		generator.load_chunks_foreground(results["chunks_foreground"])
@@ -341,6 +346,9 @@ func create_world(net_id: int = -1, world_seed: String = "", world_size: Vector2
 	else:
 		# Sets Custom World Size
 		generator.generate_new_world(world_size) # Called World Generation Code
+	
+	generator.spawn_set = true # Set World Spawn to True
+	generator.spawn_coor = generator.find_world_spawn() # Find Spawn Point For World Based on World's Seed
 	
 	# Add Loaded World to Dictionary of Loaded Worlds
 	loaded_worlds[world_meta] = template.name
