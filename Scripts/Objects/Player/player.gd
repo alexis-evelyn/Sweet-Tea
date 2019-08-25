@@ -142,6 +142,9 @@ puppet func move_player(mot: Vector2) -> void:
 	
 # Called by Timer to Correct Client's Coordinates
 func correct_coordinates_server() -> void:
+	# Replace With A Predictive Formula to Determine Where The Player is Going (May Have To Adjust Timer Too)
+	# This is so Client doesn't seem jerky when the connection lags behind too much.
+	
 	#rpc_unreliable("correct_coordinates", self.position)
 		
 	#if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))): # Can be used to only send rpc if client is moving (will be slightly off due to latency)
