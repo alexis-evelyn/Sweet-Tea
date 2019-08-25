@@ -47,7 +47,7 @@ func _tree_changed():
 func quit(error: int = 0):
 	OS.set_exit_code(error) # Sets the Exit Code The Game Will Quit With (can be checked with "echo $?" after executing game from shell)
 	
-	#logger.verbose("Quit Game!!!")
+	logger.info("Quit Game!!!")
 	get_tree().quit()
 
 # Display Information About Game

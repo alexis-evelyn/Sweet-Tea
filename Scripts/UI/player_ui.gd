@@ -45,6 +45,21 @@ func _process(_delta: float) -> void:
 	if Input.is_action_pressed("quit_world") and !panelChat.visible:
 		network.close_connection()
 
+# Make Sure Game Saves World On Quit or Crash
+func _notification(what: int) -> void:
+	# This isn't an override of the normal behavior, it just allows listening for the events and doing something based on the event happening.
+	
+	match what:
+		MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
+			# This will run no matter if autoquit is on. Disabling autoquit just means that I can quit when needed (so I don't get interrupted, say if I am saving data).
+			network.close_connection()
+			logger.info("Saved Worlds On Quit!!!")
+			#main_loop_events.quit()
+		MainLoop.NOTIFICATION_CRASH:
+			# I don't know if this will work on crash as I have not had an opportunity to properly crash my game to test it.
+			network.close_connection()
+			logger.info("Saved Worlds On Crash!!!")
+
 # Cleanup PlayerUI
 func cleanup() -> void:
 	#logger.verbose("Cleanup PlayerUI")
