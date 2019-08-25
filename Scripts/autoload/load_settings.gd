@@ -8,6 +8,8 @@ extends Node
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	logger.create_log()
+	
 	#OS.window_fullscreen = true # Allows Enabling Full Screen
 	#OS.set_window_size(Vector2(640, 480)) # Sets Window's Size
 	logger.verbose("Window Size: %s" % OS.get_window_size()) # Get's Window Size Including Titlebar

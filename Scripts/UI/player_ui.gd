@@ -52,11 +52,17 @@ func _notification(what: int) -> void:
 	match what:
 		MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
 			# This will run no matter if autoquit is on. Disabling autoquit just means that I can quit when needed (so I don't get interrupted, say if I am saving data).
+			if not get_tree().has_network_peer():
+				return
+				
 			network.close_connection()
 			logger.info("Saved Worlds On Quit!!!")
 			#main_loop_events.quit()
 		MainLoop.NOTIFICATION_CRASH:
 			# I don't know if this will work on crash as I have not had an opportunity to properly crash my game to test it.
+			if not get_tree().has_network_peer():
+				return
+			
 			network.close_connection()
 			logger.info("Saved Worlds On Crash!!!")
 
