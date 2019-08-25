@@ -28,7 +28,9 @@ func _ready() -> void:
 		self.visible = true
 		functions.set_title("Loading Mods") # Sets Window's Title
 		
+	logger.debug("---------------------------------------------------")
 	load_mods()
+	logger.debug("---------------------------------------------------")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(_delta: float) -> void:
@@ -44,15 +46,20 @@ func check_for_mods() -> bool:
 		mods_folder_check.open(mods_folder)
 		mods_folder_check.list_dir_begin(true, true) # Opens Stream for Listing Directories - https://docs.godotengine.org/en/3.1/classes/class_directory.html#class-directory-method-list-dir-begin
 		
+		logger.verbose(" ")
+		logger.verbose("Reading Mods Folder!!!")
+		
 		var file = null
 		while file != "":
 			file = mods_folder_check.get_next()
 			
 			if file != "":
-				logger.debug("File: %s" % file)
+				logger.verbose("File: %s" % file)
 				installed_mods.append(file)
 		
 		mods_folder_check.list_dir_end() # Closes Stream for Listing Directories (Not Necessary if get_next() reaches end of directory list) - https://docs.godotengine.org/en/3.1/classes/class_directory.html#class-directory-method-list-dir-end
+		
+		logger.verbose(" ")
 		
 		if installed_mods.size() > 0:
 			return true
@@ -64,14 +71,14 @@ func load_mods() -> void:
 	var scene : Node
 	
 	for mod in installed_mods:
-		logger.debug("Mod: %s" % mod)
+		logger.debug("Mod File Name: %s" % mod)
 		resource = ResourceLoader.load(mods_folder.plus_file(mod), "PackedScene", false) # Only Loads PackedScenes (Apparently can only load PackedScenes even when trying to load a png or wav? Look at ResourceImporter.)
-		logger.debug("Resource Type: %s" % typeof(resource))
+		logger.superverbose("Resource Type: %s" % typeof(resource))
 		
 		if resource != null:
 			scene = resource.instance() # Instance the Scene
 			get_tree().get_root().call_deferred("add_child", scene) # Add Scene to Root
-			logger.debug("Loaded Scene: %s" % scene.name)
+			logger.debug("Loaded Mod: %s" % scene.name)
 		
 	get_tree().change_scene(scene_to_change_to)
 
@@ -124,5 +131,3 @@ func check_system():
 		#OS.window_per_pixel_transparency_enabled = true # Turns on Pixel Transparency
 		#get_tree().get_root().set_transparent_background(true) # Makes Root Viewport Have a Transparent Background
 		#get_tree().get_root().get_node("MainMenu").visible = false # Hides MainMenu
-		
-		#network.create_server()

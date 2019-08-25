@@ -56,7 +56,8 @@ func process_message(client_ip: String, client_port: int, bytes: PoolByteArray):
 	
 	if calling_card in message:
 		var split_message : PoolStringArray = message.split(":", true, 1)
-		#logger.verbose("(%s:%s) Client's Game Version: '%s'" % [client_ip, str(client_port), split_message[1].trim_prefix(" ").trim_suffix(" ")])
+		logger.verbose("(%s:%s) Client's Game Version: '%s'" % [client_ip, str(client_port), split_message[1].trim_prefix(" ").trim_suffix(" ")])
+		
 		return JSON.print(network.server_info).to_ascii() # This converts dictionary to json, which then gets converted to a PoolByteArray to be sent as a packet.
 	else:
 		logger.verbose("Unknown Message: %s" % message)

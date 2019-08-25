@@ -4,7 +4,7 @@ extends Node
 # then I will be logging to the system log too. This is very useful for the crash handler (especially when the game is in alpha stage).
 
 # Declare member variables here. Examples:
-var verbosity : int = 5
+var verbosity : int = 4
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

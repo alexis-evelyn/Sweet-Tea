@@ -132,7 +132,7 @@ func load_template(location: String) -> Node:
 		# TODO: Keep Client only worlds loaded when inviting players to client worlds is implemnted.
 		# I mau put client worlds in a separate node so they cannot conflict with server world names.
 		# Actually, that could help a lot with separate RPC calls (as server will not be allowed to force someone into client's worlds)
-		if not get_tree().is_network_server():
+		if not get_tree().has_network_peer() or not get_tree().is_network_server():
 			for loaded_world in worlds.get_children():
 				loaded_world.queue_free()
 				
@@ -353,7 +353,7 @@ func create_world(net_id: int = -1, world_seed: String = "", world_size: Vector2
 	# Add Loaded World to Dictionary of Loaded Worlds
 	loaded_worlds[world_meta] = template.name
 	
-	if get_tree().is_network_server():
+	if get_tree().has_network_peer() and get_tree().is_network_server():
 		# Makes sure the viewport (world) is only visible (to the server player) if the server player is changing worlds
 		if (net_id == gamestate.net_id) or (net_id == -1):
 			if net_id != -1:
