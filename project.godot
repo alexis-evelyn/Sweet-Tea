@@ -140,6 +140,10 @@ debug_left={
 2d_physics/layer_3="Enemies"
 2d_physics/layer_4="Coins"
 
+[locale]
+
+translations=PoolStringArray( "res://Assets/Languages/default.en.translation", "res://Assets/Languages/default.es.translation", "res://Assets/Languages/default.ja.translation" )
+
 [network]
 
 ssl/certificates="res://addons/gamejolt/gamejolt.crt"
