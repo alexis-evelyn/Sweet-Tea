@@ -35,7 +35,7 @@ func _notification(what: int) -> void:
 				crash_dir_handler.make_dir(crash_directory)
 			
 			OS.dump_memory_to_file(crash_directory.plus_file("crash-%s.mem" % time))
-			OS.dump_resources_to_file(crash_directory.plus_file("crash-%s.res" % time))
+			OS.dump_resources_to_file(crash_directory.plus_file("crash-%s.list" % time))
 			
 			crash_system_stats.open(crash_directory.plus_file("crash-system-stats-%s.log" % time), File.WRITE)
 			
