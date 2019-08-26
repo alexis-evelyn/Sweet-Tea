@@ -1,4 +1,4 @@
-,en,es,ja
-GREET,Test,"Hola, Amigo!",こんにちは
-ASK,How are you?,Cómo está?,元気ですか
-BYE,Good Bye,Adiós,さようなら
+,en,es,ja,mz,pr
+GREET,Test,"Hola, Amigo!",こんにちは,G - MZ,G - Pirate
+ASK,How are you?,Cómo está?,元気ですか,A - MZ,A - Pirate
+BYE,Good Bye,Adiós,さようなら,B - MZ,B - Pirate

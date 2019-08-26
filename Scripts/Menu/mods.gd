@@ -16,6 +16,10 @@ var installed_mods : PoolStringArray # Array of Mods to Load
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	TranslationServer.set_locale("mz")
+	print("Locale: %s" % TranslationServer.get_locale())
+	print("Name: %s" % TranslationServer.get_locale_name(TranslationServer.get_locale()))
+	
 	print(tr("GREET"))
 	
 	check_system() # Checks for System Status to Determine How To Optimize The Game
