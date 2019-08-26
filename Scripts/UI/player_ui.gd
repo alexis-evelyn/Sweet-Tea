@@ -16,7 +16,7 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	# Checks to See if connected to server (if not, just return)
-	if not get_tree().has_network_peer():
+	if not get_tree().has_network_peer() or not network.connected:
 		return
 	
 	# This allows user to see player list (I will eventually add support to change keys and maybe joystick support)

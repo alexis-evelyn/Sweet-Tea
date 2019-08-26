@@ -39,17 +39,17 @@ func _notification(what: int) -> void:
 			
 			crash_system_stats.open(crash_directory.plus_file("crash-system-stats-%s.log" % time), File.WRITE)
 			
-			crash_system_stats.store_string("This Log File Is Related (Please Send it Too): %s" % logger.log_file_path)
-			crash_system_stats.store_string("Command Line Arguments: %s" % OS.get_cmdline_args())
-			crash_system_stats.store_string("OS Model Name: %s" % OS.get_model_name())
-			crash_system_stats.store_string("Game Memory Usage: %s/%s" % [OS.get_static_memory_usage(), OS.get_static_memory_peak_usage()])
-			crash_system_stats.store_string("OS Unique ID: %s" % OS.get_unique_id()) # Helps Identify Related Crashes To The Same System - Especially Since Another Program or Driver Could Be The Culprit
+			crash_system_stats.store_string("This Log File Is Related (Please Send it Too): %s\n" % logger.log_file_path)
+			crash_system_stats.store_string("Command Line Arguments: %s\n" % OS.get_cmdline_args())
+			crash_system_stats.store_string("OS Model Name: %s\n" % OS.get_model_name())
+			crash_system_stats.store_string("Game Memory Usage: %s/%s\n" % [OS.get_static_memory_usage(), OS.get_static_memory_peak_usage()])
+			crash_system_stats.store_string("OS Unique ID: %s\n" % OS.get_unique_id()) # Helps Identify Related Crashes To The Same System - Especially Since Another Program or Driver Could Be The Culprit
 			
-			crash_system_stats.store_string("Debug Build: %s" % OS.is_debug_build())
-			crash_system_stats.store_string("Debug Mode: %s" % gamestate.debug)
+			crash_system_stats.store_string("Debug Build: %s\n" % OS.is_debug_build())
+			crash_system_stats.store_string("Debug Mode: %s\n" % gamestate.debug)
 			
-			crash_system_stats.store_string("Stack Trace (Currently Not Available For Release Builds): %s" % get_stack())
-			crash_system_stats.store_string("SceneTree: %s" % print_tree_pretty()) # It appears print_tree...() only prints to stdout, so I may not be able to capture it for logging
+			crash_system_stats.store_string("Stack Trace (Currently Not Available For Release Builds): %s\n" % get_stack())
+			crash_system_stats.store_string("SceneTree: %s\n" % print_tree_pretty()) # It appears print_tree...() only prints to stdout, so I may not be able to capture it for logging
 			
 			crash_system_stats.close()
 			

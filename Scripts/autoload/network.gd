@@ -7,6 +7,9 @@ signal cleanup_worlds # Cleanup World Handler
 # Keep Alive Thread
 var keep_alive: Thread
 
+# Other Vars
+var connected : bool = false # For GUIs to Determine if Game is Connected
+
 # Lan Broadcast Listener
 var lan_server : String = "res://Scripts/lan/server.gd"
 
@@ -130,6 +133,7 @@ func close_connection() -> void:
 		else:
 			# Client Side Only
 			# Free Up Resources and Save Data (Client Side)
+			connected = false
 		
 			# If has ping_timer, remove it
 			if get_tree().get_root().has_node("ping_timer"):
@@ -190,6 +194,8 @@ func _on_player_disconnected(id: int) -> void:
 
 # Successfully Joined Server (Client Side Only)
 func _on_connected_to_server() -> void:
+	connected = true
+	
 	var net : NetworkedMultiplayerENet = get_tree().get_network_peer()
 	functions.set_title("Connected To %s:%s" % [net.get_peer_address(1), net.get_peer_port(1)]) # 1 is the server's id
 	
