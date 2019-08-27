@@ -76,7 +76,7 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 	logger.verbose("NetID: %s Gamestate ID: %s" % [net_id, gamestate.net_id])
 	# Run Specific RPC calls on Player Spawn
 	if net_id == gamestate.net_id:
-		network.set_client_title(tr("Spawn_World_Title") % player_registrar.players[int(net_id)].current_world) # This won't show up on server start (I think because the player selection menu is lagging behind due to not threading the world loader)
+		network.set_client_title(tr("spawn_world_title") % player_registrar.players[int(net_id)].current_world) # This won't show up on server start (I think because the player selection menu is lagging behind due to not threading the world loader)
 	else:
 		# TODO: Detect Client's Language And Send Back In Proper Language
 		network.rpc_id(net_id, "set_client_title", "Welcome to %s!!!" % player_registrar.players[int(net_id)].current_world)

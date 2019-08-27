@@ -26,7 +26,7 @@ func _ready() -> void:
 		return # Prevents MainMenu from being loaded twice (as a result of load_mods())
 	else:
 		self.visible = true
-		functions.set_title(tr("Mods_Title")) # Sets Window's Title
+		functions.set_title(tr("mods_title")) # Sets Window's Title
 		
 	logger.debug("---------------------------------------------------")
 	load_mods()

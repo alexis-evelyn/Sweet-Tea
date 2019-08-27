@@ -12,6 +12,8 @@ var calculated : bool = false # Determine if the last action was a calculation.
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	self.window_title = tr("calculator_title")
+	
 	# Sadly I have to iterate through each and every node (I cannot just iterate through the parents).
 	# Allows Attaching Calculator Button Presses to Function
 	for columns in buttons.get_children():
@@ -213,7 +215,7 @@ func calculate_results() -> void:
 		screen.bbcode_text = "[right]" + str(result)
 		#calculated = true
 	else:
-		screen.bbcode_text = "[right]" + tr("Calc_Cannot_Divide_Zero")
+		screen.bbcode_text = "[right]" + tr("calc_cannot_divide_zero")
 		calculated = true
 
 # Close Calculator

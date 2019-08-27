@@ -1,13 +1,21 @@
 extends Control
 
+onready var server_address : Node = $panelNetwork/manualJoin/txtServerAddress
+onready var join_server : Node = $panelNetwork/manualJoin/btnJoinServer
+
 var lan_client : String = "res://Scripts/lan/client.gd"
 
 # Main Function - Registers Event Handling (Handled By Both Client And Server)
 func _ready() -> void:
-	functions.set_title(tr("Network_Menu_Title"))
+	functions.set_title(tr("network_menu_title"))
 	
+	set_language_text()
 	set_theme(gamestate.game_theme)
 	find_servers()
+	
+func set_language_text():
+	server_address.placeholder_text = tr("network_menu_address_placeholder")
+	join_server.text = tr("network_menu_join_server_button")
 	
 func find_servers() -> void:
 	# Setup Broadcast Listener Script

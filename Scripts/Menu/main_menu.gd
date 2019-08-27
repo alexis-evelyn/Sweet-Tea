@@ -22,8 +22,9 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	functions.set_title(tr("Main_Menu_Title"))
+	functions.set_title(tr("main_menu_title"))
 	
+	set_language_text() # Make Main Menu Text Multi-Language Friendly
 	# TODO: Save loaded theme to file that is not accessible to server
 	set_theme(gamestate.game_theme) # Sets The MainMenu's Theme
 	
@@ -49,6 +50,13 @@ func set_theme(theme: Theme) -> void:
 	buttons.get_node("Multiplayer").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
 	buttons.get_node("Options").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
 	buttons.get_node("Quit").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
+
+func set_language_text() -> void:
+	var buttons : Node = $Menu/Buttons
+	buttons.get_node("Singleplayer").text = tr("singleplayer_button_text")
+	buttons.get_node("Multiplayer").text = tr("multiplayer_button_text")
+	buttons.get_node("Options").text = tr("options_button_text")
+	buttons.get_node("Quit").text = tr("quit_button_text")
 
 func _on_Singleplayer_pressed() -> void:
 	"""

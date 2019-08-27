@@ -84,4 +84,4 @@ func quit(error: int = 0):
 
 # Display Information About Game
 func about_game():
-	OS.alert(tr("About_Game_Text"), tr("About_Game_Title"))
+	OS.alert(tr("about_game_text"), tr("about_game_title"))

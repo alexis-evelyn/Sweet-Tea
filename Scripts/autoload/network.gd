@@ -199,7 +199,7 @@ func _on_connected_to_server() -> void:
 	connected = true
 	
 	var net : NetworkedMultiplayerENet = get_tree().get_network_peer()
-	functions.set_title(tr("Connected_To_Server_Title") % [net.get_peer_address(1), net.get_peer_port(1)]) # 1 is the server's id
+	functions.set_title(tr("connected_to_server_title") % [net.get_peer_address(1), net.get_peer_port(1)]) # 1 is the server's id
 	
 	#logger.verbose("Connected To Server")
 	

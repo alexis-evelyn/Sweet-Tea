@@ -33,7 +33,6 @@ margin_bottom = 32.0
 text = "127.0.0.1:41100"
 expand_to_text_length = true
 clear_button_enabled = true
-placeholder_text = "Server IP and Port Here..."
 caret_blink = true
 __meta__ = {
 "_edit_use_anchors_": false

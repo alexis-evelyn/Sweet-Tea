@@ -10,8 +10,7 @@ var world_seed : String # Seed to use to generate world
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	#$PlayerCreationWindow.window_title = "Hello" # Can be used for translation code
-	pass
+	$PlayerCreationWindow.window_title = tr("create_character_title") # Can be used for translation code
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -63,7 +62,7 @@ func set_client(client: bool = true) -> void:
 
 func _about_to_show() -> void:
 	old_title = functions.get_title()
-	functions.set_title(tr("Create_Character_Title"))
+	functions.set_title(tr("create_character_title"))
 
 func _about_to_hide() -> void:
 	"""

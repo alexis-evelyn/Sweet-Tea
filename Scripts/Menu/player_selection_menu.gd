@@ -10,7 +10,7 @@ var creation_menu : Node # Player Creation Menu
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	#$PlayerSelectionWindow.window_title = "Hello" # Can be used for translation code
+	$PlayerSelectionWindow.window_title = tr("select_character_title") # Can be used for translation code
 	
 	for slot in $PlayerSelectionWindow/PlayerSlots.get_children():
 		slot.connect("pressed", self, "_character_slot_pressed", [slot])
@@ -40,9 +40,9 @@ func check_existing_slots() -> void:
 		var slot_exists : bool = gamestate.check_if_slot_exists(int(slot))
 		
 		if slot_exists:
-			$PlayerSelectionWindow/PlayerSlots.get_child(slot).set_text("Load Character") # Change Button Text If Slot Exists in Save
+			$PlayerSelectionWindow/PlayerSlots.get_child(slot).set_text(tr("load_character_button_text")) # Change Button Text If Slot Exists in Save
 		else:
-			$PlayerSelectionWindow/PlayerSlots.get_child(slot).set_text("New Character") # Change Button Text If Slot Does Not Exist in Save
+			$PlayerSelectionWindow/PlayerSlots.get_child(slot).set_text(tr("new_character_button_text")) # Change Button Text If Slot Does Not Exist in Save
 
 func _character_slot_pressed(button: Node) -> void:
 	"""
@@ -133,7 +133,7 @@ func _about_to_show() -> void:
 	"""
 	
 	old_title = functions.get_title()
-	functions.set_title(tr("Select_Character_Title"))
+	functions.set_title(tr("select_character_title"))
 	check_existing_slots()
 
 func _about_to_hide() -> void:
