@@ -22,6 +22,8 @@ onready var world_generator : Node = world.get_node("Viewport/WorldGrid/WorldGen
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	set_theme(gamestate.game_theme)
+	
 	world_generator.connect("chunk_change", self, "update_chunk_label")
 	
 	update_world_label()
@@ -85,3 +87,9 @@ func update_camera_pos(position: Vector2) -> void:
 	var cross_y = position.y - (ProjectSettings.get_setting("display/window/size/height")/2)
 	
 	self.position = Vector2(cross_x, cross_y)
+
+func set_theme(theme: Theme) -> void:
+	coor_label.set_theme(theme)
+	cam_coor_label.set_theme(theme)
+	chunk_position_label.set_theme(theme)
+	world_name_label.set_theme(theme)
