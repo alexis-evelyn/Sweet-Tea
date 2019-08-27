@@ -44,9 +44,9 @@ func set_theme(theme: Theme) -> void:
 #	$Menu.set_theme(theme)
 	
 	# I May Add The Font To The Theme Instead (then again I may add an override for people to use custom fonts with the same theme)
-#	var buttons : Node = $Menu/Buttons
+	var buttons : Node = $Menu/Buttons
 	# TODO: The font does not need to be loaded more than once.
-#	buttons.get_node("Singleplayer").add_font_override("font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres"))
+#	buttons.get_node("Singleplayer").add_font_override("font", load("res://Assets/Fonts/dynamicfont/treasure-map-deadhand-regular.tres"))
 #	buttons.get_node("Multiplayer").add_font_override("font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres"))
 #	buttons.get_node("Options").add_font_override("font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres"))
 #	buttons.get_node("Quit").add_font_override("font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres"))
