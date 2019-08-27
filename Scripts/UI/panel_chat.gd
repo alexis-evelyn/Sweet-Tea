@@ -143,7 +143,7 @@ func handle_url_click(dictionary: Dictionary) -> void:
 		# Checks if Players Dictionary Has Net_ID (player could have disconnected by then)
 		if player_registrar.has(int(net_id)):
 			#logger.verbose("Clicked Player Name: %s Player ID: %s" % [player_registrar.name(int(net_id)), net_id])
-			chat_message_client("Clicked Player Name: " + player_registrar.name(int(net_id)) + " Player ID: " + str(net_id))
+			chat_message_client(tr("Handle_URL_Click") % [player_registrar.name(int(net_id)), str(net_id)])
 		else:
 			logger.verbose("The Players Dictionary is Missing ID: %s" % net_id)
 			

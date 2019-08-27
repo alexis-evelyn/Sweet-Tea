@@ -10,6 +10,10 @@ extends Node
 func _ready():
 	logger.create_log()
 	
+	TranslationServer.set_locale("mz")
+	logger.debug("Locale: %s" % TranslationServer.get_locale())
+	logger.debug("Name: %s" % TranslationServer.get_locale_name(TranslationServer.get_locale()))
+	
 	#OS.window_fullscreen = true # Allows Enabling Full Screen
 	#OS.set_window_size(Vector2(640, 480)) # Sets Window's Size
 	logger.verbose("Window Size: %s" % OS.get_window_size()) # Get's Window Size Including Titlebar

@@ -1,4 +1,24 @@
 ,en,es,ja,mz,pr
-GREET,Test,"Hola, Amigo!",こんにちは,G - MZ,G - Pirate
-ASK,How are you?,Cómo está?,元気ですか,A - MZ,A - Pirate
-BYE,Good Bye,Adiós,さようなら,B - MZ,B - Pirate
+Translation_Authors,"[""Alex Evelyn""]",,,"[""Alex Evelyn""]","[""Alex Evelyn""]"
+Debug_Chunk_Label,Chunk: %s,,,,
+World_Name_Label,World: %s,,,,
+Player_Coordinate_Label,Player: %s,,,,
+Camera_Coordinate_Label,Camera: %s,,,,
+Create_Character_Title,Create Character,,,,
+Select_Character_Title,Select A Character,,,,
+Main_Menu_Title,Sweet Tea,,,,
+Mods_Title,Loading Mods,,,,
+Network_Menu_Title,Connect To A Server,,,,
+Spawn_World_Title,Welcome to %s!!!,,,,
+Connected_To_Server_Title,Connected To %s:%s,,,,
+Handle_URL_Click,Clicked Player Name: %s Player ID: %s,,,,
+Calc_Cannot_Divide_Zero,Cannot Divide by Zero!!!,,,,
+About_Game_Text,Made by Alex Evelyn,,,,
+About_Game_Title,About Sweet Tea,,,,
+help_help_desc,Provides List of Commands and What They Do,,,,
+help_kick_desc,Kicks Player Specified As Argument,,,,
+help_kickip_desc,Kicks All Players On Specified IP,,,,
+help_ban_desc,Bans Player Specified As Argument,,,,
+help_banip_desc,Bans IP Address From Joining Server,,,,
+help_shutdown_desc,Shuts Down Server,,,,
+command_not_found,"Command,%s, Not Found!!!",,,,

@@ -63,7 +63,7 @@ func set_client(client: bool = true) -> void:
 
 func _about_to_show() -> void:
 	old_title = functions.get_title()
-	functions.set_title("Create Character")
+	functions.set_title(tr("Create_Character_Title"))
 
 func _about_to_hide() -> void:
 	"""

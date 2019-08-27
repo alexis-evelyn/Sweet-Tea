@@ -15,13 +15,7 @@ var mods_folder_check : Directory = Directory.new() # Check For Mods Directory
 var installed_mods : PoolStringArray # Array of Mods to Load
 
 # Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	TranslationServer.set_locale("mz")
-	print("Locale: %s" % TranslationServer.get_locale())
-	print("Name: %s" % TranslationServer.get_locale_name(TranslationServer.get_locale()))
-	
-	print(tr("GREET"))
-	
+func _ready() -> void:	
 	check_system() # Checks for System Status to Determine How To Optimize The Game
 	
 	installed_mods = PoolStringArray()
@@ -32,7 +26,7 @@ func _ready() -> void:
 		return # Prevents MainMenu from being loaded twice (as a result of load_mods())
 	else:
 		self.visible = true
-		functions.set_title("Loading Mods") # Sets Window's Title
+		functions.set_title(tr("Mods_Title")) # Sets Window's Title
 		
 	logger.debug("---------------------------------------------------")
 	load_mods()

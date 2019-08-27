@@ -133,7 +133,7 @@ func _about_to_show() -> void:
 	"""
 	
 	old_title = functions.get_title()
-	functions.set_title("Select A Character")
+	functions.set_title(tr("Select_Character_Title"))
 	check_existing_slots()
 
 func _about_to_hide() -> void:

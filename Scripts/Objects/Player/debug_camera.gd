@@ -59,15 +59,15 @@ func get_player_node() -> Node:
 	return players.get_node(str(gamestate.net_id)).get_node("KinematicBody2D")
 	
 func update_chunk_label(chunk: Vector2) -> void:
-	chunk_position_label.text = "Chunk: " + str(chunk)
+	chunk_position_label.text = tr("Debug_Chunk_Label") % chunk
 	
 func update_world_label():
-	world_name_label.text = "World: " + world.name
+	world_name_label.text = tr("World_Name_Label") % world.name
 	
 func update_player_pos_label() -> void:
 	# Player's position is based on center of Player, not the edges
 	if player != null:
-		coor_label.text = "Player: " + str(player.position)
+		coor_label.text = tr("Player_Coordinate_Label") % player.position
 	
 func update_camera_pos_label() -> void:
 	# Get Builtin Screen Size and Find center of screen (add center coordinates to coordinates of camera)
@@ -77,7 +77,7 @@ func update_camera_pos_label() -> void:
 	var cross_coor = Vector2(cross_x, cross_y)
 	
 	# Prints center of screen's position in world
-	cam_coor_label.text = "Camera: " + str(cross_coor)
+	cam_coor_label.text = tr("Camera_Coordinate_Label") % str(cross_coor)
 
 # Relocate Camera to this Specified Position (in middle of screen)
 func update_camera_pos(position: Vector2) -> void:

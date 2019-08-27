@@ -143,6 +143,7 @@ debug_left={
 [locale]
 
 translations=PoolStringArray( "res://Assets/Languages/default.en.translation", "res://Assets/Languages/default.es.translation", "res://Assets/Languages/default.ja.translation", "res://Assets/Languages/default.mz.translation", "res://Assets/Languages/default.pr.translation" )
+locale_filter=[ 0, [  ] ]
 
 [network]
 

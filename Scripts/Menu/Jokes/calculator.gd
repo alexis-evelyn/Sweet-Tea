@@ -213,7 +213,7 @@ func calculate_results() -> void:
 		screen.bbcode_text = "[right]" + str(result)
 		#calculated = true
 	else:
-		screen.bbcode_text = "[right]" + "Cannot Divide by Zero!!!"
+		screen.bbcode_text = "[right]" + tr("Calc_Cannot_Divide_Zero")
 		calculated = true
 
 # Close Calculator

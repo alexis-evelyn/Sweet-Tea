@@ -18,12 +18,12 @@ const max_security : int = 6 # Another Joke Permission, Prevents Any Commands At
 
 # Used by Help Command to Provide List of Commands
 var supported_commands : Dictionary = {
-"help": {"description": "Provides List of Commands and What They Do", "permission": player},
-"kick": {"description": "Kicks Player Specified As Argument", "permission": mod},
-"kickip": {"description": "Kicks All Players On Specified IP", "permission": mod},
-"ban": {"description": "Bans Player Specified As Argument", "permission": mod},
-"banip": {"description": "Bans IP Address From Joining Server", "permission": mod},
-"shutdown": {"description": "Shuts Down Server", "permission": server_owner}
+"help": {"description": "help_help_desc", "permission": player},
+"kick": {"description": "help_kick_desc", "permission": mod},
+"kickip": {"description": "help_kickip_desc", "permission": mod},
+"ban": {"description": "help_ban_desc", "permission": mod},
+"banip": {"description": "help_banip_desc", "permission": mod},
+"shutdown": {"description": "help_shutdown_desc", "permission": server_owner}
 }
 
 var arguments : PoolStringArray # To Convert Message into Arguments
@@ -85,7 +85,7 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 			if command == "":
 				return ""
 			else:
-				return "Command, " + command + ", Not Found!!!"
+				return "command_not_found"
 
 # Help Command
 # warning-ignore:unused_argument
@@ -213,6 +213,7 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 		#logger.verbose("Server Change World: %s" % net_id)
 		spawn_handler.change_world(world_name)
 		
+	# Use Client's Language To Determine What Strings to Use
 	return "Player " + str(net_id) + " Changing World to: " + str(world_name)
 	
 # Change Player's World - Server Side Only

@@ -22,7 +22,7 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	functions.set_title("Sweet Tea")
+	functions.set_title(tr("Main_Menu_Title"))
 	
 	# TODO: Save loaded theme to file that is not accessible to server
 	set_theme(gamestate.game_theme) # Sets The MainMenu's Theme

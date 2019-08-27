@@ -74,6 +74,7 @@ func start_server() -> void:
 	#net.set_always_ordered(NetworkedMultiplayerPeer.TRANSFER_MODE_UNRELIABLE_ORDERED)
 	
 	get_tree().set_network_peer(net) # Assign NetworkedMultiplayerENet as Handler of Network - https://docs.godotengine.org/en/3.1/classes/class_multiplayerapi.html?highlight=set_network_peer#class-multiplayerapi-property-network-peer
+	connected = true # Set Connected to True
 	
 	# The world_handler loader is intentionally before registering the server player so that the server player will have a current world marked
 	emit_signal("server_created") # Notify world_handler That Server Was Created
@@ -109,6 +110,8 @@ func join_server(ip: String, port: int) -> void:
 
 # Closes Connection - Client and Server
 func close_connection() -> void:
+	connected = false
+	
 	#logger.verbose("Close Connection")
 	
 	# Clears PlayerUI on Disconnect
@@ -133,7 +136,6 @@ func close_connection() -> void:
 		else:
 			# Client Side Only
 			# Free Up Resources and Save Data (Client Side)
-			connected = false
 		
 			# If has ping_timer, remove it
 			if get_tree().get_root().has_node("ping_timer"):
@@ -197,7 +199,7 @@ func _on_connected_to_server() -> void:
 	connected = true
 	
 	var net : NetworkedMultiplayerENet = get_tree().get_network_peer()
-	functions.set_title("Connected To %s:%s" % [net.get_peer_address(1), net.get_peer_port(1)]) # 1 is the server's id
+	functions.set_title(tr("Connected_To_Server_Title") % [net.get_peer_address(1), net.get_peer_port(1)]) # 1 is the server's id
 	
 	#logger.verbose("Connected To Server")
 	
