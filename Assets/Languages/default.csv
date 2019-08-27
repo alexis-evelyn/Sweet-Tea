@@ -4,11 +4,11 @@ debug_chunk_label,Chunk: %s,,,,
 world_name_label,World: %s,,,,
 player_coordinate_label,Player: %s,,,,
 camera_coordinate_label,Camera: %s,,,,
-create_character_title,Create Character,,,,
-select_character_title,Select A Character,,,,
-main_menu_title,Sweet Tea,,,,
+create_character_title,Create Character,,,,Find yer mate
+select_character_title,Select A Character,,,,Select yer mate
+main_menu_title,Sweet Tea,,,,Rum
 mods_title,Loading Mods,,,,
-network_menu_title,Connect To A Server,,,,
+network_menu_title,Connect To A Server,,,,Sail the seas
 spawn_world_title,Welcome to %s!!!,,,,
 connected_to_server_title,Connected To %s:%s,,,,
 handle_url_click,Clicked Player Name: %s Player ID: %s,,,,
@@ -22,12 +22,12 @@ help_ban_desc,Bans Player Specified As Argument,,,,
 help_banip_desc,Bans IP Address From Joining Server,,,,
 help_shutdown_desc,Shuts Down Server,,,,
 command_not_found,"Command,%s, Not Found!!!",,,,
-singleplayer_button_text,Singleplayer,,,,Arrrrrrrgh 0!!!
-multiplayer_button_text,Multiplayer,,,,
-options_button_text,Options,,,,
-quit_button_text,Quit,,,,
+singleplayer_button_text,Singleplayer,,,,Arrrrrrrgh!!! Find yer booty
+multiplayer_button_text,Multiplayer,,,,Find booty with yer mates
+options_button_text,Options,,,,Fix Yer Ship
+quit_button_text,Quit,,,,Take yer nightshade an dream
 calculator_title,Calculator,,,,
-new_character_button_text,New Character,,,,
-load_character_button_text,Load Character,,,,
-network_menu_address_placeholder,Server IP and Port Here...,,,,
-network_menu_join_server_button,Join Server,,,,
+new_character_button_text,New Character,,,,Find yer mate
+load_character_button_text,Load Character,,,,Join yer mate
+network_menu_address_placeholder,Server IP and Port Here...,,,,Plot yer course
+network_menu_join_server_button,Join Server,,,,Sail the seas!!!
