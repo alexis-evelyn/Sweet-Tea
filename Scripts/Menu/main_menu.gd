@@ -41,15 +41,15 @@ func set_theme(theme: Theme) -> void:
 	
 	#get_tree().get_root().get_node("MainMenu/Menu/Buttons").set_theme(load("res://Themes/default_theme.tres")) # Testing Setting Theme Live - It Works, but I need Control Nodes or Other GUI nodes to set it (e.g. I cannot set it for root)
 	#get_tree().get_root().get_node("MainMenu/Menu").set_theme(load(theme)) # This will set the theme for every child of "Menu", that includes the PlayerSelection popup, but not NetworkMenu.
-	$Menu.set_theme(theme)
+#	$Menu.set_theme(theme)
 	
 	# I May Add The Font To The Theme Instead (then again I may add an override for people to use custom fonts with the same theme)
-	var buttons : Node = $Menu/Buttons
+#	var buttons : Node = $Menu/Buttons
 	# TODO: The font does not need to be loaded more than once.
-	buttons.get_node("Singleplayer").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
-	buttons.get_node("Multiplayer").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
-	buttons.get_node("Options").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
-	buttons.get_node("Quit").add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres"))
+#	buttons.get_node("Singleplayer").add_font_override("font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres"))
+#	buttons.get_node("Multiplayer").add_font_override("font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres"))
+#	buttons.get_node("Options").add_font_override("font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres"))
+#	buttons.get_node("Quit").add_font_override("font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres"))
 
 func set_language_text() -> void:
 	var buttons : Node = $Menu/Buttons

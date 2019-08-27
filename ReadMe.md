@@ -17,6 +17,7 @@ FreeType - FreeType License (Comparable to GPL 3) - https://git.savannah.gnu.org
 ENet - Custom License (Comparable to MIT) - http://enet.bespin.org/License.html from https://docs.godotengine.org/en/3.1/tutorials/legal/complying_with_licenses.html
 
 FiraCode Font - Open Font License - https://github.com/tonsky/FiraCode/
+Treasure Map Deadhand Font - Freeware - https://www.fontspace.com/gemfonts/treasure-map-deadhand
 Godot GameJolt API - MIT License - https://github.com/rojekabc/-godot-gj-api
 cripter - MIT License - https://github.com/Malkverbena/cripter
 MBedTLS - Apache 2.0 license - https://www.apache.org/licenses/LICENSE-2.0 from https://tls.mbed.org/

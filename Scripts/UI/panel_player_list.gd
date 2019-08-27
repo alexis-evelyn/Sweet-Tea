@@ -16,7 +16,7 @@ func loadPlayerList() -> void:
 	localPlayer = $lblLocalPlayer
 	localPlayer.text = gamestate.player_info.name # Display Local Client's Text on Screen
 	localPlayer.align = Label.ALIGN_CENTER # Aligns the Text To Center
-	localPlayer.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) 
+	#localPlayer.add_font_override("font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres")) 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(_delta: float):
@@ -45,7 +45,7 @@ func _on_player_list_changed() -> void:
 				connectedPlayerLabel.align = Label.ALIGN_CENTER # Aligns the Text To Center
 				connectedPlayerLabel.text = player_registrar.players[int(player.name)].name
 				# Font does not need to be loaded every single time (only once)
-				connectedPlayerLabel.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) 
+				#connectedPlayerLabel.add_font_override("font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres")) 
 				$boxList.add_child(connectedPlayerLabel)
 	
 func get_players(world_name: String) -> Node:

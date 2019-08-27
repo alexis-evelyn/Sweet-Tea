@@ -22,7 +22,7 @@ help_ban_desc,Bans Player Specified As Argument,,,,
 help_banip_desc,Bans IP Address From Joining Server,,,,
 help_shutdown_desc,Shuts Down Server,,,,
 command_not_found,"Command,%s, Not Found!!!",,,,
-singleplayer_button_text,Singleplayer,,,,
+singleplayer_button_text,Singleplayer,,,,Arrrrrrrgh 0!!!
 multiplayer_button_text,Multiplayer,,,,
 options_button_text,Options,,,,
 quit_button_text,Quit,,,,

@@ -10,7 +10,7 @@ extends Node
 func _ready():
 	logger.create_log()
 	
-	TranslationServer.set_locale("mz")
+	TranslationServer.set_locale("pr")
 	logger.debug("Locale: %s" % TranslationServer.get_locale())
 	logger.debug("Name: %s" % TranslationServer.get_locale_name(TranslationServer.get_locale()))
 	

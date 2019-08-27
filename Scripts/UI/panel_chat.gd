@@ -27,11 +27,11 @@ func _ready() -> void:
 	
 	chatInput.set_max_length(max_characters)
 	
-	chatInput.add_font_override("font", load("res://Fonts/dynamicfont/firacode-regular.tres")) 
+	#chatInput.add_font_override("font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres")) 
 	
 	# RichTextLabel Fonts
-	chatMessages.set("custom_fonts/normal_font", load("res://Fonts/dynamicfont/firacode-regular.tres")) 
-	chatMessages.set("custom_fonts/bold_font", load("res://Fonts/dynamicfont/firacode-bold.tres")) 
+	chatMessages.set("custom_fonts/normal_font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres")) 
+	chatMessages.set("custom_fonts/bold_font", load("res://Assets/Fonts/dynamicfont/firacode-bold.tres")) 
 	
 	chatMessages.set_scroll_follow(true) # Sets RichTextLabel to AutoScroll if at Bottom
 
