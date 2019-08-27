@@ -214,7 +214,10 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 		spawn_handler.change_world(world_name)
 		
 	# Use Client's Language To Determine What Strings to Use
-	return "Player " + str(net_id) + " Changing World to: " + str(world_name)
+	
+	# Psuedo Code
+	# var client_title : String = TranslationServer.get_translation("set_client_title", "language")
+	return "Player %s Changing World to: %s" % [net_id, world_name]
 	
 # Change Player's World - Server Side Only
 func create_world(net_id: int, message: PoolStringArray) -> String:

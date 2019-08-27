@@ -79,6 +79,9 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 		network.set_client_title(tr("spawn_world_title") % player_registrar.players[int(net_id)].current_world) # This won't show up on server start (I think because the player selection menu is lagging behind due to not threading the world loader)
 	else:
 		# TODO: Detect Client's Language And Send Back In Proper Language
+		
+		# Psuedo Code
+		# var client_title : String = TranslationServer.get_translation("set_client_title", "language")
 		network.rpc_id(net_id, "set_client_title", "Welcome to %s!!!" % player_registrar.players[int(net_id)].current_world)
 		
 	add_player(pinfo, net_id, coordinates) # TODO: Check to see if this is what causes problems with the Headless Server Mode

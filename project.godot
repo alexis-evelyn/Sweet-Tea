@@ -24,7 +24,7 @@ config/Version="0.0.1-alpha"
 
 [autoload]
 
-load_settings="*res://Scripts/autoload/load_settings.gd"
+settings="*res://Scripts/autoload/settings.gd"
 logger="*res://Scripts/autoload/logger.gd"
 main_loop_events="*res://Scripts/autoload/main_loop_events.gd"
 gamestate="*res://Scripts/autoload/gamestate.gd"

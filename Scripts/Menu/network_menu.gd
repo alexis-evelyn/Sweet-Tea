@@ -46,8 +46,7 @@ func _on_btnJoin_pressed() -> void:
 		
 		Not Meant To Be Called Directly
 	"""
-	
-	# TODO: Make Sure To Validate Data From User
+
 	var address : PoolStringArray = ($panelNetwork/manualJoin/txtServerAddress.text).split(":", true, 1)
 	
 	# If IP Address is Empty, Just Return
