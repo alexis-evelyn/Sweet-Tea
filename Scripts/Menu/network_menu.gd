@@ -35,7 +35,7 @@ func set_theme(theme: Theme) -> void:
 	
 	# Different Panels In Network Menu - Will Be Changed After Character Creation is Implemented
 	#$panelHost.set_theme(theme)
-	#$panelNetwork.set_theme(theme)
+	$panelNetwork.set_theme(theme)
 	#$panelPlayer.set_theme(theme)
 
 func _on_btnJoin_pressed() -> void:

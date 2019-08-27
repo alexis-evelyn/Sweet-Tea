@@ -28,7 +28,7 @@ __meta__ = {
 }
 
 [node name="txtServerAddress" type="LineEdit" parent="panelNetwork/manualJoin"]
-margin_right = 170.0
+margin_right = 118.0
 margin_bottom = 32.0
 text = "127.0.0.1:41100"
 expand_to_text_length = true
@@ -39,8 +39,8 @@ __meta__ = {
 }
 
 [node name="btnJoinServer" type="Button" parent="panelNetwork/manualJoin"]
-margin_left = 174.0
-margin_right = 296.0
+margin_left = 122.0
+margin_right = 201.0
 margin_bottom = 32.0
 mouse_default_cursor_shape = 8
 text = "Join Server"
