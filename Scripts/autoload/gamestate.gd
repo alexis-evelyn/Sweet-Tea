@@ -51,6 +51,7 @@ func save_player(slot: int) -> void:
 	var save_path : String = save_directory.plus_file(save_file) # Save File Path
 	var save_path_backup : String = save_directory.plus_file(backups_dir.plus_file(backups_save_file.replace("%date%", str(OS.get_unix_time())))) # Save File Backup Path - OS.get_unix_time() is Unix Time Stamp
 	var backup_path : String = save_directory.plus_file(backups_dir) # Backup Directory Path
+	var locale : String # Store a Copy of Player's Locale
 
 	#logger.verbose("Game Version: %s" % game_version)
 	var players_data : JSONParseResult # Data To Save
@@ -88,6 +89,11 @@ func save_player(slot: int) -> void:
 			# Should I merge this and the code from new save into a single function?
 			players_data_result["game_version"] = game_version
 			
+			# Temporarily Remove Locale From Player Info
+			if player_info.has("locale"):
+				locale = player_info.locale
+				player_info.erase("locale")
+			
 			# Note: Key has to be a string, otherwise Godot bugs out and adds duplicate keys to Dictionary
 			players_data_result[str(slot)] = player_info # Replaces Key In Dictionary With Updated Player_Info
 			
@@ -103,12 +109,18 @@ func save_player(slot: int) -> void:
 		
 		player_info["char_unique_id"] = generate_character_unique_id()
 		
+		# Temporarily Remove Locale From Player Info
+		if player_info.has("locale"):
+			locale = player_info.locale
+			player_info.erase("locale")
+		
 		# Note: Key has to be a string, otherwise Godot bugs out and adds duplicate keys to Dictionary
 		players_data_result[str(slot)] = player_info
 		
 		#logger.verbose(to_json(players_data)) # Print Save Data to stdout (Debug)
 		save_data.store_string(to_json(players_data_result))
 		
+	player_info.locale = locale # Set Locale Back For Gamestate
 	save_data.close()
 
 # Load Game Data
