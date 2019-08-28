@@ -142,8 +142,9 @@ translations=PoolStringArray( "res://Assets/Languages/default.en.translation", "
 locale_filter=[ 1, [ "en", "es", "ja", "mz", "pr" ] ]
 translation_remaps={
 "res://Assets/Fonts/dynamicfont/firacode-bold.tres": PoolStringArray(  ),
-"res://Assets/Fonts/dynamicfont/firacode-regular.tres": PoolStringArray( "res://Assets/Fonts/dynamicfont/firacode-bold.tres:mz", "res://Assets/Fonts/dynamicfont/treasure-map-deadhand-regular.tres:pr" )
+"res://Assets/Fonts/dynamicfont/firacode-regular.tres": PoolStringArray( "res://Assets/Fonts/dynamicfont/treasure-map-deadhand-regular.tres:pr", "res://Assets/Fonts/dynamicfont/mazawalza-regular.tres:mz" )
 }
+csv="res://Assets/Languages/default.txt"
 
 [network]
 

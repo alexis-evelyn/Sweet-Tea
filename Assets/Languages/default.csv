@@ -4,12 +4,12 @@ debug_chunk_label,Chunk: %s,,,,
 world_name_label,World: %s,,,,
 player_coordinate_label,Player: %s,,,,
 camera_coordinate_label,Camera: %s,,,,
-create_character_title,Create Character,,,,Find yer mate
+create_character_title,Create Character,,,Mazawalza Create Character,Find yer mate
 select_character_title,Select A Character,,,,Select yer mate
 main_menu_title,Sweet Tea,,,,Rum
 mods_title,Loading Mods,,,,
 network_menu_title,Connect To A Server,,,,Sail the seas
-spawn_world_title,Welcome to %s!!!,,,,
+spawn_world_title,Welcome to %s!!!,,,Test World Title: %s,Pirate Test World! %s
 connected_to_server_title,Connected To %s:%s,,,,
 handle_url_click,Clicked Player Name: %s Player ID: %s,,,,
 calc_cannot_divide_zero,Cannot Divide by Zero!!!,,,,

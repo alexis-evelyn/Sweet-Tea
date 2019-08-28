@@ -74,15 +74,20 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 				rpc_unreliable_id(id, "spawn_player", pinfo, net_id, coordinates) # Send New Client's Info to Existing Clients
 	
 	logger.verbose("NetID: %s Gamestate ID: %s" % [net_id, gamestate.net_id])
+	
 	# Run Specific RPC calls on Player Spawn
 	if net_id == gamestate.net_id:
-		network.set_client_title(tr("spawn_world_title") % player_registrar.players[int(net_id)].current_world) # This won't show up on server start (I think because the player selection menu is lagging behind due to not threading the world loader)
+		network.set_client_title(tr("spawn_world_title") % gamestate.player_info.current_world) # This won't show up on server start (I think because the player selection menu is lagging behind due to not threading the world loader)
 	else:
-		# TODO: Detect Client's Language And Send Back In Proper Language
-		
+		var client_locale : String = "en"
+		if player_registrar.players[int(net_id)].has("locale"):
+			client_locale = player_registrar.players[int(net_id)].locale
+
+		var message : String = functions.get_translation("spawn_world_title", client_locale)
+
 		# Psuedo Code
 		# var client_title : String = TranslationServer.get_translation("set_client_title", "language")
-		network.rpc_id(net_id, "set_client_title", "Welcome to %s!!!" % player_registrar.players[int(net_id)].current_world)
+		network.rpc_id(net_id, "set_client_title", message % player_registrar.players[int(net_id)].current_world)
 		
 	add_player(pinfo, net_id, coordinates) # TODO: Check to see if this is what causes problems with the Headless Server Mode
 	return 0

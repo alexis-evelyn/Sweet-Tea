@@ -53,6 +53,7 @@ func set_theme(theme: Theme) -> void:
 
 func set_language_text() -> void:
 	var buttons : Node = $Menu/Buttons
+	
 	buttons.get_node("Singleplayer").text = tr("singleplayer_button_text")
 	buttons.get_node("Multiplayer").text = tr("multiplayer_button_text")
 	buttons.get_node("Options").text = tr("options_button_text")

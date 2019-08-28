@@ -39,15 +39,17 @@ func _ready() -> void:
 func _button_pressed(button: Node) -> void:
 	#logger.verbose("Pressed: %s" % button.name)
 	
-	# Should I Add A Backspace Button?
-	if button.name != "Equals" and button.name != "Clear" and button.name != "Multiply":
-		write_to_screen(button.text)
-	elif button.name == "Equals":
+	if button.name == "Equals":
 		calculate_results()
 	elif button.name == "Clear":
 		clear_screen()
 	elif button.name == "Multiply":
 		write_to_screen("*")
+	elif button.name == "Backspace":
+		# Should I Add A Backspace Button?
+		erase_character()
+	else:
+		write_to_screen(button.text)
 
 # Handle Keyboard and Mouse Input
 func _input(event) -> void:
@@ -96,7 +98,7 @@ func _input(event) -> void:
 					write_to_screen("*")
 					return
 				
-				write_to_screen("8")	
+				write_to_screen("8")
 				return
 			KEY_9:
 				if event.shift:

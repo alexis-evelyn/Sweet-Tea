@@ -10,11 +10,12 @@ extends Node
 func _ready():
 	logger.create_log()
 	
-	#TranslationServer.set_locale("pr")
+	TranslationServer.set_locale("pr")
+	
 	logger.debug("Locale: %s" % TranslationServer.get_locale())
 	logger.debug("Name: %s" % TranslationServer.get_locale_name(TranslationServer.get_locale()))
 	
-	gamestate.player_info.language = TranslationServer.get_locale() # Saves Current Language to Player Info (Player Info is Used By Game and Servers)
+	gamestate.player_info.locale = TranslationServer.get_locale() # Saves Current Language to Player Info (Player Info is Used By Game and Servers)
 	
 	#OS.window_fullscreen = true # Allows Enabling Full Screen
 	#OS.set_window_size(Vector2(640, 480)) # Sets Window's Size
