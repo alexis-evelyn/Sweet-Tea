@@ -10,6 +10,13 @@ I fully intend for this to be a multiplayer compatible game and since I hear it 
 - https://discordapp.com/developers/docs/game-sdk/sdk-starter-guide - Discord's Current SDK
 - https://partner.steamgames.com/doc/sdk - Steam's SDK (SteamWorks)
 
+Release Binaries
+---------
+GameJolt - https://gamejolt.com/games/Sweet-Tea/430985
+Itch.io - https://alexevelyn.itch.io/sweet-tea
+
+These binaries will be released at these locations for alpha builds and eventually full releases.
+
 Licensing
 ---------
 Godot - MIT - https://docs.godotengine.org/en/3.1/tutorials/legal/complying_with_licenses.html

@@ -5,6 +5,7 @@ extends Node
 # var b = "text"
 
 # GameJolt Plugin API Source: https://github.com/rojekabc/-godot-gj-api
+# GameJolt Client Issues: https://github.com/gamejolt/gamejolt/issues/309
 
 signal function_finished
 
