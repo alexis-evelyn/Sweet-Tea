@@ -77,7 +77,7 @@ func add_server(json: Dictionary, server_ip: String, server_port: int) -> void:
 			logger.warn("Missing Maximum Number Of Players For Server %s!!!" % server)
 			json.max_players = tr("missing_max_player_count")
 			
-		json.ip_address = server_ip
+		json.ip_address = server_ip # Store the server's ip address so it can be in the metadata
 		server_list = json.duplicate() # Copy The Dictionary For Manipulation
 		server_list.erase("icon") # Helps Keep Memory Footprint Smaller
 			
@@ -87,12 +87,18 @@ func add_server(json: Dictionary, server_ip: String, server_port: int) -> void:
 		lan_servers.set_item_metadata(lan_servers.get_item_count() - 1, server_list)
 
 func item_selected(index: int) -> void:
+	var json : Dictionary = lan_servers.get_item_metadata(index)
+	
 	logger.debug("Selected Item: %s" % index)
-	print("Metadata: %s" % lan_servers.get_item_metadata(index))
+	logger.superverbose("Metadata: %s" % json)
 	
 func item_activated(index: int) -> void:
+	var json : Dictionary = lan_servers.get_item_metadata(index)
+	
 	logger.debug("Activated Item: %s" % index)
-	print("Metadata: %s" % lan_servers.get_item_metadata(index))
+	logger.superverbose("Metadata: %s" % json)
+	
+	network.join_server(json.ip_address, json.used_port)
 	
 func set_language_text():
 	server_address.placeholder_text = tr("network_menu_address_placeholder")
