@@ -102,7 +102,7 @@ func _physics_process(_delta: float) -> void:
 		
 		#if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))):
 		if motion.abs() != Vector2(0, 0):
-			logger.superverbose("Motion: (%s, %s)" % [abs(motion.x), abs(motion.y)])
+#			logger.superverbose("Motion: (%s, %s)" % [abs(motion.x), abs(motion.y)])
 			motion = move_and_slide(motion)
 			send_to_clients(motion)
 			
@@ -157,7 +157,7 @@ func correct_coordinates_server() -> void:
 # Could also be used for teleporting (designed to correct coordinates from lag, etc...)
 # Server is also guilty of getting out of sync with client, but server is arbiter and executor, so it overrides other clients' positions
 remotesync func correct_coordinates(coordinates: Vector2) -> void:
-	logger.superverbose("Coordinates: %s" % coordinates)
+#	logger.superverbose("Coordinates: %s" % coordinates)
 	self.position = coordinates
 	
 # Sets Player's Color (also sets other players colors too)

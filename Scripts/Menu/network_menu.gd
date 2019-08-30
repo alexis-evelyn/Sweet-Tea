@@ -82,9 +82,11 @@ func add_server(json: Dictionary, server_ip: String, server_port: int) -> void:
 		server_list.erase("icon") # Helps Keep Memory Footprint Smaller
 			
 		#print("Icon: %s" % icon)
+		var server_tooltip : String = tr("server_tooltip") % server
 		var server_text : String = (tr("server_list_format") % [json.name, json.motd]) + "    " + tr("player_count_format") % [json.num_players, json.max_players]
 		lan_servers.add_item(server_text, icon_texture, true)
 		lan_servers.set_item_metadata(lan_servers.get_item_count() - 1, server_list)
+		lan_servers.set_item_tooltip(lan_servers.get_item_count() - 1, server_tooltip)
 
 func item_selected(index: int) -> void:
 	var json : Dictionary = lan_servers.get_item_metadata(index)
