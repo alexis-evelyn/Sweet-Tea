@@ -148,6 +148,7 @@ func add_player(pinfo: Dictionary, net_id: int, coordinates: Vector2) -> void:
 		# Make sure client does not try to spawn player twice (to cause server crash)
 		if not get_players(player_current_world).has_node(new_actor.name):
 			get_players(player_current_world).add_child(new_actor) # Adds Player to Respective World Node
+			network.server_info.num_players += 1 # Add One To Player Count
 	
 			emit_signal("player_list_changed") # Notify Client Of List Change
 		else:
@@ -188,6 +189,7 @@ remote func despawn_player(net_id: int) -> void:
 			return
 			
 		# Despawn Player from World
+		network.server_info.num_players -= 1 # Remove One From Player Count
 		player_node.free() # Set to free so the player node gets freed immediately for respawn (if changing world) - Now that the player nodes are in different sections of the tree, do I really need to immediately disconnect the player?
 		emit_signal("player_list_changed") # Notify Client Of List Change
 	else:

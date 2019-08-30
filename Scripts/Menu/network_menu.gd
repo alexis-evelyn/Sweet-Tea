@@ -67,14 +67,16 @@ func add_server(json: Dictionary, server_ip: String, server_port: int) -> void:
 			logger.warn("Server %s Missing MOTD!!!" % server)
 			servers[server].motd = tr("default_server_motd")
 			
-		if not json.has("num_player"):
+		if not json.has("num_players"):
 			logger.warn("Missing Number Of Players For Server %s!!!" % server)
+			servers[server].num_players = tr("missing_player_count")
 			
 		if not json.has("max_players"):
 			logger.warn("Missing Maximum Number Of Players For Server %s!!!" % server)
+			servers[server].max_players = tr("missing_max_player_count")
 			
 		#print("Icon: %s" % icon)
-		var server_text : String = tr("server_list_format") % [servers[server].name, servers[server].motd]
+		var server_text : String = (tr("server_list_format") % [servers[server].name, servers[server].motd]) + "    " + tr("player_count_format") % [servers[server].num_players, servers[server].max_players]
 		lan_servers.add_item(server_text, icon_texture, true)
 	
 func set_language_text():
