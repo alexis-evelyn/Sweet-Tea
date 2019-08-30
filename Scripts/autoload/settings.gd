@@ -3,30 +3,50 @@ extends Node
 # Used to load settings from options menu
 
 # Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+var game_settings : String = "user://game-settings.json"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	logger.create_log()
-	
+	logger.create_log() # Start Logging to File
+	check_settings() # Check OS Settings For Optimizing Game Performance
+	load_server_info() # Load's Server Info From File
+	load_locale() # Load Locale Settings
+	load_game_settings() # Load Player's Game Settings From File
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+# Load Locale Settings From File
+func load_locale() -> void:
 	TranslationServer.set_locale("en")
 	
 	logger.debug("Locale: %s" % TranslationServer.get_locale())
 	logger.debug("Name: %s" % TranslationServer.get_locale_name(TranslationServer.get_locale()))
 	
 	gamestate.player_info.locale = TranslationServer.get_locale() # Saves Current Language to Player Info (Player Info is Used By Game and Servers)
+
+# Load Server's Info From File
+func load_server_info() -> void:
+	network.server_icon = "res://Assets/Icons/game_icon.png" # Server Icon (for Clients to See)
 	
+	network.server_info.name = "Loaded Game Name" # Name of Server
+	network.server_info.motd = "Loaded MOTD" # Display A Message To Clients Before Player Joins Server
+	network.server_info.website = "https://example.com/" # Server Owner's Website (to display rules, purchases, etc...)
+	network.server_info.max_players = 5 # Maximum Number of Players (including server player)
+	network.server_info.bind_address = "*" # IP Address to Bind To (Use). Asterisk (*) means all available IPs to the Computer.
+#	network.server_info.max_chunks = 3 # Max chunks to send to client (client does not request, server sends based on position of client - this helps mitigate DOS abuse)
+#	network.server_info.used_port = 0 # Host Port
+
+# Load Player's Game Settings From File
+func load_game_settings() -> void:
 	#OS.window_fullscreen = true # Allows Enabling Full Screen
 	#OS.set_window_size(Vector2(640, 480)) # Sets Window's Size
 	logger.verbose("Window Size: %s" % OS.get_window_size()) # Get's Window Size Including Titlebar
 	#logger.verbose("Real Window Size: %s" % OS.get_real_window_size()) # Gets Window's Size Minus Titlebar
 	#logger.verbose("Screen Size: %s" % OS.get_screen_size()) # Gets Screen Size
-	
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
 
+# Check OS Settings For Optimizing Game Performance
 func check_settings():
 	#logger.verbose("MainLoop: %s" % Engine.get_main_loop().get_class()) # Prints Current MainLoop Type
 	

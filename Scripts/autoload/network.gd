@@ -10,7 +10,7 @@ var keep_alive: Thread
 # Other Vars
 var connected : bool = false # For GUIs to Determine if Game is Connected
 
-var server_icon : String = "res://Assets/Icons/game_icon.png"
+var server_icon : String
 var server_icon_resource : Resource
 var server_icon_bytes : PoolByteArray
 var server_icon_encoded : String

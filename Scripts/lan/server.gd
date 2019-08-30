@@ -1,12 +1,11 @@
 extends Node
 
-# Lan Server Finder Helper - EXTREMELY BUGGY
+# Lan Server Finder Helper
 # Declare member variables here. Examples:
 var used_port: int
 var packet_buffer_size: int = 1000 # Clients repeatedly send packets, so there is no reason to cache 65536 packets.
 var server : Thread = Thread.new()
 var calling_card : String = "Nihilistic Sweet Tea:"
-var calling_icon : String = "Icon"
 var delay_packet_processing_time_milliseconds : int = 100 # Delay processing to prevent cpu usage rising dramatically by a flood of packets (won't prevent DOS, but helps out on normal usage)
 var udp_peer = PacketPeerUDP.new()
 
