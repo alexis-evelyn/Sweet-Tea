@@ -8,7 +8,7 @@ var lan_client : String = "res://Scripts/lan/client.gd"
 var default_icon : Resource = load("res://Assets/Blocks/grass-debug.png")
 
 var max_servers : int = 50 # Apply a maximum number of servers to show
-var servers : Dictionary # Keep track of already added servers - to avoid duplicates
+var servers : Array # Keep track of already added servers - to avoid duplicates
 var server_list : Dictionary # Used to Store Server Information
 var server : String # Server to add to servers list
 var used_port : int # Server's Port
@@ -22,6 +22,10 @@ func _ready() -> void:
 	
 	setup_server_list() # Setup Server List
 	find_servers().connect("add_server", self, "add_server") # Add Server to GUI
+	
+	# ItemList Handling - https://docs.godotengine.org/en/3.1/classes/class_itemlist.html
+	lan_servers.connect("item_selected", self, "item_selected") # Detect Selected Item
+	lan_servers.connect("item_activated", self, "item_activated") # Detect When Item Is Double Clicked (or Enter Pressed)
 	
 func setup_server_list() -> void:
 	lan_servers.set_max_columns(1)
@@ -39,9 +43,7 @@ func add_server(json: Dictionary, server_ip: String, server_port: int) -> void:
 	
 	# Add Server to List If Not Already on List
 	if not servers.has(server):
-		server_list = json.duplicate() # Copy The Dictionary For Manipulation
-		server_list.erase("icon") # Helps Keep Memory Footprint Smaller
-		servers[server] = server_list # Add Current Server's Dictionary to Other Dictionary
+		servers.append(server) # Add Current Server's Dictionary to Other Dictionary
 		#print("Servers: %s" % var2str(servers))
 		
 		logger.verbose("Server: %s:%s" % [server_ip, server_port])
@@ -61,23 +63,36 @@ func add_server(json: Dictionary, server_ip: String, server_port: int) -> void:
 			
 		if not json.has("name"):
 			logger.warn("Server %s Missing Name!!!" % server)
-			servers[server].name = tr("default_server_name")
+			json.name = tr("default_server_name")
 			
 		if not json.has("motd"):
 			logger.warn("Server %s Missing MOTD!!!" % server)
-			servers[server].motd = tr("default_server_motd")
+			json.motd = tr("default_server_motd")
 			
 		if not json.has("num_players"):
 			logger.warn("Missing Number Of Players For Server %s!!!" % server)
-			servers[server].num_players = tr("missing_player_count")
+			json.num_players = tr("missing_player_count")
 			
 		if not json.has("max_players"):
 			logger.warn("Missing Maximum Number Of Players For Server %s!!!" % server)
-			servers[server].max_players = tr("missing_max_player_count")
+			json.max_players = tr("missing_max_player_count")
+			
+		json.ip_address = server_ip
+		server_list = json.duplicate() # Copy The Dictionary For Manipulation
+		server_list.erase("icon") # Helps Keep Memory Footprint Smaller
 			
 		#print("Icon: %s" % icon)
-		var server_text : String = (tr("server_list_format") % [servers[server].name, servers[server].motd]) + "    " + tr("player_count_format") % [servers[server].num_players, servers[server].max_players]
+		var server_text : String = (tr("server_list_format") % [json.name, json.motd]) + "    " + tr("player_count_format") % [json.num_players, json.max_players]
 		lan_servers.add_item(server_text, icon_texture, true)
+		lan_servers.set_item_metadata(lan_servers.get_item_count() - 1, server_list)
+
+func item_selected(index: int) -> void:
+	logger.debug("Selected Item: %s" % index)
+	print("Metadata: %s" % lan_servers.get_item_metadata(index))
+	
+func item_activated(index: int) -> void:
+	logger.debug("Activated Item: %s" % index)
+	print("Metadata: %s" % lan_servers.get_item_metadata(index))
 	
 func set_language_text():
 	server_address.placeholder_text = tr("network_menu_address_placeholder")
