@@ -31,3 +31,6 @@ new_character_button_text,New Character,,,,Find yer mate
 load_character_button_text,Load Character,,,,Join yer mate
 network_menu_address_placeholder,Server IP and Port Here...,,,,Plot yer course
 network_menu_join_server_button,Join Server,,,,Sail the seas!!!
+default_server_motd,Missing Message of The Day,,,,
+default_server_name,Missing Server Name,,,,
+server_list_format,%s - %s,,,,

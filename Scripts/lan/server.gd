@@ -7,7 +7,7 @@ var packet_buffer_size: int = 100 # Clients repeatedly send packets, so there is
 var server : Thread = Thread.new()
 var calling_card : String = "Nihilistic Sweet Tea:"
 var calling_icon : String = "Icon"
-var delay_packet_processing_time_milliseconds : int = 1000 # Delay processing to prevent cpu usage rising dramatically by a flood of packets (won't prevent DOS, but helps out on normal usage)
+var delay_packet_processing_time_milliseconds : int = 100 # Delay processing to prevent cpu usage rising dramatically by a flood of packets (won't prevent DOS, but helps out on normal usage)
 var udp_peer = PacketPeerUDP.new()
 
 # Called when the node enters the scene tree for the first time.
@@ -39,7 +39,7 @@ func listen_for_clients(thread_data) -> void:
 			
 			#logger.verbose("Client Response Type: %s" % typeof(reply)) # https://docs.godotengine.org/en/3.1/classes/class_@globalscope.html#enum-globalscope-variant-type
 			if typeof(reply) == TYPE_RAW_ARRAY: # PoolByteArray
-				#logger.verbose("Sending Reply!!!")
+				logger.superverbose("Sending Reply!!!")
 				udp_peer.set_dest_address(client_ip, client_port) # Set Client as Receiver of Response
 				udp_peer.put_packet(reply) # Send response back to client
 				

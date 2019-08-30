@@ -8,7 +8,8 @@ var lan_client : String = "res://Scripts/lan/client.gd"
 var default_icon : Resource = load("res://Assets/Blocks/grass-debug.png")
 
 var max_servers : int = 50 # Apply a maximum number of servers to show
-var servers : Array # Keep track of already added servers - to avoid duplicates
+var servers : Dictionary # Keep track of already added servers - to avoid duplicates
+var server_list : Dictionary # Used to Store Server Information
 var server : String # Server to add to servers list
 var used_port : int # Server's Port
 
@@ -28,7 +29,7 @@ func setup_server_list() -> void:
 	lan_servers.set_select_mode(ItemList.SELECT_SINGLE)
 	lan_servers.set_fixed_icon_size(Vector2(48, 48))
 	
-func add_server(json, server_ip, server_port) -> void:
+func add_server(json: Dictionary, server_ip: String, server_port: int) -> void:
 	# If server does not specify port, then the client cannot connect to it, so don't add it to the server list.
 	if not json.has("used_port"):
 		return
@@ -38,7 +39,9 @@ func add_server(json, server_ip, server_port) -> void:
 	
 	# Add Server to List If Not Already on List
 	if not servers.has(server):
-		servers.append(server)
+		server_list = json.duplicate() # Copy The Dictionary For Manipulation
+		server_list.erase("icon") # Helps Keep Memory Footprint Smaller
+		servers[server] = server_list # Add Current Server's Dictionary to Other Dictionary
 		#print("Servers: %s" % var2str(servers))
 		
 		logger.verbose("Server: %s:%s" % [server_ip, server_port])
@@ -51,25 +54,28 @@ func add_server(json, server_ip, server_port) -> void:
 			var decoded_icon : PoolByteArray = Marshalls.base64_to_raw(json.get("icon"))
 			icon_texture = bytes2var(decoded_icon, true)
 			
-			logger.debug("Got Icon!!!")
+#			logger.superverbose("Got Icon!!!")
 		else:
-			logger.warn("Missing Icon!!!")
+			logger.warn("Missing Icon For Server %s!!!" % server)
 			icon_texture = default_icon
 			
 		if not json.has("name"):
-			logger.warn("Server Missing Name!!!")
+			logger.warn("Server %s Missing Name!!!" % server)
+			servers[server].name = tr("default_server_name")
 			
 		if not json.has("motd"):
-			logger.warn("Server Missing MOTD!!!")
+			logger.warn("Server %s Missing MOTD!!!" % server)
+			servers[server].motd = tr("default_server_motd")
 			
 		if not json.has("num_player"):
-			logger.warn("Missing Number Of Players!!!")
+			logger.warn("Missing Number Of Players For Server %s!!!" % server)
 			
 		if not json.has("max_players"):
-			logger.warn("Missing Maximum Number Of Players!!!")
+			logger.warn("Missing Maximum Number Of Players For Server %s!!!" % server)
 			
 		#print("Icon: %s" % icon)
-		lan_servers.add_item(server, icon_texture, true)
+		var server_text : String = tr("server_list_format") % [servers[server].name, servers[server].motd]
+		lan_servers.add_item(server_text, icon_texture, true)
 	
 func set_language_text():
 	server_address.placeholder_text = tr("network_menu_address_placeholder")

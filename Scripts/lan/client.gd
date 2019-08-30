@@ -12,7 +12,7 @@ var packet_buffer_size : int = 65536
 
 var client : Thread = Thread.new() # I cannot switch to to OS.delay_msec(...) like I did for the server as then the client will not be able to set one way collisions and will crash. More info can be found at https://www.reddit.com/r/godot/comments/cu8jed/where_is_the_best_place_i_can_get_help_with/
 var calling_card : String = "Nihilistic Sweet Tea: %s" # Text Server watches for (includes game version to determine compatibility).
-var delay_broadcast_time_seconds : float = 5.0 # 5 seconds
+var delay_broadcast_time_seconds : float = 0.01 # 5 seconds
 var search_time : float = 30.0 # Only search for servers for 30 seconds until refresh is pressed.
 var delay_broadcast_search : Timer # Search For Servers Timer
 
