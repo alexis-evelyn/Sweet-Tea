@@ -4,6 +4,7 @@ extends Node
 
 # Declare member variables here. Examples:
 var game_settings : String = "user://game-settings.json"
+var game_settings_backup : String = "user://game-settings-backups.json"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -11,7 +12,7 @@ func _ready():
 	check_settings() # Check OS Settings For Optimizing Game Performance
 	load_server_info() # Load's Server Info From File
 	load_locale() # Load Locale Settings
-	load_game_settings() # Load Player's Game Settings From File
+#	load_game_settings() # Load Player's Game Settings From File
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -26,25 +27,84 @@ func load_locale() -> void:
 	
 	gamestate.player_info.locale = TranslationServer.get_locale() # Saves Current Language to Player Info (Player Info is Used By Game and Servers)
 
+# NOT IMPLEMENTED YET!!!
 # Load Server's Info From File
-func load_server_info() -> void:
-	network.server_icon = "res://Assets/Icons/game_icon.png" # Server Icon (for Clients to See)
+func save_server_info() -> void:
+	# Save Game Version Here
 	
-	network.server_info.name = "Loaded Game Name" # Name of Server
-	network.server_info.motd = "Loaded MOTD" # Display A Message To Clients Before Player Joins Server
-	network.server_info.website = "https://example.com/" # Server Owner's Website (to display rules, purchases, etc...)
-	network.server_info.max_players = 5 # Maximum Number of Players (including server player)
-	network.server_info.bind_address = "*" # IP Address to Bind To (Use). Asterisk (*) means all available IPs to the Computer.
-#	network.server_info.max_chunks = 3 # Max chunks to send to client (client does not request, server sends based on position of client - this helps mitigate DOS abuse)
-#	network.server_info.used_port = 0 # Host Port
+	pass
 
-# Load Player's Game Settings From File
-func load_game_settings() -> void:
-	#OS.window_fullscreen = true # Allows Enabling Full Screen
-	#OS.set_window_size(Vector2(640, 480)) # Sets Window's Size
-	logger.verbose("Window Size: %s" % OS.get_window_size()) # Get's Window Size Including Titlebar
-	#logger.verbose("Real Window Size: %s" % OS.get_real_window_size()) # Gets Window's Size Minus Titlebar
-	#logger.verbose("Screen Size: %s" % OS.get_screen_size()) # Gets Screen Size
+# Load Server's Info From File
+func load_server_info() -> int:
+	var save_path : String = game_settings # Save File Path
+	
+	var save_data : File = File.new()
+	
+	if not save_data.file_exists(save_path): # Check If Save File Exists
+		logger.verbose("Save File Does Not Exist!!! Using Default Server Info?")
+		return -1 # Returns -1 to signal that loading save file failed (for reasons of non-existence)
+	
+	# warning-ignore:return_value_discarded
+	save_data.open(save_path, File.READ)
+	var json : JSONParseResult = JSON.parse(save_data.get_as_text())
+		
+	# Checks to Make Sure JSON was Parsed
+	if json.error == OK:
+		#logger.verbose("Save File Read!!!")
+		
+		if typeof(json.result) == TYPE_DICTIONARY and json.result.has("server_info"):
+			#logger.verbose("Save File Imported As Dictionary!!!")
+			
+			if json.result.has("game_version"):
+				logger.verbose("Game Version That Saved File Was: " + json.result["game_version"])
+				
+				# TODO: Check If Saved Game Version Is Compatible With Current Game Version
+			else:
+				logger.warning("Unknown What Game Version Saved File!!!")
+
+			# TODO: Validate that a valid image is stored where the save file says it is stored
+			if json.result.server_info.has("game_icon"):
+				network.server_icon = json.result.server_info.game_icon # Server Icon (for Clients to See)
+
+			if json.result.server_info.has("name"):
+				network.server_info.name = json.result.server_info.name # Name of Server
+				
+			if json.result.server_info.has("motd"):
+				network.server_info.motd = json.result.server_info.motd # Display A Message To Clients Before Player Joins Server
+				
+			# TODO: Validate website url to ensure valid (so user can click it ingame and be sent to website)
+			if json.result.server_info.has("website"):
+				network.server_info.website = json.result.server_info.website # Server Owner's Website (to display rules, purchases, etc...)
+				
+			# TODO: Validate max players is a legitimate player count
+			if json.result.server_info.has("max_players"):
+				network.server_info.max_players = int(json.result.server_info.max_players) # Maximum Number of Players (including server player)
+				
+			# TODO: Validate ip address is valid and is within the list of available ip addresses (if not asterisk)
+			if json.result.server_info.has("bind_address"):
+				# IP.get_local_addresses()
+				network.server_info.bind_address = json.result.server_info.bind_address  # IP Address to Bind To (Use). Asterisk (*) means all available IPs to the Computer.
+				
+			# Max Chunks Are Not Implemented Yet
+			if json.result.server_info.has("max_chunks"):
+				network.server_info.max_chunks = int(json.result.server_info.max_chunks) # Max chunks to send to client (client does not request, server sends based on position of client - this helps mitigate DOS abuse)
+				
+			# Set Elsewhere In Game Code - Just Needs To Be Added to Server Info
+			network.server_info.game_version = gamestate.game_version # Add Server's Game Version So Client Can Know if Server Is Compatible
+			network.server_info.mods = ["Not Implemented Yet"] # Add List of Mods Used By Server (so client can know if it is compatible with server)
+			
+			# This one's special as the used_port is currently randomly picked, but it should be overwritten by what the save file says
+#				network.server_info.used_port = 0 # Host Port
+		else:
+#			logger.error("Save Format Is Not A Dictionary!!! It Probably is An Array!!")
+#			logger.error("Server Info Is Missing From File: %s" % save_path)
+			logger.error("Could Not Load Save File: %s" % save_path)
+			return -3 # Returns -3 to signal that JSON cannot be interpreted as a Dictionary or loaded
+	else:
+		logger.error("Cannot Interpret Save!!! Invalid JSON!!!")
+		
+	save_data.close()
+	return 0
 
 # Check OS Settings For Optimizing Game Performance
 func check_settings():
@@ -96,3 +156,141 @@ func check_settings():
 		#OS.window_per_pixel_transparency_enabled = true # Turns on Pixel Transparency
 		#get_tree().get_root().set_transparent_background(true) # Makes Root Viewport Have a Transparent Background
 		#get_tree().get_root().get_node("MainMenu").visible = false # Hides MainMenu
+
+# THIS IS NOT IMPLEMENTED YET (BECAUSE SETTINGS SCENE IS NOT SET UP)
+# Save Player's Game Settings To File
+func save_game_settings(setting: String) -> void:
+	var save_path : String = game_settings # Save File Path
+	var save_path_backup : String = game_settings_backup # Save File Backup Path - OS.get_unix_time() is Unix Time Stamp
+
+	#logger.verbose("Game Version: %s" % game_version)
+	var settings_data : JSONParseResult # Data To Save
+	var settings_data_result : Dictionary # settings_data's Result
+	
+	var file_op : Directory = Directory.new()
+	var save_data : File = File.new()
+	
+	# Checks to See If Save File Exists
+	if save_data.file_exists(save_path):
+		#logger.verbose("Save File Exists!!!")
+		
+		# warning-ignore:return_value_discarded
+		save_data.open(save_path, File.READ_WRITE) # Open Save File For Reading/Writing
+		settings_data = JSON.parse(save_data.get_as_text()) # Load existing Save File as JSON
+	
+		# Check If Backup Exists
+		if file_op.file_exists(save_path_backup):
+			file_op.remove(save_path_backup) # Remove Old Backup
+	
+		# Backup The Save File (I Want It To Back Up Regardless of if It Is Corrupted)
+		# warning-ignore:return_value_discarded
+		file_op.copy(save_path, save_path_backup) # Copy Save File to Backup	
+	
+		# Checks to Make Sure JSON was Parsed
+		# warning-ignore:unsafe_property_access
+		# warning-ignore:unsafe_property_access
+		if settings_data.error == OK and typeof(settings_data.result) == TYPE_DICTIONARY:
+			#logger.verbose("Save File Read and Imported As Dictionary!!!")
+			# warning-ignore:unsafe_property_access
+#			settings_data_result = settings_data.result # Grabs Result From JSON (this is done now so I can grab the error code from earlier)
+
+#			# Should I merge this and the code from new save into a single function?
+#			settings_data_result["game_version"] = game_version
+#
+#			# Temporarily Remove Locale From Player Info
+#			if player_info.has("locale"):
+#				locale = player_info.locale
+#				player_info.erase("locale")
+			
+			# Note: Key has to be a string, otherwise Godot bugs out and adds duplicate keys to Dictionary
+			settings_data_result = {} # Replaces Key In Dictionary With Updated Player_Info
+			
+			#logger.verbose(to_json(settings_data)) # Print Save Data to stdout (Debug)
+			save_data.store_string(to_json(settings_data_result))
+	else:
+		#logger.verbose("Save File Does Not Exist!!! Creating!!!")
+		# warning-ignore:return_value_discarded
+		save_data.open(save_path, File.WRITE) # Open Save File For Writing
+		
+#		# Should I merge this and the code from existing save into a single function?
+#		settings_data_result["game_version"] = game_version
+#
+#		player_info["char_unique_id"] = generate_character_unique_id()
+#
+#		# Temporarily Remove Locale From Player Info
+#		if player_info.has("locale"):
+#			locale = player_info.locale
+#			player_info.erase("locale")
+		
+		# Note: Key has to be a string, otherwise Godot bugs out and adds duplicate keys to Dictionary
+		settings_data_result = {}
+		
+		#logger.verbose(to_json(settings_data)) # Print Save Data to stdout (Debug)
+		save_data.store_string(to_json(settings_data_result))
+		
+#	player_info.locale = locale # Set Locale Back For Gamestate
+	save_data.close()
+
+# THIS IS NOT IMPLEMENTED YET (BECAUSE SETTINGS SCENE IS NOT SET UP)
+# Load Player's Game Settings From File
+func load_game_settings() -> int:
+	var save_path : String = game_settings # Save File Path
+	var save_path_backup : String = game_settings_backup # Save File Backup Path - OS.get_unix_time() is Unix Time Stamp
+	
+	#OS.window_fullscreen = true # Allows Enabling Full Screen
+	#OS.set_window_size(Vector2(640, 480)) # Sets Window's Size
+	logger.verbose("Window Size: %s" % OS.get_window_size()) # Get's Window Size Including Titlebar
+	#logger.verbose("Real Window Size: %s" % OS.get_real_window_size()) # Gets Window's Size Minus Titlebar
+	#logger.verbose("Screen Size: %s" % OS.get_screen_size()) # Gets Screen Size
+	
+	var save_data : File = File.new()
+	
+	if not save_data.file_exists(save_path): # Check If Save File Exists
+		#logger.verbose("Save File Does Not Exist!!! New Player?")
+		return -1 # Returns -1 to signal that loading save file failed (for reasons of non-existence)
+	
+	# warning-ignore:return_value_discarded
+	save_data.open(save_path, File.READ)
+	var json : JSONParseResult = JSON.parse(save_data.get_as_text())
+		
+	# Checks to Make Sure JSON was Parsed
+	if json.error == OK:
+		#logger.verbose("Save File Read!!!")
+		
+		# warning-ignore:unsafe_property_access
+		# warning-ignore:unsafe_property_access
+		if typeof(json.result) == TYPE_DICTIONARY:
+			pass
+			#logger.verbose("Save File Imported As Dictionary!!!")
+			
+#			# warning-ignore:unsafe_property_access
+#			if json.result.has("game_version"):
+#				# warning-ignore:unsafe_property_access
+#				# warning-ignore:unsafe_property_access
+#				logger.verbose("Game Version That Saved File Was: " + json.result["game_version"])
+#			else:
+#				logger.warning("Unknown What Game Version Saved File!!!")
+#
+#			# warning-ignore:unsafe_property_access
+#			if json.result.has(str(slot)):
+#				# warning-ignore:unsafe_property_access
+#				# I keep the locale in player_info so the server can know the client's locale
+#				var locale : String = player_info.locale
+#				player_info = json.result[str(slot)]
+#				player_info.locale = locale
+#
+#				# Check if Save Data Has Debug Boolean
+#				if player_info.has("debug"):
+#					debug = bool(player_info.debug)
+#
+#			else:
+#				logger.warn("Player Slot Does Not Exist: %s" % slot)
+#				return -2 # Returns -2 to signal that player slot does not exist
+		else:
+			logger.error("Save Format Is Not A Dictionary!!! It Probably is An Array!!")
+			return -3 # Returns -3 to signal that JSON cannot be interpreted as a Dictionary
+	else:
+		logger.error("Cannot Interpret Save!!! Invalid JSON!!!")
+		
+	save_data.close()
+	return 0

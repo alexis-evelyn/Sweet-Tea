@@ -154,7 +154,7 @@ func load_player(slot: int) -> int:
 				# warning-ignore:unsafe_property_access
 				logger.verbose("Game Version That Saved File Was: " + json.result["game_version"])
 			else:
-				logger.verbose("Unknown What Game Version Saved File!!!")
+				logger.warning("Unknown What Game Version Saved File!!!")
 			
 			# warning-ignore:unsafe_property_access
 			if json.result.has(str(slot)):

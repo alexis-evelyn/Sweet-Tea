@@ -10,7 +10,7 @@ var keep_alive: Thread
 # Other Vars
 var connected : bool = false # For GUIs to Determine if Game is Connected
 
-var server_icon : String
+var server_icon : String = "res://Assets/Icons/game_icon.png" # Default Server Icon
 var server_icon_resource : Resource
 var server_icon_bytes : PoolByteArray
 var server_icon_encoded : String
@@ -34,7 +34,7 @@ var server_info : Dictionary = {
 	motd = "A Message Will Be Displayed to Clients Using This...", # Display A Message To Clients Before Player Joins Server
 	website = "https://sweet-tea.senorcontento.com/", # Server Owner's Website (to display rules, purchases, etc...)
 	num_players = 0, # Display Current Number of Connected Players (so client can see how busy a server is)
-	max_players = 2, # Maximum Number of Players (including server player)
+	max_players = 4, # Maximum Number of Players (including server player)
 	bind_address = "*", # IP Address to Bind To (Use). Asterisk (*) means all available IPs to the Computer.
 	used_port = 0, # Host Port
 	max_chunks = 3 # Max chunks to send to client (client does not request, server sends based on position of client - this helps mitigate DOS abuse)
