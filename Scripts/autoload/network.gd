@@ -30,7 +30,7 @@ onready var playerUI : Node = get_tree().get_root().get_node("PlayerUI")
 # Server Info to Send to Clients
 var server_info : Dictionary = {
 	name = "Sweet Tea", # Name of Server
-	icon = false, # Server Icon (for Clients to See)
+	icon = "Not Set", # Server Icon (for Clients to See)
 	motd = "A Message Will Be Displayed to Clients Using This...", # Display A Message To Clients Before Player Joins Server
 	website = "https://sweet-tea.senorcontento.com/", # Server Owner's Website (to display rules, purchases, etc...)
 	num_player = 0, # Display Current Number of Connected Players (so client can see how busy a server is)
@@ -52,10 +52,10 @@ func _ready() -> void:
 	
 	if server_icon_file.file_exists(server_icon):
 		server_icon_resource = load(server_icon)
+		server_info.icon = server_icon
 		
-		server_icon_bytes = server_icon_resource.get_data().get_data()
-		
-		server_icon_encoded = Marshalls.raw_to_base64(server_icon_bytes)
+#		server_icon_bytes = server_icon_resource.get_data().get_data()
+#		server_icon_encoded = Marshalls.raw_to_base64(server_icon_bytes)
 
 # Attempt to Create Server
 func start_server() -> void:

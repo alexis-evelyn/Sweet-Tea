@@ -54,6 +54,7 @@ func check_for_mods() -> bool:
 			file = mods_folder_check.get_next()
 			
 			if file != "":
+				# Should I restrict to .tres and .res extensions?
 				logger.verbose("File: %s" % file)
 				installed_mods.append(file)
 		

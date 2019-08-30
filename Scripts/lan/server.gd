@@ -6,6 +6,7 @@ var used_port: int
 var packet_buffer_size: int = 100 # Clients repeatedly send packets, so there is no reason to cache 65536 packets.
 var server : Thread = Thread.new()
 var calling_card : String = "Nihilistic Sweet Tea:"
+var calling_icon : String = "Icon"
 var delay_packet_processing_time_milliseconds : int = 1000 # Delay processing to prevent cpu usage rising dramatically by a flood of packets (won't prevent DOS, but helps out on normal usage)
 var udp_peer = PacketPeerUDP.new()
 

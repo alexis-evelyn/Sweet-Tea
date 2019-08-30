@@ -36,27 +36,28 @@ func add_server(json, server_ip, server_port) -> void:
 	used_port = json.get("used_port")
 	server = "%s:%s" % [server_ip, used_port]
 	
-	print("Server: %s:%s" % [server_ip, server_port])
-	print("Keys: %s" % json)
-	
 	# Add Server to List If Not Already on List
 	if not servers.has(server):
 		servers.append(server)
 		#print("Servers: %s" % var2str(servers))
 		
+		logger.verbose("Server: %s:%s" % [server_ip, server_port])
+		logger.verbose("Keys: %s" % json)
+		
 		# TODO: Make sure to add an icon to represent missing an icon.
 		var icon_texture : Texture
-		if not json.has("icon"):
-			logger.warn("Missing Icon!!!")
-			icon_texture = default_icon
-		else:
+		if json.has("icon"):
 #			var encoded_icon : PoolByteArray = Marshalls.base64_to_raw(json.get("icon"))
 #			var icon : Image = Image.new()
 #			var icon_error = icon.load_png_from_buffer(encoded_icon)
 #			var icon_texture : Texture = Texture.new()
 #			icon_texture.create_from_image(icon)
+
+			logger.warn("Got Icon!!!")
+			icon_texture = load(json.get("icon"))
+		else:
+			logger.warn("Missing Icon!!!")
 			icon_texture = default_icon
-			pass
 			
 		if not json.has("name"):
 			logger.warn("Server Missing Name!!!")
