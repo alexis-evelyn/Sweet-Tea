@@ -47,14 +47,11 @@ func add_server(json, server_ip, server_port) -> void:
 		# TODO: Make sure to add an icon to represent missing an icon.
 		var icon_texture : Texture
 		if json.has("icon"):
-#			var encoded_icon : PoolByteArray = Marshalls.base64_to_raw(json.get("icon"))
-#			var icon : Image = Image.new()
-#			var icon_error = icon.load_png_from_buffer(encoded_icon)
-#			var icon_texture : Texture = Texture.new()
-#			icon_texture.create_from_image(icon)
-
-			logger.warn("Got Icon!!!")
-			icon_texture = load(json.get("icon"))
+			# TODO: Detect If Server Icon Says "Not Set". If it does, the server failed to load it.
+			var decoded_icon : PoolByteArray = Marshalls.base64_to_raw(json.get("icon"))
+			icon_texture = bytes2var(decoded_icon, true)
+			
+			logger.debug("Got Icon!!!")
 		else:
 			logger.warn("Missing Icon!!!")
 			icon_texture = default_icon

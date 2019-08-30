@@ -48,14 +48,21 @@ func _ready() -> void:
 	get_tree().connect("connection_failed", self, "_on_connection_failed")
 	get_tree().connect("server_disconnected", self, "close_connection")
 	
+	load_server_icon()
+	
+# Loads Server Icon For Transmission to Clients
+func load_server_icon():
 	var server_icon_file = File.new()
 	
 	if server_icon_file.file_exists(server_icon):
 		server_icon_resource = load(server_icon)
-		server_info.icon = server_icon
+#		server_info.icon = server_icon
 		
-#		server_icon_bytes = server_icon_resource.get_data().get_data()
-#		server_icon_encoded = Marshalls.raw_to_base64(server_icon_bytes)
+		# TODO: Shrink and Size Server Icon To Decrease Transmission Size
+		# Also, lower quality of high res icons as needed to decrease transmission size
+		server_icon_bytes = var2bytes(server_icon_resource, true)
+		server_icon_encoded = Marshalls.raw_to_base64(server_icon_bytes)
+		server_info.icon = server_icon_encoded
 
 # Attempt to Create Server
 func start_server() -> void:
