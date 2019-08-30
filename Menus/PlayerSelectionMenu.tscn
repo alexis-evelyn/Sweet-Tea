@@ -25,28 +25,28 @@ anchor_bottom = 1.0
 
 [node name="Slot 0" type="Button" parent="PlayerSelectionWindow/PlayerSlots"]
 margin_right = 307.0
-margin_bottom = 28.0
+margin_bottom = 20.0
 text = "New Character"
 flat = true
 
 [node name="Slot 1" type="Button" parent="PlayerSelectionWindow/PlayerSlots"]
-margin_top = 32.0
+margin_top = 24.0
 margin_right = 307.0
-margin_bottom = 60.0
+margin_bottom = 44.0
 text = "New Character"
 flat = true
 
 [node name="Slot 2" type="Button" parent="PlayerSelectionWindow/PlayerSlots"]
-margin_top = 64.0
+margin_top = 48.0
 margin_right = 307.0
-margin_bottom = 92.0
+margin_bottom = 68.0
 text = "New Character"
 flat = true
 
 [node name="Slot 3" type="Button" parent="PlayerSelectionWindow/PlayerSlots"]
-margin_top = 96.0
+margin_top = 72.0
 margin_right = 307.0
-margin_bottom = 124.0
+margin_bottom = 92.0
 text = "New Character"
 flat = true
 [connection signal="about_to_show" from="PlayerSelectionWindow" to="." method="_about_to_show"]

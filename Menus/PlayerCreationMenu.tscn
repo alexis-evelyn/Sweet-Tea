@@ -27,8 +27,8 @@ __meta__ = {
 }
 
 [node name="CreateCharacter" type="Button" parent="PlayerCreationWindow/Interface"]
-margin_right = 142.0
-margin_bottom = 28.0
+margin_right = 104.0
+margin_bottom = 20.0
 text = "New Character"
 flat = true
 __meta__ = {

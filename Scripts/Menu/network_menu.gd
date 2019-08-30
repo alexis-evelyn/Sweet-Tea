@@ -2,8 +2,15 @@ extends Control
 
 onready var server_address : Node = $panelNetwork/manualJoin/txtServerAddress
 onready var join_server : Node = $panelNetwork/manualJoin/btnJoinServer
+onready var lan_servers : Node = $panelNetwork/lanServers
 
 var lan_client : String = "res://Scripts/lan/client.gd"
+var default_icon : Resource = load("res://Assets/Blocks/grass-debug.png")
+
+var max_servers : int = 50 # Apply a maximum number of servers to show
+var servers : Array # Keep track of already added servers - to avoid duplicates
+var server : String # Server to add to servers list
+var used_port : int # Server's Port
 
 # Main Function - Registers Event Handling (Handled By Both Client And Server)
 func _ready() -> void:
@@ -11,18 +18,73 @@ func _ready() -> void:
 	
 	set_language_text()
 	set_theme(gamestate.game_theme)
-	find_servers()
+	
+	setup_server_list() # Setup Server List
+	find_servers().connect("add_server", self, "add_server") # Add Server to GUI
+	
+func setup_server_list() -> void:
+	lan_servers.set_max_columns(1)
+	lan_servers.set_icon_mode(ItemList.ICON_MODE_LEFT)
+	lan_servers.set_select_mode(ItemList.SELECT_SINGLE)
+	lan_servers.set_fixed_icon_size(Vector2(48, 48))
+	
+func add_server(json, server_ip, server_port) -> void:
+	# If server does not specify port, then the client cannot connect to it, so don't add it to the server list.
+	if not json.has("used_port"):
+		return
+	
+	used_port = json.get("used_port")
+	server = "%s:%s" % [server_ip, used_port]
+	
+	print("Server: %s:%s" % [server_ip, server_port])
+	print("Keys: %s" % json)
+	
+	# Add Server to List If Not Already on List
+	if not servers.has(server):
+		servers.append(server)
+		#print("Servers: %s" % var2str(servers))
+		
+		# TODO: Make sure to add an icon to represent missing an icon.
+		var icon_texture : Texture
+		if not json.has("icon"):
+			logger.warn("Missing Icon!!!")
+			icon_texture = default_icon
+		else:
+#			var encoded_icon : PoolByteArray = Marshalls.base64_to_raw(json.get("icon"))
+#			var icon : Image = Image.new()
+#			var icon_error = icon.load_png_from_buffer(encoded_icon)
+#			var icon_texture : Texture = Texture.new()
+#			icon_texture.create_from_image(icon)
+			icon_texture = default_icon
+			pass
+			
+		if not json.has("name"):
+			logger.warn("Server Missing Name!!!")
+			
+		if not json.has("motd"):
+			logger.warn("Server Missing MOTD!!!")
+			
+		if not json.has("num_player"):
+			logger.warn("Missing Number Of Players!!!")
+			
+		if not json.has("max_players"):
+			logger.warn("Missing Maximum Number Of Players!!!")
+			
+		#print("Icon: %s" % icon)
+		lan_servers.add_item(server, icon_texture, true)
 	
 func set_language_text():
 	server_address.placeholder_text = tr("network_menu_address_placeholder")
 	join_server.text = tr("network_menu_join_server_button")
 	
-func find_servers() -> void:
+func find_servers() -> Node:
 	# Setup Broadcast Listener Script
 	var server_finder = Node.new()
 	server_finder.set_script(load(lan_client)) # Attach A Script to Node
 	server_finder.set_name("ServerFinder") # Give Node A Unique ID
 	add_child(server_finder)
+	
+	return server_finder
 
 func set_theme(theme: Theme) -> void:
 	"""

@@ -21,8 +21,10 @@ func get_title():
 	# There is no builtin way to get the window title, so I have to store it in a variable. - https://github.com/godotengine/godot/issues/27536
 	return current_title
 
-func get_translation(key: String, locale: String) -> String:
-	var translations_file : String = ProjectSettings.get_setting("locale/csv")
+# While this is no longer used as Github user merumelu helped me out with reading the .translation files, but I am keeping it here incase it becomes useful later.
+# For example, I don't know if the Godot engine can generate translation files after the game is built, so I may build in an interface to let users produce their own translation in game and then just save it in csv format.
+func get_translation_csv(translations_file: String, key: String, locale: String) -> String:
+	#var translations_file : String = ProjectSettings.get_setting("locale/csv")
 	
 	var file = File.new()
 	var open_csv_status = file.open(translations_file, file.READ)
@@ -30,10 +32,12 @@ func get_translation(key: String, locale: String) -> String:
 	# Make sure there is at least one line available to read, otherwise just return
 	if open_csv_status != OK:
 		logger.error("Failed to find locale '%s' for key '%s' because the csv file '%s' couldn't be opened!!!" % [locale, key, translations_file])
+		file.close()
 		return ""
 	
 	if file.eof_reached():
 		logger.warn("Failed to find locale '%s' for key '%s' because the csv file '%s' is empty!!!" % [locale, key, translations_file])
+		file.close()
 		return ""
 	
 	var index : int = -1 # Column that Locale Is On
@@ -42,6 +46,7 @@ func get_translation(key: String, locale: String) -> String:
 	# If it does not have the locale requested, then just return
 	if not line.has(locale):
 		logger.warn("Failed to find locale '%s' for key '%s' because the csv file '%s' is does not have the locale!!!" % [locale, key, translations_file])
+		file.close()
 		return ""
 		
 	index = line.find(locale) # Get column the locale is on
@@ -55,35 +60,37 @@ func get_translation(key: String, locale: String) -> String:
 			return line[index]
 	
 	logger.warn("Failed to find locale '%s' for key '%s' because the csv file '%s' does not have the key!!!" % [locale, key, translations_file])
+	file.close()
 	return "" # If it does not have the key, then just return
 
 # Get Translation For Specified Locale
-# Currently, I cannot find a way to read the .translation files directly, so I am just holding off on this.
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
-func get_translation_experimental(key: String, locale: String) -> String:
+func get_translation(key: String, locale: String) -> String:
+	# Thank merumelu for their help on my reading translation files issue: https://github.com/godotengine/godot/issues/31749
+	
 	# Also make sure to add support for po files later.
-#	var translations : PoolStringArray = ProjectSettings.get_setting("locale/translations")
-#
-#	for translation in translations:
-#		print("Translation File: %s" % translation)
-	
-	var translator : Translation = Translation.new()
-	
-#	translator.generate(load("res://Assets/Languages/default.en.translation"))
-	
-#	translator.set_locale("pr")
-#	translator.add_message("create_character_title", "Test")
-#
-#	translator.set_locale("en")
-#	translator.add_message("create_character_title", "Test 2")
-#
-#	print("Locale B: %s" % translator.locale)
-#	translator.set_locale("pr")
-#	print("Locale A: %s" % translator.locale)
+	var translations : PoolStringArray = ProjectSettings.get_setting("locale/translations")
+	var selected_translation : PoolStringArray
 
-	var message = translator.get_message("create_character_title")
+	for translation in translations:
+		#res://Assets/Languages/default.pr.translation
+		var translation_locale : String = translation.rsplit(".", false, 2)[1]
+		#print("Translation File: %s" % translation_locale)
+		
+		if translation_locale == locale:
+			selected_translation.append(translation)
+		
+	# If No Translation File Found, Then Just Return. This will crash on debug builds, but not release builds.
+	if selected_translation.size() == 0:
+		logger.error("No Translation File Found For Locale '%s'" % locale)
+		return "No Translation File Found For Locale '%s'" % locale
+		
+	var translator : Translation = load(selected_translation[0]) # I may add support for searching more than one file of the same locale later.
+	var message = translator.get_message(key)
 	
-	print("Message: %s" % message)
+	# Should I check if the translation came back successful or will translator handle it for me?
 	
-	return "Not Set"
+	#print("Message: %s" % message)
+	
+	return message

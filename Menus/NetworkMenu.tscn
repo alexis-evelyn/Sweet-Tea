@@ -17,6 +17,14 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="lanServers" type="ItemList" parent="panelNetwork"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = -32.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="manualJoin" type="HBoxContainer" parent="panelNetwork"]
 anchor_top = 1.0
 anchor_right = 1.0

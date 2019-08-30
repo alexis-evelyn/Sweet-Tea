@@ -2,6 +2,8 @@ extends Node
 
 # PacketPeerUDP Example - https://godotengine.org/qa/20026/to-send-a-udp-packet-godot-3?show=20262#a20262
 
+signal add_server(json, server_ip, server_port)
+
 # Declare member variables here. Examples:
 var used_server_port: int
 
@@ -26,7 +28,6 @@ var addresses : Array = [localhost_address, broadcast_address] # Addresses to Br
 func _ready():
 	set_server_port() # Sets Port to Broadcast to
 	search_for_servers() # Start searching for Servers
-	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -67,6 +68,8 @@ func parse_server_info(server_ip: String, server_port: int, json: Dictionary) ->
 	for key in json.keys():
 		logger.verbose("%s: %s" % [key, json.get(key)])
 	logger.verbose("---------------------------------------------------")
+	
+	emit_signal("add_server", json, server_ip, server_port) # Add server to GUI
 
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument

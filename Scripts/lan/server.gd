@@ -12,7 +12,6 @@ var udp_peer = PacketPeerUDP.new()
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	server.start(self, "listen_for_clients", null)
-	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -56,9 +55,16 @@ func process_message(client_ip: String, client_port: int, bytes: PoolByteArray):
 	
 	if calling_card in message:
 		var split_message : PoolStringArray = message.split(":", true, 1)
+		var server_info : Dictionary = network.server_info
+		
+#		server_info.your_ip_address = udp_peer.get_packet_ip()
+#		server_info.ip_addresses = IP.get_local_addresses()
+#		print("Client IP Address: %s" % server_info.ip_address)
+#		print("IP Addresses: %s" % server_info.ip_addresses)
+		
 		logger.verbose("(%s:%s) Client's Game Version: '%s'" % [client_ip, str(client_port), split_message[1].trim_prefix(" ").trim_suffix(" ")])
 		
-		return JSON.print(network.server_info).to_ascii() # This converts dictionary to json, which then gets converted to a PoolByteArray to be sent as a packet.
+		return JSON.print(server_info).to_ascii() # This converts dictionary to json, which then gets converted to a PoolByteArray to be sent as a packet.
 	else:
 		logger.verbose("Unknown Message: %s" % message)
 	
