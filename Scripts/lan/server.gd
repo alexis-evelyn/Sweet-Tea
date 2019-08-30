@@ -3,7 +3,7 @@ extends Node
 # Lan Server Finder Helper - EXTREMELY BUGGY
 # Declare member variables here. Examples:
 var used_port: int
-var packet_buffer_size: int = 100 # Clients repeatedly send packets, so there is no reason to cache 65536 packets.
+var packet_buffer_size: int = 1000 # Clients repeatedly send packets, so there is no reason to cache 65536 packets.
 var server : Thread = Thread.new()
 var calling_card : String = "Nihilistic Sweet Tea:"
 var calling_icon : String = "Icon"
@@ -28,6 +28,11 @@ func listen_for_clients(thread_data) -> void:
 	while udp_peer.is_listening():
 		udp_peer.wait() # Makes PacketPeerUDP wait until it receives a packet (to save on CPU usage) - This works because listen_for_clients(...) is on a different thread.
 #		#logger.verbose("Listening!!!")
+		
+		# Pseudo-Code For Preventing Packet Buffer Full Warning
+		if udp_peer.get_available_packet_count() == packet_buffer_size:
+			#udp_peer. DROP_ALL_PACKETS - Latest 10% of Packet Buffer Size
+			pass
 		
 		while udp_peer.get_available_packet_count() > 0:
 #			#logger.verbose("Received Packet!!!")
