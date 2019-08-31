@@ -31,7 +31,7 @@ func set_text() -> void:
 	worldSeed.placeholder_text = tr("world_seed_placeholder")
 	characterName.placeholder_text = tr("character_name_placeholder")
 	
-	characterColor.text = tr("character_color")
+	#characterColor.text = tr("character_color")
 
 func create_character() -> void:
 	logger.info("Slot: %s" % slot)

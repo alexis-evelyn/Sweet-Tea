@@ -6,6 +6,10 @@ extends Node
 var game_settings : String = "user://game-settings.json"
 var game_settings_backup : String = "user://game-settings-backups.json"
 
+# Settings To Keep Track Of
+var window_borderless : bool = false
+var window_resizable : bool = true
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	logger.create_log() # Start Logging to File
@@ -109,6 +113,10 @@ func load_server_info() -> int:
 # Check OS Settings For Optimizing Game Performance
 func check_settings():
 	#logger.verbose("MainLoop: %s" % Engine.get_main_loop().get_class()) # Prints Current MainLoop Type
+	
+	# I keep the changing these settings in the main menu as the splash screen would not display otherwise.
+	window_borderless = false
+	window_resizable = true
 	
 	# Supposed to Request Window Attention - Probably Only Works if Window is Out of Focus
 	#OS.request_attention()

@@ -28,6 +28,10 @@ func _ready() -> void:
 	# TODO: Save loaded theme to file that is not accessible to server
 	set_theme(gamestate.game_theme) # Sets The MainMenu's Theme
 	
+	# The reason I keep these settings here is because it prevents the splash screen from loading
+	OS.set_borderless_window(settings.window_borderless)
+	OS.set_window_resizable(settings.window_resizable)
+	
 func set_theme(theme: Theme) -> void:
 	"""
 		Sets Up Main Menu's Theme

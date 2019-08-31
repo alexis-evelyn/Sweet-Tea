@@ -27,9 +27,21 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CreateCharacter" type="Button" parent="PlayerCreationWindow/Interface"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PlayerCreationWindow/Interface"]
 margin_right = 104.0
-margin_bottom = 40.0
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="PlayerCreationWindow/Interface"]
+margin_left = 108.0
+margin_right = 166.0
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="PlayerCreationWindow/Interface"]
+margin_left = 170.0
+margin_right = 246.0
+
+[node name="CreateCharacter" type="Button" parent="PlayerCreationWindow/Interface"]
+margin_top = 4.0
+margin_right = 104.0
+margin_bottom = 44.0
 text = "New Character"
 flat = true
 __meta__ = {
@@ -38,9 +50,9 @@ __meta__ = {
 
 [node name="CharacterColor" type="ColorPickerButton" parent="PlayerCreationWindow/Interface"]
 margin_left = 108.0
-margin_right = 227.0
-margin_bottom = 40.0
-text = "Character's Color"
+margin_top = 4.0
+margin_right = 166.0
+margin_bottom = 44.0
 color = Color( 1, 1, 1, 1 )
 edit_alpha = false
 __meta__ = {
@@ -48,22 +60,22 @@ __meta__ = {
 }
 
 [node name="DebugMode" type="CheckButton" parent="PlayerCreationWindow/Interface"]
-margin_left = 231.0
-margin_right = 392.0
-margin_bottom = 40.0
-text = "Debug Mode"
+margin_left = 170.0
+margin_top = 4.0
+margin_right = 246.0
+margin_bottom = 44.0
 
 [node name="WorldSeed" type="LineEdit" parent="PlayerCreationWindow/Interface"]
-margin_top = 44.0
+margin_top = 48.0
 margin_right = 104.0
-margin_bottom = 68.0
+margin_bottom = 72.0
 placeholder_text = "World Seed..."
 
 [node name="CharacterName" type="LineEdit" parent="PlayerCreationWindow/Interface"]
 margin_left = 108.0
-margin_top = 44.0
-margin_right = 227.0
-margin_bottom = 68.0
+margin_top = 48.0
+margin_right = 166.0
+margin_bottom = 72.0
 placeholder_text = "Character's Name"
 [connection signal="about_to_show" from="PlayerCreationWindow" to="." method="_about_to_show"]
 [connection signal="popup_hide" from="PlayerCreationWindow" to="." method="_about_to_hide"]
