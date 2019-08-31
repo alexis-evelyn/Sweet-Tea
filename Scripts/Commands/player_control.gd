@@ -1,4 +1,5 @@
 extends Node
+class_name PlayerControl
 
 # NOTE (IMPORTANT): None of this script is functional!!! It will be fixed later.
 # At the time of writing: I am currently organizing my code so it is more legible and easier to traverse.

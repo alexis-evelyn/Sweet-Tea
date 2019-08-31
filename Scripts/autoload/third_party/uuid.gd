@@ -1,4 +1,5 @@
 extends Node
+class_name UUIDGenerator
 
 static func getRandomInt(max_value):
   randomize()

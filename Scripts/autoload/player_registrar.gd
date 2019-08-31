@@ -1,4 +1,5 @@
 extends Node
+class_name PlayerRegistrar
 
 # Player Registration is Meant to Keep Track of Player's Public Info (for both server and clients)
 # The server will have a copy of a player's info no matter what world the player is in.

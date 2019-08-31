@@ -1,4 +1,5 @@
 extends Node
+class_name ClientEncryption
 
 # Please Refer to server_encryption.gd for my notes.
 # I always start development on server/client by starting with the server, so all of my notes will be there.

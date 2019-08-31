@@ -1,4 +1,5 @@
 extends Node
+class_name SettingsLoader
 
 # Used to load settings from options menu
 

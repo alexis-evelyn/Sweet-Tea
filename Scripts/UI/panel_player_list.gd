@@ -1,4 +1,5 @@
 extends Panel
+class_name PlayerList
 
 var world: Node
 var localPlayer: Node

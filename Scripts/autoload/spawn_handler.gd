@@ -1,4 +1,5 @@
 extends Node
+class_name SpawnHandler
 
 # Signals
 signal player_list_changed # Player's Spawned in World

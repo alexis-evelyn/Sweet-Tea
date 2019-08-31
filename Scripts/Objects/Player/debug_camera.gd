@@ -1,4 +1,5 @@
 extends Camera2D
+class_name DebugCamera
 
 # NOTE (IMPORTANT): The coordinates are measured in pixels.
 # The tilemap quadrant size is 16x16 blocks

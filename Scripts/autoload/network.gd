@@ -1,4 +1,5 @@
 extends Node
+class_name GameConnection
 
 # Signals
 signal server_created # Server Was Successfully Created

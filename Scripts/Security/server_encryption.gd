@@ -1,4 +1,5 @@
 extends Node
+class_name ServerEncryption
 
 # Godot does not have builtin support for encrypted server/client communication.
 # Because of that, I have to add an encryption module to Godot's engine and implement my own key exchange system.

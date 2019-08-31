@@ -1,4 +1,5 @@
 extends KinematicBody2D
+class_name Player
 
 # Declare member variables here:
 onready var panelChat : Node = get_tree().get_root().get_node("PlayerUI/panelChat")

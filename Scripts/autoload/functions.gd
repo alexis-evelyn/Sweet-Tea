@@ -1,4 +1,5 @@
 extends Node
+class_name Functions
 
 # Declare member variables here. Examples:
 var current_title : String = ""

@@ -1,4 +1,5 @@
 extends Control
+class_name PlayerCreationMenu
 
 signal character_created # Signal to Let Other Popup Know When Character Has Been Created
 

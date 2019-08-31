@@ -1,4 +1,5 @@
 extends Node
+class_name ServerFinderHelper
 
 # Lan Server Finder Helper
 # Declare member variables here. Examples:

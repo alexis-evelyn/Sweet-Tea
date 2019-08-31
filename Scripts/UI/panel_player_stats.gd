@@ -1,4 +1,5 @@
 extends Panel
+class_name PlayerStats
 
 # panelPlayerStats is meant for information like health and a hotbar
 

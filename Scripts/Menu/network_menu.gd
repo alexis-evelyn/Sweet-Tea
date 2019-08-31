@@ -1,4 +1,5 @@
 extends Control
+class_name MultiplayerMenu
 
 onready var server_address : Node = $panelNetwork/manualJoin/txtServerAddress
 onready var join_server : Node = $panelNetwork/manualJoin/btnJoinServer

@@ -1,4 +1,5 @@
 extends Node
+class_name ServerFinder
 
 # PacketPeerUDP Example - https://godotengine.org/qa/20026/to-send-a-udp-packet-godot-3?show=20262#a20262
 

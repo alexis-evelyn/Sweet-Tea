@@ -1,4 +1,5 @@
 extends Panel
+class_name ChatPanel
 
 # Declare member variables here. Examples:
 # TODO: Implement a Way For Server to Notify Client about Chat Char/Lines Limits

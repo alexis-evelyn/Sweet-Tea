@@ -1,4 +1,5 @@
 extends Control
+class_name OptionsMenu
 
 # Declare member variables here. Examples:
 # var a = 2

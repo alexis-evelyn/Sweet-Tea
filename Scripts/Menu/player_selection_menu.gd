@@ -1,4 +1,5 @@
 extends Control
+class_name PlayerSelectionMenu
 
 # Declare member variables here. Examples:
 onready var playerSelectionWindow : Node = $PlayerSelectionWindow

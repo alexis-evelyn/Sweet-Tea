@@ -1,4 +1,5 @@
 extends Node
+class_name ClientCommands
 
 func process_commands(message: PoolStringArray) -> String:
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)

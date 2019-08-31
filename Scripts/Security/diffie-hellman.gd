@@ -1,4 +1,5 @@
 extends Node
+class_name DiffieHellman
 
 # NOTE: I am going to do more research before I continue with the encryption part of the networking.
 # Since I am planning on using RPC as usual, all I really need to do is just route the data to encrypt/decrypt when sending/receiving the rpc calls.

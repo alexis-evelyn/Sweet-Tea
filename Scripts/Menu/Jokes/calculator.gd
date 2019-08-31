@@ -1,4 +1,5 @@
 extends WindowDialog
+class_name Calculator
 
 # This is a joke program meant to be an easter egg in the game.
 # Don't use this to do your math homework. It can only hold the size of an int and will be inaccurate for large numbers.

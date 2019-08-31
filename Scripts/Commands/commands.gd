@@ -1,4 +1,5 @@
 extends Node
+class_name ServerCommands
 
 # NOTE (IMPORTANT): Outside of a third party authentication system, a builtin login system on server join can help
 # set permissions.

@@ -1,4 +1,5 @@
 extends ParallaxBackground
+class_name MenuBackground
 
 # Declare member variables here. Examples:
 # var a = 2

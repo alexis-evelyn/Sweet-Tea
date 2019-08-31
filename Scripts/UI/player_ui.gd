@@ -1,4 +1,5 @@
 extends CanvasLayer
+class_name PlayerUI
 
 # Signals
 signal cleanup_ui

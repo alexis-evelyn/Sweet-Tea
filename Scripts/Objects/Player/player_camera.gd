@@ -1,4 +1,5 @@
 extends Camera2D
+class_name PlayerCamera
 
 # Declare member variables here. Examples:
 # var a = 2

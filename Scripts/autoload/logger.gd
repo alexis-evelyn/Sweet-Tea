@@ -1,4 +1,5 @@
 extends Node
+class_name Logger
 
 # This logger exists so that I can log to file (with varying log verbosities) and if I figure out how to implement system logging,
 # then I will be logging to the system log too. This is very useful for the crash handler (especially when the game is in alpha stage).

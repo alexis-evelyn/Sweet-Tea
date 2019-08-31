@@ -1,4 +1,5 @@
 extends Control
+class_name ModLoader
 
 # This scene is for the modloader.
 # The idea is to dynamically load mods at runtime before the MainMenu is even loaded

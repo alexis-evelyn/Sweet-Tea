@@ -1,4 +1,5 @@
 extends Node
+class_name GameState
 
 var save_directory : String = "user://" # Set's Storage Directory
 var save_file : String = "characters.json" # Save File Name
