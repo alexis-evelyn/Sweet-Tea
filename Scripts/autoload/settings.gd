@@ -114,6 +114,11 @@ func load_server_info() -> int:
 func check_settings():
 	#logger.verbose("MainLoop: %s" % Engine.get_main_loop().get_class()) # Prints Current MainLoop Type
 	
+	# https://docs.godotengine.org/en/3.1/classes/class_input.html#class-input-method-set-custom-mouse-cursor
+	# See if you (me) can put the cursor images into the theme (so the cursor will be updated when the theme is changed)
+#	var test_icon = load("res://Assets/Icons/game_icon.png")
+#	Input.set_custom_mouse_cursor(test_icon, Input.CURSOR_BUSY)
+	
 	# I keep the changing these settings in the main menu as the splash screen would not display otherwise.
 	window_borderless = false
 	window_resizable = true
