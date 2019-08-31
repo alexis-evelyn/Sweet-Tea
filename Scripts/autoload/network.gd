@@ -66,6 +66,7 @@ func load_server_icon():
 		server_info.icon = server_icon_encoded
 
 # Attempt to Create Server
+# warning-ignore:unused_argument
 func start_server(thread_data = "") -> void:
 	set_port() # Choose A Port to Use
 	#logger.verbose("Port: %s" % server_info.used_port) # Print Current Port

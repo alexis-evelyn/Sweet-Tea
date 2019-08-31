@@ -1,63 +1,14 @@
 [gd_scene load_steps=2 format=2]
 
 [sub_resource type="GDScript" id=1]
-script/source = "#extends \"res://Scripts/Menu/main_menu.gd\"
-#extends MainMenu
+script/source = "extends ServerCommands
 
-# Currently Does Not Work
+var test_variable = \"Hello\"
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	print(\"Hello\")
-	#._ready()
+func check_command(net_id: int, message: PoolStringArray):
+	print(\"Command Ran!!!\")
 	
-func set_theme(theme: Theme) -> void:
-	\"\"\"
-		Sets Up Main Menu's Theme
-		
-		Supply Theme Resource
-	\"\"\"
-	
-	.set_theme(theme) # Godot's Version of a super - https://docs.godotengine.org/en/3.1/getting_started/scripting/gdscript/gdscript_basics.html#inheritance
-
-func set_language_text() -> void:
-	.set_language_text()
-
-func _on_Singleplayer_pressed() -> void:
-	\"\"\"
-		Pull Up Player Selection Menu
-		
-		Not Meant to Be Called Directly
-	\"\"\"
-	
-	._on_Singleplayer_pressed()
-	
-func _on_Multiplayer_pressed() -> void:
-	\"\"\"
-		Pull Up Networking Menu
-		
-		Not Meant to Be Called Directly
-	\"\"\"
-	
-	._on_Multiplayer_pressed()
-
-func _on_Options_pressed() -> void:
-	\"\"\"
-		Pull Up Options Menu
-		
-		Not Meant to Be Called Directly
-	\"\"\"
-	
-	._on_Options_pressed()
-
-func _on_Quit_pressed() -> void:
-	\"\"\"
-		Quit Game from Main Menu
-		
-		Not Meant to Be Called Directly
-	\"\"\"
-	
-	._on_Quit_pressed()
+	pass
 "
 
 [node name="control" type="Control"]

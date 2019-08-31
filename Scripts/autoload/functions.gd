@@ -72,6 +72,7 @@ func get_translation(key: String, locale: String) -> String:
 	
 	# Also make sure to add support for po files later.
 	var translations : PoolStringArray = ProjectSettings.get_setting("locale/translations")
+	# warning-ignore:unassigned_variable
 	var selected_translation : PoolStringArray
 
 	for translation in translations:

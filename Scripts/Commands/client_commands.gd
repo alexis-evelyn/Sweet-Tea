@@ -22,6 +22,7 @@ func open_calculator(message: PoolStringArray) -> String:
 	
 	return tr("open_calculator")
 
+# warning-ignore:unused_argument
 func server_ip(message) -> String:
 	var net : NetworkedMultiplayerENet = get_tree().get_network_peer()
 	

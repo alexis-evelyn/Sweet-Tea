@@ -173,6 +173,7 @@ func check_settings():
 
 # THIS IS NOT IMPLEMENTED YET (BECAUSE SETTINGS SCENE IS NOT SET UP)
 # Save Player's Game Settings To File
+# warning-ignore:unused_argument
 func save_game_settings(setting: String) -> void:
 	var save_path : String = game_settings # Save File Path
 	var save_path_backup : String = game_settings_backup # Save File Backup Path - OS.get_unix_time() is Unix Time Stamp
@@ -249,6 +250,7 @@ func save_game_settings(setting: String) -> void:
 # Load Player's Game Settings From File
 func load_game_settings() -> int:
 	var save_path : String = game_settings # Save File Path
+	# warning-ignore:unused_variable
 	var save_path_backup : String = game_settings_backup # Save File Backup Path - OS.get_unix_time() is Unix Time Stamp
 	
 	#OS.window_fullscreen = true # Allows Enabling Full Screen
