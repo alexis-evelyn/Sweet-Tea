@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Scripts/Menu/player_creation_menu.gd" type="Script" id=1]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.203922, 0.239216, 0.317647, 0.901961 )
 
 [node name="PlayerCreationMenu" type="Control"]
 script = ExtResource( 1 )
@@ -19,7 +22,16 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Interface" type="GridContainer" parent="PlayerCreationWindow"]
+[node name="background" type="Panel" parent="PlayerCreationWindow"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = -12.0
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Interface" type="GridContainer" parent="PlayerCreationWindow/background"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 columns = 3
@@ -27,56 +39,56 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PlayerCreationWindow/Interface"]
-margin_right = 104.0
+[node name="VBoxContainer" type="VBoxContainer" parent="PlayerCreationWindow/background/Interface"]
+margin_right = 185.0
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="PlayerCreationWindow/Interface"]
-margin_left = 108.0
-margin_right = 166.0
+[node name="VBoxContainer2" type="VBoxContainer" parent="PlayerCreationWindow/background/Interface"]
+margin_left = 193.0
+margin_right = 357.0
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="PlayerCreationWindow/Interface"]
-margin_left = 170.0
-margin_right = 246.0
+[node name="VBoxContainer3" type="VBoxContainer" parent="PlayerCreationWindow/background/Interface"]
+margin_left = 365.0
+margin_right = 517.0
 
-[node name="CreateCharacter" type="Button" parent="PlayerCreationWindow/Interface"]
-margin_top = 4.0
-margin_right = 104.0
-margin_bottom = 44.0
+[node name="CreateCharacter" type="Button" parent="PlayerCreationWindow/background/Interface"]
+margin_top = 8.0
+margin_right = 185.0
+margin_bottom = 88.0
 text = "New Character"
 flat = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CharacterColor" type="ColorPickerButton" parent="PlayerCreationWindow/Interface"]
-margin_left = 108.0
-margin_top = 4.0
-margin_right = 166.0
-margin_bottom = 44.0
+[node name="CharacterColor" type="ColorPickerButton" parent="PlayerCreationWindow/background/Interface"]
+margin_left = 193.0
+margin_top = 8.0
+margin_right = 357.0
+margin_bottom = 88.0
 color = Color( 1, 1, 1, 1 )
 edit_alpha = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DebugMode" type="CheckButton" parent="PlayerCreationWindow/Interface"]
-margin_left = 170.0
-margin_top = 4.0
-margin_right = 246.0
-margin_bottom = 44.0
+[node name="DebugMode" type="CheckButton" parent="PlayerCreationWindow/background/Interface"]
+margin_left = 365.0
+margin_top = 8.0
+margin_right = 517.0
+margin_bottom = 88.0
 
-[node name="WorldSeed" type="LineEdit" parent="PlayerCreationWindow/Interface"]
-margin_top = 48.0
-margin_right = 104.0
-margin_bottom = 72.0
+[node name="WorldSeed" type="LineEdit" parent="PlayerCreationWindow/background/Interface"]
+margin_top = 96.0
+margin_right = 185.0
+margin_bottom = 141.0
 placeholder_text = "World Seed..."
 
-[node name="CharacterName" type="LineEdit" parent="PlayerCreationWindow/Interface"]
-margin_left = 108.0
-margin_top = 48.0
-margin_right = 166.0
-margin_bottom = 72.0
+[node name="CharacterName" type="LineEdit" parent="PlayerCreationWindow/background/Interface"]
+margin_left = 193.0
+margin_top = 96.0
+margin_right = 357.0
+margin_bottom = 141.0
 placeholder_text = "Character's Name"
 [connection signal="about_to_show" from="PlayerCreationWindow" to="." method="_about_to_show"]
 [connection signal="popup_hide" from="PlayerCreationWindow" to="." method="_about_to_hide"]
-[connection signal="pressed" from="PlayerCreationWindow/Interface/CreateCharacter" to="." method="create_character"]
+[connection signal="pressed" from="PlayerCreationWindow/background/Interface/CreateCharacter" to="." method="create_character"]

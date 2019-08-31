@@ -1,6 +1,9 @@
 extends Control
 
 # Declare member variables here. Examples:
+onready var playerSelectionWindow : Node = $PlayerSelectionWindow
+onready var playerSlots : Node = $PlayerSelectionWindow/background/PlayerSlots
+
 var scene : String = "" # Menu to load if set
 var old_title : String = "" # Title From Before Window Was Shown
 var yielding : bool = false # Prevents data.blocked > 0 crash by preventing yielding more than once
@@ -11,9 +14,9 @@ var world_load_thread : Thread # World Loading Thread
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	$PlayerSelectionWindow.window_title = tr("select_character_title") # Can be used for translation code
+	playerSelectionWindow.window_title = tr("select_character_title") # Can be used for translation code
 	
-	for slot in $PlayerSelectionWindow/PlayerSlots.get_children():
+	for slot in playerSlots.get_children():
 		slot.connect("pressed", self, "_character_slot_pressed", [slot])
 		
 	world_load_thread = Thread.new()
@@ -37,15 +40,15 @@ func check_existing_slots() -> void:
 	
 	# This was intentionally setup so a modder can just add more slots.
 	# Once I create a modding API (currently I am just going to load PackedScenes, but I will add an actual API later), then I will set this up so adding slots is trivial.
-	for slot in $PlayerSelectionWindow/PlayerSlots.get_child_count():
+	for slot in playerSlots.get_child_count():
 		#logger.verbose("Checking Slot: %s" % str(slot))
 		
 		var slot_exists : bool = gamestate.check_if_slot_exists(int(slot))
 		
 		if slot_exists:
-			$PlayerSelectionWindow/PlayerSlots.get_child(slot).set_text(tr("load_character_button")) # Change Button Text If Slot Exists in Save
+			playerSlots.get_child(slot).set_text(tr("load_character_button")) # Change Button Text If Slot Exists in Save
 		else:
-			$PlayerSelectionWindow/PlayerSlots.get_child(slot).set_text(tr("new_character_button")) # Change Button Text If Slot Does Not Exist in Save
+			playerSlots.get_child(slot).set_text(tr("new_character_button")) # Change Button Text If Slot Does Not Exist in Save
 
 func _character_slot_pressed(button: Node) -> void:
 	"""
@@ -101,7 +104,7 @@ func _character_slot_pressed(button: Node) -> void:
 		creation_menu.set_slot(slot) # Passes Slot Number to Character Creation Window
 #		creation_menu.set_seed("World Creation Seed")
 		
-		$PlayerSelectionWindow.hide() # Hide own Popup Window
+		playerSelectionWindow.hide() # Hide own Popup Window
 		creation_menu.get_node("PlayerCreationWindow").popup_centered()
 		
 		if yielding:

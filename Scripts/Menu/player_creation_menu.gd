@@ -3,11 +3,11 @@ extends Control
 signal character_created # Signal to Let Other Popup Know When Character Has Been Created
 
 # Declare member variables here. Examples:
-onready var createCharacterButton = $PlayerCreationWindow/Interface/CreateCharacter
-onready var characterName = $PlayerCreationWindow/Interface/CharacterName
-onready var characterColor = $PlayerCreationWindow/Interface/CharacterColor
-onready var debugMode = $PlayerCreationWindow/Interface/DebugMode
-onready var worldSeed = $PlayerCreationWindow/Interface/WorldSeed
+onready var createCharacterButton = $PlayerCreationWindow/background/Interface/CreateCharacter
+onready var characterName = $PlayerCreationWindow/background/Interface/CharacterName
+onready var characterColor = $PlayerCreationWindow/background/Interface/CharacterColor
+onready var debugMode = $PlayerCreationWindow/background/Interface/DebugMode
+onready var worldSeed = $PlayerCreationWindow/background/Interface/WorldSeed
 
 var old_title : String = "" # Title From Before Window Was Shown
 var slot : int # Save Slot to Use For Character
