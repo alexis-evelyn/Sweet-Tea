@@ -78,6 +78,7 @@ func _character_slot_pressed(button: Node) -> void:
 		#logger.verbose("Character Pressed: %s" % gamestate.player_info.name)
 		
 		if scene == "":
+			# These values "world_seed" and "world_created" are stored in Player's Save data when player is created for the network menu.
 			if gamestate.player_info.has("world_seed") and gamestate.player_info.has("world_created"):
 				if gamestate.player_info.world_created == false: # I am leaving the dictionary entries alone if the value was set to something other than false.
 					creation_menu.set_slot(slot) # Passes Slot Number to Character Creation Window
@@ -94,7 +95,7 @@ func _character_slot_pressed(button: Node) -> void:
 	else:
 		#logger.verbose("Creating Character and World!!!")
 		creation_menu.set_slot(slot) # Passes Slot Number to Character Creation Window
-		creation_menu.set_seed("World Creation Seed")
+#		creation_menu.set_seed("World Creation Seed")
 		
 		$PlayerSelectionWindow.hide() # Hide own Popup Window
 		creation_menu.get_node("PlayerCreationWindow").popup_centered()

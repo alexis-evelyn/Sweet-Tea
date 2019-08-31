@@ -110,9 +110,9 @@ func add_player(pinfo: Dictionary, net_id: int, coordinates: Vector2) -> void:
 	# Setup Player Customization
 	# Player Customizations (by json) will be performed in another function that will be called here!!!
 	
-	var char_color : Color = "ffffff"
+	var char_color : Color = Color.white
 	if pinfo.has("char_color"):
-		char_color = pinfo.char_color
+		char_color = Color(pinfo.char_color).to_html(false) # Since alpha is disabled, transparency should be disabled.
 	
 	new_actor.get_node("KinematicBody2D").set_dominant_color(char_color) # The player script is attached to KinematicBody2D, hence retrieving its node
 	

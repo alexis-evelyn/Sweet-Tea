@@ -3,10 +3,16 @@ extends Control
 signal character_created # Signal to Let Other Popup Know When Character Has Been Created
 
 # Declare member variables here. Examples:
+onready var createCharacterButton = $PlayerCreationWindow/Interface/CreateCharacter
+onready var characterName = $PlayerCreationWindow/Interface/CharacterName
+onready var characterColor = $PlayerCreationWindow/Interface/CharacterColor
+onready var debugMode = $PlayerCreationWindow/Interface/DebugMode
+onready var worldSeed = $PlayerCreationWindow/Interface/WorldSeed
+
 var old_title : String = "" # Title From Before Window Was Shown
 var slot : int # Save Slot to Use For Character
 var is_client : bool = false # Determine If Is Server or Client
-var world_seed : String # Seed to use to generate world
+var world_seed : String = "" # Seed to use to generate world
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -23,6 +29,13 @@ func create_character() -> void:
 	gamestate.player_info.char_unique_id = gamestate.generate_character_unique_id()
 	gamestate.player_info.debug = false
 	gamestate.player_info.name = "Default Name"
+	
+	# Set World's Seed
+	if get_seed() == "":
+		if worldSeed.text == "":
+			set_seed("Randomly Generated Seed")
+		else:
+			set_seed(worldSeed.text)
 	
 	# This is setup so worldgen does not happen if the new character was created for the purpose of joining a server.
 	# This will help save processing time as worldgen can be delayed until later
@@ -42,7 +55,7 @@ func create_character() -> void:
 # This is a function as I need to call this in player selection without resetting the character's variables
 func create_world() -> void:
 	var world_name = world_handler.create_world(-1, world_seed, Vector2(0, 0)) # The Vector (0, 0) is here until I decide if I want to generate a custom world size. This will just default to what the generator has preset.
-		
+	
 	gamestate.player_info.starting_world = "user://worlds/".plus_file(world_name)
 	
 	#gamestate.save_player(slot)
@@ -52,6 +65,9 @@ func create_world() -> void:
 
 func set_seed(set_seed: String) -> void:
 	world_seed = set_seed
+
+func get_seed() -> String:
+	return world_seed
 
 func set_slot(character_slot: int) -> void:
 	slot = character_slot

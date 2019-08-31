@@ -16,7 +16,7 @@ var server_mode : bool = false
 # Player Info Dictionary
 var player_info : Dictionary = {
 	name = "Player", # Player's Name
-	char_color = "ffffff", # Unmodified Player Color - May Combine With Custom Sprites (and JSON)
+	char_color = Color.white.to_html(false), # Unmodified Player Color - May Combine With Custom Sprites (and JSON)
 	os_unique_id = OS.get_unique_id(), # Stores OS Unique ID - Can be used to link players together, Not Designed to Be Secure (as in player is allowed to tamper with it)
 	char_unique_id = "Not Set", # Unique Character ID (meant for servers so they can attach features to specific characters - very useful for server plugins
 	starting_world = "Not Set", # Spawn World - Saved to File so The World Loader Can Load The Spawn World Up (Say Permanent Chunk Loading - Will Be Loaded on Client when Client is Connected to Server. Similar idea to Starbound's Spaceship on Servers') - Not Meant to Spawn Players in (Meant for Server Player Only - E.g. Single Player).

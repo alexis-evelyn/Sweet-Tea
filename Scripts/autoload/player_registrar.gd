@@ -32,6 +32,10 @@ remote func register_player(pinfo: Dictionary, net_id: int, new_world : bool = f
 		return -1
 	
 	#logger.verbose("Registering Player %s (%s) to Player Registry" % [pinfo.name, net_id])
+	# If Character Color is Missing, Then Set Character Color to Default Color
+	if not pinfo.has("char_color"):
+		pinfo.char_color = Color.white
+		
 	players[int(net_id)] = pinfo # Add Newly Joined Client to Dictionary of Clients
 	
 	if get_tree().is_network_server():
@@ -119,10 +123,12 @@ func name(id: int) -> String:
 # Returns Player's Character's Color
 func color(id: int) -> Color:
 	if not players.has(id):
+		# This should never be called as the player spawn code requires the player to be registered (otherwise the server registers the player anyway)
 		logger.error("Return Player Color Failed: Player ID '%s' Not Registered!!!" % str(id))
 		return Color.firebrick
 	
 	if not players[id].has("char_color"):
+		# This should never be called as a default color is assigned during player registry (if color is missing)
 		logger.warning("Return Player Color Failed: Player Color for ID '%s' Not Set!!!" % str(id))
 		return Color.white # This could potentially happen. Set it to default color.
 	
