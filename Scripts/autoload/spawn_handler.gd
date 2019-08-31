@@ -79,7 +79,7 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 	if net_id == gamestate.net_id:
 		network.set_client_title(tr("spawn_world_title") % gamestate.player_info.current_world) # This won't show up on server start (I think because the player selection menu is lagging behind due to not threading the world loader)
 	else:
-		var client_locale : String = "en"
+		var client_locale : String = "en" # English is default as it is the international business language
 		if player_registrar.players[int(net_id)].has("locale"):
 			client_locale = player_registrar.players[int(net_id)].locale
 
