@@ -25,10 +25,18 @@ func _ready():
 func create_character() -> void:
 	logger.info("Slot: %s" % slot)
 	
-	gamestate.player_info.char_color = "ff000000"
+	# Cool Color - #ff00ab
+	# Unless modded, the color output should always be a valid color
+	gamestate.player_info.char_color = get_picker_color()
+	
+	# Generate A Random Character ID
 	gamestate.player_info.char_unique_id = gamestate.generate_character_unique_id()
-	gamestate.player_info.debug = false
-	gamestate.player_info.name = "Default Name"
+	
+	# Unless modded, the checkbox should always be a valid boolean value
+	gamestate.debug = debugMode.is_pressed()
+	
+	# Set Character's Name
+	gamestate.player_info.name = get_character_name()
 	
 	# Set World's Seed
 	if get_seed() == "":
@@ -62,6 +70,20 @@ func create_world() -> void:
 
 	logger.verbose("Player Creation Menu - Starting Server (Singleplayer)")
 	world_handler.save_world(world_handler.get_world(world_name))
+
+func get_picker_color() -> Color:
+	# This is a function for if I eventually modify the color to make it play nicer with the background.
+	return characterColor.color
+	
+func get_character_name() -> String:
+	if characterName.text == "":
+		return get_random_name()
+	else:
+		return characterName.text
+
+func get_random_name() -> String:
+	# Pick A Random Name For Character
+	return "Default Character Name"
 
 func set_seed(set_seed: String) -> void:
 	world_seed = set_seed
