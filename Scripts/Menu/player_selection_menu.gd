@@ -40,9 +40,9 @@ func check_existing_slots() -> void:
 		var slot_exists : bool = gamestate.check_if_slot_exists(int(slot))
 		
 		if slot_exists:
-			$PlayerSelectionWindow/PlayerSlots.get_child(slot).set_text(tr("load_character_button_text")) # Change Button Text If Slot Exists in Save
+			$PlayerSelectionWindow/PlayerSlots.get_child(slot).set_text(tr("load_character_button")) # Change Button Text If Slot Exists in Save
 		else:
-			$PlayerSelectionWindow/PlayerSlots.get_child(slot).set_text(tr("new_character_button_text")) # Change Button Text If Slot Does Not Exist in Save
+			$PlayerSelectionWindow/PlayerSlots.get_child(slot).set_text(tr("new_character_button")) # Change Button Text If Slot Does Not Exist in Save
 
 func _character_slot_pressed(button: Node) -> void:
 	"""

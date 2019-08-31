@@ -85,7 +85,7 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 			if command == "":
 				return ""
 			else:
-				return "command_not_found"
+				return functions.get_translation("command_not_found", player_registrar.players[net_id].locale) % command
 
 # Help Command
 # warning-ignore:unused_argument
@@ -103,7 +103,7 @@ func help_command(net_id, message) -> String:
 	#output_array.append("-----------------------" + "\n")
 	for command in supported_commands:
 		# TODO: Alphanumerically Sort Commands using PSA.insert(index, string)
-		output_array.append(command + ": " + supported_commands[str(command)]["description"])
+		output_array.append(command + ": " + functions.get_translation(supported_commands[str(command)]["description"], player_registrar.players[net_id].locale))
 		output_array.append(" - " + str(supported_commands[str(command)]["permission"]))
 		output_array.append('\n')
 	
@@ -128,7 +128,7 @@ func kick_player(net_id: int, message: PoolStringArray) -> String:
 	
 	# player_control
 	
-	return "Kick Player and Optional Message - Permission Needed: " + str(permission_level)
+	return functions.get_translation("kick_player_command_no_permission", player_registrar.players[net_id].locale) % str(permission_level)
 	
 # Kick Player by IP Command
 # warning-ignore:unused_argument
@@ -140,12 +140,13 @@ func kick_player_ip(net_id: int, message: PoolStringArray) -> String:
 	"""
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
-# warning-ignore:unused_variable
-	var ip_address : String = str(message[1]) # Check to make sure IP Address is Specified
+	
+	# warning-ignore:unused_variable
+#	var ip_address : String = str(message[1]) # Check to make sure IP Address is Specified
 	
 	# player_control
 	
-	return "Kick Player By IP and Optional Message - Permission Needed: " + str(permission_level)
+	return functions.get_translation("kick_player_ip_command_no_permission", player_registrar.players[net_id].locale) % str(permission_level)
 
 # Ban Player Command
 # warning-ignore:unused_argument
@@ -160,7 +161,7 @@ func ban_player(net_id: int, message: PoolStringArray) -> String:
 	
 	# player_control
 	
-	return "Ban Player and Optional Message - Permission Needed: " + str(permission_level)
+	return functions.get_translation("ban_player_command_no_permission", player_registrar.players[net_id].locale) % str(permission_level)
 
 # Ban Player By IP Command
 # warning-ignore:unused_argument
@@ -175,7 +176,7 @@ func ban_player_ip(net_id: int, message: PoolStringArray) -> String:
 	
 	# player_control
 	
-	return "Ban Player By IP and Optional Message - Permission Needed: " + str(permission_level)
+	return functions.get_translation("ban_player_ip_command_no_permission", player_registrar.players[net_id].locale) % str(permission_level)
 	
 # Change Player's World - Server Side Only
 func change_player_world(net_id: int, message: PoolStringArray) -> String:
@@ -200,7 +201,7 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	
 	if world_name == "":
 		# TODO: Replace world_path in error message with name user gave!!!
-		return "failed to Load World %s For Player ID %s" % [world_path, net_id]
+		return functions.get_translation("change_world_command_failed_load_world", player_registrar.players[net_id].locale) % [world_path, net_id]
 	
 	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 	
@@ -217,7 +218,7 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	
 	# Psuedo Code
 	# var client_title : String = TranslationServer.get_translation("set_client_title", "language")
-	return "Player %s Changing World to: %s" % [net_id, world_name]
+	return functions.get_translation("change_world_command_success", player_registrar.players[net_id].locale) % [world_path, net_id]
 	
 # Change Player's World - Server Side Only
 func create_world(net_id: int, message: PoolStringArray) -> String:
@@ -255,8 +256,8 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 			#logger.verbose("Server Change World: %s" % net_id)
 			spawn_handler.change_world(world_name)
 		
-		return "Created New World Named %s!!!" % world_name
-	return "You are not the server!!!"
+		return functions.get_translation("created_world_success", player_registrar.players[net_id].locale) % world_name
+	return functions.get_translation("created_world_no_permission", player_registrar.players[net_id].locale)
 	
 # TODO: Add Restart Command
 # Shutdown Server Command
@@ -271,7 +272,7 @@ func shutdown_server(net_id: int, message: PoolStringArray) -> String:
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
-	return "Shutdown Command Not Implemented - Permission Needed: " + str(permission_level)
+	return functions.get_translation("shutdown_server_no_permission", player_registrar.players[net_id].locale) % permission_level
 	
 func server_spawn(net_id: int, message: PoolStringArray) -> String:
 	"""
@@ -293,7 +294,7 @@ func server_spawn(net_id: int, message: PoolStringArray) -> String:
 	
 	if world_name == "":
 		# TODO: Replace world_path in error message with name user gave!!!
-		return "(Server Spawn) failed to Load World %s For Player ID %s" % [world_path, net_id]
+		return functions.get_translation("spawn_command_failed", player_registrar.players[net_id].locale) % [world_path, net_id]
 	
 	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 	
@@ -306,4 +307,4 @@ func server_spawn(net_id: int, message: PoolStringArray) -> String:
 		#logger.verbose("Server Change World: %s" % net_id)
 		spawn_handler.change_world(world_name)
 		
-	return "Teleported to Spawn"
+	return functions.get_translation("spawn_command_success", player_registrar.players[net_id].locale)

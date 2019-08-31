@@ -18,9 +18,20 @@ var world_seed : String = "" # Seed to use to generate world
 func _ready():
 	$PlayerCreationWindow.window_title = tr("create_character_title") # Can be used for translation code
 
+	set_text()
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+
+func set_text() -> void:
+	createCharacterButton.text = tr("create_character_button")
+	debugMode.text = tr("debug_mode_checkbox")
+	
+	worldSeed.placeholder_text = tr("world_seed_placeholder")
+	characterName.placeholder_text = tr("character_name_placeholder")
+	
+	characterColor.text = tr("character_color")
 
 func create_character() -> void:
 	logger.info("Slot: %s" % slot)

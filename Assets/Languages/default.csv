@@ -21,14 +21,14 @@ help_kickip_desc,Kicks All Players On Specified IP,,,,
 help_ban_desc,Bans Player Specified As Argument,,,,
 help_banip_desc,Bans IP Address From Joining Server,,,,
 help_shutdown_desc,Shuts Down Server,,,,
-command_not_found,"Command,%s, Not Found!!!",,,,
-singleplayer_button_text,Singleplayer,,,,Arrrrrrrgh!!! Find yer booty
-multiplayer_button_text,Multiplayer,,,,Find booty with yer mates
-options_button_text,Options,,,,Fix Yer Ship
-quit_button_text,Quit,,,,Take yer nightshade an dream
+command_not_found,"Command, %s, Not Found!!!",,,,
+singleplayer_button,Singleplayer,,,,Arrrrrrrgh!!! Find yer booty
+multiplayer_button,Multiplayer,,,,Find booty with yer mates
+options_button,Options,,,,Fix Yer Ship
+quit_button,Quit,,,,Take yer nightshade an dream
 calculator_title,Calculator,,,,
-new_character_button_text,New Character,,,,Find yer mate
-load_character_button_text,Load Character,,,,Join yer mate
+new_character_button,New Character,,,,Find yer mate
+load_character_button,Load Character,,,,Join yer mate
 network_menu_address_placeholder,Server IP and Port Here...,,,,Plot yer course
 network_menu_join_server_button,Join Server,,,,Sail the seas!!!
 default_server_motd,Missing Message of The Day,,,,
@@ -38,6 +38,22 @@ missing_player_count,-,,,,
 missing_max_player_count,-,,,,
 player_count_format,%s/%s,,,,
 open_calculator,Opening Calculator...,,,,
-server_ip_command_text,Server IP Address: %s,,,,
-server_ip_command_text_self,"You are the server, so, you are not connected via IP Address",,,,
+server_ip_command,Server IP Address: %s,,,,
+server_ip_command_self,"You are the server, so you are not connected via IP Address",,,,
 server_tooltip,Server: %s,,,,
+create_character_button,Create,,,,
+debug_mode_checkbox,Debug Mode,,,,
+world_seed_placeholder,World Seed,,,,
+character_name_placeholder,Character Name,,,,
+character_color,Character Color,,,,
+kick_player_command_no_permission,Kick Player and Optional Message - Permission Needed: %s,,,,
+kick_player_ip_command_no_permission,Kick Player By IP and Optional Message - Permission Needed:%s,,,,
+ban_player_command_no_permission,Ban Player and Optional Message - Permission Needed: %s,,,,
+ban_player_ip_command_no_permission,Ban Player By IP and Optional Message - Permission Needed: %s,,,,
+change_world_command_failed_load_world,Failed to load world %s for player ID %s,,,,
+change_world_command_success,Player %s Changing World to: %s,,,,
+created_world_success,Created New World Named %s!!!,,,,
+created_world_no_permission,You are not the server!!!,,,,
+shutdown_server_no_permission,Shutdown Command Not Implemented - Permission Needed: %s,,,,
+spawn_command_failed_load_world,(Server Spawn) failed to Load World %s For Player ID %s,,,,
+spawn_command_success,Teleported to Spawn,,,,

@@ -25,6 +25,6 @@ func server_ip(message) -> String:
 	var net : NetworkedMultiplayerENet = get_tree().get_network_peer()
 	
 	if gamestate.net_id == 1:
-		return tr("server_ip_command_text_self")
+		return tr("server_ip_command_self")
 	
-	return tr("server_ip_command_text") % net.get_peer_address(1)
+	return tr("server_ip_command") % net.get_peer_address(1)
