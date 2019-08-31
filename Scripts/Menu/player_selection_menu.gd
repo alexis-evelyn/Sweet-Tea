@@ -7,6 +7,7 @@ var yielding : bool = false # Prevents data.blocked > 0 crash by preventing yiel
 
 var player_creation_menu : String = "res://Menus/PlayerCreationMenu.tscn" # Player Creation Menu
 var creation_menu : Node # Player Creation Menu
+var world_load_thread : Thread # World Loading Thread
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -14,6 +15,8 @@ func _ready() -> void:
 	
 	for slot in $PlayerSelectionWindow/PlayerSlots.get_children():
 		slot.connect("pressed", self, "_character_slot_pressed", [slot])
+		
+	world_load_thread = Thread.new()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(_delta: float):
@@ -91,6 +94,7 @@ func _character_slot_pressed(button: Node) -> void:
 					gamestate.save_player(slot)
 			
 			# Only load world if a scene to load is not selected.
+#			world_load_thread.start(network, "start_server")
 			network.start_server()
 	else:
 		#logger.verbose("Creating Character and World!!!")
@@ -145,3 +149,7 @@ func _about_to_hide() -> void:
 	"""
 	
 	functions.set_title(old_title)
+	
+func _exit_tree():
+	#world_load_thread.wait_to_finish()
+	pass
