@@ -2,10 +2,11 @@
 
 [sub_resource type="GDScript" id=1]
 script/source = "#extends \"res://Scripts/Menu/main_menu.gd\"
-extends MainMenu
+#extends MainMenu
+
+# Currently Does Not Work
 
 # Called when the node enters the scene tree for the first time.
-	
 func _ready() -> void:
 	print(\"Hello\")
 	#._ready()
