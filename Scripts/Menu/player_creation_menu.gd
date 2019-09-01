@@ -4,6 +4,7 @@ class_name PlayerCreationMenu
 signal character_created # Signal to Let Other Popup Know When Character Has Been Created
 
 # Declare member variables here. Examples:
+onready var playerCreationWindow = $PlayerCreationWindow
 onready var createCharacterButton = $PlayerCreationWindow/background/Interface/CreateCharacter
 onready var characterName = $PlayerCreationWindow/background/Interface/CharacterName
 onready var characterColor = $PlayerCreationWindow/background/Interface/CharacterColor
@@ -17,7 +18,9 @@ var world_seed : String = "" # Seed to use to generate world
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	$PlayerCreationWindow.window_title = tr("create_character_title") # Can be used for translation code
+	playerCreationWindow.window_title = tr("create_character_title") # Can be used for translation code
+	playerCreationWindow.get_close_button().disabled = true # Disable X Button (use theme or gdscript to remove disabled x texture)
+	playerCreationWindow.get_close_button().set_disabled_texture(ImageTexture.new()) # Create Empty Texture For Disabled Close Button - This cannot be specifically chosen by the theme alone
 
 	set_text()
 

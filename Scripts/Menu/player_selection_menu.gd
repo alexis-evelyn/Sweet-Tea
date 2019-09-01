@@ -16,6 +16,8 @@ var world_load_thread : Thread # World Loading Thread
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	playerSelectionWindow.window_title = tr("select_character_title") # Can be used for translation code
+	playerSelectionWindow.get_close_button().disabled = true # Disable X Button (use theme or gdscript to remove disabled x texture)
+	playerSelectionWindow.get_close_button().set_disabled_texture(ImageTexture.new()) # Create Empty Texture For Disabled Close Button - This cannot be specifically chosen by the theme alone
 	
 	for slot in playerSlots.get_children():
 		slot.connect("pressed", self, "_character_slot_pressed", [slot])
