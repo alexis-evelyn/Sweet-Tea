@@ -7,6 +7,8 @@ class_name ModLoader
 # https://gamedev.stackexchange.com/a/174312/97290
 
 # Declare member variables here. Examples:
+var mods_node : Node # Mods Node
+
 var scene_to_change_to = "res://Menus/MainMenu.tscn"
 var mods_folder : String = "user://mods/"
 var mods_installed : bool = false
@@ -72,6 +74,12 @@ func load_mods() -> void:
 	var resource : Resource
 	var scene : Node
 	
+	# Create Mods Node to Put Mods in
+	if not get_tree().get_root().has_node("Mods"):
+		mods_node = Node.new()
+		mods_node.name = "Mods"
+		get_tree().get_root().call_deferred("add_child", mods_node) # Add Scene to Root
+	
 	for mod in installed_mods:
 		logger.debug("Mod File Name: %s" % mod)
 		resource = ResourceLoader.load(mods_folder.plus_file(mod), "PackedScene", false) # Only Loads PackedScenes (Apparently can only load PackedScenes even when trying to load a png or wav? Look at ResourceImporter.)
@@ -79,7 +87,7 @@ func load_mods() -> void:
 		
 		if resource != null:
 			scene = resource.instance() # Instance the Scene
-			get_tree().get_root().call_deferred("add_child", scene) # Add Scene to Root
+			mods_node.call_deferred("add_child", scene) # Add Scene to Mods Node
 			logger.debug("Loaded Mod: %s" % scene.name)
 		
 	get_tree().change_scene(scene_to_change_to)

@@ -13,6 +13,8 @@ var window_resizable : bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	seed(OS.get_system_time_msecs()) # Set Seed to Current Time in Milliseconds (Helps Randomize Generator Per Session)
+	
 	logger.create_log() # Start Logging to File
 	check_settings() # Check OS Settings For Optimizing Game Performance
 	load_server_info() # Load's Server Info From File

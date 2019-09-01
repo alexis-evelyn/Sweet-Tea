@@ -1,12 +1,10 @@
 extends Node
 class_name Functions
 
+# get_class() - https://godotengine.org/qa/46057/how-to-get-the-class-name-of-a-custom-node?show=46059#a46059
+
 # Declare member variables here. Examples:
 var current_title : String = ""
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -18,7 +16,7 @@ func set_title(title: String):
 	OS.set_window_title(title) # Sets Window's Title
 
 # Gets Title of Window
-func get_title():
+func get_title() -> String:
 	# There is no builtin way to get the window title, so I have to store it in a variable. - https://github.com/godotengine/godot/issues/27536
 	return current_title
 
@@ -96,3 +94,10 @@ func get_translation(key: String, locale: String) -> String:
 	#print("Message: %s" % message)
 	
 	return message
+
+func get_class() -> String:
+	return "Functions"
+	
+# I don't have a use for this yet, so I am just leaving this here.
+func _to_string() -> String:
+	return "Hello"

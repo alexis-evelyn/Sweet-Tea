@@ -1,6 +1,8 @@
 extends Control
 class_name MainMenu
 
+signal script_setup # Used to let mods know MainMenu has finished loading
+
 # Interesting Links
 # https://docs.godotengine.org/en/3.1/getting_started/step_by_step/scripting_continued.html#overrideable-functions
 # https://docs.godotengine.org/en/latest/classes/class_projectsettings.html
@@ -32,6 +34,8 @@ func _ready() -> void:
 	# The reason I keep these settings here is because it prevents the splash screen from loading
 	OS.set_borderless_window(settings.window_borderless)
 	OS.set_window_resizable(settings.window_resizable)
+	
+	emit_signal("script_setup") # LEt mods know MainMenu is finished loading
 	
 func set_theme(theme: Theme) -> void:
 	"""

@@ -1,0 +1,44 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Functions
+
+# This mod is an example of extending an autoloaded function and then waiting for MainMenu to be loaded
+
+# Currently I have not been able to extend the Main Menu as then the Main Menu's ready() function will be called and the
+# game will complain about missing nodes (references in MainMenu's script that are only valid when the menu is loaded)
+# Try seeing if checking the validity of the nodes in MainMenu will fix this issue.
+
+onready var scene_tree : SceneTree = get_tree() # Scene Tree - Added For Making Code More Legible
+onready var scene_root : Node = scene_tree.get_root() # Scene Root - Added For Making Code More Legible
+onready var main_menu : Node # Main Menu Reference
+
+var random_titles : PoolStringArray = [\"Random Title\", \"Title De Random\", \"What is a Title?\"]
+
+func _ready() -> void:
+	scene_tree.connect(\"tree_changed\", self, \"tree_changed\")
+
+func random_title() -> String:
+	seed(OS.get_system_time_msecs()) # Set Seed to Current Time in Milliseconds
+	var random_int : int = rand_range(0, random_titles.size()) # Pick A Random Number From 0 to number of titles
+	var random_string : String = random_titles[random_int]
+	
+#	logger.superverbose(\"Random Integer For Random Titles: %s\" % random_int)
+	
+	set_title(random_string)
+	return get_title()
+
+func tree_changed() -> void:
+	if scene_root.has_node(\"MainMenu\"):
+		logger.verbose(\"Main Menu Loaded!!!\")
+		scene_tree.disconnect(\"tree_changed\", self, \"tree_changed\") # Disconnect Signal So This Function is Not Wasting More CPU
+		
+		main_menu = scene_root.get_node(\"MainMenu\") # MainMenu would be fully loaded by this point (and you cannot check signal ready() or script_setup() after load anyway)
+		logger.verbose(\"Random Title: %s\" % self.random_title())
+"
+
+[node name="ExtendingFunction" type="Control"]
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
