@@ -5,7 +5,7 @@ class_name SpawnHandler
 signal player_list_changed # Player's Spawned in World
 
 # Load the scene and create an instance
-var player_class : Resource = load("res://Objects/Players/Player.tscn") # Load Default Player
+var player_class : Resource = preload("res://Objects/Players/Player.tscn") # Load Default Player
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

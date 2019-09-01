@@ -15,7 +15,7 @@ func process_commands(message: PoolStringArray) -> String:
 # warning-ignore:unused_argument
 func open_calculator(message: PoolStringArray) -> String:
 	if not get_tree().get_root().has_node("Calculator"):
-		var calc : Node = load("res://Menus/Jokes/Calculator.tscn").instance()
+		var calc : Node = preload("res://Menus/Jokes/Calculator.tscn").instance()
 		calc.name = "Calculator"
 		
 		get_tree().get_root().add_child(calc)

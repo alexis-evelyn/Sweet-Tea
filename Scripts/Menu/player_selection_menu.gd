@@ -9,7 +9,7 @@ var scene : String = "" # Menu to load if set
 var old_title : String = "" # Title From Before Window Was Shown
 var yielding : bool = false # Prevents data.blocked > 0 crash by preventing yielding more than once
 
-var player_creation_menu : String = "res://Menus/PlayerCreationMenu.tscn" # Player Creation Menu
+const player_creation_menu : String = "res://Menus/PlayerCreationMenu.tscn" # Player Creation Menu
 var creation_menu : Node # Player Creation Menu
 var world_load_thread : Thread # World Loading Thread
 
@@ -69,7 +69,7 @@ func _character_slot_pressed(button: Node) -> void:
 	#logger.verbose("Character Slot Pressed: %s" % slot)
 	
 	if not has_node("PlayerCreationMenu"):
-		creation_menu = load(player_creation_menu).instance() # Instance Creation Menu
+		creation_menu = preload(player_creation_menu).instance() # Instance Creation Menu
 		creation_menu.set_name("PlayerCreationMenu") # Set's a Name (Basically an ID) to make sure I don't create this twice unless it was freed from memory.
 	
 		add_child(creation_menu) # Add Player Creation Menu As Child of Player Selection Menu

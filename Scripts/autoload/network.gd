@@ -17,11 +17,11 @@ var server_icon_bytes : PoolByteArray
 var server_icon_encoded : String
 
 # Lan Broadcast Listener
-var lan_server : String = "res://Scripts/lan/server.gd"
+const lan_server : String = "res://Scripts/lan/server.gd"
 
 # StreamPeerSSL
-var enc_server : String = "res://Scripts/Security/server_encryption.gd"
-var enc_client : String = "res://Scripts/Security/client_encryption.gd"
+const enc_server : String = "res://Scripts/Security/server_encryption.gd"
+const enc_client : String = "res://Scripts/Security/client_encryption.gd"
 
 # Reference to Player List
 onready var playerList : Node = get_tree().get_root().get_node("PlayerUI/panelPlayerList")
@@ -75,7 +75,7 @@ func start_server(thread_data = "") -> void:
 	
 	# Setup Encryption Script
 	var encryption = Node.new()
-	encryption.set_script(load(enc_server)) # Attach A Script to Node
+	encryption.set_script(preload(enc_server)) # Attach A Script to Node
 	encryption.set_name("EncryptionServer") # Give Node A Unique ID
 	get_tree().get_root().add_child(encryption)
 	
@@ -104,7 +104,7 @@ func start_server(thread_data = "") -> void:
 	
 	# Setup Broadcast Listener Script (For Clients To Find Server on Lan)
 	var broadcast_listener = Node.new()
-	broadcast_listener.set_script(load(lan_server)) # Attach A Script to Node
+	broadcast_listener.set_script(preload(lan_server)) # Attach A Script to Node
 	broadcast_listener.set_name("BroadcastListener") # Give Node A Unique ID
 	get_tree().get_root().add_child(broadcast_listener)
 	
@@ -236,7 +236,7 @@ func _on_connected_to_server() -> void:
 		get_tree().get_root().get_node("ping_timer").free()
 		
 	var encryption = Node.new()
-	encryption.set_script(load(enc_client)) # Attach A Script to Node
+	encryption.set_script(preload(enc_client)) # Attach A Script to Node
 	encryption.set_name("EncryptionClient") # Give Node A Unique ID
 	get_tree().get_root().add_child(encryption)
 	

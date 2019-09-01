@@ -49,8 +49,8 @@ const block : Dictionary = {
 }
 
 # Tilesets
-var default_tileset : TileSet = load("res://Objects/Blocks/Default.tres")
-var debug_tileset : TileSet = load("res://Objects/Blocks/Default-Debug.tres")
+var default_tileset : TileSet = preload("res://Objects/Blocks/Default.tres")
+var debug_tileset : TileSet = preload("res://Objects/Blocks/Default-Debug.tres")
 
 # Set's Worldgen size (Tilemap's Origin is Fixed to Same Spot as World Origin - I doubt I am changing this. Not unless changing it improves performance)
 var quadrant_size : int = get_quadrant_size() # Default 16
@@ -60,7 +60,7 @@ var standard_pixel_size : Vector2 = Vector2(32, 32) # This doesn't mean anything
 
 onready var world_node = self.get_owner() # Gets The Current World's Node
 onready var background_tilemap : TileMap = get_node("Background") # Gets The Background Tilemap
-var background_shader : ShaderMaterial = load("res://Assets/Materials/background.tres") # ShaderMaterial (for shading background tilemap)
+var background_shader : ShaderMaterial = preload("res://Assets/Materials/background.tres") # ShaderMaterial (for shading background tilemap)
 
 var world_seed : String # World's Seed (used by generator to produce consistent results)
 var generated_chunks_foreground : Array # Store Generated Chunks IDs to Make Sure Not To Generate Them Again

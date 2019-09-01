@@ -10,7 +10,7 @@ var backups_save_file : String = "characters_%date%.json" # Backup Save File Nam
 var game_version : String = ProjectSettings.get_setting("application/config/Version")
 
 # warning-ignore:unused_class_variable
-var game_theme : Theme = load("res://Assets/Themes/default_theme.tres")
+var game_theme : Theme = preload("res://Assets/Themes/default_theme.tres")
 # warning-ignore:unused_class_variable
 var server_mode : bool = false
 

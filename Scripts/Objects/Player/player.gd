@@ -171,7 +171,7 @@ func debug_camera(activated : bool = true):
 	# The camera is automatically cleaned up when the player is unloaded (e.g. world change)
 	if not get_tree().get_root().get_node("Worlds").get_node(player_registrar.players[gamestate.net_id].current_world).get_node("Viewport").has_node("DebugCamera"):
 		# Check to Make Sure Camera isn't Already Loaded - Prevents Duplicate Cameras (to save memory)
-		camera = load("res://Objects/Players/DebugCamera.tscn").instance()
+		camera = preload("res://Objects/Players/DebugCamera.tscn").instance()
 		camera.name = "DebugCamera"
 		
 		# This allows me to align camera to World
@@ -186,7 +186,7 @@ func player_camera(activated : bool = true):
 	# The camera is automatically cleaned up when the player is unloaded (e.g. world change)
 	if not has_node("PlayerCamera"):
 		# Check to Make Sure Camera isn't Already Loaded - Prevents Duplicate Cameras (to save memory)
-		camera = load("res://Objects/Players/PlayerCamera.tscn").instance()
+		camera = preload("res://Objects/Players/PlayerCamera.tscn").instance()
 		camera.name = "PlayerCamera"
 		
 		# This allows me to align camera to Player

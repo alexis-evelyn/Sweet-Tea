@@ -7,8 +7,8 @@ onready var server_address : Node = $panelNetwork/manualJoin/txtServerAddress
 onready var join_server : Node = $panelNetwork/manualJoin/btnJoinServer
 onready var lan_servers : Node = $panelNetwork/lanServers
 
-var lan_client : String = "res://Scripts/lan/client.gd"
-var default_icon : Resource = load("res://Assets/Blocks/grass-debug.png")
+const lan_client : String = "res://Scripts/lan/client.gd"
+const default_icon : Resource = preload("res://Assets/Blocks/grass-debug.png")
 
 var max_servers : int = 50 # Apply a maximum number of servers to show
 var servers : Array # Keep track of already added servers - to avoid duplicates
@@ -118,7 +118,7 @@ func set_language_text():
 func find_servers() -> Node:
 	# Setup Broadcast Listener Script
 	var server_finder = Node.new()
-	server_finder.set_script(load(lan_client)) # Attach A Script to Node
+	server_finder.set_script(preload(lan_client)) # Attach A Script to Node
 	server_finder.set_name("ServerFinder") # Give Node A Unique ID
 	add_child(server_finder)
 	

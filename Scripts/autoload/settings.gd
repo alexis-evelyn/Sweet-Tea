@@ -119,7 +119,7 @@ func check_settings():
 	
 	# https://docs.godotengine.org/en/3.1/classes/class_input.html#class-input-method-set-custom-mouse-cursor
 	# See if you (me) can put the cursor images into the theme (so the cursor will be updated when the theme is changed)
-#	var test_icon = load("res://Assets/Icons/game_icon.png")
+#	var test_icon = preload("res://Assets/Icons/game_icon.png")
 #	Input.set_custom_mouse_cursor(test_icon, Input.CURSOR_BUSY)
 	
 	# I keep the changing these settings in the main menu as the splash screen would not display otherwise.

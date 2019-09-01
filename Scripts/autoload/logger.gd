@@ -55,6 +55,7 @@ func superverbose(statement: String = ""):
 func warn(statement: String = ""):
 	if verbosity >= 2:
 		printerr("Warning: %s" % statement)
+		push_warning("Warning: %s" % statement)
 		
 	if save_to_drive:
 		flush_to_log("Warning: %s" % statement)
@@ -65,6 +66,7 @@ func warning(statement: String = ""):
 	
 func error(statement: String = ""):
 	if verbosity >= 1:
+		push_error("Error: %s" % statement)
 		printerr("Error: %s" % statement)
 		
 	if save_to_drive:
@@ -72,6 +74,7 @@ func error(statement: String = ""):
 	
 func fatal(statement: String = ""):
 	if verbosity >= 0:
+		push_error("Fatal: %s" % statement)
 		printerr("Fatal: %s" % statement)
 		
 	if save_to_drive:
@@ -81,6 +84,7 @@ func trace(statement: String = ""):
 	if verbosity >= 0:
 		printerr("If trace does not show up, it means Godot still doesn't support stacktraces in exported games. Try breaking the game in the Godot editor (you will need the source code at https://github.com/alex-evelyn/Sweet-Tea)")
 		printerr("Error: '%s' Trace: '%s'" % [statement, get_stack()])
+		push_error("Error: '%s' Trace: '%s'" % [statement, get_stack()])
 		
 	if save_to_drive:
 		flush_to_log("Error: '%s' Trace: '%s'" % [statement, get_stack()])

@@ -21,7 +21,7 @@ func _ready() -> void:
 	if not has_node("ClientCommands"):
 		client_commands = Node.new()
 		client_commands.name = "ClientCommands"
-		client_commands.set_script(load("res://Scripts/Commands/client_commands.gd"))
+		client_commands.set_script(preload("res://Scripts/Commands/client_commands.gd"))
 		add_child(client_commands)
 	
 	get_tree().get_root().get_node("PlayerUI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
@@ -31,8 +31,8 @@ func _ready() -> void:
 	#chatInput.add_font_override("font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres")) 
 	
 	# RichTextLabel Fonts
-	chatMessages.set("custom_fonts/normal_font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres")) 
-	chatMessages.set("custom_fonts/bold_font", load("res://Assets/Fonts/dynamicfont/firacode-bold.tres")) 
+	chatMessages.set("custom_fonts/normal_font", preload("res://Assets/Fonts/dynamicfont/firacode-regular.tres")) 
+	chatMessages.set("custom_fonts/bold_font", preload("res://Assets/Fonts/dynamicfont/firacode-bold.tres")) 
 	
 	chatMessages.set_scroll_follow(true) # Sets RichTextLabel to AutoScroll if at Bottom
 
