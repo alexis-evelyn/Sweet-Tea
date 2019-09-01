@@ -1,6 +1,8 @@
 extends Control
 class_name MultiplayerMenu
 
+# bytes2var (Validate To Prevent Code Execution) - https://docs.godotengine.org/en/3.1/classes/class_@gdscript.html#class-gdscript-method-bytes2var
+
 onready var server_address : Node = $panelNetwork/manualJoin/txtServerAddress
 onready var join_server : Node = $panelNetwork/manualJoin/btnJoinServer
 onready var lan_servers : Node = $panelNetwork/lanServers
@@ -55,7 +57,13 @@ func add_server(json: Dictionary, server_ip: String, server_port: int) -> void:
 		if json.has("icon"):
 			# TODO: Detect If Server Icon Says "Not Set". If it does, the server failed to load it.
 			var decoded_icon : PoolByteArray = Marshalls.base64_to_raw(json.get("icon"))
-			icon_texture = bytes2var(decoded_icon, true)
+			
+			# If Icon Size is 0, use default icon
+			if decoded_icon.size() == 0:
+				icon_texture = default_icon
+				logger.warn("Icon Size is Zero For Server %s!!!" % server)
+			else:
+				icon_texture = bytes2var(decoded_icon, true)
 			
 #			logger.superverbose("Got Icon!!!")
 		else:
