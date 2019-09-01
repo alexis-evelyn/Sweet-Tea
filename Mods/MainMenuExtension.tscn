@@ -1,0 +1,48 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+# This mod is an example of extending an autoloaded function and then waiting for MainMenu to be loaded
+
+onready var scene_tree : SceneTree = get_tree() # Scene Tree - Added For Making Code More Legible
+onready var scene_root : Node = scene_tree.get_root() # Scene Root - Added For Making Code More Legible
+onready var main_menu : Node # Main Menu Reference
+
+var new_button : Button = Button.new()
+
+func _ready() -> void:
+	scene_tree.connect(\"tree_changed\", self, \"tree_changed\")
+
+func add_button() -> void:
+	if main_menu.has_node(\"Menu/Buttons\"):
+		var buttons : Node = main_menu.get_node(\"Menu/Buttons\")
+		new_button.name = \"ButtonIDHere\"
+		new_button.text = \"About Game\"
+		
+		new_button.connect(\"pressed\", self, \"button_pressed\")
+		
+		buttons.add_child(new_button)
+	else:
+		logger.verbose(\"Menu Buttons Are Missing!!!\")
+
+func button_pressed() -> void:
+	logger.verbose(\"Mod About Button Pressed!!!\")
+	
+	main_loop_events.about_game()
+	# You could also change scene, etc...
+
+func tree_changed() -> void:
+	if scene_root.has_node(\"MainMenu\"):
+		logger.verbose(\"Main Menu Loaded!!!\")
+		scene_tree.disconnect(\"tree_changed\", self, \"tree_changed\") # Disconnect Signal So This Function is Not Wasting More CPU
+		
+		main_menu = scene_root.get_node(\"MainMenu\") # MainMenu would be fully loaded by this point (and you cannot check signal ready() or script_setup() after load anyway)
+		add_button()
+"
+
+[node name="ExtendingMainMenu" type="Control"]
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
