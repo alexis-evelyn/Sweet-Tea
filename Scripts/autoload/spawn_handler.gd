@@ -213,7 +213,7 @@ remote func despawn_player(net_id: int) -> void:
 		logger.error("Player Registrar Missing %s Cannot Locate Player Node to Despawn!!!" % net_id)
 		
 # Changing Worlds - Perform Cleanup and Load World
-remote func change_world(world_name: String) -> void:
+remote func change_world(world_name: String, same_world: bool = false) -> void:
 	#logger.verbose("Player %s Change World: %s" % [gamestate.net_id, get_world(gamestate.net_id)])
 	get_tree().get_root().get_node("PlayerUI/panelPlayerList").cleanup() # Cleanup Player List
 
@@ -223,15 +223,17 @@ remote func change_world(world_name: String) -> void:
 
 	# The Server Would Have Already Updated World Name - No Need to Set Twice
 	if not get_tree().is_network_server():
-		var worlds = get_tree().get_root().get_node("Worlds")
-		worlds.get_node(get_world(gamestate.net_id)).free() # Frees the World and It's Children From Memory (Client Side Only)
-		
-		set_world(world_name)
-		
-		var spawn = load(world_handler.world_template).instance()
-		spawn.name = world_name
-		
-		worlds.add_child(spawn)
+		# Don't despawn world if the same world
+		if not same_world:
+			var worlds = get_tree().get_root().get_node("Worlds")
+			worlds.get_node(get_world(gamestate.net_id)).free() # Frees the World and It's Children From Memory (Client Side Only)
+			
+			set_world(world_name)
+			
+			var spawn = load(world_handler.world_template).instance()
+			spawn.name = world_name
+			
+			worlds.add_child(spawn)
 		# TODO (IMPORTANT): Every once in a blue moon, the client does not spawn it's own player in (after it loads the world) after changing worlds. Figure out why!!!
 		rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Request Server Spawn
 	elif get_tree().is_network_server():

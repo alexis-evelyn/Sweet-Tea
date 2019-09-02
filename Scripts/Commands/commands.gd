@@ -339,7 +339,7 @@ func world_spawn(net_id: int, message: PoolStringArray) -> String:
 	
 	if net_id != 1:
 		#logger.verbose("NetID Change World: %s" % net_id)
-		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name)
+		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name, true)
 	else:
 		#logger.verbose("Server Change World: %s" % net_id)
 		spawn_handler.change_world(world_name)
@@ -365,14 +365,15 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 	
 	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 	
-	player_registrar.players[net_id].spawn_coordinates = Vector2(100, 100) # Set To Use World's Spawn Location
+	var coordinates : Vector2 = Vector2(100, 100)
+	player_registrar.players[net_id].spawn_coordinates = coordinates # Set To Use World's Spawn Location
 #	player_registrar.players[net_id].spawn_coordinates_safety_off = Vector2(100, 100) # Set To Use World's Spawn Location
 	
 	if net_id != 1:
 		#logger.verbose("NetID Change World: %s" % net_id)
-		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name)
+		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name, true)
 	else:
 		#logger.verbose("Server Change World: %s" % net_id)
 		spawn_handler.change_world(world_name)
 		
-	return functions.get_translation("world_spawn_command_success", player_registrar.players[net_id].locale)
+	return functions.get_translation("tp_command_success", player_registrar.players[net_id].locale) % [coordinates.x, coordinates.y]
