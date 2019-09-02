@@ -3,9 +3,21 @@ class_name MainMenu
 
 signal script_setup # Used to let mods know MainMenu has finished loading
 
+# Super Efficiency
+# How To Improve Efficiency - https://www.reddit.com/r/godot/comments/cyvbzh/how_to_make_my_godot_game_use_less_cpu/eyufv78/
+# C++ vs C# - https://stackoverflow.com/a/2203124/6828099
+# GDScript or C++ - https://godotengine.org/qa/8800/can-i-write-a-full-game-with-just-c-or-is-gdscript-necessary?show=8806#c8806
+
+# README (IMPORTANT):
+# I plan on rewriting the cpu intensive scripts with c++ to greatly improve efficiency.
+# I am also getting close to the point where I want to start asking for donations (e.g. Kickstarter),
+# so I am going to need to make a Gantt chart and setup a unabridged list of planned features.
+# I am also going to figure out how to multithread world loading so I can have a loading screen.
+
 # Interesting Links
 # https://docs.godotengine.org/en/3.1/getting_started/step_by_step/scripting_continued.html#overrideable-functions
 # https://docs.godotengine.org/en/latest/classes/class_projectsettings.html
+# Youtube Channel to help with development and marketing (Ask Gamedev) - https://www.youtube.com/channel/UCd_lJ4zSp9wZDNyeKCWUstg
 
 # Performance Improving Links
 # https://docs.godotengine.org/en/3.1/classes/class_engine.html#class-engine-property-iterations-per-second
