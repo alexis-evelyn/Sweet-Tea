@@ -109,10 +109,6 @@ func _ready() -> void:
 
 	#generate_new_world()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta: float):
-#	pass
-
 # Set Shader for Background Tiles
 func set_shader_background_tiles():
 	# Without explicitly making the resource unique, the same reference is just passed around no matter how many times it is loaded

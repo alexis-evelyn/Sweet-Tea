@@ -24,10 +24,6 @@ func _ready() -> void:
 		
 	world_load_thread = Thread.new()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(_delta: float):
-#	pass
-
 # Used to set a menu to load after loading character.
 func set_menu(set_scene: String) -> void:
 	scene = set_scene

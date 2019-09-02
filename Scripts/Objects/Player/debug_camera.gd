@@ -29,15 +29,11 @@ func _ready() -> void:
 	
 	update_world_label()
 	
-	set_physics_process(true)
+	set_physics_process(false)
 	
 	player = get_player_node()
 	
 	update_camera_pos(player.position)
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta: float) -> void:
-#	pass
 
 func _physics_process(_delta: float) -> void:
 	if Input.is_action_pressed("debug_up"):

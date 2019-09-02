@@ -6,10 +6,6 @@ class_name Functions
 # Declare member variables here. Examples:
 var current_title : String = ""
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
 # I may replace the default window title bar with my own. - https://www.youtube.com/watch?v=alKdkRJy-iY&list=PL0t9iz007UitFwiu33Vx4ZnjYQHH9th2r&index=4&t=0s
 func set_title(title: String):
 	current_title = title

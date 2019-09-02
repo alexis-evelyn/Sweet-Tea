@@ -14,10 +14,6 @@ var udp_peer : PacketPeerUDP = PacketPeerUDP.new()
 func _ready():
 	server.start(self, "listen_for_clients", null)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
 # warning-ignore:unused_argument
 func listen_for_clients(thread_data) -> void:
 	if udp_peer.listen(set_port(), network.server_info.bind_address, packet_buffer_size) != OK:

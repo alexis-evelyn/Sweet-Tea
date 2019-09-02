@@ -32,10 +32,6 @@ func _ready() -> void:
 	# Show Calculator
 	popup_calc()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(_delta) -> void:
-#	pass
-
 # Calculator Button Was Pressed
 func _button_pressed(button: Node) -> void:
 	#logger.verbose("Pressed: %s" % button.name)

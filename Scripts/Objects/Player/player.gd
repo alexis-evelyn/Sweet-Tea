@@ -25,6 +25,8 @@ var camera: Node
 
 # Called everytime player is spawned 
 func _ready() -> void:
+	set_physics_process(false)
+	
 	# Get Player's ID
 	player_name = get_node("..").name
 	
@@ -64,10 +66,6 @@ func _ready() -> void:
 		correct_coordinates_timer.start() # Start Timer
 	elif is_network_master() and gamestate.debug:
 		world_generator.center_chunk(self.position, true) # Allows DebugCamera to be Updated on Chunk Position
-
-# Called before every rendered frame.
-func _process(_delta: float) -> void:
-	pass
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta: float) -> void:

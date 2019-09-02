@@ -19,10 +19,6 @@ func loadPlayerList() -> void:
 	localPlayer.align = Label.ALIGN_CENTER # Aligns the Text To Center
 	#localPlayer.add_font_override("font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres")) 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(_delta: float):
-#	pass
-
 # Update Player List in GUI
 func _on_player_list_changed() -> void:
 	# TODO: Replace the player list with a rich text label to implement clicking on player names (and add player icons (profile pics?))

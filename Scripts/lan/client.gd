@@ -30,10 +30,6 @@ func _ready():
 	set_server_port() # Sets Port to Broadcast to
 	search_for_servers() # Start searching for Servers
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
 func find_servers(peer: PacketPeerUDP) -> void:
 	peer.listen(0, "*", packet_buffer_size) # Listen for replies from server (the server knows your port, so )
 	#logger.verbose("Starting To Search for Servers!!!")

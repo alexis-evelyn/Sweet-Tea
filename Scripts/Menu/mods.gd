@@ -35,10 +35,6 @@ func _ready() -> void:
 	load_mods()
 	logger.debug("---------------------------------------------------")
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(_delta: float) -> void:
-#	pass
-
 func check_for_mods() -> bool:
 	# Make Mods Directory (if it does not exist)
 	if not mods_folder_check.dir_exists(mods_folder): # Check If Mods Folder Exists

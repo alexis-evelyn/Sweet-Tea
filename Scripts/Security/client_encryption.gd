@@ -12,10 +12,6 @@ var dh = preload("diffie-hellman.gd").new() # Preload Diffie-Hellman Script (Mat
 func _ready():
 	dh.test()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
 # Test Module for Cripte
 func test_module():
 #	var Cripte = cripter.new()

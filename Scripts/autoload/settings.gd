@@ -21,10 +21,6 @@ func _ready():
 	load_locale() # Load Locale Settings
 #	load_game_settings() # Load Player's Game Settings From File
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
 # Load Locale Settings From File
 func load_locale() -> void:
 	TranslationServer.set_locale("en")

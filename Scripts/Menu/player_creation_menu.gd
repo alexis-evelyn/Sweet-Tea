@@ -24,10 +24,6 @@ func _ready():
 
 	set_text()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
 func set_text() -> void:
 	createCharacterButton.text = tr("create_character_button")
 	debugMode.text = tr("debug_mode_checkbox")

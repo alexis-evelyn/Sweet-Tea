@@ -24,10 +24,6 @@ func _ready():
 		#test()
 		pass
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
 func debug_auth_path():
 	var output = []
 	OS.execute('export', [], true, output)
