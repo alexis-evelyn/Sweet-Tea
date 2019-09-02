@@ -48,7 +48,7 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 		
 	elif player_registrar.players[net_id].has("spawn_coordinates_safety_off"):
 		# TODO: Add /tp command and use this to set spawn coordinates...
-		coordinates = player_registrar.players[net_id].spawn_coordinates
+		coordinates = player_registrar.players[net_id].spawn_coordinates_safety_off
 		player_registrar.players[net_id].erase("spawn_coordinates_safety_off")
 		
 	else:

@@ -354,6 +354,37 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 	"""
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var arguments : PoolStringArray = message
+	arguments.remove(0)
+	
+	var coordinates : Vector2
+	if arguments.size() == 2:
+		var x_coor : int = convert(arguments[0], TYPE_INT)
+		var y_coor : int = convert(arguments[1], TYPE_INT)
+		
+		coordinates = Vector2(x_coor, y_coor)
+	elif arguments.size() == 1:
+		# Teleport to Player (Not Implemented)
+		var player_id : int = convert(arguments[0], TYPE_INT)
+		
+		if player_registrar.players.has(player_id):
+			pass
+		else:
+			pass
+			
+		return functions.get_translation("tp_command_not_enough_arguments", player_registrar.players[net_id].locale)
+	elif arguments.size() == 3:
+		# Teleport Player to Other Location (if alphabetical characters are first)
+		# Disable Safety Check (if alphabetical characters are third)
+		
+		# Not Implemented
+		
+		return functions.get_translation("tp_command_too_many_arguments", player_registrar.players[net_id].locale)
+	elif arguments.size() == 0:
+		return functions.get_translation("tp_command_not_enough_arguments", player_registrar.players[net_id].locale)
+	else:
+		return functions.get_translation("tp_command_too_many_arguments", player_registrar.players[net_id].locale)
+	
 	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
 	var world_name : String = spawn_handler.get_world(net_id) # Pick world player is currently in
@@ -365,9 +396,8 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 	
 	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 	
-	var coordinates : Vector2 = Vector2(100, 100)
-	player_registrar.players[net_id].spawn_coordinates = coordinates # Set To Use World's Spawn Location
-#	player_registrar.players[net_id].spawn_coordinates_safety_off = Vector2(100, 100) # Set To Use World's Spawn Location
+#	player_registrar.players[net_id].spawn_coordinates = coordinates # Set To Use World's Spawn Location
+	player_registrar.players[net_id].spawn_coordinates_safety_off = coordinates # Set To Use World's Spawn Location
 	
 	if net_id != 1:
 		#logger.verbose("NetID Change World: %s" % net_id)

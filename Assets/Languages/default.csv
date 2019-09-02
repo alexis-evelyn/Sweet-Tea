@@ -61,3 +61,5 @@ first_name_list,"{""Masc"":[""John"",""James"",""Brandon"",""Robert"",""Robert""
 last_name_list,"{""NB"":[""Smith"",""Johnson"",""Miller"",""Evans"",""Jones"",""Williams"",""Brown""]}",,,,
 world_spawn_command_success,Teleported to World Spawn,,,,
 tp_command_success,"Teleported to (%s, %s)",,,,
+tp_command_not_enough_arguments,Teleport Command - Not Enough Arguments,,,,
+tp_command_too_many_arguments,Teleport Command - Too Many Arguments,,,,
