@@ -5,8 +5,8 @@ class_name Calculator
 # Don't use this to do your math homework. It can only hold the size of an int and will be inaccurate for large numbers.
 
 # Declare member variables here. Examples:
-onready var screen = $Screen
-onready var buttons = $Buttons
+onready var screen = $background/Screen
+onready var buttons = $background/Buttons
 onready var expression = Expression.new()
 
 var calculated : bool = false # Determine if the last action was a calculation.
