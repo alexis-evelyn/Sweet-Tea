@@ -60,7 +60,7 @@ func add_server(json: Dictionary, server_ip: String, server_port: int) -> void:
 			var decoded_icon : PoolByteArray = Marshalls.base64_to_raw(json.get("icon").get("bytes"))
 			
 			# If Icon Size is 0, use default icon
-			if decoded_icon.size() != 0:
+			if decoded_icon.size() != 0 and int(json.get("icon").get("width")) <= network.max_pixel_width and int(json.get("icon").get("width")) == int(json.get("icon").get("height")):
 				icon_image.create_from_data(int(json.get("icon").get("width")), int(json.get("icon").get("height")), false, int(json.get("icon").get("format")), decoded_icon)
 				icon_texture.create_from_image(icon_image)
 				print("Icon Texture: %s" % json.get("icon"))

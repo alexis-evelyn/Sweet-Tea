@@ -8,7 +8,7 @@ var packet_buffer_size: int = 1000 # Clients repeatedly send packets, so there i
 var server : Thread = Thread.new()
 var calling_card : String = "Nihilistic Sweet Tea:"
 var delay_packet_processing_time_milliseconds : int = 300 # Delay processing to prevent cpu usage rising dramatically by a flood of packets (won't prevent DOS, but helps out on normal usage)
-var udp_peer = PacketPeerUDP.new()
+var udp_peer : PacketPeerUDP = PacketPeerUDP.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

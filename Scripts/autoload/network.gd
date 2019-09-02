@@ -27,6 +27,8 @@ const enc_client : String = "res://Scripts/Security/client_encryption.gd"
 onready var playerList : Node = get_tree().get_root().get_node("PlayerUI/panelPlayerList")
 onready var playerUI : Node = get_tree().get_root().get_node("PlayerUI")
 
+var max_pixel_width : int = 32
+
 # TODO: Make sure to verify the data is valid and coherent
 # Server Info to Send to Clients
 var server_info : Dictionary = {
@@ -71,10 +73,13 @@ func load_server_icon():
 		server_icon_bytes = server_icon_image.get_data() #var2bytes(server_icon_resource, true)
 		server_icon_encoded = Marshalls.raw_to_base64(server_icon_bytes)
 		
-		server_info.icon.bytes = server_icon_encoded #server_icon_encoded
-		server_info.icon.width = server_icon_image.get_width()
-		server_info.icon.height = server_icon_image.get_height()
-		server_info.icon.format = server_icon_image.get_format()
+		if server_icon_image.get_width() == server_icon_image.get_height() and server_icon_image.get_width() <= max_pixel_width:
+			server_info.icon.bytes = server_icon_encoded #server_icon_encoded
+			server_info.icon.width = server_icon_image.get_width()
+			server_info.icon.height = server_icon_image.get_height()
+			server_info.icon.format = server_icon_image.get_format()
+		else:
+			logger.error("Cannot Use Icon!!! Shrink Image Here!!!")
 		
 
 # Attempt to Create Server
