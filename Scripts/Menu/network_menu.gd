@@ -2,6 +2,7 @@ extends Control
 class_name MultiplayerMenu
 
 # bytes2var (Validate To Prevent Code Execution) - https://docs.godotengine.org/en/3.1/classes/class_@gdscript.html#class-gdscript-method-bytes2var
+# Icon Loading Help - https://www.reddit.com/r/godot/comments/cy6nf3/how_safe_is_bytes2var/
 
 onready var server_address : Node = $panelNetwork/manualJoin/txtServerAddress
 onready var join_server : Node = $panelNetwork/manualJoin/btnJoinServer
