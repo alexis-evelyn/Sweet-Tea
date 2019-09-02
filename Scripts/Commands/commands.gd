@@ -84,6 +84,8 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 			return server_spawn(net_id, message)
 		"wspawn":
 			return world_spawn(net_id, message)
+		"tp":
+			return teleport(net_id, message)
 		_: # Default Result - Put at Bottom of Match Results
 			if command == "":
 				return ""
@@ -334,6 +336,37 @@ func world_spawn(net_id: int, message: PoolStringArray) -> String:
 	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 	
 	player_registrar.players[net_id].world_spawn = true # Set To Use World's Spawn Location
+	
+	if net_id != 1:
+		#logger.verbose("NetID Change World: %s" % net_id)
+		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name)
+	else:
+		#logger.verbose("Server Change World: %s" % net_id)
+		spawn_handler.change_world(world_name)
+		
+	return functions.get_translation("world_spawn_command_success", player_registrar.players[net_id].locale)
+
+func teleport(net_id: int, message: PoolStringArray) -> String:
+	"""
+		Teleport To Coordinates Command
+		
+		Not Meant to Be Called Directly
+	"""
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	
+	var world_name : String = spawn_handler.get_world(net_id) # Pick world player is currently in
+	
+	# Clears Loaded Chunks From Previous World Generator's Memory
+	var world_generation = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
+	world_generation.clear_player_chunks(net_id)
+	#logger.verbose("Previous World: %s" % spawn_handler.get_world(net_id))
+	
+	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
+	
+	player_registrar.players[net_id].spawn_coordinates = Vector2(100, 100) # Set To Use World's Spawn Location
+#	player_registrar.players[net_id].spawn_coordinates_safety_off = Vector2(100, 100) # Set To Use World's Spawn Location
 	
 	if net_id != 1:
 		#logger.verbose("NetID Change World: %s" % net_id)

@@ -40,9 +40,17 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 	if player_registrar.players[net_id].has("world_spawn"):
 		coordinates = get_world_generator(get_world(net_id)).find_safe_spawn(Vector2(coor_x, coor_y), player_registrar.players[net_id].world_spawn)
 		player_registrar.players[net_id].erase("world_spawn")
+		
 	elif player_registrar.players[net_id].has("spawn_coordinates"):
 		# TODO: Add /tp command and use this to set spawn coordinates...
-		pass
+		coordinates = get_world_generator(get_world(net_id)).find_safe_spawn(player_registrar.players[net_id].spawn_coordinates)
+		player_registrar.players[net_id].erase("spawn_coordinates")
+		
+	elif player_registrar.players[net_id].has("spawn_coordinates_safety_off"):
+		# TODO: Add /tp command and use this to set spawn coordinates...
+		coordinates = player_registrar.players[net_id].spawn_coordinates
+		player_registrar.players[net_id].erase("spawn_coordinates_safety_off")
+		
 	else:
 		coordinates = get_world_generator(get_world(net_id)).find_safe_spawn(Vector2(coor_x, coor_y))
 		
