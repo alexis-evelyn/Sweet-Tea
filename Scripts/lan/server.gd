@@ -21,13 +21,13 @@ func _ready():
 # warning-ignore:unused_argument
 func listen_for_clients(thread_data) -> void:
 	if udp_peer.listen(set_port(), network.server_info.bind_address, packet_buffer_size) != OK:
-		#logger.verbose("Failed to Bind to Port %s for Clients to Poll!!! Clients will not find you in LAN!!!" % used_port)
+		logger.error("Failed to Bind to Port %s for Clients to Poll!!! Clients will not find you in LAN!!!" % used_port)
 		return
 	
 	#logger.verbose("Starting To Listen For Clients!!!")
 	while udp_peer.is_listening():
 		udp_peer.wait() # Makes PacketPeerUDP wait until it receives a packet (to save on CPU usage) - This works because listen_for_clients(...) is on a different thread.
-#		#logger.verbose("Listening!!!")
+		logger.verbose("Server Finder Helper Listening!!!")
 		
 		# Pseudo-Code For Preventing Packet Buffer Full Warning
 		if udp_peer.get_available_packet_count() == packet_buffer_size:
@@ -35,7 +35,7 @@ func listen_for_clients(thread_data) -> void:
 			pass
 		
 		while udp_peer.get_available_packet_count() > 0:
-#			#logger.verbose("Received Packet!!!")
+			logger.superverbose("Received Packet!!!")
 			var bytes : PoolByteArray = udp_peer.get_packet()
 			var client_ip : String = udp_peer.get_packet_ip()
 			var client_port : int = udp_peer.get_packet_port()
@@ -44,11 +44,17 @@ func listen_for_clients(thread_data) -> void:
 			
 			#logger.verbose("Client Response Type: %s" % typeof(reply)) # https://docs.godotengine.org/en/3.1/classes/class_@globalscope.html#enum-globalscope-variant-type
 			if typeof(reply) == TYPE_RAW_ARRAY: # PoolByteArray
-				logger.superverbose("Sending Reply!!!")
+				logger.superverbose("Sending Reply To %s:%s!!!" % [client_ip, client_port])
 				udp_peer.set_dest_address(client_ip, client_port) # Set Client as Receiver of Response
+				
+				# Socket Error 40 is when the packet is too big. It will respond with packet_error 1 (which is a generic error).
 				var packet_error = udp_peer.put_packet(reply) # Send response back to client
 				
-#				logger.error("Packet: %s" % packet_error)
+				# If Packet Error Is Not OK!!!
+				if packet_error != 0:
+#					udp_peer.get_packet_error()
+					logger.error("Packet: %s" % packet_error)
+					udp_peer.close()
 				
 			# Apparently using yield with a timer here causes the server to crash when the client uses /changeworld or /spawn. Using OS.delay_msec(...) solves this issue.
 			OS.delay_msec(delay_packet_processing_time_milliseconds)
