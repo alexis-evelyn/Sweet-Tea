@@ -25,7 +25,7 @@ var camera: Node
 
 # Called everytime player is spawned 
 func _ready() -> void:
-	set_physics_process(false)
+	set_physics_process(true)
 	
 	# Get Player's ID
 	player_name = get_node("..").name

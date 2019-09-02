@@ -9,6 +9,7 @@ var max_characters : int = 500 # Max number of characters in line before cut off
 var internal_reply : String # For internal commands only
 var arguments : PoolStringArray # To Convert Message into Arguments
 var client_commands : Node # Allows Adding Client Commands to Scene Tree
+var just_opened : bool = false
 
 # The NWSC is used to break up BBCode submitted by user without deleting characters - Should be able to be disabled by Server Request
 var NWSC : String = PoolByteArray(['U+8203']).get_string_from_utf8() # No Width Space Character (Used to be called RawArray?) - https://docs.godotengine.org/en/3.1/classes/class_poolbytearray.html
@@ -97,8 +98,8 @@ master func chat_message_server(message: String) -> int:
 
 # Send Chat To Server
 func _on_userChat_gui_input(event) -> void:
-	if event is InputEventKey:
-		if Input.is_action_just_pressed("chat_send") and chatInput.text.rstrip(" ").lstrip(" ") != "":
+	if event is InputEventKey and not just_opened:
+		if event.is_action_pressed("chat_send") and chatInput.text.rstrip(" ").lstrip(" ") != "":
 			# TODO (IMPORTANT): Create Way to Store Command History (maybe full chat history?)
 			
 			arguments = chatInput.text.split(" ", false, 0) # Convert Message into Arguments
@@ -108,6 +109,8 @@ func _on_userChat_gui_input(event) -> void:
 				chatInput.text = ""
 			else:
 				chat_message_client(internal_reply)
+	else:
+		just_opened = false
 
 # When URLs are Clicked in Chat Window
 func _on_chatMessages_meta_clicked(meta: String) -> void:

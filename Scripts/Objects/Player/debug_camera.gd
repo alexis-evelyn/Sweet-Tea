@@ -29,24 +29,28 @@ func _ready() -> void:
 	
 	update_world_label()
 	
-	set_physics_process(false)
+	set_physics_process(true)
 	
 	player = get_player_node()
 	
 	update_camera_pos(player.position)
+	update_camera_pos_label()
 
 func _physics_process(_delta: float) -> void:
 	if Input.is_action_pressed("debug_up"):
 		translate(Vector2(0, -cam_speed))
+		update_camera_pos_label()
 	if Input.is_action_pressed("debug_down"):
 		translate(Vector2(0, cam_speed))
+		update_camera_pos_label()
 	if Input.is_action_pressed("debug_left"):
 		translate(Vector2(-cam_speed, 0))
+		update_camera_pos_label()
 	if Input.is_action_pressed("debug_right"):
 		translate(Vector2(cam_speed, 0))
+		update_camera_pos_label()
 	
 	update_player_pos_label()
-	update_camera_pos_label()
 
 func get_player_node() -> Node:
 	#logger.verbose("Parent: %s" % get_parent().name)

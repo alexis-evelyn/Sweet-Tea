@@ -3,15 +3,6 @@
 [ext_resource path="res://Scripts/UI/panel_chat.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/Commands/commands.gd" type="Script" id=2]
 
-
-
-
-
-
-
-
-
-
 [node name="panelChat" type="Panel"]
 modulate = Color( 1, 1, 1, 0.588235 )
 margin_left = 25.0
@@ -23,6 +14,9 @@ script = ExtResource( 1 )
 [node name="chatMessages" type="RichTextLabel" parent="."]
 margin_right = 600.0
 margin_bottom = 250.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="userChat" type="LineEdit" parent="."]
 margin_top = 250.0
@@ -31,6 +25,9 @@ margin_bottom = 275.0
 clear_button_enabled = true
 placeholder_text = "Type Chat Here..."
 caret_blink = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="commands" type="Node" parent="."]
 script = ExtResource( 2 )
