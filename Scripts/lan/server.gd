@@ -7,7 +7,7 @@ var used_port: int
 var packet_buffer_size: int = 1000 # Clients repeatedly send packets, so there is no reason to cache 65536 packets.
 var server : Thread = Thread.new()
 var calling_card : String = "Nihilistic Sweet Tea:"
-var delay_packet_processing_time_milliseconds : int = 100 # Delay processing to prevent cpu usage rising dramatically by a flood of packets (won't prevent DOS, but helps out on normal usage)
+var delay_packet_processing_time_milliseconds : int = 300 # Delay processing to prevent cpu usage rising dramatically by a flood of packets (won't prevent DOS, but helps out on normal usage)
 var udp_peer = PacketPeerUDP.new()
 
 # Called when the node enters the scene tree for the first time.
@@ -46,7 +46,9 @@ func listen_for_clients(thread_data) -> void:
 			if typeof(reply) == TYPE_RAW_ARRAY: # PoolByteArray
 				logger.superverbose("Sending Reply!!!")
 				udp_peer.set_dest_address(client_ip, client_port) # Set Client as Receiver of Response
-				udp_peer.put_packet(reply) # Send response back to client
+				var packet_error = udp_peer.put_packet(reply) # Send response back to client
+				
+#				logger.error("Packet: %s" % packet_error)
 				
 			# Apparently using yield with a timer here causes the server to crash when the client uses /changeworld or /spawn. Using OS.delay_msec(...) solves this issue.
 			OS.delay_msec(delay_packet_processing_time_milliseconds)
@@ -69,6 +71,8 @@ func process_message(client_ip: String, client_port: int, bytes: PoolByteArray):
 #		print("IP Addresses: %s" % server_info.ip_addresses)
 		
 		logger.verbose("(%s:%s) Client's Game Version: '%s'" % [client_ip, str(client_port), split_message[1].trim_prefix(" ").trim_suffix(" ")])
+#		logger.warning("Server Info Reply: %s" % JSON.print(server_info))
+#		logger.warning("Server Info Reply (PBA): %s" % JSON.print(server_info).to_ascii())
 		
 		return JSON.print(server_info).to_ascii() # This converts dictionary to json, which then gets converted to a PoolByteArray to be sent as a packet.
 	else:

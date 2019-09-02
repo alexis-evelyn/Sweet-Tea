@@ -31,7 +31,12 @@ onready var playerUI : Node = get_tree().get_root().get_node("PlayerUI")
 # Server Info to Send to Clients
 var server_info : Dictionary = {
 	name = "Sweet Tea", # Name of Server
-	icon = "Not Set", # Server Icon (for Clients to See)
+	icon = {
+		bytes = "Not Set", # Raw Bytes Encoded In Base64
+		width = -1, # Icon Width
+		height = -1, # Icon Height
+		format = -1, # Image Format
+	}, # Server Icon (for Clients to See)
 	motd = "A Message Will Be Displayed to Clients Using This...", # Display A Message To Clients Before Player Joins Server
 	website = "https://sweet-tea.senorcontento.com/", # Server Owner's Website (to display rules, purchases, etc...)
 	num_players = 0, # Display Current Number of Connected Players (so client can see how busy a server is)
@@ -50,20 +55,27 @@ func _ready() -> void:
 	get_tree().connect("server_disconnected", self, "close_connection")
 	
 	load_server_icon()
+	logger.superverbose("Server Info: %s" % server_info)
 	
 # Loads Server Icon For Transmission to Clients
 func load_server_icon():
 	var server_icon_file = File.new()
+	var server_icon_image : Image
 	
 	if server_icon_file.file_exists(server_icon):
 		server_icon_resource = load(server_icon)
-#		server_info.icon = server_icon
 		
 		# TODO: Shrink and Size Server Icon To Decrease Transmission Size
 		# Also, lower quality of high res icons as needed to decrease transmission size
-		server_icon_bytes = var2bytes(server_icon_resource, true)
+		server_icon_image = server_icon_resource.get_data()
+		server_icon_bytes = server_icon_image.get_data() #var2bytes(server_icon_resource, true)
 		server_icon_encoded = Marshalls.raw_to_base64(server_icon_bytes)
-		server_info.icon = server_icon_encoded
+		
+		server_info.icon.bytes = server_icon_encoded #server_icon_encoded
+		server_info.icon.width = server_icon_image.get_width()
+		server_info.icon.height = server_icon_image.get_height()
+		server_info.icon.format = server_icon_image.get_format()
+		
 
 # Attempt to Create Server
 # warning-ignore:unused_argument

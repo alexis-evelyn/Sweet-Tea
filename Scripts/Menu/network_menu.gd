@@ -53,22 +53,25 @@ func add_server(json: Dictionary, server_ip: String, server_port: int) -> void:
 		logger.verbose("Keys: %s" % json)
 		
 		# TODO: Make sure to add an icon to represent missing an icon.
-		var icon_texture : Texture
-		if json.has("icon"):
+		var icon_texture : ImageTexture = ImageTexture.new()
+		var icon_image : Image = Image.new()
+		if json.has("icon") and json.get("icon").has("bytes") and json.get("icon").has("width") and json.get("icon").has("height") and json.get("icon").has("format"):
 			# TODO: Detect If Server Icon Says "Not Set". If it does, the server failed to load it.
-			var decoded_icon : PoolByteArray = Marshalls.base64_to_raw(json.get("icon"))
+			var decoded_icon : PoolByteArray = Marshalls.base64_to_raw(json.get("icon").get("bytes"))
 			
 			# If Icon Size is 0, use default icon
-			if decoded_icon.size() == 0:
-				icon_texture = default_icon
-				logger.warn("Icon Size is Zero For Server %s!!!" % server)
+			if decoded_icon.size() != 0:
+				icon_image.create_from_data(int(json.get("icon").get("width")), int(json.get("icon").get("height")), false, int(json.get("icon").get("format")), decoded_icon)
+				icon_texture.create_from_image(icon_image)
+				print("Icon Texture: %s" % json.get("icon"))
 			else:
-				icon_texture = bytes2var(decoded_icon, true)
+				logger.warn("Decoded Icon Size is Zero For Server %s!!!" % server)
+				icon_texture.create_from_image(default_icon.get_data())
 			
 #			logger.superverbose("Got Icon!!!")
 		else:
 			logger.warn("Missing Icon For Server %s!!!" % server)
-			icon_texture = default_icon
+			icon_texture.create_from_image(default_icon.get_data())
 			
 		if not json.has("name"):
 			logger.warn("Server %s Missing Name!!!" % server)
