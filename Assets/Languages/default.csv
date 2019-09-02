@@ -59,3 +59,4 @@ spawn_command_failed_load_world,(Server Spawn) failed to Load World %s For Playe
 spawn_command_success,Teleported to Spawn,,,,
 first_name_list,"{""Masc"":[""John"",""James"",""Brandon"",""Robert"",""Robert""],""Fem"":[""Emma"",""Amelia"",""Mary"",""Ava"",""Autumn"",""Evelyn"",""Alexis"",""Jane""],""NB"":[""Alex"",""Sam"",""Chris"",""Mel"",""Avery"",""Alexis"",""Jess""]}",,,,
 last_name_list,"{""NB"":[""Smith"",""Johnson"",""Miller"",""Evans"",""Jones"",""Williams"",""Brown""]}",,,,
+world_spawn_command_success,Teleported to World Spawn,,,,

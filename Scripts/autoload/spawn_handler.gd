@@ -31,12 +31,20 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 	else:
 		net_id = get_tree().get_rpc_sender_id()
 	
+	var coordinates : Vector2
 	# Currently Coordinates are Randomly Chosen
 	# warning-ignore:narrowing_conversion
 	var coor_x : int = rand_range(100,900)
 	# warning-ignore:narrowing_conversion
 	var coor_y : int = rand_range(100,500)
-	var coordinates : Vector2 = get_world_generator(get_world(net_id)).find_safe_spawn(Vector2(coor_x, coor_y))
+	if player_registrar.players[net_id].has("world_spawn"):
+		coordinates = get_world_generator(get_world(net_id)).find_safe_spawn(Vector2(coor_x, coor_y), player_registrar.players[net_id].world_spawn)
+		player_registrar.players[net_id].erase("world_spawn")
+	elif player_registrar.players[net_id].has("spawn_coordinates"):
+		# TODO: Add /tp command and use this to set spawn coordinates...
+		pass
+	else:
+		coordinates = get_world_generator(get_world(net_id)).find_safe_spawn(Vector2(coor_x, coor_y))
 		
 	if (get_tree().is_network_server()):
 		# We Are The Server and The New Player is Not The Server

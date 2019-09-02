@@ -82,6 +82,8 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 			return create_world(net_id, message)
 		"spawn":
 			return server_spawn(net_id, message)
+		"wspawn":
+			return world_spawn(net_id, message)
 		_: # Default Result - Put at Bottom of Match Results
 			if command == "":
 				return ""
@@ -219,7 +221,7 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	
 	# Psuedo Code
 	# var client_title : String = TranslationServer.get_translation("set_client_title", "language")
-	return functions.get_translation("change_world_command_success", player_registrar.players[net_id].locale) % [world_path, net_id]
+	return functions.get_translation("change_world_command_success", player_registrar.players[net_id].locale) % [net_id, world_path]
 	
 # Change Player's World - Server Side Only
 func create_world(net_id: int, message: PoolStringArray) -> String:
@@ -301,6 +303,8 @@ func server_spawn(net_id: int, message: PoolStringArray) -> String:
 	
 	player_registrar.players[net_id].current_world = world_name # Update World Player is In (server-side)
 	
+	player_registrar.players[net_id].world_spawn = true # Set To Use World's Spawn Location
+	
 	if net_id != 1:
 		#logger.verbose("NetID Change World: %s" % net_id)
 		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name)
@@ -309,3 +313,33 @@ func server_spawn(net_id: int, message: PoolStringArray) -> String:
 		spawn_handler.change_world(world_name)
 		
 	return functions.get_translation("spawn_command_success", player_registrar.players[net_id].locale)
+
+func world_spawn(net_id: int, message: PoolStringArray) -> String:
+	"""
+		Teleport To World Spawn Command
+		
+		Not Meant to Be Called Directly
+	"""
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	
+	var world_name : String = spawn_handler.get_world(net_id) # Pick world player is currently in
+	
+	# Clears Loaded Chunks From Previous World Generator's Memory
+	var world_generation = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
+	world_generation.clear_player_chunks(net_id)
+	#logger.verbose("Previous World: %s" % spawn_handler.get_world(net_id))
+	
+	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
+	
+	player_registrar.players[net_id].world_spawn = true # Set To Use World's Spawn Location
+	
+	if net_id != 1:
+		#logger.verbose("NetID Change World: %s" % net_id)
+		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name)
+	else:
+		#logger.verbose("Server Change World: %s" % net_id)
+		spawn_handler.change_world(world_name)
+		
+	return functions.get_translation("world_spawn_command_success", player_registrar.players[net_id].locale)
