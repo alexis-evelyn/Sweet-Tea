@@ -21,10 +21,10 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 	var net_id : int = -1
 	
 	if pinfo.has("os_unique_id"):
-		logger.verbose("OS Unique ID: " + pinfo.os_unique_id)
+		logger.verbose("Player ID: %s OS Unique ID: %s" % [net_id, pinfo.os_unique_id])
 	
 	if pinfo.has("char_unique_id"):
-		logger.verbose("Character Unique ID: " + pinfo.char_unique_id)
+		logger.verbose("Player ID: %s Character Unique ID: %s" % [net_id, pinfo.char_unique_id])
 	
 	if get_tree().get_rpc_sender_id() == 0:
 		net_id = gamestate.net_id

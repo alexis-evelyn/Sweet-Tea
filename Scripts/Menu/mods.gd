@@ -19,7 +19,7 @@ var installed_mods : PoolStringArray # Array of Mods to Load
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	settings.check_settings() # Checks for System Status to Determine How To Optimize The Game
+#	settings.check_settings() # Checks for System Status to Determine How To Optimize The Game
 	
 	installed_mods = PoolStringArray()
 	mods_installed = check_for_mods()

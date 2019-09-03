@@ -132,9 +132,32 @@ func check_settings():
 	
 	Engine.set_iterations_per_second(30) # Physics FPS - Default 60
 	Engine.set_target_fps(30) # Rendering FPS - Default Unlimited
+	Engine.set_physics_jitter_fix(1) # Default 0.5 - No Idea How This Value Works
+	Engine.set_time_scale(1) # How fast the game clock runs compared to realtime.
+	
+	logger.file("Engine Version: %s" % Engine.get_version_info())
+	
+	if OS.get_current_video_driver() == OS.VIDEO_DRIVER_GLES3:
+		logger.file("Current Video Driver: OpenGL ES 3.x Renderer")
+	elif OS.get_current_video_driver() == OS.VIDEO_DRIVER_GLES2:
+		logger.file("Current Video Driver: OpenGL ES 2.x Renderer")
+	else:
+		logger.warn("Unknown Video Driver!!!")
 	
 	logger.verbose("Number of Cores: %s" % OS.get_processor_count())
 	logger.verbose("Multithread Support: %s" % OS.can_use_threads())
+	
+	logger.verbose("Current Screen: %s/%s" % [OS.get_current_screen(), OS.get_screen_count()])
+	for screen in OS.get_screen_count():
+		logger.verbose("Screen DPI for Screen %s: %s" % [screen, OS.get_screen_dpi(screen)])
+	
+#	logger.verbose("Current Audio Driver: %s")
+	logger.verbose("Number Of Audio Drivers: %s" % OS.get_audio_driver_count())
+	for audio_driver in OS.get_audio_driver_count():
+		logger.verbose("Audio Driver: %s" % OS.get_audio_driver_name(audio_driver))
+	
+	logger.verbose("Keep Screen On: %s" % OS.is_keep_screen_on())
+#	logger.verbose("Can Draw: %s" % OS.can_draw()) # I have no idea what this does
 	
 	if OS.can_use_threads():
 		# Figure out how to change Rendering Thread Model in GDScript

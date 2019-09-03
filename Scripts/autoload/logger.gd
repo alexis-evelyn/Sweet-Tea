@@ -80,6 +80,11 @@ func fatal(statement: String = ""):
 	if save_to_drive:
 		flush_to_log("Fatal: %s" % statement)
 	
+# Not Meant To Be Printed
+func file(statement: String = ""):
+	if save_to_drive:
+		flush_to_log("File: %s" % statement)
+	
 func trace(statement: String = ""):
 	if verbosity >= 0:
 		printerr("If trace does not show up, it means Godot still doesn't support stacktraces in exported games. Try breaking the game in the Godot editor (you will need the source code at https://github.com/alex-evelyn/Sweet-Tea)")

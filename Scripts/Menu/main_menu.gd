@@ -47,7 +47,7 @@ func _ready() -> void:
 	OS.set_borderless_window(settings.window_borderless)
 	OS.set_window_resizable(settings.window_resizable)
 	
-	emit_signal("script_setup") # LEt mods know MainMenu is finished loading
+	emit_signal("script_setup") # Let mods know MainMenu is finished loading
 	
 func set_theme(theme: Theme) -> void:
 	"""
