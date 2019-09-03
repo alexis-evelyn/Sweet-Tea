@@ -1,4 +1,5 @@
 extends Node
+class_name WorldHandler
 
 signal server_started(gamestate_player_info) # Server Started Up and World is Loaded - Spawns Server Player
 # warning-ignore:unused_signal
@@ -396,3 +397,6 @@ func get_tiles(tilemap: TileMap) -> Dictionary:
 # Cleanup World Handler
 func cleanup() -> void:
 	loaded_worlds.clear()
+
+func get_class() -> String:
+	return "WorldHandler"

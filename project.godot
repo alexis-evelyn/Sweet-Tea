@@ -173,6 +173,16 @@ _global_script_classes=[ {
 "class": "UUIDGenerator",
 "language": "GDScript",
 "path": "res://Scripts/autoload/third_party/uuid.gd"
+}, {
+"base": "TileMap",
+"class": "WorldGenerator",
+"language": "GDScript",
+"path": "res://Scripts/world_generation/world_generation.gd"
+}, {
+"base": "Node",
+"class": "WorldHandler",
+"language": "GDScript",
+"path": "res://Scripts/autoload/world_handler.gd"
 } ]
 _global_script_class_icons={
 "Calculator": "",
@@ -207,7 +217,9 @@ _global_script_class_icons={
 "ServerFinderHelper": "",
 "SettingsLoader": "",
 "SpawnHandler": "",
-"UUIDGenerator": ""
+"UUIDGenerator": "",
+"WorldGenerator": "",
+"WorldHandler": ""
 }
 
 [application]

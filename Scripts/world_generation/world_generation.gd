@@ -1,4 +1,5 @@
 extends TileMap
+class_name WorldGenerator
 
 # * IDEA: What if I had the game in three dimensions (horizontal and vertical axes plus time). Use 3d rendering to show the time axis with a special in game item...
 # * Also build a time manipulating boss!!! Research Spacetime to decide how to implement this.
@@ -613,3 +614,6 @@ func clear_player_chunks(net_id: int) -> bool:
 func set_spawn(coordinates: Vector2) -> void:
 	spawn_coor = coordinates
 	spawn_set = true
+	
+func get_class() -> String:
+	return "WorldGenerator"
