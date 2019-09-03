@@ -50,7 +50,7 @@ func get_translation_csv(translations_file: String, key: String, locale: String)
 		line = Array(file.get_csv_line())
 		
 		if line[0] == key:
-			#print("Translation: %s" % line[index])
+			#logger.verbose("Translation: %s" % line[index])
 			file.close()
 			return line[index]
 	
@@ -72,7 +72,7 @@ func get_translation(key: String, locale: String) -> String:
 	for translation in translations:
 		#res://Assets/Languages/default.pr.translation
 		var translation_locale : String = translation.rsplit(".", false, 2)[1]
-		#print("Translation File: %s" % translation_locale)
+		#logger.verbose"Translation File: %s" % translation_locale)
 		
 		if translation_locale == locale:
 			selected_translation.append(translation)
@@ -87,7 +87,7 @@ func get_translation(key: String, locale: String) -> String:
 	
 	# Should I check if the translation came back successful or will translator handle it for me?
 	
-	#print("Message: %s" % message)
+	#logger.verbose"Message: %s" % message)
 	
 	return message
 

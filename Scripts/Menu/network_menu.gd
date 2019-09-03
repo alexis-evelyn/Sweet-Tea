@@ -48,7 +48,7 @@ func add_server(json: Dictionary, server_ip: String, server_port: int) -> void:
 	# Add Server to List If Not Already on List
 	if not servers.has(server):
 		servers.append(server) # Add Current Server's Dictionary to Other Dictionary
-		#print("Servers: %s" % var2str(servers))
+		#logger.verbose("Servers: %s" % var2str(servers))
 		
 		logger.verbose("Server: %s:%s" % [server_ip, server_port])
 		logger.verbose("Keys: %s" % json)
@@ -64,7 +64,7 @@ func add_server(json: Dictionary, server_ip: String, server_port: int) -> void:
 			if decoded_icon.size() != 0 and int(json.get("icon").get("width")) <= network.max_pixel_width and int(json.get("icon").get("width")) == int(json.get("icon").get("height")):
 				icon_image.create_from_data(int(json.get("icon").get("width")), int(json.get("icon").get("height")), false, int(json.get("icon").get("format")), decoded_icon)
 				icon_texture.create_from_image(icon_image)
-				print("Icon Texture: %s" % json.get("icon"))
+#				logger.superverbose("Icon Texture: %s" % json.get("icon"))
 			else:
 				logger.warn("Decoded Icon Size is Zero For Server %s!!!" % server)
 				icon_texture.create_from_image(default_icon.get_data())
@@ -94,7 +94,7 @@ func add_server(json: Dictionary, server_ip: String, server_port: int) -> void:
 		server_list = json.duplicate() # Copy The Dictionary For Manipulation
 		server_list.erase("icon") # Helps Keep Memory Footprint Smaller
 			
-		#print("Icon: %s" % icon)
+		#logger.superverbose("Icon: %s" % icon)
 		var server_tooltip : String = tr("server_tooltip") % server
 		var server_text : String = (tr("server_list_format") % [json.name, json.motd]) + "    " + tr("player_count_format") % [json.num_players, json.max_players]
 		lan_servers.add_item(server_text, icon_texture, true)

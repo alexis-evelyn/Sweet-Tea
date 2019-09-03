@@ -9,10 +9,16 @@ var server : Thread = Thread.new()
 var calling_card : String = "Nihilistic Sweet Tea"
 var delay_packet_processing_time_milliseconds : int = 300 # Delay processing to prevent cpu usage rising dramatically by a flood of packets (won't prevent DOS, but helps out on normal usage)
 var udp_peer : PacketPeerUDP = PacketPeerUDP.new()
+
 var string_insertion : String = "%s" # String to look for when inserting another string!!!
+var server_info : Dictionary = network.server_info.duplicate() # Copy Server Info To Manipulate
+var motd : String
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	if server_info.has("motd"):
+		motd = server_info.motd # Working Variable to Reset MOTD Variable
+	
 	server.start(self, "listen_for_clients", null)
 
 # warning-ignore:unused_argument
@@ -68,17 +74,19 @@ func process_message(client_ip: String, client_port: int, bytes: PoolByteArray):
 		var game_version : String
 		var character_name : String
 		var character_unique_id : String
+		var split_message : PoolStringArray
 		
-		var server_info : Dictionary = network.server_info
+		# Reset Server Info's MOTD
+		if server_info.has("motd"):
+			server_info.motd = motd
 		
 		for line in message.split("\n", true, 0):
-			var split_message : PoolStringArray = line.split(":", true, 2)
+			split_message = line.split(":", true, 2)
 			
-	#		server_info.your_ip_address = udp_peer.get_packet_ip()
-	#		server_info.ip_addresses = IP.get_local_addresses()
-	#		print("Client IP Address: %s" % server_info.ip_address)
-	#		print("IP Addresses: %s" % server_info.ip_addresses)
-#			logger.warn("Line: '%s'" % split_message[0])
+#			server_info.your_ip_address = udp_peer.get_packet_ip()
+#			server_info.ip_addresses = IP.get_local_addresses()
+#			logger.verbose("Client IP Address: %s" % server_info.ip_address)
+#			logger.verbose("IP Addresses: %s" % server_info.ip_addresses)
 			if split_message[0] == calling_card:
 				game_version = split_message[1].trim_prefix(" ").trim_suffix(" ")
 			elif split_message[0] == "name":
@@ -86,9 +94,9 @@ func process_message(client_ip: String, client_port: int, bytes: PoolByteArray):
 			elif split_message[0] == "character_unique_id":
 				character_unique_id = split_message[1].trim_prefix(" ").trim_suffix(" ")
 		
-#		logger.error("(%s:%s) Client's Game Version: '%s'" % [client_ip, str(client_port), game_version])
-#		logger.error("(%s:%s) Character Name: '%s'" % [client_ip, str(client_port), character_name])
-#		logger.error("(%s:%s) Character Unique ID: '%s'" % [client_ip, str(client_port), character_unique_id])
+#		logger.warning("(%s:%s) Client's Game Version: '%s'" % [client_ip, str(client_port), game_version])
+#		logger.warning("(%s:%s) Character Name: '%s'" % [client_ip, str(client_port), character_name])
+#		logger.warning("(%s:%s) Character Unique ID: '%s'" % [client_ip, str(client_port), character_unique_id])
 #		logger.warning("Server Info Reply: %s" % JSON.print(server_info))
 #		logger.warning("Server Info Reply (PBA): %s" % JSON.print(server_info).to_ascii())
 		
