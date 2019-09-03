@@ -169,3 +169,6 @@ func _on_btnJoin_pressed() -> void:
 	port = int(address[1].rstrip(" ").lstrip(" "))
 	
 	network.join_server(ip, port)
+
+func get_class() -> String:
+	return "MultiplayerMenu"

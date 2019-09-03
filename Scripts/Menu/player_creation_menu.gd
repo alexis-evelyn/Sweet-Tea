@@ -121,3 +121,6 @@ func _about_to_hide() -> void:
 	"""
 	
 	functions.set_title(old_title)
+
+func get_class() -> String:
+	return "PlayerCreationMenu"

@@ -315,3 +315,6 @@ func set_port() -> int:
 	server_info.used_port = port # Sets Port
 	
 	return port
+
+func get_class() -> String:
+	return "GameConnection"

@@ -155,3 +155,6 @@ func _about_to_hide() -> void:
 func _exit_tree():
 	#world_load_thread.wait_to_finish()
 	pass
+
+func get_class() -> String:
+	return "PlayerSelectionMenu"

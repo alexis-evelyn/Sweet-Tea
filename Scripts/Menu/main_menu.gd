@@ -122,3 +122,6 @@ func _on_Quit_pressed() -> void:
 	"""
 	
 	main_loop_events.quit() # Quits Game
+	
+func get_class() -> String:
+	return "MainMenu"

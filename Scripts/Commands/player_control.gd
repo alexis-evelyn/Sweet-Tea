@@ -127,3 +127,6 @@ func ban_player_ip() -> void:
 				
 				banned_ips[ip_address] = ban_data
 				#kick_player_by_ip(ip_address) # Will add arguments later (player id and ban message)
+
+func get_class() -> String:
+	return "PlayerControl"

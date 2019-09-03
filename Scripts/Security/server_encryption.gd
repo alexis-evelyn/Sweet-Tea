@@ -107,3 +107,6 @@ func test_module():
 #	#logger.verbose("Encrypted: ", encrypted_array_gcm.get_string_from_ascii())
 #	#logger.verbose("Decrypted: ", bytes2var(decrypted_array_gcm))
 	pass
+
+func get_class() -> String:
+	return "ServerEncryption"

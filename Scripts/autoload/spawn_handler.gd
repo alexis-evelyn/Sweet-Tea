@@ -292,3 +292,6 @@ func get_world_generator(world: String) -> Node:
 		return null
 	
 	return get_world_grid(world).get_node("WorldGen")
+
+func get_class() -> String:
+	return "SpawnHandler"

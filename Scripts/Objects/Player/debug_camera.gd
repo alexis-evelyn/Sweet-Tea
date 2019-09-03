@@ -94,3 +94,6 @@ func set_theme(theme: Theme) -> void:
 	cam_coor_label.set_theme(theme)
 	chunk_position_label.set_theme(theme)
 	world_name_label.set_theme(theme)
+
+func get_class() -> String:
+	return "DebugCamera"

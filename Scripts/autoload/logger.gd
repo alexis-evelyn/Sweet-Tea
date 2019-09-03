@@ -100,3 +100,6 @@ func flush_to_log(line: String):
 func _exit_tree():
 	if save_to_drive:
 		log_data.close()
+
+func get_class() -> String:
+	return "Logger"

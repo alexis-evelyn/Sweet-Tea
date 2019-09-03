@@ -123,3 +123,6 @@ func set_port() -> int:
 func _exit_tree():
 	udp_peer.close()
 	#server.wait_to_finish()
+
+func get_class() -> String:
+	return "ServerFinderHelper"

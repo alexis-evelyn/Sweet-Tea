@@ -61,3 +61,6 @@ func cleanup() -> void:
 	# Remove Nodes From Boxlist
 	for node in $boxList.get_children():
 		node.queue_free()
+
+func get_class() -> String:
+	return "PlayerList"

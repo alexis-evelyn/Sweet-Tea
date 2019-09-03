@@ -407,3 +407,6 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 		spawn_handler.change_world(world_name)
 		
 	return functions.get_translation("tp_command_success", player_registrar.players[net_id].locale) % [coordinates.x, coordinates.y]
+
+func get_class() -> String:
+	return "ServerCommands"

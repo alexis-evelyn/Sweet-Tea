@@ -87,3 +87,6 @@ func load_mods() -> void:
 			logger.debug("Loaded Mod: %s" % scene.name)
 		
 	get_tree().change_scene(scene_to_change_to)
+
+func get_class() -> String:
+	return "ModLoader"

@@ -16,3 +16,6 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	#$ParallaxLayer.motion_offset.x += SPEED # Allows Background to Move
 	pass
+
+func get_class() -> String:
+	return "MenuBackground"

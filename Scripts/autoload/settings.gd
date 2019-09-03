@@ -331,3 +331,6 @@ func load_game_settings() -> int:
 		
 	save_data.close()
 	return 0
+	
+func get_class() -> String:
+	return "SettingsLoader"

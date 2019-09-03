@@ -196,3 +196,6 @@ func _exit_tree() -> void:
 	# camera.is_inside_tree() checks to see if the camera has already been freed to prevent the game from crashign
 	if camera != null and camera.is_inside_tree():
 		camera.free()
+
+func get_class() -> String:
+	return "Player"

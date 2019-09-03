@@ -86,3 +86,6 @@ func quit(error: int = 0):
 # Display Information About Game
 func about_game():
 	OS.alert(tr("about_game_text"), tr("about_game_title"))
+
+func get_class() -> String:
+	return "MainLoopEvents"

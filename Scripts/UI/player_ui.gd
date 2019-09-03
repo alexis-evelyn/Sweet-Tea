@@ -88,3 +88,6 @@ func set_theme(theme) -> void:
 # Checks if Calculator is Open (from Easter Eggs)
 func is_calc_open() -> bool:
 	return get_tree().get_root().has_node("Calculator")
+
+func get_class() -> String:
+	return "PlayerUI"

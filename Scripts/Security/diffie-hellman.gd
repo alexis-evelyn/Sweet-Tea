@@ -79,3 +79,6 @@ func test():
 		logger.verbose("Diffie-Hellman Test Successful!!!")
 	else:
 		logger.fatal("Diffie-Hellman Test Failed!!!")
+
+func get_class() -> String:
+	return "DiffieHellman"

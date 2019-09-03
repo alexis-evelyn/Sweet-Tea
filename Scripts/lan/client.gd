@@ -60,11 +60,11 @@ func find_servers(peer: PacketPeerUDP) -> void:
 
 # Parse Dictionary Sent By Server
 func parse_server_info(server_ip: String, server_port: int, json: Dictionary) -> void:
-	logger.verbose("---------------------------------------------------")
-	logger.verbose("Server Finder Helper: %s:%s" % [server_ip, server_port])
-	for key in json.keys():
-		logger.verbose("%s: %s" % [key, json.get(key)])
-	logger.verbose("---------------------------------------------------")
+#	logger.verbose("---------------------------------------------------")
+#	logger.verbose("Server Finder Helper: %s:%s" % [server_ip, server_port])
+#	for key in json.keys():
+#		logger.verbose("%s: %s" % [key, json.get(key)])
+#	logger.verbose("---------------------------------------------------")
 	
 	emit_signal("add_server", json, server_ip, server_port) # Add server to GUI
 
@@ -118,3 +118,6 @@ func _exit_tree():
 		
 	udp_peer.close()
 	#client.wait_to_finish()
+
+func get_class() -> String:
+	return "ServerFinder"

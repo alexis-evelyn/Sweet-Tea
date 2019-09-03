@@ -153,3 +153,6 @@ func cleanup() -> void:
 	
 	self.visible = false # Hides PlayerChat
 	chatMessages.clear() # Clear Chat Messages
+
+func get_class() -> String:
+	return "ChatPanel"

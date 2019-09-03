@@ -134,3 +134,6 @@ func color(id: int) -> Color:
 		return Color.white # This could potentially happen. Set it to default color.
 	
 	return Color(players[id].char_color)
+
+func get_class() -> String:
+	return "PlayerRegistrar"

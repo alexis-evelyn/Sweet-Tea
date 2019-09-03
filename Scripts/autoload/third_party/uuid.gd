@@ -32,3 +32,6 @@ static func v4():
   var node = '%02x%02x%02x%02x%02x%02x' % [b[10], b[11], b[12], b[13], b[14], b[15]]
 
   return '%s-%s-%s-%s-%s' % [low, mid, hi, clock, node]
+
+func get_class() -> String:
+  return "UUIDGenerator"

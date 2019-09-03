@@ -15,3 +15,6 @@ func _ready() -> void:
 # Cleanup PlayerStats - Meant to be Called by PlayerUI
 func cleanup() -> void:
 	pass
+
+func get_class() -> String:
+	return "PlayerStats"

@@ -256,3 +256,6 @@ func cleanup():
 	#logger.verbose("Close Calculator...")
 	self.hide() # Hides Calculator Window
 	get_parent().queue_free() # Frees Calculator From Memory
+
+func get_class() -> String:
+	return "Calculator"

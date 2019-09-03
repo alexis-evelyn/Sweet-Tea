@@ -147,3 +147,6 @@ func get_executable_folder():
 		
 	# TODO: Test to make sure this works
 	return path[0].rsplit("/", true, 1)[0]
+
+func get_class() -> String:
+	return "GameJoltFunctions"

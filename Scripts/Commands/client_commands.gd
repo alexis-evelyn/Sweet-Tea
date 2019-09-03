@@ -30,3 +30,6 @@ func server_ip(message) -> String:
 		return tr("server_ip_command_self")
 	
 	return tr("server_ip_command") % net.get_peer_address(1)
+
+func get_class() -> String:
+	return "ClientCommands"

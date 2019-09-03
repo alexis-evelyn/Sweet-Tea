@@ -219,3 +219,6 @@ func check_if_slot_exists(slot: int) -> bool:
 func generate_character_unique_id() -> String:
 	# Returns OS Unique ID Plus A Random Int From 1 Million to 100 Million
 	return str(OS.get_unique_id() + "-" + str(randi()%100000001+100000))
+
+func get_class() -> String:
+	return "GameState"
