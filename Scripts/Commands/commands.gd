@@ -360,7 +360,7 @@ func get_seed(net_id: int, message: PoolStringArray) -> String:
 	
 	var world_name : String = spawn_handler.get_world(net_id) # Pick world player is currently in
 	
-	# Clears Loaded Chunks From Previous World Generator's Memory
+	# Get Seed From World Player Is In
 	var world_generation : Node = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
 	var world_seed : int = world_generation.world_seed
 		
