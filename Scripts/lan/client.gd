@@ -84,11 +84,17 @@ func process_message(server_ip: String, server_port: int, bytes: PoolByteArray):
 
 func poll_for_servers(peer: PacketPeerUDP) -> void:
 	# This loops through all addresses to broadcast to and sends a message to see if server replies.
+	var message : String
+	var bytes : PoolByteArray
+	
 	for address in addresses:
 		peer.set_dest_address(address, used_server_port)
 		
-		var message : String = calling_card % gamestate.game_version
-		var bytes : PoolByteArray = message.to_ascii()
+		message = calling_card % gamestate.game_version
+		message += "\nname: %s" % gamestate.player_info.name
+		message += "\ncharacter_unique_id: %s" % gamestate.player_info.char_unique_id
+		
+		bytes = message.to_ascii()
 		peer.put_packet(bytes)
 
 func set_server_port() -> int:

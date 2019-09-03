@@ -6,9 +6,10 @@ class_name ServerFinderHelper
 var used_port: int
 var packet_buffer_size: int = 1000 # Clients repeatedly send packets, so there is no reason to cache 65536 packets.
 var server : Thread = Thread.new()
-var calling_card : String = "Nihilistic Sweet Tea:"
+var calling_card : String = "Nihilistic Sweet Tea"
 var delay_packet_processing_time_milliseconds : int = 300 # Delay processing to prevent cpu usage rising dramatically by a flood of packets (won't prevent DOS, but helps out on normal usage)
 var udp_peer : PacketPeerUDP = PacketPeerUDP.new()
+var string_insertion : String = "%s" # String to look for when inserting another string!!!
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -64,18 +65,38 @@ func process_message(client_ip: String, client_port: int, bytes: PoolByteArray):
 	var message : String = bytes.get_string_from_ascii()
 	
 	if calling_card in message:
-		var split_message : PoolStringArray = message.split(":", true, 1)
+		var game_version : String
+		var character_name : String
+		var character_unique_id : String
+		
 		var server_info : Dictionary = network.server_info
 		
-#		server_info.your_ip_address = udp_peer.get_packet_ip()
-#		server_info.ip_addresses = IP.get_local_addresses()
-#		print("Client IP Address: %s" % server_info.ip_address)
-#		print("IP Addresses: %s" % server_info.ip_addresses)
+		for line in message.split("\n", true, 0):
+			var split_message : PoolStringArray = line.split(":", true, 2)
+			
+	#		server_info.your_ip_address = udp_peer.get_packet_ip()
+	#		server_info.ip_addresses = IP.get_local_addresses()
+	#		print("Client IP Address: %s" % server_info.ip_address)
+	#		print("IP Addresses: %s" % server_info.ip_addresses)
+#			logger.warn("Line: '%s'" % split_message[0])
+			if split_message[0] == calling_card:
+				game_version = split_message[1].trim_prefix(" ").trim_suffix(" ")
+			elif split_message[0] == "name":
+				character_name = split_message[1].trim_prefix(" ").trim_suffix(" ")
+			elif split_message[0] == "character_unique_id":
+				character_unique_id = split_message[1].trim_prefix(" ").trim_suffix(" ")
 		
-		logger.verbose("(%s:%s) Client's Game Version: '%s'" % [client_ip, str(client_port), split_message[1].trim_prefix(" ").trim_suffix(" ")])
+#		logger.error("(%s:%s) Client's Game Version: '%s'" % [client_ip, str(client_port), game_version])
+#		logger.error("(%s:%s) Character Name: '%s'" % [client_ip, str(client_port), character_name])
+#		logger.error("(%s:%s) Character Unique ID: '%s'" % [client_ip, str(client_port), character_unique_id])
 #		logger.warning("Server Info Reply: %s" % JSON.print(server_info))
 #		logger.warning("Server Info Reply (PBA): %s" % JSON.print(server_info).to_ascii())
 		
+		# If has %s, then insert username into motd!!!
+		# TODO: Figure out how to make this configurable!!!
+		if server_info.has("motd") and string_insertion in server_info.get("motd"):
+			server_info.motd = server_info.motd % character_name
+			
 		return JSON.print(server_info).to_ascii() # This converts dictionary to json, which then gets converted to a PoolByteArray to be sent as a packet.
 	else:
 		logger.verbose("Unknown Message: %s" % message)
