@@ -432,6 +432,7 @@ func apply_foreground(world_grid: Dictionary) -> void:
 			#logger.verbose("Coordinate: (%s, %s) - Value: %s" % [coor_x, coor_y, world_grid[coor_x][coor_y]])
 			if self != null:
 				set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
+				# Deferring the call breaks this, even on a separate thread. Using the set_cell function as normal works on threaded.
 #				call_deferred("set_cell", coor_x, coor_y, world_grid[coor_x][coor_y])
 
 func apply_background(world_grid: Dictionary) -> void:
@@ -461,6 +462,7 @@ func apply_background(world_grid: Dictionary) -> void:
 				#logger.verbose("Set Cell!!!")
 				# Number of Tiles in WorldGrid is 16^16 (16 chunks)
 				background_tilemap.set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
+				# Deferring the call breaks this, even on a separate thread. Using the set_cell function as normal works on threaded.
 #				background_tilemap.call_deferred("set_cell", coor_x, coor_y, world_grid[coor_x][coor_y])
 
 # This will be replaced by a chunk loading system later.

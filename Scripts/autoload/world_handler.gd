@@ -63,7 +63,13 @@ func start_server() -> void:
 		
 		return
 	
-	var world = load_world_server(-1, starting_world) # Specify -1 (server only) to let server know the spawn world doesn't have the server player yet (gui only)
+	var load_world_server_thread : Thread = Thread.new()
+	load_world_server_thread.start(self, "load_world_server_threaded", [-1, starting_world])
+	
+	# Setup loading screen on separate thread here and listen or signals from world loader.
+	
+	var world : String = load_world_server_thread.wait_to_finish()
+#	var world = yield(, "finished_loading_game") # Specify -1 (server only) to let server know the spawn world doesn't have the server player yet (gui only)
 	
 	if world == "":
 		#logger.verbose("World is Missing (on Server Start)!!! Check Player Save File!!!")
@@ -147,6 +153,15 @@ func load_template(location: String) -> Node:
 		
 	emit_signal("failed_loading_world")
 	return null # World failed to load
+
+func load_world_server_threaded(thread_data: Array) -> String:
+	if thread_data.size() != 2:
+		return ""
+	
+	var net_id: int = int(thread_data[0])
+	var location: String = thread_data[1]
+	
+	return load_world_server(net_id, location)
 
 # Load World to Send Player To (server-side only)
 func load_world_server(net_id: int, location: String) -> String:
@@ -316,6 +331,21 @@ func save_world(world: Node):
 	
 	# Save World to Drive
 	world_data.store_string(to_json(world_data_dict))
+	
+func create_world_server_threaded(thread_data: Array) -> String:
+	if thread_data.size() < 1 or thread_data.size() > 3:
+		return ""
+	
+	var net_id: int = int(thread_data[0])
+	var world_seed: String = thread_data[1]
+	
+	if thread_data.size() == 1:
+		return create_world(net_id)
+	elif thread_data.size() == 2:
+		return create_world(net_id, world_seed)
+		
+	var world_size : Vector2 = thread_data[2]
+	return create_world(net_id, world_seed, world_size)
 	
 func create_world(net_id: int = -1, world_seed: String = "", world_size: Vector2 = Vector2(0, 0)):
 	# Creates A World From Scratch

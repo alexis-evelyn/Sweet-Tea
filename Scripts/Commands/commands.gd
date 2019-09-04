@@ -199,7 +199,16 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
 	var world_path : String = "user://worlds/World 2"
-	var world_name : String = world_handler.load_world_server(net_id, world_path)
+#	var world_name : String = world_handler.load_world_server(net_id, world_path)
+	
+	var load_world_server_thread : Thread = Thread.new()
+	load_world_server_thread.start(world_handler, "load_world_server_threaded", [net_id, world_path])
+	
+	if net_id == 1:
+		# If Server, show loading screen here.
+		pass
+	
+	var world_name : String = load_world_server_thread.wait_to_finish()
 	
 	# Clears Loaded Chunks From Previous World Generator's Memory
 	var world_generation = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
@@ -250,7 +259,16 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 		world_generation.clear_player_chunks(net_id)
 		#logger.verbose("Previous World: %s" % spawn_handler.get_world(net_id))
 		
-		var world_name = world_handler.create_world(net_id, "") # Run's createworld function
+#		var world_name = world_handler.create_world(net_id, "") # Run's createworld function
+		
+		var create_world_server_thread : Thread = Thread.new()
+		create_world_server_thread.start(world_handler, "create_world_server_threaded", [net_id, ""]) # Run's createworld function
+		
+		if net_id == 1:
+			# If Server, show loading screen here.
+			pass
+		
+		var world_name : String = create_world_server_thread.wait_to_finish()
 		
 		spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 		player_registrar.players[net_id].current_world = world_name # Update World Player is In (server-side)
@@ -292,7 +310,16 @@ func server_spawn(net_id: int, message: PoolStringArray) -> String:
 	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
 	var world_path : String = world_handler.starting_world
-	var world_name : String = world_handler.load_world_server(net_id, world_path)
+#	var world_name : String = world_handler.load_world_server(net_id, world_path)
+	
+	var load_world_server_thread : Thread = Thread.new()
+	load_world_server_thread.start(world_handler, "load_world_server_threaded", [net_id, world_path])
+	
+	if net_id == 1:
+		# If Server, show loading screen here.
+		pass
+	
+	var world_name : String = load_world_server_thread.wait_to_finish()
 	
 	# Clears Loaded Chunks From Previous World Generator's Memory
 	var world_generation : Node = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
