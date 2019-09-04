@@ -337,6 +337,10 @@ func save_world(world: Node):
 	if world_generator.spawn_set:
 		world_data_dict["spawn"] = str(world_generator.spawn_coor)
 	
+	if not is_instance_valid(world_generator):
+		logger.fatal("World Generator is Not Inside Tree!!!")
+		return null
+	
 	# Store Used Cells (Everything but Air - Air uses the same tile id as a non-existant tile, so there is no reason to save it. Tile chunks will be recorded in a separate array.)
 	world_data_dict["tiles_foreground"] = get_tiles(world_generator)
 	world_data_dict["tiles_background"] = get_tiles(world_generator_background)
@@ -436,9 +440,14 @@ func get_world(worldname: String) -> Node:
 	
 # Get Tiles From TileMap
 func get_tiles(tilemap: TileMap) -> Dictionary:
+	# Fixes A Rare Crash With Loading Missing World First Then Trying To Load Valid World
+	# I am not sure why this fixes it, I was going to have this go back to main menu on failure, but it loads properly now.
+	if tilemap.get_used_cells().size() == 0:
+		return {}
+	
 	var cells = tilemap.get_used_cells()
 	
-	if cells.size() == 0:
+	if cells.size() == 0 or cells == null:
 		return {}
 	
 	var tiles = {}
