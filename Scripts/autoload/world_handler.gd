@@ -72,12 +72,10 @@ func start_server() -> void:
 	loading_screen.name = "LoadingScreen"
 	get_tree().get_root().add_child(loading_screen) # Call Deferred Will Make This Too Late
 	
-	# Why Is The Loading Screen Delayed???
+	# Unload Current Scene (Single Player Menu on Main Menu)
+	get_tree().get_current_scene().call_deferred("free")
 	
-	# Unload Current Scene (either Network Menu or Single Player Menu)
-	get_tree().get_current_scene().queue_free()
-	
-	OS.delay_msec(2000) # Trying to Figure Out How To Get Loading Screen To Show Before Thread Wait_To_Finish()
+	yield(get_tree().create_timer(0.5), "timeout")
 	
 	var load_world_server_thread : Thread = Thread.new()
 	load_world_server_thread.start(self, "load_world_server_threaded", [-1, starting_world]) # Specify -1 (server only) to let server know the spawn world doesn't have the server player yet (gui only)
