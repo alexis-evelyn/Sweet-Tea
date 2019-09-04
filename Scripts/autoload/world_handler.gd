@@ -75,10 +75,10 @@ func start_server() -> void:
 	# Unload Current Scene (Single Player Menu on Main Menu)
 	get_tree().get_current_scene().call_deferred("free")
 	
-	yield(get_tree().create_timer(0.5), "timeout")
-	
 	var load_world_server_thread : Thread = Thread.new()
 	load_world_server_thread.start(self, "load_world_server_threaded", [-1, starting_world]) # Specify -1 (server only) to let server know the spawn world doesn't have the server player yet (gui only)
+	
+	yield(get_tree().create_timer(0.5), "timeout")
 	
 	var world : String = load_world_server_thread.wait_to_finish()
 	
