@@ -95,12 +95,6 @@ func start_server() -> void:
 	
 	# TODO: Godot supports UDP hole punching and/or UPNP, so this could be useful for non-technical players
 	
-	# Setup Encryption Script
-	var encryption = Node.new()
-	encryption.set_script(preload(enc_server)) # Attach A Script to Node
-	encryption.set_name("EncryptionServer") # Give Node A Unique ID
-	get_tree().get_root().add_child(encryption)
-	
 	#logger.verbose("Attempting to Create Server on Port %s" % server_info.used_port)
 	var net = NetworkedMultiplayerENet.new() # Create Networking Node (for handling connections)
 	# Disabled Because Not Implemented - #logger.verbose("Port: %s" % net.get_port())
@@ -126,15 +120,23 @@ func start_server() -> void:
 	# The world_handler loader is intentionally before registering the server player so that the server player will have a current world marked
 	emit_signal("server_created") # Notify world_handler That Server Was Created
 	
+	# Activate PlayerList Since Server is Close to Finishing Loading
+	if not gamestate.server_mode:
+		playerList.loadPlayerList() # Load PlayerList
+
+func start_server_finder_helper() -> void:
 	# Setup Broadcast Listener Script (For Clients To Find Server on Lan)
 	var broadcast_listener = Node.new()
 	broadcast_listener.set_script(preload(lan_server)) # Attach A Script to Node
 	broadcast_listener.set_name("BroadcastListener") # Give Node A Unique ID
 	get_tree().get_root().add_child(broadcast_listener)
-	
-	# Activate PlayerList Since Server is Close to Finishing Loading
-	if not gamestate.server_mode:
-		playerList.loadPlayerList() # Load PlayerList
+
+func start_encryption_server() -> void:
+	# Setup Encryption Script
+	var encryption = Node.new()
+	encryption.set_script(preload(enc_server)) # Attach A Script to Node
+	encryption.set_name("EncryptionServer") # Give Node A Unique ID
+	get_tree().get_root().add_child(encryption)
 
 # Attempt to Join Server (Not Connected Yet)
 func join_server(ip: String, port: int) -> void:

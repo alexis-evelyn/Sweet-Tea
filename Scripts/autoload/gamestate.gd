@@ -47,6 +47,16 @@ var debug : bool = false
 # Note: "user://" is guaranteed by default to be writeable (so I should be able to assume read/write permissions).
 # It will only change if the user changes it manually. I could check if I wanted to (and maybe I will add that feature later)
 
+# Used To Cleanup Player Info
+func reset_player_info() -> void:
+	gamestate.player_info.name = "Player" # Player's Name
+	gamestate.player_info.char_color = Color.white.to_html(false) # Unmodified Player Color - May Combine With Custom Sprites (and JSON)
+	gamestate.player_info.os_unique_id = OS.get_unique_id() # Stores OS Unique ID - Can be used to link players together, Not Designed to Be Secure (as in player is allowed to tamper with it)
+	gamestate.player_info.char_unique_id = "Not Set" # Unique Character ID (meant for servers so they can attach features to specific characters - very useful for server plugins
+	gamestate.player_info.starting_world = "Not Set" # Spawn World - Saved to File so The World Loader Can Load The Spawn World Up (Say Permanent Chunk Loading - Will Be Loaded on Client when Client is Connected to Server. Similar idea to Starbound's Spaceship on Servers') - Not Meant to Spawn Players in (Meant for Server Player Only - E.g. Single Player).
+	gamestate.player_info.saved_world = "" # Functionally the same thing as current_world, but meant for Single Player Only (the one exception is, the single player world is loaded on client when connected to server. Similar idea to Starbound's Spaceship on Servers) - Loads Player In Last Saved World
+#	gamestate.player_info.locale = TranslationServer.get_locale() # Helps Servers Know What Language To Use (for multilingual supporting servers)
+
 # Save Game Data
 func save_player(slot: int) -> void:
 	var save_path : String = save_directory.plus_file(save_file) # Save File Path
@@ -153,7 +163,7 @@ func load_player(slot: int) -> int:
 			if json.result.has("game_version"):
 				# warning-ignore:unsafe_property_access
 				# warning-ignore:unsafe_property_access
-				logger.verbose("Game Version That Saved File Was: " + json.result["game_version"])
+				logger.verbose("Game Version That Saved File Was: %s" % json.result["game_version"])
 			else:
 				logger.warning("Unknown What Game Version Saved File!!!")
 			

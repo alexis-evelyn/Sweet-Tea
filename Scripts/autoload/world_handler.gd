@@ -3,10 +3,12 @@ class_name WorldHandler
 
 signal server_started(gamestate_player_info) # Server Started Up and World is Loaded - Spawns Server Player
 signal cleanup_worlds
+
 signal missing_starting_world
 signal missing_starting_world_reference
 signal missing_current_world_reference
 signal failed_loading_world
+
 signal world_created
 signal world_loaded_server
 signal world_loaded_client
@@ -60,6 +62,7 @@ func start_server() -> void:
 		#logger.verbose("This should never be reached (once character creation exists). This is because Host Server will not be in network menu anymore.")
 		
 		# Cleans Up Connection on Error
+		starting_world = "Not Set"
 		player_registrar.cleanup()
 		gamestate.net_id = 1 # Reset Network ID To 1 (default value)
 		get_tree().set_network_peer(null) # Disable Network Peer
@@ -100,6 +103,9 @@ func start_server() -> void:
 	if not gamestate.server_mode:
 		player_registrar.register_player(gamestate.player_info, 0)
 		emit_signal("server_started", gamestate.player_info) # Sends Server Player's Info To Spawn Code
+		
+	network.start_encryption_server() # Start Encryption For Server
+	network.start_server_finder_helper() # Start Lan Server Finder Helper
 
 # Client World Loading Code (client side only)
 puppet func load_world_client() -> void:
