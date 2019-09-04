@@ -11,7 +11,6 @@ var yielding : bool = false # Prevents data.blocked > 0 crash by preventing yiel
 
 const player_creation_menu : String = "res://Menus/PlayerCreationMenu.tscn" # Player Creation Menu
 var creation_menu : Node # Player Creation Menu
-var world_load_thread : Thread # World Loading Thread
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -21,8 +20,6 @@ func _ready() -> void:
 	
 	for slot in playerSlots.get_children():
 		slot.connect("pressed", self, "_character_slot_pressed", [slot])
-		
-	world_load_thread = Thread.new()
 
 # Used to set a menu to load after loading character.
 func set_menu(set_scene: String) -> void:
@@ -96,7 +93,6 @@ func _character_slot_pressed(button: Node) -> void:
 					gamestate.save_player(slot)
 			
 			# Only load world if a scene to load is not selected.
-#			world_load_thread.start(network, "start_server")
 			network.start_server()
 	else:
 		#logger.verbose("Creating Character and World!!!")

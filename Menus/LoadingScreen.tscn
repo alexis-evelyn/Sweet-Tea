@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/Menu/loading_screen.gd" type="Script" id=1]
+
+[node name="LoadingScreen" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="background" type="Panel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="loadingBar" type="TextureProgress" parent="background"]
+margin_left = 249.028
+margin_top = 139.259
+margin_right = 802.028
+margin_bottom = 179.259
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="loadingBarPlain" type="ProgressBar" parent="background"]
+margin_left = 101.577
+margin_top = 335.86
+margin_right = 905.577
+margin_bottom = 540.86

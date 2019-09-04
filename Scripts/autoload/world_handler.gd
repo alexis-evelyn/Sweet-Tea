@@ -7,11 +7,15 @@ signal missing_starting_world
 signal missing_starting_world_reference
 signal missing_current_world_reference
 signal failed_loading_world
+signal world_created
+signal world_loaded_server
+signal world_loaded_client
 
 # Chunk Loading (like in Minecraft) is perfectly possible with Godot - https://www.reddit.com/r/godot/comments/8shad4/how_do_large_open_worlds_work_in_godot/
 # I ultimately plan on having multiple worlds which the players can join on the server. As for singleplayer, it is going to be a server that refuses connections unless the player opens it up to other players.
 # I also want to have a "home" that players spawn at before they join the world_template (like how Starbound has a spaceship. but I want my home to be an actual world that will be the player's home world. The player can then use portals to join the server world.
-var world_template : String = "res://WorldGen/WorldTemplate.tscn" # What Scene to use to instance the world into (Client Side)
+const world_template : String = "res://WorldGen/WorldTemplate.tscn" # What Scene to use to instance the world into (Client Side)
+const loading_screen_name : String = "res://Menus/LoadingScreen.tscn" # Loading Screen
 var starting_world : String = "Not Set" # Template From World (Server Side - Includes Single Player)
 var starting_world_name : String = "Not Set" # Spawn World's Name (Server Side - Includes Single Player)
 
@@ -63,10 +67,15 @@ func start_server() -> void:
 		
 		return
 	
+	# Setup loading screen on separate thread here and listen or signals from world loader.
+	var loading_screen : Node = preload(loading_screen_name).instance()
+	loading_screen.name = "LoadingScreen"
+	get_tree().get_root().add_child(loading_screen) # Call Deferred Will Make This Too Late
+	
+	# Why Is The Loading Screen Delayed???
+	
 	var load_world_server_thread : Thread = Thread.new()
 	load_world_server_thread.start(self, "load_world_server_threaded", [-1, starting_world])
-	
-	# Setup loading screen on separate thread here and listen or signals from world loader.
 	
 	var world : String = load_world_server_thread.wait_to_finish()
 #	var world = yield(, "finished_loading_game") # Specify -1 (server only) to let server know the spawn world doesn't have the server player yet (gui only)
@@ -120,7 +129,7 @@ puppet func load_world_client() -> void:
 		#logger.verbose("World (Load Client): %s" % gamestate.player_info.current_world)
 		
 		# Sets Starting World Name to Pass to Spawn Handler
-		var spawn = load(world_template).instance()
+		var spawn = preload(world_template).instance()
 		spawn.name = gamestate.player_info.current_world
 		
 		worlds.add_child(spawn)
@@ -131,6 +140,7 @@ puppet func load_world_client() -> void:
 	
 	# Now that the current world has been set, ask server to spawn player
 	spawn_handler.rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
+	emit_signal("world_loaded_client")
 	
 # Load Template to Instance World Into
 func load_template(location: String) -> Node:
@@ -277,6 +287,7 @@ func load_world_server(net_id: int, location: String) -> String:
 			else:
 				template.visible = false
 		
+		emit_signal("world_loaded_server")
 		return template.name
 	else:
 		# Unknown JSON Format
@@ -402,7 +413,8 @@ func create_world(net_id: int = -1, world_seed: String = "", world_size: Vector2
 		else:
 			template.visible = false
 	
-	return template.name # REturns World's Name
+	emit_signal("world_created")
+	return template.name # Returns World's Name
 	
 func get_world(worldname: String) -> Node:
 	var worlds : Node

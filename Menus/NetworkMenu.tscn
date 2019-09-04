@@ -20,7 +20,7 @@ __meta__ = {
 [node name="lanServers" type="ItemList" parent="panelNetwork"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_bottom = -32.0
+margin_bottom = -55.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -29,15 +29,17 @@ __meta__ = {
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = -32.0
+margin_top = -50.0
+margin_bottom = -5.0
 __meta__ = {
 "_edit_group_": true,
 "_edit_use_anchors_": false
 }
 
 [node name="txtServerAddress" type="LineEdit" parent="panelNetwork/manualJoin"]
-margin_right = 118.0
-margin_bottom = 32.0
+margin_left = 5.0
+margin_right = 175.0
+margin_bottom = 45.0
 expand_to_text_length = true
 clear_button_enabled = true
 caret_blink = true
@@ -46,9 +48,9 @@ __meta__ = {
 }
 
 [node name="btnJoinServer" type="Button" parent="panelNetwork/manualJoin"]
-margin_left = 122.0
-margin_right = 201.0
-margin_bottom = 32.0
+margin_left = 180.0
+margin_right = 314.0
+margin_bottom = 45.0
 mouse_default_cursor_shape = 8
 text = "Join Server"
 __meta__ = {
