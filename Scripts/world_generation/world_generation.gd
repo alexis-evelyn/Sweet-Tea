@@ -122,10 +122,6 @@ func set_shader_background_tiles():
 		background_tilemap.tile_set.tile_set_material(tile, background_shader)
 
 # Load or Generate New Chunks for Player (Server Side)
-# warning-ignore:unused_argument
-# warning-ignore:unused_argument
-# warning-ignore:unused_argument
-#var load_chunks_thread : Thread = Thread.new()
 func load_chunks(net_id: int, position: Vector2, instant_load: bool = false, render_distance: Vector2 = Vector2(3, 3)):
 	# render_distance - This is different from the world_size as this is generating/loading the world from the player's position and won't be halved (will be configurable). Halving it will make it only able to load an even number of chunks.
 	
@@ -150,10 +146,11 @@ func load_chunks(net_id: int, position: Vector2, instant_load: bool = false, ren
 	# * - Looping the world on the horizontal access only applies to non-infinite worlds. Release will only support non-infinite worlds (afterwards if the game does well, I will work on infinite worlds). 
 	#logger.verbose("Player %s has Position %s!!!" % [net_id, position])
 	
-	#load_chunks.start(self, "load_chunks_threaded", [net_id, position, render_distance, instant_load])
-	#load_chunks.wait_to_finish()
+	var load_chunks_thread : Thread = Thread.new()
+	load_chunks_thread.start(self, "load_chunks_threaded", [net_id, position, render_distance, instant_load])
+	load_chunks_thread.wait_to_finish()
 	
-	load_chunks_threaded([net_id, position, render_distance, instant_load])
+#	load_chunks_threaded([net_id, position, render_distance, instant_load])
 	
 # Putting Load Chunks on Separate Thread
 func load_chunks_threaded(thread_data: Array):

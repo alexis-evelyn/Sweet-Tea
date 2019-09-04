@@ -153,7 +153,6 @@ func _about_to_hide() -> void:
 	functions.set_title(old_title)
 	
 func _exit_tree():
-	#world_load_thread.wait_to_finish()
 	pass
 
 func get_class() -> String:
