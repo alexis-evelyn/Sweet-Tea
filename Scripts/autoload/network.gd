@@ -4,6 +4,9 @@ class_name GameConnection
 # Signals
 signal server_created # Server Was Successfully Created
 signal cleanup_worlds # Cleanup World Handler
+signal failed_server # Failed to Start Server - Alert User or Change Ports
+signal failed_server_finder_helper # Failed to Load Lan Server
+signal failed_client # Failed to Start Client (Is this necessary?)
 
 # Keep Alive Thread
 var keep_alive: Thread
@@ -104,8 +107,10 @@ func start_server(thread_data = "") -> void:
 	net.set_bind_ip(server_info.bind_address) # Sets the IP Address the Server Binds to
 	
 	# Could Not Create Server (probably port already in use or Failed Permissions)
-	if (net.create_server(server_info.used_port, server_info.max_players - 1) != OK): # The -1 for max players is so the player count correctly matches the max player count (as apparently the max player amount does not include the server player)
+	var server_error : int = net.create_server(server_info.used_port, server_info.max_players - 1)
+	if (server_error != OK): # The -1 for max players is so the player count correctly matches the max player count (as apparently the max player amount does not include the server player)
 		logger.fatal("Failed to create server")
+		emit_signal("failed_server", server_error) # Something else will listen for this signal and act accordingly
 		return
 	
 	# Disabled Because Not Implemented - #logger.verbose("Port: %s" % net.get_port())

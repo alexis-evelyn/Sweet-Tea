@@ -432,6 +432,7 @@ func apply_foreground(world_grid: Dictionary) -> void:
 			#logger.verbose("Coordinate: (%s, %s) - Value: %s" % [coor_x, coor_y, world_grid[coor_x][coor_y]])
 			if self != null:
 				set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
+#				call_deferred("set_cell", coor_x, coor_y, world_grid[coor_x][coor_y])
 
 func apply_background(world_grid: Dictionary) -> void:
 	"""
@@ -458,11 +459,9 @@ func apply_background(world_grid: Dictionary) -> void:
 			#logger.verbose("Background Tilemap: %s" % background_tilemap)
 			if background_tilemap != null:
 				#logger.verbose("Set Cell!!!")
-				background_tilemap.set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
 				# Number of Tiles in WorldGrid is 16^16 (16 chunks)
-				var cell = world_grid[coor_x][coor_y]
-				background_tilemap.set_cell(coor_x, coor_y, cell)
-				pass
+				background_tilemap.set_cell(coor_x, coor_y, world_grid[coor_x][coor_y])
+#				background_tilemap.call_deferred("set_cell", coor_x, coor_y, world_grid[coor_x][coor_y])
 
 # This will be replaced by a chunk loading system later.
 func load_foreground(tiles: Dictionary):

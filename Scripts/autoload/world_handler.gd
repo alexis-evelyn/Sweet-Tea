@@ -2,8 +2,11 @@ extends Node
 class_name WorldHandler
 
 signal server_started(gamestate_player_info) # Server Started Up and World is Loaded - Spawns Server Player
-# warning-ignore:unused_signal
 signal cleanup_worlds
+signal missing_starting_world
+signal missing_starting_world_reference
+signal missing_current_world_reference
+signal failed_loading_world
 
 # Chunk Loading (like in Minecraft) is perfectly possible with Godot - https://www.reddit.com/r/godot/comments/8shad4/how_do_large_open_worlds_work_in_godot/
 # I ultimately plan on having multiple worlds which the players can join on the server. As for singleplayer, it is going to be a server that refuses connections unless the player opens it up to other players.
@@ -56,6 +59,7 @@ func start_server() -> void:
 		player_registrar.cleanup()
 		gamestate.net_id = 1 # Reset Network ID To 1 (default value)
 		get_tree().set_network_peer(null) # Disable Network Peer
+		emit_signal("missing_starting_world_reference")
 		
 		return
 	
@@ -68,6 +72,7 @@ func start_server() -> void:
 		player_registrar.cleanup()
 		gamestate.net_id = 1 # Reset Network ID To 1 (default value)
 		get_tree().set_network_peer(null) # Disable Network Peer
+		emit_signal("missing_starting_world")
 		
 		return
 	
@@ -102,6 +107,7 @@ puppet func load_world_client() -> void:
 
 		if not gamestate.player_info.has("current_world"):
 			logger.error("Never Got Current World From Server!!! Not Going to Bother Finishing Connection!!!")
+			emit_signal("missing_current_world_reference")
 			emit_signal("cleanup_worlds")
 			return
 		
@@ -138,6 +144,8 @@ func load_template(location: String) -> Node:
 				loaded_world.queue_free()
 				
 		return world # Return World Name to Help Track Client Location
+		
+	emit_signal("failed_loading_world")
 	return null # World failed to load
 
 # Load World to Send Player To (server-side only)
