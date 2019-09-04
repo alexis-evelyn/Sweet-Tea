@@ -71,8 +71,10 @@ func process_message(client_ip: String, client_port: int, bytes: PoolByteArray):
 	var message : String = bytes.get_string_from_ascii()
 	
 	if calling_card in message:
+		# warning-ignore:unused_variable
 		var game_version : String
 		var character_name : String
+		# warning-ignore:unused_variable
 		var character_unique_id : String
 		var split_message : PoolStringArray
 		

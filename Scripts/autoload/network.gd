@@ -5,7 +5,9 @@ class_name GameConnection
 signal server_created # Server Was Successfully Created
 signal cleanup_worlds # Cleanup World Handler
 signal failed_server # Failed to Start Server - Alert User or Change Ports
+# warning-ignore:unused_signal
 signal failed_server_finder_helper # Failed to Load Lan Server
+# warning-ignore:unused_signal
 signal failed_client # Failed to Start Client (Is this necessary?)
 
 # Keep Alive Thread

@@ -385,8 +385,6 @@ func get_seed(net_id: int, message: PoolStringArray) -> String:
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
-	var world_name : String = spawn_handler.get_world(net_id) # Pick world player is currently in
-	
 	# Get Seed From World Player Is In
 	var world_generation : Node = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
 	var world_seed : int = world_generation.world_seed
