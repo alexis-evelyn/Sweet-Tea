@@ -16,6 +16,9 @@ var slot : int # Save Slot to Use For Character
 var is_client : bool = false # Determine If Is Server or Client
 var world_seed : String = "" # Seed to use to generate world
 
+var loading_screen : Node
+const loading_screen_name : String = "res://Menus/LoadingScreen.tscn" # Loading Screen
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	playerCreationWindow.window_title = tr("create_character_title") # Can be used for translation code
@@ -74,19 +77,32 @@ func create_character() -> void:
 # This is a function as I need to call this in player selection without resetting the character's variables
 func create_world() -> void:
 	# Should I Thread This?
-	var world_name = world_handler.create_world(-1, world_seed, Vector2(0, 0)) # The Vector (0, 0) is here until I decide if I want to generate a custom world size. This will just default to what the generator has preset.
 	
+	# Setup loading screen on separate thread here and listen or signals from world loader.
+#	if not get_tree().get_root().has_node("LoadingScreen"):
+#		loading_screen = load(loading_screen_name).instance()
+#		loading_screen.name = "LoadingScreen"
+#		get_tree().get_root().add_child(loading_screen) # Call Deferred Will Make This Too Late
+#
+#	var create_world_server_thread : Thread = Thread.new()
+#	create_world_server_thread.start(world_handler, "create_world_server_threaded", [-1, world_seed, Vector2(0, 0)]) # The Vector (0, 0) is here until I decide if I want to generate a custom world size. This will just default to what the generator has preset.
+#
+#	yield(get_tree().create_timer(0.5), "timeout")
+#
+#	var world_name : String = create_world_server_thread.wait_to_finish()
+	var world_name : String = world_handler.create_world_server_threaded([-1, world_seed, Vector2(0, 0)])
+
 	gamestate.player_info.starting_world = "user://worlds/".plus_file(world_name)
 	
-	#gamestate.save_player(slot)
+#	gamestate.save_player(slot)
 
 	logger.verbose("Player Creation Menu - Starting Server (Singleplayer)")
 	# Should I Thread This?
 	world_handler.save_world(world_handler.get_world(world_name))
 
-func get_picker_color() -> Color:
+func get_picker_color() -> String:
 	# This is a function for if I eventually modify the color to make it play nicer with the background.
-	return characterColor.color
+	return characterColor.color.to_html(false)
 	
 func get_character_name() -> String:
 	if characterName.text == "":

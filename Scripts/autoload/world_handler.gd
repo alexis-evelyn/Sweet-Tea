@@ -27,6 +27,7 @@ var loaded_worlds : Dictionary = {}
 var file_check : File = File.new() # Check to see if world's file path exists
 
 var world_data_dict : Dictionary = {}
+var loading_screen : Node
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -70,9 +71,10 @@ func start_server() -> void:
 		return
 	
 	# Setup loading screen on separate thread here and listen or signals from world loader.
-	var loading_screen : Node = preload(loading_screen_name).instance()
-	loading_screen.name = "LoadingScreen"
-	get_tree().get_root().add_child(loading_screen) # Call Deferred Will Make This Too Late
+	if not get_tree().get_root().has_node("LoadingScreen"):
+		loading_screen = load(loading_screen_name).instance()
+		loading_screen.name = "LoadingScreen"
+		get_tree().get_root().add_child(loading_screen) # Call Deferred Will Make This Too Late
 	
 	# Unload Current Scene (Single Player Menu on Main Menu)
 	get_tree().get_current_scene().call_deferred("free")
@@ -222,6 +224,7 @@ func load_world_server(net_id: int, location: String) -> String:
 		else:
 			world.visible = false
 			
+		emit_signal("world_loaded_server")
 		return world.name
 	
 	world_file.open(world_meta, File.READ)
