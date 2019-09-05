@@ -83,10 +83,12 @@ func start_server() -> void:
 	
 	load_world_server_thread.start(self, "load_world_server_threaded", [-1, starting_world]) # Specify -1 (server only) to let server know the spawn world doesn't have the server player yet (gui only)
 	
-	yield(get_tree().create_timer(0.5), "timeout")
+	# This timing is short enough to make the loading screen visible while allowing the camera in the player script to center around the player before the world is visible.
+	# The reason why I force the loading screen to show up is because loading the world is not instant and the game looks frozen (for a split second) while loading the world.
+	# The world loader is threaded, so it is not impacted by the timer and does not freeze the game. The loading screen just shows visible proof that the game is not frozen to give a higher quality feel to the game.
+	yield(get_tree().create_timer(0.05), "timeout")
 	
 	var world : String = load_world_server_thread.wait_to_finish()
-	
 	
 #	yield(get_tree().create_timer(1), "timeout")
 #	loading_screen.queue_free()

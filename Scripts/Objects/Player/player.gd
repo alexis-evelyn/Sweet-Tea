@@ -23,6 +23,16 @@ var world_generator: Node
 
 var camera: Node
 
+func _enter_tree() -> void:
+	# Activate Debug Camera if Gamestate Debug Camera Boolean is True
+	# Get the camera initialized immediately so the camera is centered on the player before the player sees the world screen.
+	# Works in conjunction with loading screen timer.
+	if is_network_master():
+		if gamestate.debug:
+			debug_camera(true)
+		else:
+			player_camera(true)
+
 # Called everytime player is spawned 
 func _ready() -> void:
 	set_physics_process(true)
@@ -39,13 +49,6 @@ func _ready() -> void:
 	# Checks to See if in Server/Client Mode (I may have a server always started, but refuse connections in single player. That is still up to debate).
 	if not get_tree().has_network_peer():
 		return # Should Be Connected Here
-	
-	# Activate Debug Camera if Gamestate Debug Camera Boolean is True
-	if is_network_master():
-		if gamestate.debug:
-			debug_camera(true)
-		else:
-			player_camera(true)
 	
 	# Should this be moved to a separate file? - https://www.youtube.com/watch?v=AStJd_Ia2p4
 	# Server corrects coordinates of client to keep in sync

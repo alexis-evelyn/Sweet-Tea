@@ -20,6 +20,8 @@ var world_seed : String = "" # Seed to use to generate world
 var loading_screen : Node
 const loading_screen_name : String = "res://Menus/LoadingScreen.tscn" # Loading Screen
 
+var create_world_server_thread : Thread = Thread.new()
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	playerCreationWindow.window_title = tr("create_character_title") # Can be used for translation code
@@ -79,17 +81,16 @@ func create_character() -> void:
 func create_world() -> void:
 	# Should I Thread This?
 	
+	
 	# Setup loading screen on separate thread here and listen or signals from world loader.
 #	if not get_tree().get_root().has_node("LoadingScreen"):
 #		loading_screen = load(loading_screen_name).instance()
 #		loading_screen.name = "LoadingScreen"
 #		get_tree().get_root().add_child(loading_screen) # Call Deferred Will Make This Too Late
-#
-#	var create_world_server_thread : Thread = Thread.new()
+
+	# Attempting to thread this causes issues, but since world creation doesn't take that long (right now), I am not going to add the loading screen.
 #	create_world_server_thread.start(world_handler, "create_world_server_threaded", [-1, world_seed, Vector2(0, 0)]) # The Vector (0, 0) is here until I decide if I want to generate a custom world size. This will just default to what the generator has preset.
-#
 #	yield(get_tree().create_timer(0.5), "timeout")
-#
 #	var world_name : String = create_world_server_thread.wait_to_finish()
 	var world_name : String = world_handler.create_world_server_threaded([-1, world_seed, Vector2(0, 0)])
 
