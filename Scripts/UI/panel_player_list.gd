@@ -29,9 +29,9 @@ func _on_player_list_changed() -> void:
 	for node in $boxList.get_children():
 		node.queue_free()
 	
-	world = get_players(get_world(gamestate.net_id))
+	world = get_players_node(get_world_name(gamestate.net_id))
 	
-	#logger.verbose("World: %s" % get_world(gamestate.net_id))
+	#logger.verbose("World: %s" % get_world_name(gamestate.net_id))
 	
 	if world != null:
 		# Populate Boxlist With Player Names
@@ -45,13 +45,13 @@ func _on_player_list_changed() -> void:
 				#connectedPlayerLabel.add_font_override("font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres")) 
 				$boxList.add_child(connectedPlayerLabel)
 	
-func get_players(world_name: String) -> Node:
+func get_players_node(world_name: String) -> Node:
 	if get_tree().get_root().has_node("Worlds/" + world_name + "/Viewport/WorldGrid/Players/"):
 		return get_tree().get_root().get_node("Worlds/" + world_name + "/Viewport/WorldGrid/Players/")
 	else:
 		return null
 
-func get_world(net_id: int) -> String:
+func get_world_name(net_id: int) -> String:
 	if player_registrar.players[int(net_id)].has("current_world"):
 		return str(player_registrar.players[int(net_id)].current_world)
 	return ""

@@ -213,9 +213,9 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	var world_name : String = load_world_server_thread.wait_to_finish()
 	
 	# Clears Loaded Chunks From Previous World Generator's Memory
-	var world_generation = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
+	var world_generation = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
 	world_generation.clear_player_chunks(net_id)
-	#logger.verbose("Previous World: %s" % spawn_handler.get_world(net_id))
+	#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
 	
 	if world_name == "":
 		# TODO: Replace world_path in error message with name user gave!!!
@@ -257,9 +257,9 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 	# When Permission Levels are implemented, the net_id == 1 check will be replaced
 	if net_id == 1:
 		# Clears Loaded Chunks From Previous World Generator's Memory
-		var world_generation = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
+		var world_generation = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
 		world_generation.clear_player_chunks(net_id)
-		#logger.verbose("Previous World: %s" % spawn_handler.get_world(net_id))
+		#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
 		
 #		var world_name = world_handler.create_world(net_id, "") # Run's createworld function
 		
@@ -322,9 +322,9 @@ func server_spawn(net_id: int, message: PoolStringArray) -> String:
 	var world_name : String = load_world_server_thread.wait_to_finish()
 	
 	# Clears Loaded Chunks From Previous World Generator's Memory
-	var world_generation : Node = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
+	var world_generation : Node = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
 	world_generation.clear_player_chunks(net_id)
-	#logger.verbose("Previous World: %s" % spawn_handler.get_world(net_id))
+	#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
 	
 	if world_name == "":
 		# TODO: Replace world_path in error message with name user gave!!!
@@ -355,12 +355,12 @@ func world_spawn(net_id: int, message: PoolStringArray) -> String:
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
-	var world_name : String = spawn_handler.get_world(net_id) # Pick world player is currently in
+	var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
 	
 	# Clears Loaded Chunks From Previous World Generator's Memory
-	var world_generation : Node = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
+	var world_generation : Node = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
 	world_generation.clear_player_chunks(net_id)
-	#logger.verbose("Previous World: %s" % spawn_handler.get_world(net_id))
+	#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
 	
 	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 	
@@ -386,7 +386,7 @@ func get_seed(net_id: int, message: PoolStringArray) -> String:
 	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
 	# Get Seed From World Player Is In
-	var world_generation : Node = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
+	var world_generation : Node = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
 	var world_seed : int = world_generation.world_seed
 		
 	return functions.get_translation("world_seed_command_success", player_registrar.players[net_id].locale) % world_seed
@@ -432,12 +432,12 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 	
 	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
-	var world_name : String = spawn_handler.get_world(net_id) # Pick world player is currently in
+	var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
 	
 	# Clears Loaded Chunks From Previous World Generator's Memory
-	var world_generation = spawn_handler.get_world_generator(spawn_handler.get_world(net_id))
+	var world_generation = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
 	world_generation.clear_player_chunks(net_id)
-	#logger.verbose("Previous World: %s" % spawn_handler.get_world(net_id))
+	#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
 	
 	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 	

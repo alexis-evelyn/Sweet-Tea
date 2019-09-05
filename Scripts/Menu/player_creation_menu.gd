@@ -100,7 +100,7 @@ func create_world() -> void:
 
 	logger.verbose("Player Creation Menu - Starting Server (Singleplayer)")
 	# Should I Thread This?
-	world_handler.save_world(world_handler.get_world(world_name))
+	world_handler.save_world(world_handler.get_world_name(world_name))
 
 func get_picker_color() -> String:
 	# This is a function for if I eventually modify the color to make it play nicer with the background.

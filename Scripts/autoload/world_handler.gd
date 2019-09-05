@@ -221,7 +221,7 @@ func load_world_server(net_id: int, location: String) -> String:
 		if (net_id == gamestate.net_id) or (player) or (net_id == -1):
 			# Make sure previous world was made invisible
 			if net_id != -1:
-				worlds.get_node(spawn_handler.get_world(net_id)).visible = false
+				worlds.get_node(spawn_handler.get_world_name(net_id)).visible = false
 				
 			world.visible = true
 		else:
@@ -295,7 +295,7 @@ func load_world_server(net_id: int, location: String) -> String:
 			if (net_id == gamestate.net_id) or (net_id == -1):
 				# Make sure previous world was made invisible
 				if net_id != -1:
-					worlds.get_node(spawn_handler.get_world(net_id)).visible = false
+					worlds.get_node(spawn_handler.get_world_name(net_id)).visible = false
 					
 				template.visible = true
 			else:
@@ -425,7 +425,7 @@ func create_world(net_id: int = -1, world_seed: String = "", world_size: Vector2
 		# Makes sure the viewport (world) is only visible (to the server player) if the server player is changing worlds
 		if (net_id == gamestate.net_id) or (net_id == -1):
 			if net_id != -1:
-				worlds.get_node(spawn_handler.get_world(net_id)).visible = false
+				worlds.get_node(spawn_handler.get_world_name(net_id)).visible = false
 			
 			template.visible = true
 		else:
@@ -434,7 +434,7 @@ func create_world(net_id: int = -1, world_seed: String = "", world_size: Vector2
 	emit_signal("world_created")
 	return template.name # Returns World's Name
 	
-func get_world(worldname: String) -> Node:
+func get_world_name(worldname: String) -> Node:
 	var worlds : Node
 	
 	if not get_tree().get_root().has_node("Worlds"):
