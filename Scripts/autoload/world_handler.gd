@@ -13,6 +13,16 @@ signal world_created
 signal world_loaded_server
 signal world_loaded_client
 
+signal found_world_data
+signal loaded_world_grid
+signal added_players_node
+signal loaded_template
+
+signal loaded_foreground_chunks
+signal loaded_background_chunks
+signal loaded_foreground_tiles
+signal loaded_background_tiles
+
 # Chunk Loading (like in Minecraft) is perfectly possible with Godot - https://www.reddit.com/r/godot/comments/8shad4/how_do_large_open_worlds_work_in_godot/
 # I ultimately plan on having multiple worlds which the players can join on the server. As for singleplayer, it is going to be a server that refuses connections unless the player opens it up to other players.
 # I also want to have a "home" that players spawn at before they join the world_template (like how Starbound has a spaceship. but I want my home to be an actual world that will be the player's home world. The player can then use portals to join the server world.
@@ -202,6 +212,8 @@ func load_world_server(net_id: int, location: String) -> String:
 		logger.error("Failed To Find world.json When Loading World!!!")
 		return ""
 	
+	emit_signal("found_world_data")
+	
 	# Checks to Make sure World isn't already loaded
 	if loaded_worlds.has(world_meta):
 		var world : Node = get_tree().get_root().get_node("Worlds").get_node(loaded_worlds[world_meta]) # World was already loaded (as tracked in loaded_worlds Array)
@@ -211,10 +223,14 @@ func load_world_server(net_id: int, location: String) -> String:
 			logger.error("Cannot Load World Grid for World '%s'" % world_meta)
 			return ""
 			
+		emit_signal("loaded_world_grid")
+			
 		if not world_grid.has_node("Players"):
 			var players_node : Node = Node.new()
 			players_node.name = "Players"
 			world_grid.add_child(players_node)
+			
+		emit_signal("added_players_node")
 			
 		var player : bool = world_grid.get_node("Players").has_node(str(gamestate.net_id)) # If already in same world, keep visible
 		
@@ -237,6 +253,7 @@ func load_world_server(net_id: int, location: String) -> String:
 	if json.error != OK:
 		# Failed to Parse JSON
 		logger.error("Failed To Parse JSON When Loading World!!!")
+#		emit_signal("failed_loading_world")
 		return ""
 		
 	if typeof(json.result) == TYPE_DICTIONARY:
@@ -259,6 +276,8 @@ func load_world_server(net_id: int, location: String) -> String:
 			logger.error("Failed To Load Template When Loading World!!!")
 			return ""
 			
+		emit_signal("loaded_template")
+			
 		# Set World's Metadata
 		var generator = template.get_node("Viewport/WorldGrid/WorldGen")
 		generator.world_seed = results.seed # Set World's Seed
@@ -274,7 +293,9 @@ func load_world_server(net_id: int, location: String) -> String:
 		
 		# Load Generated Chunk Location into Memory (this should be replaced by a chunk loading system later)
 		generator.load_chunks_foreground(results["chunks_foreground"])
+		emit_signal("loaded_foreground_chunks")
 		generator.load_chunks_background(results["chunks_background"])
+		emit_signal("loaded_background_chunks")
 		
 		template.name = results.name # Set World's Name
 		worlds.add_child(template) # Add Loaded World to Worlds node
@@ -285,10 +306,12 @@ func load_world_server(net_id: int, location: String) -> String:
 		# This will be replaced by a chunk loading system later.
 		if results.has("tiles_foreground"):
 			generator.load_foreground(results["tiles_foreground"])
+			emit_signal("loaded_foreground_tiles")
 			
 		# This will be replaced by a chunk loading system later.
 		if results.has("tiles_background"):
 			generator.load_background(results["tiles_background"])
+			emit_signal("loaded_background_tiles")
 		
 		if get_tree().is_network_server():
 			# Makes sure the viewport (world) is only visible (to the server player) if the server player is changing worlds
