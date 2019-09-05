@@ -26,9 +26,10 @@ func _input(event) -> void:
 		return
 	
 	# This allows user to see player list (I will eventually add support to change keys and maybe joystick support)
-	if event.is_action_pressed("show_playerlist"):
+	if event.is_action("show_playerlist"):
 		panelPlayerList.visible = true
-	else:
+	
+	if event.is_action_released("show_playerlist"):
 		panelPlayerList.visible = false
 	
 	# Makes Chat Window Visible
