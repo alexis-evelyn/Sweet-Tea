@@ -31,3 +31,6 @@ margin_left = 101.577
 margin_top = 335.86
 margin_right = 905.577
 margin_bottom = 540.86
+step = 1.0
+rounded = true
+percent_visible = false
