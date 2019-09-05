@@ -209,7 +209,7 @@ func load_chunks_threaded(thread_data: Array):
 					#OS.delay_msec(1000)
 					
 #					#logger.verbose("Setting Timer")
-					delay_packet_processing_timer.set_wait_time(delay_packet_processing_time_seconds) # Amoutn of time to delay for.
+					delay_packet_processing_timer.set_wait_time(delay_packet_processing_time_seconds) # Amount of time to delay for.
 					delay_packet_processing_timer.start() # Start Timer
 
 					yield(delay_packet_processing_timer, "timeout") # Pause World Generation/Loading until timer runs out!

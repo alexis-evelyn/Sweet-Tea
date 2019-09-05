@@ -84,6 +84,10 @@ func start_server() -> void:
 	
 	var world : String = load_world_server_thread.wait_to_finish()
 	
+	
+#	yield(get_tree().create_timer(1), "timeout")
+#	loading_screen.queue_free()
+	
 	if world == "":
 		#logger.verbose("World is Missing (on Server Start)!!! Check Player Save File!!!")
 		
