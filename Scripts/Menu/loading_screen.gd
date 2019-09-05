@@ -38,42 +38,42 @@ func get_class() -> String:
 # Both
 func found_world_data():
 	logger.debug("Loading Screen - Found World Data!!!")
-	loading_bar_plain.value = 10
+	set_progress_value(10)
 
 # Already Existing World	
 func loaded_world_grid():
 	logger.debug("Loading Screen - Loaded World Grid!!!")
-	loading_bar_plain.value = 15
+	set_progress_value(15)
 	
 # Already Existing World	
 func added_players_node():
 	logger.debug("Loading Screen - Added Players Node!!!")
-	loading_bar_plain.value = 20
+	set_progress_value(20)
 	
 # New World
 func loaded_template():
 	logger.debug("Loading Screen - Loaded Templates!!!")
-	loading_bar_plain.value = 20
+	set_progress_value(20)
 	
 # New World
 func loaded_foreground_chunks():
 	logger.debug("Loading Screen - Loaded Foreground Chunks!!!")
-	loading_bar_plain.value = 30
+	set_progress_value(30)
 	
 # New World
 func loaded_background_chunks():
 	logger.debug("Loading Screen - Loaded Background Chunks!!!")
-	loading_bar_plain.value = 40
+	set_progress_value(40)
 	
 # New World
 func loaded_foreground_tiles():
 	logger.debug("Loading Screen - Loaded Foreground Tiles!!!")
-	loading_bar_plain.value = 50
+	set_progress_value(50)
 	
 # New World
 func loaded_background_tiles():
 	logger.debug("Loading Screen - Loaded Background Tiles!!!")
-	loading_bar_plain.value = 60
+	set_progress_value(60)
 
 func failed_loading_world():
 	logger.debug("Loading Screen - Failed Loading World!!!")
@@ -83,19 +83,32 @@ func failed_loading_world():
 
 func world_created():
 	logger.debug("Loading Screen - World Created!!!")
-	loading_bar_plain.value = 100
+	set_progress_value(100)
 	close_loading_screen()
 	
 func world_loaded_server():
 	logger.debug("Loading Screen - Server World Loaded!!!")
-	loading_bar_plain.value = 100
+	set_progress_value(100)
 	close_loading_screen()
 	
 func world_loaded_client():
 	logger.debug("Loading Screen - World Loaded Client!!!")
-	loading_bar_plain.value = 100
+	set_progress_value(100)
 	close_loading_screen()
 	
 func close_loading_screen():
-	gamestate.reset_player_info() # Clear GameState Player's Info!!!
+#	gamestate.reset_player_info() # Clear GameState Player's Info!!!
 	self.queue_free()
+
+func set_progress_value(ending_value: int) -> void:
+	var bar : Node = loading_bar_plain
+	var starting_value : int = bar.value
+	
+	if starting_value < ending_value:
+		# Add Value
+		while bar.value != ending_value:
+			bar.value = (bar.value + 1)
+	elif starting_value > ending_value:
+		# Subtract Value
+		while bar.value != ending_value:
+			bar.value = (bar.value - 1)
