@@ -29,6 +29,9 @@ var supported_commands : Dictionary = {
 
 var arguments : PoolStringArray # To Convert Message into Arguments
 
+var load_world_server_thread : Thread = Thread.new()
+var create_world_server_thread : Thread = Thread.new()
+
 # Process the Command and Return Result if Any
 func process_command(net_id: int, message: String) -> void:
 	"""
@@ -201,7 +204,6 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	var world_path : String = "user://worlds/World 2"
 #	var world_name : String = world_handler.load_world_server(net_id, world_path)
 	
-	var load_world_server_thread : Thread = Thread.new()
 	load_world_server_thread.start(world_handler, "load_world_server_threaded", [net_id, world_path])
 	
 	if net_id == 1:
@@ -261,7 +263,6 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 		
 #		var world_name = world_handler.create_world(net_id, "") # Run's createworld function
 		
-		var create_world_server_thread : Thread = Thread.new()
 		create_world_server_thread.start(world_handler, "create_world_server_threaded", [net_id, ""]) # Run's createworld function
 		
 		if net_id == 1:
@@ -312,7 +313,6 @@ func server_spawn(net_id: int, message: PoolStringArray) -> String:
 	var world_path : String = world_handler.starting_world
 #	var world_name : String = world_handler.load_world_server(net_id, world_path)
 	
-	var load_world_server_thread : Thread = Thread.new()
 	load_world_server_thread.start(world_handler, "load_world_server_threaded", [net_id, world_path])
 	
 	if net_id == 1:

@@ -11,7 +11,7 @@ signal failed_server_finder_helper # Failed to Load Lan Server
 signal failed_client # Failed to Start Client (Is this necessary?)
 
 # Keep Alive Thread
-var keep_alive: Thread
+var keep_alive : Thread = Thread.new()
 
 # Other Vars
 var connected : bool = false # For GUIs to Determine if Game is Connected
@@ -267,7 +267,6 @@ func _on_connected_to_server() -> void:
 	get_tree().get_root().add_child(encryption)
 	
 	# Put Ping Timer on New Thread - Is the Timer Already on New Thread? Does this Affect Timer's Thread (given that it is a node)?
-	keep_alive = Thread.new()
 	keep_alive.start(self, "start_ping", "Test Connection")
 	
 	playerList.loadPlayerList() # Load PlayerList

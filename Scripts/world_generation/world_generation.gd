@@ -77,6 +77,8 @@ var delay_packet_processing_time_seconds : float = 1.0 # Amount of Time To Delay
 var spawn_set : bool = false # Determine if Spawn Was Set
 var spawn_coor : Vector2 # World's Spawn Coordinates (Defaults to Origin)
 
+var load_chunks_thread : Thread = Thread.new()
+
 # TODO (IMPORTANT): Generate chunks array on world load instead of reading from file!!!
 # Also, currently seeds aren't loaded from world handler, so they are generated new every time.
 
@@ -146,7 +148,6 @@ func load_chunks(net_id: int, position: Vector2, instant_load: bool = false, ren
 	# * - Looping the world on the horizontal access only applies to non-infinite worlds. Release will only support non-infinite worlds (afterwards if the game does well, I will work on infinite worlds). 
 	#logger.verbose("Player %s has Position %s!!!" % [net_id, position])
 	
-	var load_chunks_thread : Thread = Thread.new()
 	load_chunks_thread.start(self, "load_chunks_threaded", [net_id, position, render_distance, instant_load])
 	load_chunks_thread.wait_to_finish()
 	
