@@ -49,7 +49,9 @@ func _notification(what: int) -> void:
 			crash_system_stats.store_string("Debug Build: %s\n" % OS.is_debug_build())
 			crash_system_stats.store_string("Debug Mode: %s\n" % gamestate.debug)
 			
-			crash_system_stats.store_string("Stack Trace (Currently Not Available For Release Builds): %s\n" % get_stack())
+			# Sometimes the get_stack() function does not return an array that can be converted to string and it crashes the game!!! Ironic, isn't it.
+			# Here's the weird part, this crash happens when the game would not crash without the get_stack() function. As in the game runs as if nothing happened.
+#			crash_system_stats.store_string("Stack Trace (Currently Not Available For Release Builds): %s\n" % get_stack())
 			crash_system_stats.store_string("SceneTree: %s\n" % print_tree_pretty()) # It appears print_tree...() only prints to stdout, so I may not be able to capture it for logging
 			
 			crash_system_stats.close()

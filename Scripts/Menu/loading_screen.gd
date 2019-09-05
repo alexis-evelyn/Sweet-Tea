@@ -18,9 +18,9 @@ func _ready():
 	world_handler.connect("world_loaded_client", self, "world_loaded_client")
 	
 	world_handler.connect("missing_starting_world", self, "failed_loading_world")
-#	world_handler.connect("missing_starting_world_reference", self, "failed_loading_world")
-#	world_handler.connect("missing_current_world_reference", self, "failed_loading_world")
-#	world_handler.connect("failed_loading_world", self, "failed_loading_world")
+	world_handler.connect("missing_starting_world_reference", self, "failed_loading_world")
+	world_handler.connect("missing_current_world_reference", self, "failed_loading_world")
+	world_handler.connect("failed_loading_world", self, "failed_loading_world")
 
 func get_class() -> String:
 	return "LoadingScreen"
@@ -31,7 +31,7 @@ func failed_loading_world():
 	close_loading_screen()
 
 func world_created():
-	logger.debug("World Loaded Created!!!")
+	logger.debug("World Created!!!")
 	loading_bar_plain.value = 100
 	close_loading_screen()
 	

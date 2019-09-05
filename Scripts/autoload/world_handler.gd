@@ -62,7 +62,6 @@ func start_server() -> void:
 		#logger.verbose("This should never be reached (once character creation exists). This is because Host Server will not be in network menu anymore.")
 		
 		# Cleans Up Connection on Error
-		starting_world = "Not Set"
 		player_registrar.cleanup()
 		gamestate.net_id = 1 # Reset Network ID To 1 (default value)
 		get_tree().set_network_peer(null) # Disable Network Peer

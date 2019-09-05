@@ -73,6 +73,7 @@ func create_character() -> void:
 
 # This is a function as I need to call this in player selection without resetting the character's variables
 func create_world() -> void:
+	# Should I Thread This?
 	var world_name = world_handler.create_world(-1, world_seed, Vector2(0, 0)) # The Vector (0, 0) is here until I decide if I want to generate a custom world size. This will just default to what the generator has preset.
 	
 	gamestate.player_info.starting_world = "user://worlds/".plus_file(world_name)
@@ -80,6 +81,7 @@ func create_world() -> void:
 	#gamestate.save_player(slot)
 
 	logger.verbose("Player Creation Menu - Starting Server (Singleplayer)")
+	# Should I Thread This?
 	world_handler.save_world(world_handler.get_world(world_name))
 
 func get_picker_color() -> Color:
