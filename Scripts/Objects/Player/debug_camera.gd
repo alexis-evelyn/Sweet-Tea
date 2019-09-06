@@ -29,6 +29,7 @@ func _ready() -> void:
 	set_theme(gamestate.game_theme)
 	
 	world_generator.connect("chunk_change", self, "update_chunk_label")
+	get_tree().get_root().connect("size_changed", self, "screen_size_changed")
 	
 	update_world_label()
 	
@@ -37,7 +38,11 @@ func _ready() -> void:
 	player = get_player_node()
 	
 	update_camera_pos(player.position)
+	update_crosshair_pos(player.position)
 	update_camera_pos_label()
+
+func screen_size_changed() -> void:
+	update_crosshair_pos(player.position)
 
 func _process(_delta: float) -> void:
 	update_fps_label()
@@ -88,8 +93,15 @@ func update_player_pos_label() -> void:
 func update_camera_pos_label() -> void:
 	# Get Builtin Screen Size and Find center of screen (add center coordinates to coordinates of camera)
 	# This helps locate where the crosshair is (which is only a visual reference for the user. The gdscript does not get position from crosshair)
-	var cross_x = self.position.x + (ProjectSettings.get_setting("display/window/size/width")/2)
-	var cross_y = self.position.y + (ProjectSettings.get_setting("display/window/size/height")/2)
+#	var cross_x = self.position.x + (ProjectSettings.get_setting("display/window/size/width")/2)
+#	var cross_y = self.position.y + (ProjectSettings.get_setting("display/window/size/height")/2)
+
+#	var cross_x = self.position.x + (get_viewport().get_visible_rect().size.x/2)
+#	var cross_y = self.position.y + (get_viewport().get_visible_rect().size.y/2)
+
+	var cross_x = self.position.x + (get_tree().get_root().size.x/2)
+	var cross_y = self.position.y + (get_tree().get_root().size.y/2)
+
 	var cross_coor = Vector2(cross_x, cross_y)
 	
 	# Prints center of screen's position in world
@@ -97,10 +109,32 @@ func update_camera_pos_label() -> void:
 
 # Relocate Camera to this Specified Position (in middle of screen)
 func update_camera_pos(position: Vector2) -> void:
+	# Fix this to make it center on player no matter what the screen size is (When stretch mode is disabled)
+	
 	var cross_x = position.x - (ProjectSettings.get_setting("display/window/size/width")/2)
 	var cross_y = position.y - (ProjectSettings.get_setting("display/window/size/height")/2)
 	
+#	var cross_x = position.x - (get_viewport().get_visible_rect().size.x/2)
+#	var cross_y = position.y - (get_viewport().get_visible_rect().size.y/2)
+	
+#	var cross_x = position.x - (get_tree().get_root().size.x/2)
+#	var cross_y = position.y - (get_tree().get_root().size.y/2)
+	
 	self.position = Vector2(cross_x, cross_y)
+
+func update_crosshair_pos(position: Vector2) -> void:
+	# Fix this so that it positions the label exactly in the middle instead of near it.
+	
+#	var cross_x = OS.get_real_window_size().x/2
+#	var cross_y = OS.get_real_window_size().y/2
+	
+#	var cross_x = get_tree().get_root().size.x/2
+#	var cross_y = get_tree().get_root().size.y/2
+#
+#	print("Camera Label Position: (%s, %s)" % [cross_x, cross_y])
+#	crosshair.rect_position = Vector2(cross_x, cross_y)
+	
+	pass
 
 func set_theme(theme: Theme) -> void:
 	coor_label.set_theme(theme)
