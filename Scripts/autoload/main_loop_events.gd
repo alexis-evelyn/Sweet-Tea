@@ -10,6 +10,9 @@ func _ready() -> void:
 	get_tree().set_auto_accept_quit(false) # Disables Default Quit Action - Allows Override to Handle Other Code (e.g. saving or in a meta horror game, play a creepy voice)
 	get_tree().connect("files_dropped", self, "_drop_files")
 	#get_tree().connect("tree_changed", self, "_tree_changed")
+	
+	# This is not being triggered.
+	get_tree().get_root().connect("size_changed", self, "screen_size_changed")
 
 # Called When MainLoop Event Happens
 func _notification(what: int) -> void:
@@ -68,6 +71,17 @@ func _notification(what: int) -> void:
 # https://docs.godotengine.org/en/3.1/classes/class_mainloop.html#class-mainloop-method-finalize
 func _finalize():
 	logger.info("Goodbye!!!")
+
+func screen_size_changed() -> void:
+	print("Screen Size Changed!!!")
+	# This is supposed to change the font size so the font is smooth.
+	
+#	var dynamic_font = DynamicFont.new()
+#	dynamic_font.font_data = load("res://Assets/Fonts/dynamicfont/firacode-regular.tres")
+#	dynamic_font.size = 64
+#	get_tree().get_root().get_t
+#	pass
+#	get_tree().get_root().set_theme("Hello")
 
 # Detect When Files Dropped onto Game (Requires Signal) - Can Work in Any Node
 func _drop_files(files: PoolStringArray, from_screen: int):
