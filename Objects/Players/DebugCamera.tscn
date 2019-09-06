@@ -22,9 +22,9 @@ __meta__ = {
 
 [node name="CameraCoordinates" type="RichTextLabel" parent="."]
 margin_left = 665.0
-margin_top = 61.4382
+margin_top = 60.0
 margin_right = 1015.0
-margin_bottom = 101.438
+margin_bottom = 99.9998
 text = "Camera Coordinates..."
 __meta__ = {
 "_edit_use_anchors_": false
@@ -32,9 +32,9 @@ __meta__ = {
 
 [node name="ChunkPosition" type="RichTextLabel" parent="."]
 margin_left = 665.0
-margin_top = 114.798
+margin_top = 110.0
 margin_right = 1015.0
-margin_bottom = 154.798
+margin_bottom = 150.0
 text = "Chunk Position..."
 __meta__ = {
 "_edit_use_anchors_": false
@@ -42,10 +42,30 @@ __meta__ = {
 
 [node name="WorldName" type="RichTextLabel" parent="."]
 margin_left = 665.0
-margin_top = 166.491
+margin_top = 160.0
 margin_right = 1015.0
-margin_bottom = 206.491
+margin_bottom = 200.0
 text = "World Name..."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FPS" type="RichTextLabel" parent="."]
+margin_left = 665.0
+margin_top = 210.0
+margin_right = 1015.0
+margin_bottom = 250.0
+text = "FPS..."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PhysicsFPS" type="RichTextLabel" parent="."]
+margin_left = 665.0
+margin_top = 260.0
+margin_right = 1015.0
+margin_bottom = 300.0
+text = "Physics FPS..."
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -15,6 +15,9 @@ onready var coor_label = $PlayerCoordinates
 onready var cam_coor_label = $CameraCoordinates
 onready var chunk_position_label = $ChunkPosition
 onready var world_name_label = $WorldName
+onready var fps_label = $FPS
+onready var physics_fps_label = $PhysicsFPS
+
 # warning-ignore:unused_class_variable
 onready var crosshair = $Crosshair
 
@@ -36,6 +39,9 @@ func _ready() -> void:
 	update_camera_pos(player.position)
 	update_camera_pos_label()
 
+func _process(_delta: float) -> void:
+	update_fps_label()
+
 func _physics_process(_delta: float) -> void:
 	if Input.is_action_pressed("debug_up"):
 		translate(Vector2(0, -cam_speed))
@@ -51,6 +57,7 @@ func _physics_process(_delta: float) -> void:
 		update_camera_pos_label()
 	
 	update_player_pos_label()
+	update_physics_fps_label()
 
 func get_player_node() -> Node:
 	#logger.verbose("Parent: %s" % get_parent().name)
@@ -63,6 +70,12 @@ func get_player_node() -> Node:
 	
 func update_chunk_label(chunk: Vector2) -> void:
 	chunk_position_label.text = tr("debug_chunk_label") % chunk
+	
+func update_fps_label() -> void:
+	fps_label.text = tr("fps_label") % [Engine.get_frames_per_second(), Engine.get_frames_drawn()]
+	
+func update_physics_fps_label() -> void:
+	physics_fps_label.text = tr("physics_fps_label") % [Engine.get_iterations_per_second()]
 	
 func update_world_label():
 	world_name_label.text = tr("world_name_label") % world.name
@@ -94,6 +107,8 @@ func set_theme(theme: Theme) -> void:
 	cam_coor_label.set_theme(theme)
 	chunk_position_label.set_theme(theme)
 	world_name_label.set_theme(theme)
+	fps_label.set_theme(theme)
+	physics_fps_label.set_theme(theme)
 
 func get_class() -> String:
 	return "DebugCamera"

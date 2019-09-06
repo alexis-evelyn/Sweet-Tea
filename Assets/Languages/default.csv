@@ -69,3 +69,5 @@ tp_camera_command_not_enough_arguments,Teleport Camera Command - Not Enough Argu
 tp_camera_command_too_many_arguments,Teleport Camera Command - Too Many Arguments,,,,
 tp_camera_command_missing_debug_camera,Camera has to be a debug camera!!!,,,,
 tp_camera_command_success,"Teleported Camera to (%s, %s)",,,,
+fps_label,FPS: %s/%s,,,,
+physics_fps_label,Physics FPS: %s,,,,
