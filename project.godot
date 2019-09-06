@@ -175,6 +175,11 @@ _global_script_classes=[ {
 "path": "res://Scripts/autoload/spawn_handler.gd"
 }, {
 "base": "Node",
+"class": "UPNP_Server",
+"language": "GDScript",
+"path": "res://Scripts/upnp/upnp.gd"
+}, {
+"base": "Node",
 "class": "UUIDGenerator",
 "language": "GDScript",
 "path": "res://Scripts/autoload/third_party/uuid.gd"
@@ -223,6 +228,7 @@ _global_script_class_icons={
 "ServerFinderHelper": "",
 "SettingsLoader": "",
 "SpawnHandler": "",
+"UPNP_Server": "",
 "UUIDGenerator": "",
 "WorldGenerator": "",
 "WorldHandler": ""

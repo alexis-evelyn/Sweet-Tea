@@ -9,6 +9,7 @@ signal failed_server # Failed to Start Server - Alert User or Change Ports
 signal failed_server_finder_helper # Failed to Load Lan Server
 # warning-ignore:unused_signal
 signal failed_client # Failed to Start Client (Is this necessary?)
+signal game_forwarded # UPNP Game Port Forwarded
 
 # Keep Alive Thread
 var keep_alive : Thread = Thread.new()
@@ -27,6 +28,9 @@ const lan_server : String = "res://Scripts/lan/server.gd"
 # StreamPeerSSL
 const enc_server : String = "res://Scripts/Security/server_encryption.gd"
 const enc_client : String = "res://Scripts/Security/client_encryption.gd"
+
+# UPNP Game Forwarding
+const game_forwarding : String = "res://Scripts/upnp/upnp.gd"
 
 # Reference to Player List
 onready var playerList : Node = get_tree().get_root().get_node("PlayerUI/panelPlayerList")
@@ -120,6 +124,8 @@ func start_server() -> void:
 	# The world_handler loader is intentionally before registering the server player so that the server player will have a current world marked
 	emit_signal("server_created") # Notify world_handler That Server Was Created
 	
+	forward_game() # Forward Game
+	
 	# Activate PlayerList Since Server is Close to Finishing Loading
 	if not gamestate.server_mode:
 		playerList.loadPlayerList() # Load PlayerList
@@ -130,6 +136,17 @@ func start_server_finder_helper() -> void:
 	broadcast_listener.set_script(preload(lan_server)) # Attach A Script to Node
 	broadcast_listener.set_name("BroadcastListener") # Give Node A Unique ID
 	get_tree().get_root().add_child(broadcast_listener)
+
+func forward_game() -> void:
+	# Setup Encryption Script
+	var port_forwarding = Node.new()
+	port_forwarding.set_script(preload(game_forwarding)) # Attach A Script to Node
+	port_forwarding.set_name("GameForwarding") # Give Node A Unique ID
+	get_tree().get_root().add_child(port_forwarding)
+	
+	var successful : int = port_forwarding.forward_game(int(server_info.used_port))
+	
+	emit_signal("game_forwarded", successful)
 
 func start_encryption_server() -> void:
 	# Setup Encryption Script
@@ -182,6 +199,9 @@ func close_connection() -> void:
 				
 			if get_tree().get_root().has_node("BroadcastListener"):
 				get_tree().get_root().get_node("BroadcastListener").queue_free()
+			
+			if get_tree().get_root().has_node("GameForwarding"):
+				get_tree().get_root().get_node("GameForwarding").queue_free()
 		else:
 			# Client Side Only
 			# Free Up Resources and Save Data (Client Side)

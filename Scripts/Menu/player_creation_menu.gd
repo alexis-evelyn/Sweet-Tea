@@ -20,7 +20,7 @@ var world_seed : String = "" # Seed to use to generate world
 var loading_screen : Node
 const loading_screen_name : String = "res://Menus/LoadingScreen.tscn" # Loading Screen
 
-var create_world_server_thread : Thread = Thread.new()
+#var create_world_server_thread : Thread = Thread.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
