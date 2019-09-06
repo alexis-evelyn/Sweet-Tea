@@ -3,7 +3,7 @@
 [ext_resource path="res://Assets/Fonts/ttf/Treamd.ttf" type="DynamicFontData" id=1]
 
 [resource]
-size = 12
+size = 24
 use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 1 )
