@@ -48,6 +48,16 @@ func _ready() -> void:
 	
 	player_registrar.connect("world_set", self, "load_world_client") # The player has to be registered to download the world information.
 
+func loading_screen_closed() -> void:
+#	var timer : SceneTreeTimer = get_tree().create_timer(0.5) # Creates a One Shot Timer (One Shot means it only runs once)
+#	yield(timer, "timeout")
+#	timer.call_deferred('free')
+	
+	# Try to Thread This!!!
+#	get_tree().set_screen_stretch(SceneTree.STRETCH_MODE_VIEWPORT, SceneTree.STRETCH_ASPECT_IGNORE, Vector2(1400, 2000))
+#	get_tree().set_screen_stretch(SceneTree.STRETCH_MODE_DISABLED, SceneTree.STRETCH_ASPECT_IGNORE, Vector2(1400, 2000))
+	pass
+
 # Server Starting Function
 func start_server() -> void:
 	#logger.verbose("Server Loading")
@@ -87,6 +97,7 @@ func start_server() -> void:
 		loading_screen = load(loading_screen_name).instance()
 		loading_screen.name = "LoadingScreen"
 		get_tree().get_root().add_child(loading_screen) # Call Deferred Will Make This Too Late
+		loading_screen.connect("loading_screen_closed", self, "loading_screen_closed")
 	
 	# Unload Current Scene (Single Player Menu on Main Menu)
 	get_tree().get_current_scene().call_deferred("free")

@@ -1,6 +1,10 @@
 extends Control
 class_name LoadingScreen
 
+signal loading_screen_closed
+
+# Holding Down a Character Move Button While On This Screen Freezes The Game!!!
+
 # Declare member variables here. Examples:
 # warning-ignore:unused_class_variable
 onready var loading_bar : Node = $background/loadingBar
@@ -112,3 +116,6 @@ func set_progress_value(ending_value: int) -> void:
 		# Subtract Value
 		while bar.value != ending_value:
 			bar.value = (bar.value - 1)
+
+func _exit_tree():
+	emit_signal("loading_screen_closed")
