@@ -35,7 +35,10 @@ func _enter_tree() -> void:
 
 # Called everytime player is spawned 
 func _ready() -> void:
-	set_physics_process(true)
+	if is_network_master():
+		# Used to prevent game from freezing on loading screen if player presses movement keys on loading screen.
+		set_physics_process(false)
+		detect_loading_screen_closed()
 	
 	# Get Player's ID
 	player_name = get_node("..").name
@@ -69,6 +72,16 @@ func _ready() -> void:
 		correct_coordinates_timer.start() # Start Timer
 	elif is_network_master() and gamestate.debug:
 		world_generator.center_chunk(self.position, true) # Allows DebugCamera to be Updated on Chunk Position
+	
+func detect_loading_screen_closed() -> void:
+	if get_tree().get_root().has_node("LoadingScreen"):
+		var loading_screen : Node = get_tree().get_root().get_node("LoadingScreen")
+		loading_screen.connect("loading_screen_closed", self, "loading_screen_closed")
+#	else:
+#		loading_screen_closed()
+	
+func loading_screen_closed() -> void:
+	set_physics_process(true)
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta: float) -> void:
