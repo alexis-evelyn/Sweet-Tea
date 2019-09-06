@@ -372,6 +372,7 @@ translation_remaps={
 "res://Assets/Fonts/dynamicfont/firacode-regular.tres": PoolStringArray( "res://Assets/Fonts/dynamicfont/treasure-map-deadhand-regular.tres:pr", "res://Assets/Fonts/dynamicfont/mazawalza-regular.tres:mz" )
 }
 csv="res://Assets/Languages/default.txt"
+game_translation_file_name="default"
 
 [network]
 

@@ -21,6 +21,8 @@ func _ready():
 	load_locale() # Load Locale Settings
 #	load_game_settings() # Load Player's Game Settings From File
 
+#	functions.list_game_translations()
+
 # Load Locale Settings From File
 func load_locale() -> void:
 	TranslationServer.set_locale("en")

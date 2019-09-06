@@ -1,6 +1,7 @@
 ,en,es,ja,mz,pr
 translation_authors,"[""Alex Evelyn""]",,,"[""Alex Evelyn""]","[""Alex Evelyn""]"
 Sweet Tea,Sweet Tea,,,,
+language_name,English,Español,日本人,???,Pirate
 debug_chunk_label,Chunk: %s,,,,
 world_name_label,World: %s,,,,
 player_coordinate_label,Player: %s,,,,

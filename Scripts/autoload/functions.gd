@@ -87,9 +87,31 @@ func get_translation(key: String, locale: String) -> String:
 	
 	# Should I check if the translation came back successful or will translator handle it for me?
 	
-	#logger.verbose"Message: %s" % message)
+	#logger.superverbose("Message: %s" % message)
 	
 	return message
+	
+# Useful for Translation Selection Menu
+func list_game_translations() -> Dictionary:
+	# Also make sure to add support for po files later.
+	var translations : PoolStringArray = ProjectSettings.get_setting("locale/translations")
+	var game_translation_name : String = ProjectSettings.get_setting("locale/game_translation_file_name")
+	var translation_names : Dictionary = {}
+	translation_names.locales = []
+
+	for translation in translations:
+		#res://Assets/Languages/default.pr.translation
+		var translation_name : String = translation.rsplit(".", false, 2)[0].rsplit("/", false, 1)[1]
+		
+		if game_translation_name == translation_name:
+			var translation_locale : String = translation.rsplit(".", false, 2)[1]
+			translation_names.locales.append({"locale": translation_locale, "name": TranslationServer.get_locale_name(translation_locale), "native_name": get_translation("language_name", translation_locale)})
+			
+#			logger.superverbose("Native Language Name: %s" % get_translation("language_name", translation_locale))
+#			logger.superverbose("Translation: %s/%s" % [translation_locale, TranslationServer.get_locale_name(translation_locale)])
+		
+#	print("Translation Dictionary: %s" % translation_names)
+	return translation_names
 
 func get_class() -> String:
 	return "Functions"
