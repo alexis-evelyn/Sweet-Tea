@@ -75,10 +75,12 @@ func _ready() -> void:
 	
 func detect_loading_screen_closed() -> void:
 	if get_tree().get_root().has_node("LoadingScreen"):
+		# For Server - Loading Screen
 		var loading_screen : Node = get_tree().get_root().get_node("LoadingScreen")
 		loading_screen.connect("loading_screen_closed", self, "loading_screen_closed")
-#	else:
-#		loading_screen_closed()
+	else:
+		# For Clients - Loading Screen Not Implemented Yet
+		loading_screen_closed()
 	
 func loading_screen_closed() -> void:
 	set_physics_process(true)
