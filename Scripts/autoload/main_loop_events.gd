@@ -9,9 +9,14 @@ var window_size_detection : Thread = Thread.new()
 
 var theme : Theme # Get Game's Theme
 var default_font : DynamicFont # Get Default Font
+var default_font_size : int # Default Font Size
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	theme = gamestate.game_theme # Get Game's Theme
+	default_font = theme.get_default_font() # Get Default Font
+	default_font_size = default_font.size
+	
 	get_tree().set_auto_accept_quit(false) # Disables Default Quit Action - Allows Override to Handle Other Code (e.g. saving or in a meta horror game, play a creepy voice)
 	get_tree().connect("files_dropped", self, "_drop_files")
 	#get_tree().connect("tree_changed", self, "_tree_changed")
@@ -90,11 +95,15 @@ func _finalize():
 func screen_size_changed() -> void:
 	# This is supposed to change the font size so the font is smooth.
 	logger.superverbose("Window Size: %s" % window_size)
+#	logger.superverbose("Default Font Size: %s" % default_font_size)
+	
+	var font_size : int = ((window_size.x * 1.05) / (window_size.y)) * default_font_size
+	logger.debug("font_size: %s" % font_size)
+	logger.debug("Font Size Math: (%s / %s) * %s = %s" % [window_size.x, window_size.y, default_font_size, (window_size.x/window_size.y)*default_font_size])
 	
 	theme = gamestate.game_theme # Get Game's Theme
 	default_font = theme.get_default_font() # Get Default Font
-	
-#	default_font.size = 64 # Change Font Size
+	default_font.size = font_size # Change Font Size
 
 # Detect When Files Dropped onto Game (Requires Signal) - Can Work in Any Node
 func _drop_files(files: PoolStringArray, from_screen: int):
