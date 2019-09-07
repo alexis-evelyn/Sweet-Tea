@@ -75,13 +75,12 @@ func _finalize():
 func screen_size_changed() -> void:
 	print("Screen Size Changed!!!")
 	# This is supposed to change the font size so the font is smooth.
+	# This only works if stretch is not viewport.
 	
-#	var dynamic_font = DynamicFont.new()
-#	dynamic_font.font_data = load("res://Assets/Fonts/dynamicfont/firacode-regular.tres")
-#	dynamic_font.size = 64
-#	get_tree().get_root().get_t
-#	pass
-#	get_tree().get_root().set_theme("Hello")
+#	var theme = get_tree().get_root().get_node("MainMenu").get_theme()
+	var theme : Theme = gamestate.game_theme # Get Game's Theme
+	var dynamic_font = theme.get_default_font() # Get Default Font
+#	dynamic_font.size = 64 # Change Font Size
 
 # Detect When Files Dropped onto Game (Requires Signal) - Can Work in Any Node
 func _drop_files(files: PoolStringArray, from_screen: int):
