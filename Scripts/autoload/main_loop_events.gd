@@ -7,8 +7,8 @@ signal resized # Real Window is Resized
 var window_size : Vector2 = OS.get_real_window_size()
 var window_size_detection : Thread = Thread.new()
 
-var theme : Theme = gamestate.game_theme # Get Game's Theme
-var default_font : DynamicFont = theme.get_default_font() # Get Default Font
+var theme : Theme # Get Game's Theme
+var default_font : DynamicFont # Get Default Font
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
