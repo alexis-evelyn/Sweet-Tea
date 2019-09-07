@@ -7,6 +7,9 @@ signal resized # Real Window is Resized
 var window_size : Vector2 = OS.get_real_window_size()
 var window_size_detection : Thread = Thread.new()
 
+var theme : Theme = gamestate.game_theme # Get Game's Theme
+var default_font : DynamicFont = theme.get_default_font() # Get Default Font
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	get_tree().set_auto_accept_quit(false) # Disables Default Quit Action - Allows Override to Handle Other Code (e.g. saving or in a meta horror game, play a creepy voice)
@@ -85,16 +88,13 @@ func _finalize():
 	logger.info("Goodbye!!!")
 
 func screen_size_changed() -> void:
-#	print("Screen Size Changed!!!")
 	# This is supposed to change the font size so the font is smooth.
-	# This only works if stretch is not viewport.
-	
 	logger.superverbose("Window Size: %s" % window_size)
 	
-#	var theme = get_tree().get_root().get_node("MainMenu").get_theme()
-	var theme : Theme = gamestate.game_theme # Get Game's Theme
-	var dynamic_font = theme.get_default_font() # Get Default Font
-#	dynamic_font.size = 64 # Change Font Size
+	theme = gamestate.game_theme # Get Game's Theme
+	default_font = theme.get_default_font() # Get Default Font
+	
+#	default_font.size = 64 # Change Font Size
 
 # Detect When Files Dropped onto Game (Requires Signal) - Can Work in Any Node
 func _drop_files(files: PoolStringArray, from_screen: int):
