@@ -61,7 +61,7 @@ func load_server_info() -> int:
 			#logger.verbose("Save File Imported As Dictionary!!!")
 			
 			if json.result.has("game_version"):
-				logger.verbose("Game Version That Saved File Was: " + json.result["game_version"])
+				logger.verbose("Game Version That Saved File Was: %s" % json.result["game_version"])
 				
 				# TODO: Check If Saved Game Version Is Compatible With Current Game Version
 			else:

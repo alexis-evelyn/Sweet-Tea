@@ -1,9 +1,11 @@
 extends Node
 class_name MainLoopEvents
 
+signal resized # Real Window is Resized
+
 # Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+var window_size : Vector2 = OS.get_real_window_size()
+var window_size_detection : Thread = Thread.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -11,8 +13,10 @@ func _ready() -> void:
 	get_tree().connect("files_dropped", self, "_drop_files")
 	#get_tree().connect("tree_changed", self, "_tree_changed")
 	
-	# This is not being triggered.
-	get_tree().get_root().connect("size_changed", self, "screen_size_changed")
+	# This does not get triggered if stretch mode is viewport
+#	get_tree().get_root().connect("size_changed", self, "screen_size_changed")
+	connect("resized", self, "screen_size_changed")
+	window_size_detection.start(self, "_size_change_detector")
 
 # Called When MainLoop Event Happens
 func _notification(what: int) -> void:
@@ -67,15 +71,25 @@ func _notification(what: int) -> void:
 		_: # Default Result - Put at Bottom of Match Results
 			pass
 
+func _size_change_detector(_thread_data) -> void:
+	while true:
+		yield(get_tree().create_timer(0.5), "timeout")
+		
+		if window_size != OS.get_real_window_size():
+			window_size = OS.get_real_window_size()
+			emit_signal("resized")
+
 # This is supposed to be called last right before the game quits, but that doesn't work (maybe it can only do it in a custom MainLoop?).
 # https://docs.godotengine.org/en/3.1/classes/class_mainloop.html#class-mainloop-method-finalize
 func _finalize():
 	logger.info("Goodbye!!!")
 
 func screen_size_changed() -> void:
-	print("Screen Size Changed!!!")
+#	print("Screen Size Changed!!!")
 	# This is supposed to change the font size so the font is smooth.
 	# This only works if stretch is not viewport.
+	
+	logger.superverbose("Window Size: %s" % window_size)
 	
 #	var theme = get_tree().get_root().get_node("MainMenu").get_theme()
 	var theme : Theme = gamestate.game_theme # Get Game's Theme
