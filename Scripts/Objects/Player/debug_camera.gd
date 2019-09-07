@@ -9,14 +9,17 @@ class_name DebugCamera
 # You may have to give or take a one depending on if the coordinate was negative or positive.
 
 # Declare member variables here. Examples:
-var cam_speed = 70
+var cam_speed : int = 70
 var player : Node
+var powerstate_status : String
+
 onready var coor_label = $PlayerCoordinates
 onready var cam_coor_label = $CameraCoordinates
 onready var chunk_position_label = $ChunkPosition
 onready var world_name_label = $WorldName
 onready var fps_label = $FPS
 onready var physics_fps_label = $PhysicsFPS
+onready var battery_label = $BatteryStats
 
 # warning-ignore:unused_class_variable
 onready var crosshair = $Crosshair
@@ -40,12 +43,14 @@ func _ready() -> void:
 	update_camera_pos(player.position)
 	update_crosshair_pos(player.position)
 	update_camera_pos_label()
+	update_battery_label()
 
 func screen_size_changed() -> void:
 	update_crosshair_pos(player.position)
 
 func _process(_delta: float) -> void:
 	update_fps_label()
+	update_battery_label()
 
 func _physics_process(_delta: float) -> void:
 	if Input.is_action_pressed("debug_up"):
@@ -75,6 +80,21 @@ func get_player_node() -> Node:
 	
 func update_chunk_label(chunk: Vector2) -> void:
 	chunk_position_label.text = tr("debug_chunk_label") % chunk
+	
+func update_battery_label() -> void:
+	match OS.get_power_state():
+		OS.POWERSTATE_UNKNOWN:
+			powerstate_status = tr("battery_unknown")
+		OS.POWERSTATE_ON_BATTERY:
+			powerstate_status = tr("battery_battery")
+		OS.POWERSTATE_NO_BATTERY:
+			powerstate_status = tr("battery_none")
+		OS.POWERSTATE_CHARGING:
+			powerstate_status = tr("battery_charging")
+		OS.POWERSTATE_CHARGED:
+			powerstate_status = tr("battery_charged")
+	
+	battery_label.text = tr("battery_label") % [OS.get_power_percent_left(), OS.get_power_seconds_left(), powerstate_status]
 	
 func update_fps_label() -> void:
 	fps_label.text = tr("fps_label") % [Engine.get_frames_per_second(), Engine.get_frames_drawn()]
@@ -143,6 +163,7 @@ func set_theme(theme: Theme) -> void:
 	world_name_label.set_theme(theme)
 	fps_label.set_theme(theme)
 	physics_fps_label.set_theme(theme)
+	battery_label.set_theme(theme)
 
 func get_class() -> String:
 	return "DebugCamera"
