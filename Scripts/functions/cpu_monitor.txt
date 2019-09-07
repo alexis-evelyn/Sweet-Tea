@@ -1,0 +1,6 @@
+// Notes for cpu_monitor.gdns
+// Let's see if we can get our own CPU usage!!!
+
+// CPU Usage - https://stackoverflow.com/a/64166/6828099
+// C++ in Godot Video - https://www.youtube.com/watch?v=U2NxfogHyOQ
+// C++ Native Module - https://docs.godotengine.org/en/3.1/tutorials/plugins/gdnative/gdnative-cpp-example.html
