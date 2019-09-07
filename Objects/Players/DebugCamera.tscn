@@ -13,7 +13,7 @@ __meta__ = {
 [node name="PlayerCoordinates" type="RichTextLabel" parent="."]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 360.0
+margin_right = 1015.0
 margin_bottom = 35.0
 text = "Player Coordinates..."
 scroll_active = false
@@ -24,7 +24,7 @@ __meta__ = {
 [node name="CameraCoordinates" type="RichTextLabel" parent="."]
 margin_left = 10.0
 margin_top = 45.0
-margin_right = 360.0
+margin_right = 1015.0
 margin_bottom = 70.0
 text = "Camera Coordinates..."
 scroll_active = false
@@ -35,7 +35,7 @@ __meta__ = {
 [node name="ChunkPosition" type="RichTextLabel" parent="."]
 margin_left = 10.0
 margin_top = 80.0
-margin_right = 360.0
+margin_right = 1015.0
 margin_bottom = 105.0
 text = "Chunk Position..."
 scroll_active = false
@@ -46,7 +46,7 @@ __meta__ = {
 [node name="WorldName" type="RichTextLabel" parent="."]
 margin_left = 10.0
 margin_top = 115.0
-margin_right = 360.0
+margin_right = 1015.0
 margin_bottom = 140.0
 text = "World Name..."
 scroll_active = false
@@ -57,7 +57,7 @@ __meta__ = {
 [node name="FPS" type="RichTextLabel" parent="."]
 margin_left = 10.0
 margin_top = 150.0
-margin_right = 360.0
+margin_right = 1015.0
 margin_bottom = 175.0
 text = "FPS..."
 scroll_active = false
@@ -68,7 +68,7 @@ __meta__ = {
 [node name="PhysicsFPS" type="RichTextLabel" parent="."]
 margin_left = 10.0
 margin_top = 185.0
-margin_right = 360.0
+margin_right = 1015.0
 margin_bottom = 210.0
 text = "Physics FPS..."
 scroll_active = false
@@ -79,7 +79,7 @@ __meta__ = {
 [node name="BatteryStats" type="RichTextLabel" parent="."]
 margin_left = 10.0
 margin_top = 220.0
-margin_right = 360.0
+margin_right = 1015.0
 margin_bottom = 295.0
 text = "Battery Stats...
 2

@@ -97,17 +97,18 @@ func screen_size_changed() -> void:
 	logger.superverbose("Window Size: %s" % window_size)
 #	logger.superverbose("Default Font Size: %s" % default_font_size)
 	
+##	var font_size : int = (((float(window_size.x)) / (float(window_size.y))) * float(default_font_size))
+##	var font_size : int = (float(window_size.x)/2) / float(default_font_size)
 #	var font_size : int = (((float(window_size.x)) / (float(window_size.y))) * float(default_font_size))
-#	var font_size : int = (float(window_size.x)/2) / float(default_font_size)
-	var font_size : int = (((float(window_size.x)) / (float(window_size.y))) * float(default_font_size))
-	
-	logger.debug("Font Size: %s" % font_size)
-	logger.debug("Font Size Math: (%s / %s) * %s = %s" % [float(window_size.x), float(window_size.y), float(default_font_size), (float(window_size.x)/float(window_size.y))*float(default_font_size)])
-	logger.debug("Window Size Math: (%s / %s) = %s" % [float(window_size.x), float(window_size.y), float(window_size.x)/float(window_size.y)])
-	
-	theme = gamestate.game_theme # Get Game's Theme
-	default_font = theme.get_default_font() # Get Default Font
-	default_font.size = font_size # Change Font Size
+#	font_size = default_font.size + (font_size - default_font.size)
+#
+#	logger.debug("Font Size: %s" % font_size)
+#	logger.debug("Font Size Math: (%s / %s) * %s = %s" % [float(window_size.x), float(window_size.y), float(default_font_size), (float(window_size.x)/float(window_size.y))*float(default_font_size)])
+#	logger.debug("Window Size Math: (%s / %s) = %s" % [float(window_size.x), float(window_size.y), float(window_size.x)/float(window_size.y)])
+#
+#	theme = gamestate.game_theme # Get Game's Theme
+#	default_font = theme.get_default_font() # Get Default Font
+#	default_font.size = font_size # Change Font Size
 
 # Detect When Files Dropped onto Game (Requires Signal) - Can Work in Any Node
 func _drop_files(files: PoolStringArray, from_screen: int):
