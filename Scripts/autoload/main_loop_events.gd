@@ -97,9 +97,13 @@ func screen_size_changed() -> void:
 	logger.superverbose("Window Size: %s" % window_size)
 #	logger.superverbose("Default Font Size: %s" % default_font_size)
 	
-	var font_size : int = ((window_size.x * 1.05) / (window_size.y)) * default_font_size
-	logger.debug("font_size: %s" % font_size)
-	logger.debug("Font Size Math: (%s / %s) * %s = %s" % [window_size.x, window_size.y, default_font_size, (window_size.x/window_size.y)*default_font_size])
+#	var font_size : int = (((float(window_size.x)) / (float(window_size.y))) * float(default_font_size))
+#	var font_size : int = (float(window_size.x)/2) / float(default_font_size)
+	var font_size : int = (((float(window_size.x)) / (float(window_size.y))) * float(default_font_size))
+	
+	logger.debug("Font Size: %s" % font_size)
+	logger.debug("Font Size Math: (%s / %s) * %s = %s" % [float(window_size.x), float(window_size.y), float(default_font_size), (float(window_size.x)/float(window_size.y))*float(default_font_size)])
+	logger.debug("Window Size Math: (%s / %s) = %s" % [float(window_size.x), float(window_size.y), float(window_size.x)/float(window_size.y)])
 	
 	theme = gamestate.game_theme # Get Game's Theme
 	default_font = theme.get_default_font() # Get Default Font
