@@ -13,6 +13,13 @@ var cam_speed : int = 70
 var player : Node
 var powerstate_status : String
 
+var key_color : Color = Color.webgray
+var value_color : Color = Color.silver
+
+var value_begin_bbcode : String = "[color=#" + value_color.to_html(true) + "]"
+var key_begin_bbcode : String = "[color=#" + key_color.to_html(true) + "]"
+var both_end_bbcode : String = "[/color]"
+
 onready var coor_label = $PlayerCoordinates
 onready var cam_coor_label = $CameraCoordinates
 onready var chunk_position_label = $ChunkPosition
@@ -79,7 +86,7 @@ func get_player_node() -> Node:
 	return players.get_node(str(gamestate.net_id)).get_node("KinematicBody2D")
 	
 func update_chunk_label(chunk: Vector2) -> void:
-	chunk_position_label.text = tr("debug_chunk_label") % chunk
+	chunk_position_label.bbcode_text = key_begin_bbcode + tr("debug_chunk_label") % [value_begin_bbcode + str(chunk) + both_end_bbcode] + both_end_bbcode
 	
 func update_battery_label() -> void:
 	match OS.get_power_state():
@@ -94,21 +101,21 @@ func update_battery_label() -> void:
 		OS.POWERSTATE_CHARGED:
 			powerstate_status = tr("battery_charged")
 	
-	battery_label.text = tr("battery_label") % [OS.get_power_percent_left(), OS.get_power_seconds_left(), powerstate_status]
+	battery_label.bbcode_text = key_begin_bbcode + tr("battery_label") % [value_begin_bbcode + str(OS.get_power_percent_left()) + both_end_bbcode, value_begin_bbcode + str(OS.get_power_seconds_left()) + both_end_bbcode, value_begin_bbcode + powerstate_status + both_end_bbcode] + both_end_bbcode
 	
 func update_fps_label() -> void:
-	fps_label.text = tr("fps_label") % [Engine.get_frames_per_second(), Engine.get_frames_drawn()]
+	fps_label.bbcode_text = key_begin_bbcode + tr("fps_label") % [value_begin_bbcode + str(Engine.get_frames_per_second()) + both_end_bbcode, value_begin_bbcode + str(Engine.get_frames_drawn()) + both_end_bbcode] + both_end_bbcode
 	
 func update_physics_fps_label() -> void:
-	physics_fps_label.text = tr("physics_fps_label") % [Engine.get_iterations_per_second()]
+	physics_fps_label.bbcode_text = key_begin_bbcode + tr("physics_fps_label") % [value_begin_bbcode + str(Engine.get_iterations_per_second()) + both_end_bbcode] + both_end_bbcode
 	
 func update_world_label():
-	world_name_label.text = tr("world_name_label") % world.name
+	world_name_label.bbcode_text = key_begin_bbcode + tr("world_name_label") % [value_begin_bbcode + world.name + both_end_bbcode] + both_end_bbcode
 	
 func update_player_pos_label() -> void:
 	# Player's position is based on center of Player, not the edges
 	if player != null:
-		coor_label.text = tr("player_coordinate_label") % player.position
+		coor_label.bbcode_text = key_begin_bbcode + tr("player_coordinate_label") % [value_begin_bbcode + str(player.position) + both_end_bbcode] + both_end_bbcode
 	
 func update_camera_pos_label() -> void:
 	# Get Builtin Screen Size and Find center of screen (add center coordinates to coordinates of camera)
@@ -125,7 +132,7 @@ func update_camera_pos_label() -> void:
 	var cross_coor = Vector2(cross_x, cross_y)
 	
 	# Prints center of screen's position in world
-	cam_coor_label.text = tr("camera_coordinate_label") % str(cross_coor)
+	cam_coor_label.bbcode_text = key_begin_bbcode + tr("camera_coordinate_label") % [value_begin_bbcode + str(cross_coor) + both_end_bbcode] + both_end_bbcode
 
 # Relocate Camera to this Specified Position (in middle of screen)
 func update_camera_pos(position: Vector2) -> void:
