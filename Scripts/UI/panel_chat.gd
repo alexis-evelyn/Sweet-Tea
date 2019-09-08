@@ -17,6 +17,9 @@ var NWSC : String = PoolByteArray(['U+8203']).get_string_from_utf8() # No Width 
 onready var chatMessages : Node = $chatMessages
 onready var chatInput : Node = $userChat
 
+# Supposed to Request Window Attention - Only Works if Window is Out of Focus
+#OS.request_attention()
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if not has_node("ClientCommands"):

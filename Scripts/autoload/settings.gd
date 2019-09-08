@@ -124,12 +124,9 @@ func check_settings():
 	window_borderless = false
 	window_resizable = true
 	
-	# Supposed to Request Window Attention - Probably Only Works if Window is Out of Focus
-	#OS.request_attention()
-	
 	# If not careful, the game can easily make a laptop hot. For computers that can handle processing as quickly as possible, this can be disabled.
 	# TODO: Provide option in settings to turn this off.
-	#OS.low_processor_usage_mode = true # Default Off - Meant for programs (as not in games - Causes performance issues in game)
+#	OS.low_processor_usage_mode = true # Default Off - Meant for programs (as not in games - Causes performance issues in game)
 	OS.vsync_enabled = true # Already enabled by default, but can be changed by code.
 	
 	Engine.set_iterations_per_second(30) # Physics FPS - Default 60

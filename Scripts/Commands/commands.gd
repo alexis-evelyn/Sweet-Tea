@@ -9,22 +9,38 @@ class_name ServerCommands
 # A Permission System Does Not Exist Yet, So The Permission Levels are Moot. This will be implemented eventually.
 # Integer Constants for Determining Permission Levels of Commands (basically only allow those with permission to use or even see the commands they have permission for)
 # Note: The lower the number is, the more power the permission level has.
-const server_owner : int = 0 # Owner of Server
-const admin : int = 1 # Paid helpers of Server Owner (manages the server plugins/mods and moderators)
-const mod : int = 2 # Trusted Moderators (Manages Operators and Helps Deal With Problems Such as Griefing)
-const op : int = 3 # Player With More Permissions Than Normal (Can access some commands a normal player cannot access) - Most useful with server plugins
-const player : int = 4 # A Normal Player
-const jail : int = 5 # A Joke Permission, but can be Used To Prevent Player From Executing Most Commands (except msg or invite, etc...)
-const max_security : int = 6 # Another Joke Permission, Prevents Any Commands At All (might be renamed to solitary)
+enum permission_level {
+	missing_permission = -2, # Missing Permission From Command From Permission List
+	missing_command = -1, # Missing Command From Permission List
+	
+	server_owner = 0, # Owner of Server
+	admin = 1, # Paid helpers of Server Owner (manages the server plugins/mods and moderators)
+	mod = 2, # Trusted Moderators (Manages Operators and Helps Deal With Problems Such as Griefing)
+	op = 3, # Player With More Permissions Than Normal (Can access some commands a normal player cannot access) - Most useful with server plugins
+	player = 4, # A Normal Player
+	jail = 5, # A Joke Permission, but can be Used To Prevent Player From Executing Most Commands (except msg or invite, etc...)
+	max_security = 6 # Another Joke Permission, Prevents Any Commands At All (might be renamed to solitary)
+}
 
 # Used by Help Command to Provide List of Commands
 var supported_commands : Dictionary = {
-"help": {"description": "help_help_desc", "permission": player},
-"kick": {"description": "help_kick_desc", "permission": mod},
-"kickip": {"description": "help_kickip_desc", "permission": mod},
-"ban": {"description": "help_ban_desc", "permission": mod},
-"banip": {"description": "help_banip_desc", "permission": mod},
-"shutdown": {"description": "help_shutdown_desc", "permission": server_owner}
+	"help": {"description": "help_help_desc", "permission": permission_level.player},
+	"kick": {"description": "help_kick_desc", "permission": permission_level.mod},
+	"kickip": {"description": "help_kickip_desc", "permission": permission_level.mod},
+	"ban": {"description": "help_ban_desc", "permission": permission_level.mod},
+	"banip": {"description": "help_banip_desc", "permission": permission_level.mod},
+	"shutdown": {"description": "help_shutdown_desc", "permission": permission_level.server_owner},
+	
+	"changeworld": {"description": "help_changeworld_desc", "permission": permission_level.op},
+	"createworld": {"description": "help_createworld_desc", "permission": permission_level.mod},
+	"spawn": {"description": "help_spawn_desc", "permission": permission_level.player},
+	"wspawn": {"description": "help_wspawn_desc", "permission": permission_level.player},
+	"tp": {"description": "help_tp_desc", "permission": permission_level.op},
+	"seed": {"description": "help_seed_desc", "permission": permission_level.server_owner},
+	
+	# These are the essentially same command
+	"msg": {"description": "help_msg_desc", "permission": permission_level.player},
+	"tell": {"description": "help_msg_desc", "permission": permission_level.player}
 }
 
 var arguments : PoolStringArray # To Convert Message into Arguments
@@ -91,16 +107,34 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 			return teleport(net_id, message)
 		"seed":
 			return get_seed(net_id, message)
+		"msg":
+			return private_message(net_id, message)
+		"tell":
+			return private_message(net_id, message)
 		_: # Default Result - Put at Bottom of Match Results
 			if command == "":
 				return ""
 			else:
 				return functions.get_translation("command_not_found", player_registrar.players[net_id].locale) % command
 
+# Get Command's Permission Level (If Set)
+func get_permission(command: String) -> int:
+	"""
+		Find Out Command's Permission Level
+	"""
+	
+	if not supported_commands.has(command):
+		return permission_level.missing_command
+		
+	if not supported_commands[command].has("permission"):
+		return permission_level.missing_permission
+	
+	return supported_commands[command]["permission"]
+
 # Help Command
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
-func help_command(net_id, message) -> String:
+func help_command(net_id: int, message: PoolStringArray) -> String:
 	"""
 		Help Command
 		
@@ -120,10 +154,29 @@ func help_command(net_id, message) -> String:
 	# I was hoping for a builtin method to convert array to string without the array brackets and commas
 	var output : String = ""
 	
+	output_array.remove(output_array.size()-1) # Remove the last newline character from array
+	
 	for line in output_array:
 		output += line
 	
 	return str(output)
+	
+# Private Message User
+func private_message(net_id: int, message: PoolStringArray) -> String:
+	"""
+		Private Message Command
+		
+		Not Meant to Be Called Directly
+	"""
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var permission_level : int = get_permission(command) # Gets Command's Permission Level
+	
+	if not message.size() > 2:
+		return functions.get_translation("private_message_not_enough_arguments", player_registrar.players[net_id].locale)
+	
+	
+	
+	return ""
 	
 # Kick Player Command
 # warning-ignore:unused_argument
@@ -134,7 +187,7 @@ func kick_player(net_id: int, message: PoolStringArray) -> String:
 		Not Meant to Be Called Directly
 	"""
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	var permission_level : int = get_permission(command) # Gets Command's Permission Level
 	
 	# player_control
 	
@@ -149,7 +202,7 @@ func kick_player_ip(net_id: int, message: PoolStringArray) -> String:
 		Not Meant to Be Called Directly
 	"""
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	var permission_level : int = get_permission(command) # Gets Command's Permission Level
 	
 	# warning-ignore:unused_variable
 #	var ip_address : String = str(message[1]) # Check to make sure IP Address is Specified
@@ -167,7 +220,7 @@ func ban_player(net_id: int, message: PoolStringArray) -> String:
 		Not Meant to Be Called Directly
 	"""
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	var permission_level : int = get_permission(command) # Gets Command's Permission Level
 	
 	# player_control
 	
@@ -182,7 +235,7 @@ func ban_player_ip(net_id: int, message: PoolStringArray) -> String:
 		Not Meant to Be Called Directly
 	"""
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	var permission_level : int = get_permission(command) # Gets Command's Permission Level
 	
 	# player_control
 	
@@ -199,7 +252,7 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	"""
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	var permission_level : int = get_permission(command) # Gets Command's Permission Level
 	
 	var world_path : String = "user://worlds/World 2"
 #	var world_name : String = world_handler.load_world_server(net_id, world_path)
@@ -251,7 +304,7 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 	"""
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	var permission_level : int = get_permission(command) # Gets Command's Permission Level
 	# TODO (IMPORTANT): Make sure to restrict access with permission levels!!!
 	
 	# When Permission Levels are implemented, the net_id == 1 check will be replaced
@@ -296,7 +349,7 @@ func shutdown_server(net_id: int, message: PoolStringArray) -> String:
 	"""
 	
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-	var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	var permission_level : int = get_permission(command) # Gets Command's Permission Level
 	
 	return functions.get_translation("shutdown_server_no_permission", player_registrar.players[net_id].locale) % permission_level
 	
@@ -308,7 +361,7 @@ func server_spawn(net_id: int, message: PoolStringArray) -> String:
 	"""
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	var permission_level : int = get_permission(command) # Gets Command's Permission Level
 	
 	var world_path : String = world_handler.starting_world
 #	var world_name : String = world_handler.load_world_server(net_id, world_path)
@@ -353,7 +406,7 @@ func world_spawn(net_id: int, message: PoolStringArray) -> String:
 	"""
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	var permission_level : int = get_permission(command) # Gets Command's Permission Level
 	
 	var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
 	
@@ -383,7 +436,7 @@ func get_seed(net_id: int, message: PoolStringArray) -> String:
 	"""
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
-	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	var permission_level : int = get_permission(command) # Gets Command's Permission Level
 	
 	# Get Seed From World Player Is In
 	var world_generation : Node = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
@@ -399,6 +452,8 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 	"""
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var permission_level : int = get_permission(command) # Gets Command's Permission Level
+	
 	var command_arguments : PoolStringArray = message
 	command_arguments.remove(0)
 	
@@ -429,8 +484,6 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 		return functions.get_translation("tp_command_not_enough_arguments", player_registrar.players[net_id].locale)
 	else:
 		return functions.get_translation("tp_command_too_many_arguments", player_registrar.players[net_id].locale)
-	
-	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 	
 	var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
 	
