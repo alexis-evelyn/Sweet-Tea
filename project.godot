@@ -265,6 +265,8 @@ gdscript/warnings/unsafe_cast=true
 
 [display]
 
+window/size/width=1920
+window/size/height=1080
 window/size/borderless=true
 window/dpi/allow_hidpi=true
 window/per_pixel_transparency/allowed=true

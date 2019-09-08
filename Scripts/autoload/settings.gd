@@ -20,6 +20,7 @@ func _ready():
 	load_server_info() # Load's Server Info From File
 	load_locale() # Load Locale Settings
 #	load_game_settings() # Load Player's Game Settings From File
+	OS.set_window_size(Vector2(1024, 700))
 
 #	functions.list_game_translations()
 
