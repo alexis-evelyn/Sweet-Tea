@@ -268,7 +268,8 @@ gdscript/warnings/unsafe_cast=true
 window/size/borderless=true
 window/dpi/allow_hidpi=true
 window/per_pixel_transparency/allowed=true
-window/stretch/mode="viewport"
+window/stretch/mode="2d"
+window/stretch/aspect="expand"
 
 [editor_plugins]
 
@@ -393,4 +394,3 @@ quality/2d/use_pixel_snap=true
 threads/thread_model=2
 environment/default_clear_color=Color( 0.137255, 0.129412, 0.392157, 1 )
 environment/default_environment="res://default_env.tres"
-quality/dynamic_fonts/use_oversampling=false
