@@ -171,6 +171,9 @@ func private_message(net_id: int, message: PoolStringArray) -> String:
 		
 		Not Meant to Be Called Directly
 	"""
+	
+	# TODO: Make sure to use OS.request_attention() on client side
+	
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var permission_level : int = get_permission(command) # Gets Command's Permission Level
 	
