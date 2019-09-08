@@ -37,6 +37,9 @@ remote func register_player(pinfo: Dictionary, net_id: int, new_world : bool = f
 	if not pinfo.has("char_color"):
 		pinfo.char_color = Color.white
 		
+	# TODO: Change to use a permanent id supplied by auth server
+	pinfo.name = tr("public_player_id") % [pinfo.name, net_id] # Setup Player's ID to be Unique
+		
 	players[int(net_id)] = pinfo # Add Newly Joined Client to Dictionary of Clients
 	
 	if get_tree().is_network_server():
