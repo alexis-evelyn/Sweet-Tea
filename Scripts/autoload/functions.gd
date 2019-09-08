@@ -1,6 +1,10 @@
 extends Node
 class_name Functions
 
+enum attention_reason {
+	private_message = 0
+}
+
 # get_class() - https://godotengine.org/qa/46057/how-to-get-the-class-name-of-a-custom-node?show=46059#a46059
 
 # Declare member variables here. Examples:
@@ -15,6 +19,11 @@ func set_title(title: String):
 func get_title() -> String:
 	# There is no builtin way to get the window title, so I have to store it in a variable. - https://github.com/godotengine/godot/issues/27536
 	return current_title
+
+sync func request_attention(reason: int) -> void:
+	# Use the reason combined with notification settings to determine if attention should be requested
+	OS.request_attention()
+	logger.superverbose("Requesting User Attention - Reason: %s" % reason)
 
 # While this is no longer used as Github user merumelu helped me out with reading the .translation files, but I am keeping it here incase it becomes useful later.
 # For example, I don't know if the Godot engine can generate translation files after the game is built, so I may build in an interface to let users produce their own translation in game and then just save it in csv format.

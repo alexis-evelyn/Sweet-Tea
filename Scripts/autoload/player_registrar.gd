@@ -36,15 +36,15 @@ remote func register_player(pinfo: Dictionary, net_id: int, new_world : bool = f
 	# If Character Color is Missing, Then Set Character Color to Default Color
 	if not pinfo.has("char_color"):
 		pinfo.char_color = Color.white
-		
-	# TODO: Change to use a permanent id supplied by auth server
-	# The idea is that this id cannot be manipulated by the user. In essence, it is secure (as opposed to char_unique_id or os_unique_id) 
-	pinfo.name = "%s#%s" % [pinfo.name, net_id] # Setup Player's ID to be Unique
-	pinfo.secure_unique_id = net_id # Copy the id to a value that can be easily retrieved (without parsing overhead)
-		
+	
 	players[int(net_id)] = pinfo # Add Newly Joined Client to Dictionary of Clients
 	
 	if get_tree().is_network_server():
+		# TODO: Change to use a permanent id supplied by auth server
+		# The idea is that this id cannot be manipulated by the user. In essence, it is secure (as opposed to char_unique_id or os_unique_id) 
+		players[int(net_id)].name = "%s#%s" % [pinfo.name, net_id] # Setup Player's ID to be Unique
+		players[int(net_id)].secure_unique_id = net_id # Copy the id to a value that can be easily retrieved (without parsing overhead)
+		
 		# Add Starting World Name to Player Data (names are unique in the same parent node, so it can be treated as an id)
 		players[int(net_id)].current_world = world_handler.starting_world_name # Add Current World to Server's Copy of Player Data - I can load last seen world from save instead of sending to spawn everytime the player connects
 		

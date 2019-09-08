@@ -64,6 +64,8 @@ player_count_format,%s/%s,,,,
 private_message_not_enough_arguments,Not Enough Arguments for Private Message,,,,
 private_message_user_not_found,User '%s' Not Found!!!,,,,
 private_message_whisper, whispered ,,,,
+private_message_whisper_self,"To yourself, you whispered ",,,,
+private_message_whisper_success,You have whispered to %s...,,,,
 quit_button,Quit,,,,Take yer nightshade an dream
 select_character_title,Select A Character,,,,Select yer mate
 server_ip_command,Server IP Address: %s,,,,

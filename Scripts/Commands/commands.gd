@@ -172,8 +172,6 @@ func private_message(net_id: int, message: PoolStringArray) -> String:
 		Not Meant to Be Called Directly
 	"""
 	
-	# TODO: Make sure to use OS.request_attention() on client side
-	
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var permission_level : int = get_permission(command) # Gets Command's Permission Level
 	
@@ -188,16 +186,23 @@ func private_message(net_id: int, message: PoolStringArray) -> String:
 	# This currently cannot handle usernames with spaces in it and I am not getting rid of the spaces.
 	# TODO: Set this up so that it cross references a dictionary to look up the user's net_id
 	# key will be username and value will be net_id
-	var user_id : String = username.rsplit("#", false, 1)[1] # Remove this once dictionary lookup by username exists
+	var user_id_pool : PoolStringArray = username.rsplit("#", false, 1)
+	
+	if user_id_pool.size() != 2:
+		return functions.get_translation("private_message_user_not_found", player_registrar.players[net_id].locale) % username
+	
+	var user_id : String = user_id_pool[1] # Remove this once dictionary lookup by username exists
 	var user_net_id : int = int(user_id)
 	# The function setting this is player_registrar.register_player(...)
+	
+	print("User ID: '%s'" % user_id)
 	
 	# Faster way to extract whole private message from PoolStringArray
 	message.remove(0) # Remove command from arguments
 	message.remove(0) # Remove username from arguments (Index is now 0 since the last 0 was removed)
 	
 	# Find out if user actually exists and then send message to them.
-	if player_registrar.players[user_net_id].name.to_lower() != username.to_lower():
+	if not player_registrar.players.has(user_net_id) or player_registrar.players[user_net_id].name.to_lower() != username.to_lower():
 		return functions.get_translation("private_message_user_not_found", player_registrar.players[net_id].locale) % username
 	
 	var private_message_string : String = PoolStringArray(message).join(" ")
@@ -214,14 +219,31 @@ func private_message(net_id: int, message: PoolStringArray) -> String:
 	var private_message_start : String = "[color=" + chat_color + "][i]"
 	var private_message_end : String = "[/i][/color]"
 	
-	var added_username = "* " + username_start + str(player_registrar.name(int(net_id))) + username_end + functions.get_translation("private_message_whisper", player_registrar.players[net_id].locale) + private_message_start + private_message_string + private_message_end
-	
+	# There's Probably A Way To Make This Use Less Code!!!
 	if net_id != 1:
-		get_parent().rpc_unreliable_id(user_net_id, "chat_message_client", added_username)
+		# Whisper To A Client
+		if net_id != user_net_id:
+			var added_username = "* " + username_start + str(player_registrar.name(int(net_id))) + username_end + functions.get_translation("private_message_whisper", player_registrar.players[net_id].locale) + private_message_start + private_message_string + private_message_end
+			functions.rpc_unreliable_id(user_net_id, "request_attention", functions.attention_reason.private_message)
+			get_parent().rpc_unreliable_id(user_net_id, "chat_message_client", added_username)
+			return functions.get_translation("private_message_whisper_success", player_registrar.players[net_id].locale) % username
+		else:
+			var added_username = "* " + functions.get_translation("private_message_whisper_self", player_registrar.players[net_id].locale) + private_message_start + private_message_string + private_message_end
+			functions.rpc_unreliable_id(user_net_id, "request_attention", functions.attention_reason.private_message)
+			get_parent().rpc_unreliable_id(user_net_id, "chat_message_client", added_username)
+			return ""
 	else:
-		get_parent().chat_message_client(added_username) # This just calls the chat_message_client directly as the server wants to message itself
-	
-	return ""
+		if net_id != user_net_id:
+			var added_username = "* " + username_start + str(player_registrar.name(int(net_id))) + username_end + functions.get_translation("private_message_whisper", player_registrar.players[net_id].locale) + private_message_start + private_message_string + private_message_end
+			functions.rpc_unreliable_id(user_net_id, "request_attention", functions.attention_reason.private_message)
+			get_parent().rpc_unreliable_id(user_net_id, "chat_message_client", added_username)
+			return functions.get_translation("private_message_whisper_success", player_registrar.players[net_id].locale) % username
+		else:
+			# Whisper To Server
+			var added_username = "* " + functions.get_translation("private_message_whisper_self", player_registrar.players[net_id].locale) + private_message_start + private_message_string + private_message_end
+			functions.request_attention(functions.attention_reason.private_message)
+			get_parent().chat_message_client(added_username) # This just calls the chat_message_client directly as the server wants to message itself
+			return ""
 	
 # Kick Player Command
 # warning-ignore:unused_argument
