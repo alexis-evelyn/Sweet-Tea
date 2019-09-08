@@ -13,7 +13,6 @@ __meta__ = {
 
 [node name="Viewport" type="Viewport" parent="."]
 size = Vector2( 1920, 1080 )
-transparent_bg = true
 handle_input_locally = false
 msaa = 1
 disable_3d = true
