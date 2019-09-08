@@ -10,6 +10,9 @@ margin_top = 250.0
 margin_right = 625.0
 margin_bottom = 500.0
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="chatMessages" type="RichTextLabel" parent="."]
 margin_right = 600.0
