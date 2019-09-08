@@ -38,7 +38,9 @@ remote func register_player(pinfo: Dictionary, net_id: int, new_world : bool = f
 		pinfo.char_color = Color.white
 		
 	# TODO: Change to use a permanent id supplied by auth server
-	pinfo.name = tr("public_player_id") % [pinfo.name, net_id] # Setup Player's ID to be Unique
+	# The idea is that this id cannot be manipulated by the user. In essence, it is secure (as opposed to char_unique_id or os_unique_id) 
+	pinfo.name = "%s#%s" % [pinfo.name, net_id] # Setup Player's ID to be Unique
+	pinfo.secure_unique_id = net_id # Copy the id to a value that can be easily retrieved (without parsing overhead)
 		
 	players[int(net_id)] = pinfo # Add Newly Joined Client to Dictionary of Clients
 	

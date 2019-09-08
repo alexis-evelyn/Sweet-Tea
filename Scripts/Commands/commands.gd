@@ -48,6 +48,9 @@ var arguments : PoolStringArray # To Convert Message into Arguments
 var load_world_server_thread : Thread = Thread.new()
 var create_world_server_thread : Thread = Thread.new()
 
+# The NWSC is used to break up BBCode submitted by user without deleting characters - Should be able to be disabled by Server Request
+var NWSC : String = PoolByteArray(['U+8203']).get_string_from_utf8() # No Width Space Character (Used to be called RawArray?) - https://docs.godotengine.org/en/3.1/classes/class_poolbytearray.html
+
 # Process the Command and Return Result if Any
 func process_command(net_id: int, message: String) -> void:
 	"""
@@ -174,7 +177,46 @@ func private_message(net_id: int, message: PoolStringArray) -> String:
 	if not message.size() > 2:
 		return functions.get_translation("private_message_not_enough_arguments", player_registrar.players[net_id].locale)
 	
+	var username : String = message[1]
 	
+	if not "#" in username:
+		return functions.get_translation("private_message_user_not_found", player_registrar.players[net_id].locale) % username
+	
+	# This currently cannot handle usernames with spaces in it and I am not getting rid of the spaces.
+	# TODO: Set this up so that it cross references a dictionary to look up the user's net_id
+	# key will be username and value will be net_id
+	var user_id : String = username.rsplit("#", false, 1)[1] # Remove this once dictionary lookup by username exists
+	var user_net_id : int = int(user_id)
+	# The function setting this is player_registrar.register_player(...)
+	
+	# Faster way to extract whole private message from PoolStringArray
+	message.remove(0) # Remove command from arguments
+	message.remove(0) # Remove username from arguments (Index is now 0 since the last 0 was removed)
+	
+	# Find out if user actually exists and then send message to them.
+	if player_registrar.players[user_net_id].name.to_lower() != username.to_lower():
+		return functions.get_translation("private_message_user_not_found", player_registrar.players[net_id].locale) % username
+	
+	var private_message_string : String = PoolStringArray(message).join(" ")
+	
+	# Set Color for Player's Username
+	var chat_color = "#" + player_registrar.color(int(net_id)).to_html(false) # For now, I am specify chat color as color of character. I may change how color is set later.
+
+	# Insert No Width Space After Open Bracket to Prevent BBCode - Should be able to be turned on and off by server (scratch that, let the server inject bbcode in if it approves the code or command)
+	private_message_string = private_message_string.replace("[", "[" + NWSC)
+
+	# The URL Idea Came From: https://docs.godotengine.org/en/latest/classes/class_richtextlabel.html?highlight=bbcode#signals
+	var username_start : String = "[url={\"player_net_id\":\"" + str(net_id) + "\"}][color=" + chat_color + "][b][u]"
+	var username_end : String = "[/u][/b][/color][/url]"
+	var private_message_start : String = "[color=" + chat_color + "][i]"
+	var private_message_end : String = "[/i][/color]"
+	
+	var added_username = "* " + username_start + str(player_registrar.name(int(net_id))) + username_end + functions.get_translation("private_message_whisper", player_registrar.players[net_id].locale) + private_message_start + private_message_string + private_message_end
+	
+	if net_id != 1:
+		get_parent().rpc_unreliable_id(user_net_id, "chat_message_client", added_username)
+	else:
+		get_parent().chat_message_client(added_username) # This just calls the chat_message_client directly as the server wants to message itself
 	
 	return ""
 	
