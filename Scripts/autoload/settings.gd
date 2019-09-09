@@ -21,6 +21,15 @@ func _ready():
 	load_locale() # Load Locale Settings
 #	load_game_settings() # Load Player's Game Settings From File
 	OS.set_window_size(Vector2(1024, 700))
+	
+	var center_screen : Vector2 = (OS.get_screen_size(OS.get_current_screen()) / Vector2(2, 2)) - (OS.get_window_size() / Vector2(2, 2))
+	
+	OS.set_window_position(center_screen)
+
+#	get_tree().debug_collisions_hint = true
+#	get_tree().debug_navigation_hint = true
+#	get_tree().set_refuse_new_network_connections(true)
+#	get_tree().set_quit_on_go_back(false)
 
 #	functions.list_game_translations()
 
