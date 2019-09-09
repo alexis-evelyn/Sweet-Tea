@@ -1,11 +1,33 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=7 format=2]
 
+[ext_resource path="res://addons/mixing-desk/music/mixing_desk_music.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/AudioServer/music.gd" type="Script" id=2]
-[ext_resource path="res://addons/mixing-desk/sound/nonspatial/scatter_cont.gd" type="Script" id=3]
+[ext_resource path="res://Assets/Audio/music/Timer.wav" type="AudioStream" id=3]
+[ext_resource path="res://addons/mixing-desk/music/song.gd" type="Script" id=4]
+[ext_resource path="res://addons/mixing-desk/music/containers/core_cont.gd" type="Script" id=5]
+[ext_resource path="res://Assets/Audio/music/Acid Walk.wav" type="AudioStream" id=6]
 
 [node name="Music" type="Node"]
 script = ExtResource( 2 )
 
-[node name="ScatterSoundContainer" type="Node" parent="."]
-script = ExtResource( 3 )
-autostart = false
+[node name="MixingDeskMusic" type="Node" parent="."]
+script = ExtResource( 1 )
+play_mode = 3
+
+[node name="test" type="Node" parent="MixingDeskMusic"]
+pause_mode = 2
+script = ExtResource( 4 )
+tempo = 120
+bars = 4
+beats_in_bar = 4
+
+[node name="core" type="Node" parent="MixingDeskMusic/test"]
+script = ExtResource( 5 )
+
+[node name="Timer" type="AudioStreamPlayer" parent="MixingDeskMusic/test/core"]
+stream = ExtResource( 3 )
+bus = "Music"
+
+[node name="Acid Walk" type="AudioStreamPlayer" parent="MixingDeskMusic/test/core"]
+stream = ExtResource( 6 )
+bus = "Music"
