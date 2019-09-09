@@ -273,7 +273,7 @@ window/per_pixel_transparency/allowed=true
 
 [editor_plugins]
 
-enabled=PoolStringArray( "gamejolt" )
+enabled=PoolStringArray( "gamejolt", "mixing-desk" )
 
 [gui]
 
