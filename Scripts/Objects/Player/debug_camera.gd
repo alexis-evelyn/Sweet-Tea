@@ -13,6 +13,10 @@ var cam_speed : int = 70
 var player : Node
 var powerstate_status : String
 
+var date_time : Dictionary
+var formatted_time : String
+var time_milliseconds : int
+
 var key_color : Color = Color.webgray
 var value_color : Color = Color.silver
 
@@ -26,7 +30,11 @@ onready var chunk_position_label = $ChunkPosition
 onready var world_name_label = $WorldName
 onready var fps_label = $FPS
 onready var physics_fps_label = $PhysicsFPS
+onready var cpu_usage_label = $CPUUsage
+onready var memory_usage_label = $MemoryUsage
 onready var battery_label = $BatteryStats
+onready var clock_label = $Clock
+onready var engine_start_time_label = $TimeSinceStart
 
 # warning-ignore:unused_class_variable
 onready var crosshair = $Crosshair
@@ -58,6 +66,10 @@ func screen_size_changed() -> void:
 func _process(_delta: float) -> void:
 	update_fps_label()
 	update_battery_label()
+	update_cpu_usage_label()
+	update_clock_label()
+	update_memory_usage_label()
+	update_time_since_start()
 
 func _physics_process(_delta: float) -> void:
 	if Input.is_action_pressed("debug_up"):
@@ -163,6 +175,21 @@ func update_crosshair_pos(position: Vector2) -> void:
 	
 	pass
 
+func update_cpu_usage_label() -> void:
+	cpu_usage_label.bbcode_text = key_begin_bbcode + "CPU Usage Not Implemented Yet - Need GDNative Module" + both_end_bbcode
+
+func update_memory_usage_label() -> void:
+	memory_usage_label.bbcode_text = key_begin_bbcode + tr("memory_usage_label") % (value_begin_bbcode + str(OS.get_static_memory_usage()/1000000) + both_end_bbcode) + both_end_bbcode
+	
+func update_time_since_start() -> void:
+	engine_start_time_label.bbcode_text = key_begin_bbcode + tr("engine_start_time_label") % [value_begin_bbcode + str(OS.get_ticks_msec()/1000) + both_end_bbcode, value_begin_bbcode + str(OS.get_ticks_usec()) + both_end_bbcode] + both_end_bbcode
+	
+func update_clock_label() -> void:
+	date_time = OS.get_datetime()
+	time_milliseconds = OS.get_system_time_msecs() - (OS.get_system_time_secs() * 1000)
+	formatted_time = tr("datetime_formatting") % [int(date_time["hour"]), int(date_time["minute"]), int(date_time["second"]), time_milliseconds, OS.get_time_zone_info().name]
+	clock_label.bbcode_text = key_begin_bbcode + tr("clock_label_formatting") % [value_begin_bbcode + formatted_time + both_end_bbcode] + both_end_bbcode
+
 func set_theme(theme: Theme) -> void:
 	coor_label.set_theme(theme)
 	cam_coor_label.set_theme(theme)
@@ -170,7 +197,11 @@ func set_theme(theme: Theme) -> void:
 	world_name_label.set_theme(theme)
 	fps_label.set_theme(theme)
 	physics_fps_label.set_theme(theme)
+	cpu_usage_label.set_theme(theme)
+	memory_usage_label.set_theme(theme)
 	battery_label.set_theme(theme)
+	clock_label.set_theme(theme)
+	engine_start_time_label.set_theme(theme)
 
 func get_class() -> String:
 	return "DebugCamera"

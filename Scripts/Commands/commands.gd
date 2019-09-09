@@ -114,6 +114,8 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 			return private_message(net_id, message)
 		"tell":
 			return private_message(net_id, message)
+		"servertime":
+			return get_server_time(net_id, message)
 		_: # Default Result - Put at Bottom of Match Results
 			if command == "":
 				return ""
@@ -510,6 +512,16 @@ func get_seed(net_id: int, message: PoolStringArray) -> String:
 	var world_seed : int = world_generation.world_seed
 		
 	return functions.get_translation("world_seed_command_success", player_registrar.players[net_id].locale) % world_seed
+
+func get_server_time(net_id: int, message: PoolStringArray) -> String:
+	var date_time : Dictionary
+	var formatted_time : String
+	var time_milliseconds : int
+	
+	date_time = OS.get_datetime()
+	time_milliseconds = OS.get_system_time_msecs() - (OS.get_system_time_secs() * 1000)
+	formatted_time = tr("datetime_formatting") % [int(date_time["hour"]), int(date_time["minute"]), int(date_time["second"]), time_milliseconds, OS.get_time_zone_info().name]
+	return functions.get_translation("servertime_command_success", player_registrar.players[net_id].locale) % formatted_time
 
 func teleport(net_id: int, message: PoolStringArray) -> String:
 	"""

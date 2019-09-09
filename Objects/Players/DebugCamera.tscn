@@ -88,11 +88,37 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="BatteryStats" type="RichTextLabel" parent="."]
+[node name="CPUUsage" type="RichTextLabel" parent="."]
 margin_left = 10.0
 margin_top = 220.0
 margin_right = 1015.0
-margin_bottom = 295.0
+margin_bottom = 245.0
+mouse_filter = 2
+bbcode_enabled = true
+text = "CPU Usage..."
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MemoryUsage" type="RichTextLabel" parent="."]
+margin_left = 10.0
+margin_top = 255.0
+margin_right = 1015.0
+margin_bottom = 280.0
+mouse_filter = 2
+bbcode_enabled = true
+text = "Memory Usage..."
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BatteryStats" type="RichTextLabel" parent="."]
+margin_left = 10.0
+margin_top = 290.0
+margin_right = 1015.0
+margin_bottom = 365.0
 mouse_filter = 2
 bbcode_enabled = true
 text = "Battery Stats...
@@ -103,11 +129,37 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Clock" type="RichTextLabel" parent="."]
+margin_left = 10.0
+margin_top = 375.0
+margin_right = 1015.0
+margin_bottom = 400.0
+mouse_filter = 2
+bbcode_enabled = true
+text = "Clock..."
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimeSinceStart" type="RichTextLabel" parent="."]
+margin_left = 10.0
+margin_top = 410.0
+margin_right = 1015.0
+margin_bottom = 435.0
+mouse_filter = 2
+bbcode_enabled = true
+text = "Time Since Start..."
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Crosshair" type="RichTextLabel" parent="."]
-margin_left = 502.0
-margin_top = 290.0
-margin_right = 522.0
-margin_bottom = 310.0
+margin_left = 950.0
+margin_top = 530.0
+margin_right = 970.0
+margin_bottom = 550.0
 mouse_filter = 2
 bbcode_enabled = true
 bbcode_text = "[color=black][center]+[/center][/color]"
