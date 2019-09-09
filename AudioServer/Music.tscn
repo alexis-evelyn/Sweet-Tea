@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/AudioServer/music.gd" type="Script" id=2]
+[ext_resource path="res://addons/mixing-desk/sound/nonspatial/scatter_cont.gd" type="Script" id=3]
+
+[node name="Music" type="Node"]
+script = ExtResource( 2 )
+
+[node name="ScatterSoundContainer" type="Node" parent="."]
+script = ExtResource( 3 )
+autostart = false

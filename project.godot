@@ -84,6 +84,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/Menu/menu_background.gd"
 }, {
+"base": "Node",
+"class": "MixingDeskMusic",
+"language": "GDScript",
+"path": "res://addons/mixing-desk/music/mixing_desk_music.gd"
+}, {
 "base": "Control",
 "class": "ModLoader",
 "language": "GDScript",
@@ -210,6 +215,7 @@ _global_script_class_icons={
 "MainLoopEvents": "",
 "MainMenu": "",
 "MenuBackground": "",
+"MixingDeskMusic": "",
 "ModLoader": "",
 "MultiplayerMenu": "",
 "OptionsMenu": "",
@@ -257,6 +263,7 @@ spawn_handler="*res://Scripts/autoload/spawn_handler.gd"
 GameJoltAPI="*res://Custom/GameJoltAPI.tscn"
 uuid="*res://Scripts/autoload/third_party/uuid.gd"
 functions="*res://Scripts/autoload/functions.gd"
+Music="*res://AudioServer/Music.tscn"
 
 [debug]
 
