@@ -45,16 +45,16 @@ onready var world_generator : Node = world.get_node("Viewport/WorldGrid/WorldGen
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	set_theme(gamestate.game_theme)
-	
+
 	world_generator.connect("chunk_change", self, "update_chunk_label")
 	get_tree().get_root().connect("size_changed", self, "screen_size_changed")
-	
+
 	update_world_label()
-	
+
 	set_physics_process(true)
-	
+
 	player = get_player_node()
-	
+
 	update_camera_pos(player.position)
 	update_crosshair_pos(player.position)
 	update_camera_pos_label()
@@ -84,22 +84,22 @@ func _physics_process(_delta: float) -> void:
 	if Input.is_action_pressed("debug_right"):
 		translate(Vector2(cam_speed, 0))
 		update_camera_pos_label()
-	
+
 	update_player_pos_label()
 	update_physics_fps_label()
 
 func get_player_node() -> Node:
 	#logger.verbose("Parent: %s" % get_parent().name)
-	
+
 	var players : Node
 	if get_parent().has_node("WorldGrid/Players"):
 		players = get_parent().get_node("WorldGrid/Players")
-	
+
 	return players.get_node(str(gamestate.net_id)).get_node("KinematicBody2D")
-	
+
 func update_chunk_label(chunk: Vector2) -> void:
 	chunk_position_label.bbcode_text = key_begin_bbcode + tr("debug_chunk_label") % [value_begin_bbcode + str(chunk) + both_end_bbcode] + both_end_bbcode
-	
+
 func update_battery_label() -> void:
 	match OS.get_power_state():
 		OS.POWERSTATE_UNKNOWN:
@@ -112,23 +112,23 @@ func update_battery_label() -> void:
 			powerstate_status = tr("battery_charging")
 		OS.POWERSTATE_CHARGED:
 			powerstate_status = tr("battery_charged")
-	
+
 	battery_label.bbcode_text = key_begin_bbcode + tr("battery_label") % [value_begin_bbcode + str(OS.get_power_percent_left()) + both_end_bbcode, value_begin_bbcode + str(OS.get_power_seconds_left()) + both_end_bbcode, value_begin_bbcode + powerstate_status + both_end_bbcode] + both_end_bbcode
-	
+
 func update_fps_label() -> void:
 	fps_label.bbcode_text = key_begin_bbcode + tr("fps_label") % [value_begin_bbcode + str(Engine.get_frames_per_second()) + both_end_bbcode, value_begin_bbcode + str(Engine.get_frames_drawn()) + both_end_bbcode] + both_end_bbcode
-	
+
 func update_physics_fps_label() -> void:
 	physics_fps_label.bbcode_text = key_begin_bbcode + tr("physics_fps_label") % [value_begin_bbcode + str(Engine.get_iterations_per_second()) + both_end_bbcode] + both_end_bbcode
-	
+
 func update_world_label():
 	world_name_label.bbcode_text = key_begin_bbcode + tr("world_name_label") % [value_begin_bbcode + world.name + both_end_bbcode] + both_end_bbcode
-	
+
 func update_player_pos_label() -> void:
 	# Player's position is based on center of Player, not the edges
 	if player != null:
 		coor_label.bbcode_text = key_begin_bbcode + tr("player_coordinate_label") % [value_begin_bbcode + str(player.position) + both_end_bbcode] + both_end_bbcode
-	
+
 func update_camera_pos_label() -> void:
 	# Get Builtin Screen Size and Find center of screen (add center coordinates to coordinates of camera)
 	# This helps locate where the crosshair is (which is only a visual reference for the user. The gdscript does not get position from crosshair)
@@ -142,37 +142,37 @@ func update_camera_pos_label() -> void:
 #	var cross_y = self.position.y + (get_tree().get_root().size.y/2)
 
 	var cross_coor = Vector2(cross_x, cross_y)
-	
+
 	# Prints center of screen's position in world
 	cam_coor_label.bbcode_text = key_begin_bbcode + tr("camera_coordinate_label") % [value_begin_bbcode + str(cross_coor) + both_end_bbcode] + both_end_bbcode
 
 # Relocate Camera to this Specified Position (in middle of screen)
 func update_camera_pos(position: Vector2) -> void:
 	# Fix this to make it center on player no matter what the screen size is (When stretch mode is disabled)
-	
+
 	var cross_x = position.x - (ProjectSettings.get_setting("display/window/size/width")/2)
 	var cross_y = position.y - (ProjectSettings.get_setting("display/window/size/height")/2)
-	
+
 #	var cross_x = position.x - (get_viewport().get_visible_rect().size.x/2)
 #	var cross_y = position.y - (get_viewport().get_visible_rect().size.y/2)
-	
+
 #	var cross_x = position.x - (get_tree().get_root().size.x/2)
 #	var cross_y = position.y - (get_tree().get_root().size.y/2)
-	
+
 	self.position = Vector2(cross_x, cross_y)
 
 func update_crosshair_pos(position: Vector2) -> void:
 	# Fix this so that it positions the label exactly in the middle instead of near it.
-	
+
 #	var cross_x = OS.get_real_window_size().x/2
 #	var cross_y = OS.get_real_window_size().y/2
-	
+
 #	var cross_x = get_tree().get_root().size.x/2
 #	var cross_y = get_tree().get_root().size.y/2
 #
 #	print("Camera Label Position: (%s, %s)" % [cross_x, cross_y])
 #	crosshair.rect_position = Vector2(cross_x, cross_y)
-	
+
 	pass
 
 func update_cpu_usage_label() -> void:
@@ -180,10 +180,10 @@ func update_cpu_usage_label() -> void:
 
 func update_memory_usage_label() -> void:
 	memory_usage_label.bbcode_text = key_begin_bbcode + tr("memory_usage_label") % (value_begin_bbcode + str(OS.get_static_memory_usage()/1000000) + both_end_bbcode) + both_end_bbcode
-	
+
 func update_time_since_start() -> void:
 	engine_start_time_label.bbcode_text = key_begin_bbcode + tr("engine_start_time_label") % [value_begin_bbcode + str(OS.get_ticks_msec()/1000) + both_end_bbcode, value_begin_bbcode + str(OS.get_ticks_usec()) + both_end_bbcode] + both_end_bbcode
-	
+
 func update_clock_label() -> void:
 	date_time = OS.get_datetime()
 	time_milliseconds = OS.get_system_time_msecs() - (OS.get_system_time_secs() * 1000)
