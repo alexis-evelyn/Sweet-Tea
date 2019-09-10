@@ -1,7 +1,5 @@
 shader_type canvas_item;
 
-// Source - https://godotengine.org/asset-library/asset/122
-
 void fragment() {
 	vec2 uv = SCREEN_UV;
 	

@@ -1,7 +1,5 @@
 shader_type canvas_item;
 
-// Source - https://godotengine.org/asset-library/asset/122
-
 uniform float frequency_x = 60;
 uniform float frequency_y = 60;
 uniform float depth = 0.005;

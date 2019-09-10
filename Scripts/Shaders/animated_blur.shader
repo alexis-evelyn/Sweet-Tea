@@ -1,7 +1,5 @@
 shader_type canvas_item;
 
-// Source - https://godotengine.org/asset-library/asset/122
-
 uniform float uv_frequency_x = 60;
 uniform float uv_frequency_y = 60;
 uniform float blur_phase_frequency = 4;
