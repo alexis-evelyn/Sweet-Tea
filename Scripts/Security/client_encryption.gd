@@ -22,7 +22,7 @@ func test_module():
 #	var gcm_input = var2bytes("The cow goes muuuu")
 #
 #	var encrypted_array_gcm = Cripte.encrypt_byte_GCM(gcm_input, key, gcm_add)
-#	var decrypted_array_gcm = Cripte.decrypt_byte_GCM(encrypted_array_gcm, key, gcm_add) 
+#	var decrypted_array_gcm = Cripte.decrypt_byte_GCM(encrypted_array_gcm, key, gcm_add)
 #
 #	#logger.verbose("Encrypted: ", encrypted_array_gcm.get_string_from_ascii())
 #	#logger.verbose("Decrypted: ", bytes2var(decrypted_array_gcm))

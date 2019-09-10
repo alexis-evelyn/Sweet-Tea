@@ -49,23 +49,26 @@ func _ready() -> void:
 
 	emit_signal("script_setup") # Let mods know MainMenu is finished loading
 
-	load_shader()
+	load_screen_shader()
 
-func load_shader() -> void:
-	var shader : Shader = load("res://Scripts/Shaders/grayscale.shader")
+func load_screen_shader() -> void:
+	if get_tree().get_root().get_node("PlayerUI").has_node("Screen Shader"):
+		return
+
+#	var shader : Shader = load("res://Scripts/Shaders/grayscale.shader")
+	var shader : Shader = load("res://Scripts/Shaders/fabric_of_time.shader")
 
 	var shader_screen : ColorRect = ColorRect.new()
 	shader_screen.rect_position = Vector2(0, 0)
-	shader_screen.rect_size = Vector2(1920, 1080)
+	shader_screen.rect_size = Vector2(ProjectSettings.get_setting("display/window/size/width"), ProjectSettings.get_setting("display/window/size/height"))
 	shader_screen.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	shader_screen.name = "Screen Shader"
 
 	var shader_material : ShaderMaterial = ShaderMaterial.new()
 	shader_material.set_shader(shader)
 
-#	shader_screen.material = shader_material
 	shader_screen.set_material(shader_material)
-	get_tree().get_root().add_child(shader_screen)
+	get_tree().get_root().get_node("PlayerUI").add_child(shader_screen)
 
 func set_theme(theme: Theme) -> void:
 	"""
