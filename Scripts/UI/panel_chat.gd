@@ -150,7 +150,15 @@ func handle_url_click(dictionary: Dictionary) -> void:
 			chat_message_client(tr("handle_url_click") % [player_registrar.name(int(net_id)), str(net_id)])
 		else:
 			logger.verbose("The Players Dictionary is Missing ID: %s" % net_id)
-			
+
+func show_panelchat() -> void:
+	self.visible = true
+	self.show()
+
+func hide_panelchat() -> void:
+	self.visible = false
+	self.hide()
+
 # Cleanup PlayerChat - Meant to be Called by PlayerUI
 func cleanup() -> void:
 	#logger.verbose("Clearing PlayerChat")

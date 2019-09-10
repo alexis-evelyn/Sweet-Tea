@@ -55,7 +55,15 @@ func get_world_name(net_id: int) -> String:
 	if player_registrar.players[int(net_id)].has("current_world"):
 		return str(player_registrar.players[int(net_id)].current_world)
 	return ""
-		
+
+func show_player_list() -> void:
+	self.visible = true
+	self.show()
+
+func hide_player_list() -> void:
+	self.visible = false
+	self.hide()
+
 # Cleanup PlayerList - Meant to be Called by PlayerUI
 func cleanup() -> void:
 	# Remove Nodes From Boxlist

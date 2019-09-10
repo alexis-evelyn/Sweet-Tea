@@ -33,8 +33,10 @@ const enc_client : String = "res://Scripts/Security/client_encryption.gd"
 const game_forwarding : String = "res://Scripts/upnp/upnp.gd"
 
 # Reference to Player List
-onready var playerList : Node = get_tree().get_root().get_node("PlayerUI/panelPlayerList")
 onready var playerUI : Node = get_tree().get_root().get_node("PlayerUI")
+onready var playerList : Node = get_tree().get_root().get_node("PlayerUI/panelPlayerList")
+onready var playerStats : Node = get_tree().get_root().get_node("PlayerUI/panelPlayerStats")
+onready var playerChat : Node = get_tree().get_root().get_node("PlayerUI/panelChat")
 
 var max_pixel_width : int = 32
 
@@ -226,6 +228,11 @@ func close_connection() -> void:
 			worlds.queue_free()
 	
 	emit_signal("cleanup_worlds")
+	
+	# TODO: Standardize These Function Names
+	playerStats.hide_playerstats()
+	playerChat.hide_panelchat()
+	playerList.hide_player_list()
 	
 	#logger.verbose("Attempt to Change Scene Tree To Main Menu")
 	# TODO: Maybe Pull Up A Disconnected Message GUI (which will then go to NetworkMenu)

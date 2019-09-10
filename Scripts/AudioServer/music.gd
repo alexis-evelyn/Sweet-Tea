@@ -17,7 +17,7 @@ func _ready():
 	mixer.init_song("SonicPi - Acid Walk")
 	
 #	mixer.start_alone("test", "Timer")
-	mixer.start_alone("SonicPi - Acid Walk", "Acid Walk")
+#	mixer.start_alone("SonicPi - Acid Walk", "Acid Walk")
 #	mixer.play("test")
 
 func mixer_beat(beat: int):

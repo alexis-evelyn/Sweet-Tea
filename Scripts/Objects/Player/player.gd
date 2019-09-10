@@ -3,6 +3,7 @@ class_name Player
 
 # Declare member variables here:
 onready var panelChat : Node = get_tree().get_root().get_node("PlayerUI/panelChat")
+onready var playerStats : Node = get_tree().get_root().get_node("PlayerUI/panelPlayerStats")
 
 const UP : Vector2 = Vector2(0, -1)
 const LEFT : Vector2 = Vector2(-1, 0)
@@ -84,6 +85,7 @@ func detect_loading_screen_closed() -> void:
 	
 func loading_screen_closed() -> void:
 	set_physics_process(true)
+	playerStats.show_playerstats()
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta: float) -> void:
