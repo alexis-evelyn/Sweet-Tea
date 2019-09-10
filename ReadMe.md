@@ -19,16 +19,4 @@ These binaries will be released at these locations for alpha builds and eventual
 
 Licensing
 ---------
-Godot - MIT - https://docs.godotengine.org/en/3.1/tutorials/legal/complying_with_licenses.html
-FreeType - FreeType License (Comparable to GPL 3) - https://git.savannah.gnu.org/cgit/freetype/freetype2.git/tree/docs/FTL.TXT from https://docs.godotengine.org/en/3.1/tutorials/legal/complying_with_licenses.html
-ENet - Custom License (Comparable to MIT) - http://enet.bespin.org/License.html from https://docs.godotengine.org/en/3.1/tutorials/legal/complying_with_licenses.html
-
-FiraCode Font - Open Font License - https://github.com/tonsky/FiraCode/
-Treasure Map Deadhand Font - Freeware - https://www.fontspace.com/gemfonts/treasure-map-deadhand
-Godot GameJolt API - MIT License - https://github.com/rojekabc/-godot-gj-api
-cripter - MIT License - https://github.com/Malkverbena/cripter
-MBedTLS - Apache 2.0 license - https://www.apache.org/licenses/LICENSE-2.0 from https://tls.mbed.org/
-UUID GDScript - MIT License - https://github.com/binogure-studio/godot-uuid/blob/master/LICENSE
-Mixing Desk Addon - MIT License - https://github.com/kyzfrintin/Godot-Mixing-Desk
-
-* Licenses are located in Legal/
+Moved to Credits.md

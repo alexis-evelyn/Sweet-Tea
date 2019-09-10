@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/LonePeakMusic - Modern Plague -Retro Gaming Version-.wav-9759ea0f32fbb8d0d24afa59005a3534.sample"
+
+[deps]
+
+source_file="res://Assets/Audio/music/LonePeakMusic - Modern Plague -Retro Gaming Version-.wav"
+dest_files=[ "res://.import/LonePeakMusic - Modern Plague -Retro Gaming Version-.wav-9759ea0f32fbb8d0d24afa59005a3534.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=false
+compress/mode=0
