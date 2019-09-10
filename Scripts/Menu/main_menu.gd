@@ -38,32 +38,50 @@ signal script_setup # Used to let mods know MainMenu has finished loading
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	functions.set_title(tr("main_menu_title"))
-	
+
 	set_language_text() # Make Main Menu Text Multi-Language Friendly
 	# TODO: Save loaded theme to file that is not accessible to server
 	set_theme(gamestate.game_theme) # Sets The MainMenu's Theme
-	
+
 	# The reason I keep these settings here is because it prevents the splash screen from loading
 	OS.set_borderless_window(settings.window_borderless)
 	OS.set_window_resizable(settings.window_resizable)
-	
+
 	emit_signal("script_setup") # Let mods know MainMenu is finished loading
-	
+
+	load_shader()
+
+func load_shader() -> void:
+	var shader : Shader = load("res://Scripts/Shaders/grayscale.shader")
+
+	var shader_screen : ColorRect = ColorRect.new()
+	shader_screen.rect_position = Vector2(0, 0)
+	shader_screen.rect_size = Vector2(1920, 1080)
+	shader_screen.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	shader_screen.name = "Screen Shader"
+
+	var shader_material : ShaderMaterial = ShaderMaterial.new()
+	shader_material.set_shader(shader)
+
+#	shader_screen.material = shader_material
+	shader_screen.set_material(shader_material)
+	get_tree().get_root().add_child(shader_screen)
+
 func set_theme(theme: Theme) -> void:
 	"""
 		Sets Up Main Menu's Theme
-		
+
 		Supply Theme Resource
 	"""
-	
+
 	.set_theme(theme) # Godot's Version of a super - https://docs.godotengine.org/en/3.1/getting_started/scripting/gdscript/gdscript_basics.html#inheritance
-	
+
 	# The set_theme(...) function can only set themes to nodes that are actively loaded (NetworkMenu is not loaded at this point)
-	
+
 	#get_tree().get_root().get_node("MainMenu/Menu/Buttons").set_theme(load("res://Assets/Themes/default_theme.tres")) # Testing Setting Theme Live - It Works, but I need Control Nodes or Other GUI nodes to set it (e.g. I cannot set it for root)
 	#get_tree().get_root().get_node("MainMenu/Menu").set_theme(load(theme)) # This will set the theme for every child of "Menu", that includes the PlayerSelection popup, but not NetworkMenu.
 #	$Menu.set_theme(theme)
-	
+
 	# I May Add The Font To The Theme Instead (then again I may add an override for people to use custom fonts with the same theme)
 #	var buttons : Node = $Menu/Buttons
 	# TODO: The font does not need to be loaded more than once.
@@ -74,7 +92,7 @@ func set_theme(theme: Theme) -> void:
 
 func set_language_text() -> void:
 	var buttons : Node = $Menu/Buttons
-	
+
 	buttons.get_node("Singleplayer").text = tr("singleplayer_button")
 	buttons.get_node("Multiplayer").text = tr("multiplayer_button")
 	buttons.get_node("Options").text = tr("options_button")
@@ -83,22 +101,22 @@ func set_language_text() -> void:
 func _on_Singleplayer_pressed() -> void:
 	"""
 		Pull Up Player Selection Menu
-		
+
 		Not Meant to Be Called Directly
 	"""
-	
+
 	var player_selection_menu : Node = $Menu/PlayerSelectionMenu
 	var player_selection_window : Node = player_selection_menu.get_node("PlayerSelectionWindow")
 	player_selection_menu.set_menu("") # Set's menu to load after selecting player
 	player_selection_window.popup_centered()
-	
+
 func _on_Multiplayer_pressed() -> void:
 	"""
 		Pull Up Networking Menu
-		
+
 		Not Meant to Be Called Directly
 	"""
-	
+
 	var player_selection_menu : Node = $Menu/PlayerSelectionMenu
 	var player_selection_window : Node = player_selection_menu.get_node("PlayerSelectionWindow")
 	player_selection_menu.set_menu("res://Menus/NetworkMenu.tscn") # Set's menu to load after selecting player
@@ -107,21 +125,21 @@ func _on_Multiplayer_pressed() -> void:
 func _on_Options_pressed() -> void:
 	"""
 		Pull Up Options Menu
-		
+
 		Not Meant to Be Called Directly
 	"""
-	
+
 	get_tree().change_scene("res://Menus/OptionsMenu.tscn")
 	pass
 
 func _on_Quit_pressed() -> void:
 	"""
 		Quit Game from Main Menu
-		
+
 		Not Meant to Be Called Directly
 	"""
-	
+
 	main_loop_events.quit() # Quits Game
-	
+
 func get_class() -> String:
 	return "MainMenu"
