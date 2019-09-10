@@ -4,12 +4,17 @@
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.486275, 0.00784314, 0.996078, 0.588235 )
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color( 0.137255, 1, 0, 0.588235 )
+border_blend = true
 
 [node name="panelPlayerStats" type="Panel"]
 self_modulate = Color( 1, 1, 1, 0 )
-margin_top = 980.0
-margin_right = 1920.0
-margin_bottom = 1080.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
