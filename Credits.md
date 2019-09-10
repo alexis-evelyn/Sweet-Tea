@@ -4,7 +4,7 @@ Licensing
 
 Software
 ---------
-Godot - MIT - https://docs.godotengine.org/en/3.1/tutorials/legal/complying_with_licenses.html
+Godot - MIT/Godot - https://docs.godotengine.org/en/3.1/tutorials/legal/complying_with_licenses.html - https://godotengine.org/license
 FreeType - FreeType License (Comparable to GPL 3) - https://git.savannah.gnu.org/cgit/freetype/freetype2.git/tree/docs/FTL.TXT from https://docs.godotengine.org/en/3.1/tutorials/legal/complying_with_licenses.html
 ENet - Custom License (Comparable to MIT) - http://enet.bespin.org/License.html from https://docs.godotengine.org/en/3.1/tutorials/legal/complying_with_licenses.html
 
@@ -13,7 +13,7 @@ cripter - MIT License - https://github.com/Malkverbena/cripter
 MBedTLS - Apache 2.0 license - https://www.apache.org/licenses/LICENSE-2.0 from https://tls.mbed.org/
 UUID GDScript - MIT License - https://github.com/binogure-studio/godot-uuid/blob/master/LICENSE
 Mixing Desk Addon - MIT License - https://github.com/kyzfrintin/Godot-Mixing-Desk
-2D Screen-Space Shaders Demo (No License File Provided) - MIT License - https://godotengine.org/asset-library/asset/122
+2D Screen-Space Shaders Demo - MIT/Godot License - https://godotengine.org/asset-library/asset/122 - https://github.com/godotengine/godot-demo-projects/blob/master/LICENSE.md
 
 Fonts
 ---------
