@@ -17,17 +17,26 @@ play_mode = 3
 [node name="test" type="Node" parent="MixingDeskMusic"]
 pause_mode = 2
 script = ExtResource( 4 )
-tempo = 120
+tempo = 128
 bars = 4
 beats_in_bar = 4
 
-[node name="core" type="Node" parent="MixingDeskMusic/test"]
+[node name="sounds" type="Node" parent="MixingDeskMusic/test"]
 script = ExtResource( 5 )
 
-[node name="Timer" type="AudioStreamPlayer" parent="MixingDeskMusic/test/core"]
+[node name="Timer" type="AudioStreamPlayer" parent="MixingDeskMusic/test/sounds"]
 stream = ExtResource( 3 )
 bus = "Music"
 
-[node name="Acid Walk" type="AudioStreamPlayer" parent="MixingDeskMusic/test/core"]
+[node name="SonicPi - Acid Walk" type="Node" parent="MixingDeskMusic"]
+script = ExtResource( 4 )
+tempo = 120
+bars = 73
+beats_in_bar = 4
+
+[node name="song" type="Node" parent="MixingDeskMusic/SonicPi - Acid Walk"]
+script = ExtResource( 5 )
+
+[node name="Acid Walk" type="AudioStreamPlayer" parent="MixingDeskMusic/SonicPi - Acid Walk/song"]
 stream = ExtResource( 6 )
 bus = "Music"
