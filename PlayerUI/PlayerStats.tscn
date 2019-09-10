@@ -23,6 +23,7 @@ text = "
 
 
 This exists purely for testing scaling the GUI!!!!"
+scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
