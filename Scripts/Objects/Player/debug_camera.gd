@@ -132,14 +132,14 @@ func update_player_pos_label() -> void:
 func update_camera_pos_label() -> void:
 	# Get Builtin Screen Size and Find center of screen (add center coordinates to coordinates of camera)
 	# This helps locate where the crosshair is (which is only a visual reference for the user. The gdscript does not get position from crosshair)
-#	var cross_x = self.position.x + (ProjectSettings.get_setting("display/window/size/width")/2)
-#	var cross_y = self.position.y + (ProjectSettings.get_setting("display/window/size/height")/2)
+	var cross_x = self.position.x + (ProjectSettings.get_setting("display/window/size/width")/2)
+	var cross_y = self.position.y + (ProjectSettings.get_setting("display/window/size/height")/2)
 
 #	var cross_x = self.position.x + (get_viewport().get_visible_rect().size.x/2)
 #	var cross_y = self.position.y + (get_viewport().get_visible_rect().size.y/2)
 
-	var cross_x = self.position.x + (get_tree().get_root().size.x/2)
-	var cross_y = self.position.y + (get_tree().get_root().size.y/2)
+#	var cross_x = self.position.x + (get_tree().get_root().size.x/2)
+#	var cross_y = self.position.y + (get_tree().get_root().size.y/2)
 
 	var cross_coor = Vector2(cross_x, cross_y)
 	

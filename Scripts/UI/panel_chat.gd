@@ -109,9 +109,10 @@ func _on_userChat_gui_input(event) -> void:
 			internal_reply = client_commands.process_commands(arguments)
 			if internal_reply == "":
 				rpc_unreliable_id(1, "chat_message_server", chatInput.text)
-				chatInput.text = ""
 			else:
 				chat_message_client(internal_reply)
+				
+			chatInput.text = ""
 	else:
 		just_opened = false
 
