@@ -12,10 +12,10 @@ func _ready():
 	mixer.connect("end", self, "song_ended")
 	mixer.connect("shuffle", self, "mixer_shuffle")
 	mixer.connect("song_changed", self, "song_changed")
-	
+
 	mixer.init_song("test")
 	mixer.init_song("SonicPi - Acid Walk")
-	
+
 #	mixer.start_alone("test", "Timer")
 #	mixer.start_alone("SonicPi - Acid Walk", "Acid Walk")
 #	mixer.play("test")
@@ -32,13 +32,13 @@ func song_ended(track: int):
 func mixer_shuffle(songs: Array):
 	var current_track : int = songs[0]
 	var next_track : int = songs[1]
-	
+
 	logger.debug("Songs Shuffled - Current Track: %s - Next Track: %s" % [current_track, next_track])
 
 func song_changed(songs: Array):
 	var old_track : int = songs[0]
 	var new_track : int = songs[1]
-	
+
 	logger.debug("Songs Changed - Old Track: %s - New Track: %s" % [old_track, new_track])
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
