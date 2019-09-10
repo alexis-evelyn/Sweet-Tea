@@ -57,6 +57,10 @@ rect_min_size = Vector2( 360, 60 )
 text = "Quit"
 
 [node name="PlayerSelectionMenu" parent="Menu" instance=ExtResource( 2 )]
+margin_left = 960.0
+margin_top = 540.0
+margin_right = 960.0
+margin_bottom = 540.0
 [connection signal="pressed" from="Menu/Buttons/Singleplayer" to="." method="_on_Singleplayer_pressed"]
 [connection signal="pressed" from="Menu/Buttons/Multiplayer" to="." method="_on_Multiplayer_pressed"]
 [connection signal="pressed" from="Menu/Buttons/Options" to="." method="_on_Options_pressed"]

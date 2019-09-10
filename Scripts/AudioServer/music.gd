@@ -13,12 +13,15 @@ func _ready():
 	mixer.connect("shuffle", self, "mixer_shuffle")
 	mixer.connect("song_changed", self, "song_changed")
 
-	mixer.init_song("test")
-	mixer.init_song("SonicPi - Acid Walk")
+#	mixer.init_song("test")
+#	mixer.init_song("SonicPi - Acid Walk")
+	mixer.init_song("Title Song")
 
 #	mixer.start_alone("test", "Timer")
 #	mixer.start_alone("SonicPi - Acid Walk", "Acid Walk")
-#	mixer.play("test")
+#	mixer.start_alone("Title Song", "Modern Plague")
+
+	mixer.play("Title Song")
 
 func mixer_beat(beat: int):
 	logger.debug("Beat: %s" % beat)

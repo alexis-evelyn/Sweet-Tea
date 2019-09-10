@@ -1,0 +1,57 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Assets/Audio/music/Timer.wav" type="AudioStream" id=1]
+[ext_resource path="res://addons/mixing-desk/music/song.gd" type="Script" id=2]
+[ext_resource path="res://Assets/Audio/music/Acid Walk.wav" type="AudioStream" id=3]
+[ext_resource path="res://addons/mixing-desk/music/mixing_desk_music.gd" type="Script" id=4]
+[ext_resource path="res://addons/mixing-desk/music/containers/core_cont.gd" type="Script" id=5]
+[ext_resource path="res://Scripts/AudioServer/music.gd" type="Script" id=6]
+[ext_resource path="res://Assets/Audio/music/LonePeakMusic - Modern Plague -Retro Gaming Version-.wav" type="AudioStream" id=7]
+
+[node name="Title Screen" type="Node"]
+script = ExtResource( 6 )
+
+[node name="MixingDeskMusic" type="Node" parent="."]
+script = ExtResource( 4 )
+play_mode = 3
+
+[node name="Title Song" type="Node" parent="MixingDeskMusic"]
+script = ExtResource( 2 )
+tempo = 120
+bars = 51
+beats_in_bar = 4
+
+[node name="song" type="Node" parent="MixingDeskMusic/Title Song"]
+script = ExtResource( 5 )
+
+[node name="Modern Plague" type="AudioStreamPlayer" parent="MixingDeskMusic/Title Song/song"]
+stream = ExtResource( 7 )
+
+[node name="Disabled" type="Node" parent="."]
+
+[node name="test" type="Node" parent="Disabled"]
+pause_mode = 2
+script = ExtResource( 2 )
+tempo = 128
+bars = 4
+beats_in_bar = 4
+
+[node name="sounds" type="Node" parent="Disabled/test"]
+script = ExtResource( 5 )
+
+[node name="Timer" type="AudioStreamPlayer" parent="Disabled/test/sounds"]
+stream = ExtResource( 1 )
+bus = "Music"
+
+[node name="SonicPi - Acid Walk" type="Node" parent="Disabled"]
+script = ExtResource( 2 )
+tempo = 120
+bars = 69
+beats_in_bar = 4
+
+[node name="song" type="Node" parent="Disabled/SonicPi - Acid Walk"]
+script = ExtResource( 5 )
+
+[node name="Acid Walk" type="AudioStreamPlayer" parent="Disabled/SonicPi - Acid Walk/song"]
+stream = ExtResource( 3 )
+bus = "Music"

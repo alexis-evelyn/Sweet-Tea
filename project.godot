@@ -263,7 +263,7 @@ spawn_handler="*res://Scripts/autoload/spawn_handler.gd"
 GameJoltAPI="*res://Custom/GameJoltAPI.tscn"
 uuid="*res://Scripts/autoload/third_party/uuid.gd"
 functions="*res://Scripts/autoload/functions.gd"
-Music="*res://AudioServer/Music.tscn"
+Music="*res://AudioHandlers/TitleScreenMusic.tscn"
 
 [debug]
 
