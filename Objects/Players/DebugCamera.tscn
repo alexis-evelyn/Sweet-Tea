@@ -1,13 +1,10 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Scripts/Objects/Player/debug_camera.gd" type="Script" id=1]
-[ext_resource path="res://Scripts/Shaders/fabric_of_time.shader" type="Shader" id=2]
+[ext_resource path="res://Scripts/Shaders/grayscale.shader" type="Shader" id=2]
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 2 )
-shader_param/frequency_x = 60.0
-shader_param/frequency_y = 60.0
-shader_param/depth = 0.005
 
 [node name="DebugCamera" type="Camera2D"]
 anchor_mode = 0
