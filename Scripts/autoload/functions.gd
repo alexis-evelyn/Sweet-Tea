@@ -122,27 +122,37 @@ func list_game_translations() -> Dictionary:
 #	print("Translation Dictionary: %s" % translation_names)
 	return translation_names
 
-func set_world_shader(shader: Shader) -> bool:
-	var player : Node = spawn_handler.get_player_node(gamestate.net_id)
+
+func get_world_camera() -> ColorRect:
 	var shader_screen : ColorRect
+	var player : Node = spawn_handler.get_player_node(gamestate.net_id)
 
 	if player == null:
-		return false
+		return null
 
 	if player.get_node("KinematicBody2D").has_node("PlayerCamera"):
 		shader_screen = player.get_node("KinematicBody2D").get_node("PlayerCamera").get_node("ShaderRectangle")
 	else:
 		if not gamestate.player_info.has("current_world"):
-			logger.error("Set World Shader - Missing Current World Info: %s" % shader.resource_path)
-			return false
+			logger.error("Set World Shader - Missing Current World Info")
+			return null
 
 		var world : Node = spawn_handler.get_world_node(gamestate.player_info.current_world)
 
 		if not world.get_node("Viewport").has_node("DebugCamera"):
-			logger.error("Set World Shader - Missing Debug Camera: %s" % shader.resource_path)
-			return false
+			logger.error("Set World Shader - Missing Debug Camera")
+			return null
 
 		shader_screen = world.get_node("Viewport").get_node("DebugCamera").get_node("ShaderRectangle")
+
+	return shader_screen
+
+func set_world_shader(shader: Shader) -> bool:
+	var shader_screen : ColorRect = get_world_camera()
+
+	if shader_screen == null:
+		logger.error("Set World Shader - Failed to Get Shader Rectangle for Shader: %s" % shader.resource_path)
+		return false
 
 	var shader_material : ShaderMaterial = ShaderMaterial.new()
 	shader_material.set_shader(shader)
@@ -153,12 +163,31 @@ func set_world_shader(shader: Shader) -> bool:
 	return true
 
 func set_world_shader_param(param: String, value) -> bool:
-	return false
-	pass
+	var shader_screen : ColorRect = get_world_camera()
+
+	if shader_screen == null:
+		logger.error("Set World Shader Param - Failed to Get Shader Rectangle for Shader")
+		return false
+
+	var shader_material : ShaderMaterial = shader_screen.get_material()
+	shader_material.set_shader_param(param, value)
+
+	return true
 
 func remove_world_shader() -> bool:
-	return false
-	pass
+	var shader_screen : ColorRect = get_world_camera()
+
+	if shader_screen == null:
+#		logger.error("Remove World Shader - Failed to Get Shader Rectangle for Shader")
+		return true
+
+	var shader_material : ShaderMaterial = shader_screen.get_material()
+	shader_material.set_shader(null)
+
+	shader_screen.set_material(null)
+	shader_screen.visible = false
+
+	return true
 
 func set_global_shader(shader: Shader) -> bool:
 	if not get_tree().get_root().get_node("PlayerUI").has_node("Screen Shader"):
