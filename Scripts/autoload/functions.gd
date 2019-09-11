@@ -29,40 +29,40 @@ sync func request_attention(reason: int) -> void:
 # For example, I don't know if the Godot engine can generate translation files after the game is built, so I may build in an interface to let users produce their own translation in game and then just save it in csv format.
 func get_translation_csv(translations_file: String, key: String, locale: String) -> String:
 	#var translations_file : String = ProjectSettings.get_setting("locale/csv")
-	
+
 	var file = File.new()
 	var open_csv_status = file.open(translations_file, file.READ)
-	
+
 	# Make sure there is at least one line available to read, otherwise just return
 	if open_csv_status != OK:
 		logger.error("Failed to find locale '%s' for key '%s' because the csv file '%s' couldn't be opened!!!" % [locale, key, translations_file])
 		file.close()
 		return ""
-	
+
 	if file.eof_reached():
 		logger.warn("Failed to find locale '%s' for key '%s' because the csv file '%s' is empty!!!" % [locale, key, translations_file])
 		file.close()
 		return ""
-	
+
 	var index : int = -1 # Column that Locale Is On
 	var line : Array = Array(file.get_csv_line()) # Get first line of csv file
-		
+
 	# If it does not have the locale requested, then just return
 	if not line.has(locale):
 		logger.warn("Failed to find locale '%s' for key '%s' because the csv file '%s' is does not have the locale!!!" % [locale, key, translations_file])
 		file.close()
 		return ""
-		
+
 	index = line.find(locale) # Get column the locale is on
-	
+
 	while !file.eof_reached():
 		line = Array(file.get_csv_line())
-		
+
 		if line[0] == key:
 			#logger.verbose("Translation: %s" % line[index])
 			file.close()
 			return line[index]
-	
+
 	logger.warn("Failed to find locale '%s' for key '%s' because the csv file '%s' does not have the key!!!" % [locale, key, translations_file])
 	file.close()
 	return "" # If it does not have the key, then just return
@@ -72,7 +72,7 @@ func get_translation_csv(translations_file: String, key: String, locale: String)
 # warning-ignore:unused_argument
 func get_translation(key: String, locale: String) -> String:
 	# Thank merumelu for their help on my reading translation files issue: https://github.com/godotengine/godot/issues/31749
-	
+
 	# Also make sure to add support for po files later.
 	var translations : PoolStringArray = ProjectSettings.get_setting("locale/translations")
 	# warning-ignore:unassigned_variable
@@ -82,24 +82,24 @@ func get_translation(key: String, locale: String) -> String:
 		#res://Assets/Languages/default.pr.translation
 		var translation_locale : String = translation.rsplit(".", false, 2)[1]
 		#logger.verbose"Translation File: %s" % translation_locale)
-		
+
 		if translation_locale == locale:
 			selected_translation.append(translation)
-		
+
 	# If No Translation File Found, Then Just Return. This will crash on debug builds, but not release builds.
 	if selected_translation.size() == 0:
 		logger.error("No Translation File Found For Locale '%s'" % locale)
 		return "No Translation File Found For Locale '%s'" % locale
-		
+
 	var translator : Translation = load(selected_translation[0]) # I may add support for searching more than one file of the same locale later.
 	var message = translator.get_message(key)
-	
+
 	# Should I check if the translation came back successful or will translator handle it for me?
-	
+
 	#logger.superverbose("Message: %s" % message)
-	
+
 	return message
-	
+
 # Useful for Translation Selection Menu
 func list_game_translations() -> Dictionary:
 	# Also make sure to add support for po files later.
@@ -111,20 +111,75 @@ func list_game_translations() -> Dictionary:
 	for translation in translations:
 		#res://Assets/Languages/default.pr.translation
 		var translation_name : String = translation.rsplit(".", false, 2)[0].rsplit("/", false, 1)[1]
-		
+
 		if game_translation_name == translation_name:
 			var translation_locale : String = translation.rsplit(".", false, 2)[1]
 			translation_names.locales.append({"locale": translation_locale, "name": TranslationServer.get_locale_name(translation_locale), "native_name": get_translation("language_name", translation_locale)})
-			
+
 #			logger.superverbose("Native Language Name: %s" % get_translation("language_name", translation_locale))
 #			logger.superverbose("Translation: %s/%s" % [translation_locale, TranslationServer.get_locale_name(translation_locale)])
-		
+
 #	print("Translation Dictionary: %s" % translation_names)
 	return translation_names
 
+func set_world_shader() -> void:
+	pass
+
+func set_global_shader(shader: Shader) -> bool:
+	if not get_tree().get_root().get_node("PlayerUI").has_node("Screen Shader"):
+		return false
+
+	var shader_screen : ColorRect = get_tree().get_root().get_node("PlayerUI").get_node("Screen Shader")
+
+	var shader_material : ShaderMaterial = ShaderMaterial.new()
+	shader_material.set_shader(shader)
+
+	shader_screen.set_material(shader_material)
+	shader_screen.visible = true
+
+	return true
+
+func set_global_shader_param(param: String, value) -> bool:
+	if not get_tree().get_root().get_node("PlayerUI").has_node("Screen Shader"):
+		return false
+
+	var shader_screen : ColorRect = get_tree().get_root().get_node("PlayerUI").get_node("Screen Shader")
+
+	var shader_material : ShaderMaterial = shader_screen.get_material()
+	shader_material.set_shader_param(param, value)
+
+	return true
+
+func remove_global_shader() -> bool:
+#	if not get_tree().get_root().get_node("PlayerUI").has_node("Screen Shader"):
+#		return true
+
+	var shader_screen : ColorRect = get_tree().get_root().get_node("PlayerUI").get_node("Screen Shader")
+
+	var shader_material : ShaderMaterial = shader_screen.get_material()
+	shader_material.set_shader(null)
+
+	shader_screen.set_material(null)
+	shader_screen.visible = false
+
+	return true
+
+# Example Shader Rectangle Creation Code
+#func create_global_shader_rect() -> void:
+#	if get_tree().get_root().get_node("PlayerUI").has_node("Screen Shader"):
+#		return
+#
+#	var shader_screen : ColorRect = ColorRect.new()
+#	shader_screen.rect_position = Vector2(0, 0)
+#	shader_screen.rect_size = Vector2(ProjectSettings.get_setting("display/window/size/width"), ProjectSettings.get_setting("display/window/size/height"))
+#	shader_screen.mouse_filter = Control.MOUSE_FILTER_IGNORE
+#	shader_screen.name = "Screen Shader"
+#
+#	get_tree().get_root().get_node("PlayerUI").add_child(shader_screen)
+
 func get_class() -> String:
 	return "Functions"
-	
+
 # I don't have a use for this yet, so I am just leaving this here.
 func _to_string() -> String:
 	return "Hello"

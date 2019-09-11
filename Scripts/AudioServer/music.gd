@@ -23,6 +23,11 @@ func _ready():
 
 	mixer.play("Title Song")
 
+func add_audio_effect() -> void:
+	var custom_effect : AudioEffect = AudioEffect.new()
+#	custom_effect.
+	pass
+
 func mixer_beat(beat: int):
 	logger.debug("Beat: %s" % beat)
 
