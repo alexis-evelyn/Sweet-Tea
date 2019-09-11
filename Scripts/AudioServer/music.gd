@@ -29,25 +29,25 @@ func add_audio_effect() -> void:
 	pass
 
 func mixer_beat(beat: int):
-	logger.debug("Beat: %s" % beat)
+	logger.superverbose("Beat: %s" % beat)
 
 func mixer_bar(bar: int):
-	logger.debug("Bar: %s" % bar)
+	logger.superverbose("Bar: %s" % bar)
 
 func song_ended(track: int):
-	logger.debug("Song Ended: %s" % track)
+	logger.superverbose("Song Ended: %s" % track)
 
 func mixer_shuffle(songs: Array):
 	var current_track : int = songs[0]
 	var next_track : int = songs[1]
 
-	logger.debug("Songs Shuffled - Current Track: %s - Next Track: %s" % [current_track, next_track])
+	logger.superverbose("Songs Shuffled - Current Track: %s - Next Track: %s" % [current_track, next_track])
 
 func song_changed(songs: Array):
 	var old_track : int = songs[0]
 	var new_track : int = songs[1]
 
-	logger.debug("Songs Changed - Old Track: %s - New Track: %s" % [old_track, new_track])
+	logger.superverbose("Songs Changed - Old Track: %s - New Track: %s" % [old_track, new_track])
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

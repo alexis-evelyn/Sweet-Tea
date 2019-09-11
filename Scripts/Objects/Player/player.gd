@@ -86,8 +86,9 @@ func detect_loading_screen_closed() -> void:
 func loading_screen_closed() -> void:
 	set_physics_process(true)
 	playerStats.show_playerstats()
-	functions.set_world_shader(load("res://Scripts/Shaders/third_party/sepia.shader"))
-	functions.set_world_shader_param("base", Color.green)
+
+#	functions.set_world_shader(load("res://Scripts/Shaders/third_party/sepia.shader"))
+#	functions.set_world_shader_param("base", Color.green)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta: float) -> void:
