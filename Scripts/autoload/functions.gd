@@ -181,6 +181,9 @@ func remove_world_shader() -> bool:
 #		logger.error("Remove World Shader - Failed to Get Shader Rectangle for Shader")
 		return true
 
+	if shader_screen.get_material() == null:
+		return true
+
 	var shader_material : ShaderMaterial = shader_screen.get_material()
 	shader_material.set_shader(null)
 
@@ -219,6 +222,9 @@ func remove_global_shader() -> bool:
 #		return true
 
 	var shader_screen : ColorRect = get_tree().get_root().get_node("PlayerUI").get_node("Screen Shader")
+
+	if shader_screen.get_material() == null:
+		return true
 
 	var shader_material : ShaderMaterial = shader_screen.get_material()
 	shader_material.set_shader(null)

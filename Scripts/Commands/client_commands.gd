@@ -208,19 +208,93 @@ func set_shader(message) -> String:
 		# Assume world if world or game not specified
 		shader_name = command_arguments[0]
 
+		if shader_name.to_lower() == tr("shader_remove_argument"):
+			# Remove Both Shaders
+			functions.remove_global_shader()
+			functions.remove_world_shader()
+			return tr("removed_both_shaders")
+
 		if not shaders.has(shader_name):
-			return "No Match"
+			return tr("shader_not_found") % shader_name
 
 		if not shaders.get(shader_name).has("path"):
-			return "Corrupted Dictionary - Missing Path"
+			return tr("shader_registry_corrupted_path") % shader_name
 
 		functions.set_world_shader(load(shaders.get(shader_name).path))
-		return "Set Shader!!!"
+		return tr("shader_command_success") % [shader_name, tr("shader_world_argument")]
 
-	return "Hmmmm..."
+	elif command_arguments.size() == 2:
+		shader_name = command_arguments[0]
+		var shader_rect : String = command_arguments[1]
+
+		if shader_rect.to_lower() == tr("shader_world_argument").to_lower():
+			if shader_name.to_lower() == tr("shader_remove_argument"):
+				# Remove World Shader
+				functions.remove_world_shader()
+				return tr("removed_world_shader")
+
+			if not shaders.has(shader_name):
+				return tr("shader_not_found") % shader_name
+
+			if not shaders.get(shader_name).has("path"):
+				return tr("shader_registry_corrupted_path") % shader_name
+
+			functions.set_world_shader(load(shaders.get(shader_name).path))
+			return tr("shader_command_success") % [shader_name, tr("shader_world_argument")]
+		elif shader_rect.to_lower() == tr("shader_game_argument").to_lower():
+			if shader_name.to_lower() == tr("shader_remove_argument"):
+				# Remove Global Shader
+				functions.remove_global_shader()
+				return tr("removed_game_shader")
+
+			if not shaders.has(shader_name):
+				return tr("shader_not_found") % shader_name
+
+			if not shaders.get(shader_name).has("path"):
+				return tr("shader_registry_corrupted_path") % shader_name
+
+			functions.set_global_shader(load(shaders.get(shader_name).path))
+			return tr("shader_command_success") % [shader_name, tr("shader_game_argument")]
+		elif shader_rect.to_lower() == tr("shader_all_argument").to_lower():
+			if shader_name.to_lower() == tr("shader_remove_argument"):
+				# Remove Both Shaders
+				functions.remove_global_shader()
+				functions.remove_world_shader()
+				return tr("removed_both_shaders")
+
+			if not shaders.has(shader_name):
+				return tr("shader_not_found") % shader_name
+
+			if not shaders.get(shader_name).has("path"):
+				return tr("shader_registry_corrupted_path") % shader_name
+
+			functions.set_world_shader(load(shaders.get(shader_name).path))
+			functions.set_global_shader(load(shaders.get(shader_name).path))
+			return tr("shader_command_success") % [shader_name, tr("shader_all_argument_reply")]
+
+	return tr("shader_command_invalid_arguments")
 
 func set_shader_param(message) -> String:
 	# /shaderparam <key> <value> [world or game]
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_arguments : PoolStringArray = message
+	command_arguments.remove(0)
+
+	var key : String
+	var value : String
+
+	if command_arguments.size() == 2:
+		key = command_arguments[0]
+		value = command_arguments[1]
+
+		pass
+	elif command_arguments.size() == 3:
+		key = command_arguments[0]
+		value = command_arguments[1]
+
+		var shader_rect : String = command_arguments[2]
+
+		pass
 
 	return ""
 
