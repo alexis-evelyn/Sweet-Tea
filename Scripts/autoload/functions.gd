@@ -122,7 +122,42 @@ func list_game_translations() -> Dictionary:
 #	print("Translation Dictionary: %s" % translation_names)
 	return translation_names
 
-func set_world_shader() -> void:
+func set_world_shader(shader: Shader) -> bool:
+	var player : Node = spawn_handler.get_player_node(gamestate.net_id)
+	var shader_screen : ColorRect
+
+	if player == null:
+		return false
+
+	if player.get_node("KinematicBody2D").has_node("PlayerCamera"):
+		shader_screen = player.get_node("KinematicBody2D").get_node("PlayerCamera").get_node("ShaderRectangle")
+	else:
+		if not gamestate.player_info.has("current_world"):
+			logger.error("Set World Shader - Missing Current World Info: %s" % shader.resource_path)
+			return false
+
+		var world : Node = spawn_handler.get_world_node(gamestate.player_info.current_world)
+
+		if not world.get_node("Viewport").has_node("DebugCamera"):
+			logger.error("Set World Shader - Missing Debug Camera: %s" % shader.resource_path)
+			return false
+
+		shader_screen = world.get_node("Viewport").get_node("DebugCamera").get_node("ShaderRectangle")
+
+	var shader_material : ShaderMaterial = ShaderMaterial.new()
+	shader_material.set_shader(shader)
+
+	shader_screen.set_material(shader_material)
+	shader_screen.visible = true
+
+	return true
+
+func set_world_shader_param(param: String, value) -> bool:
+	return false
+	pass
+
+func remove_world_shader() -> bool:
+	return false
 	pass
 
 func set_global_shader(shader: Shader) -> bool:

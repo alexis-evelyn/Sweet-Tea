@@ -49,7 +49,8 @@ func _ready() -> void:
 
 	emit_signal("script_setup") # Let mods know MainMenu is finished loading
 
-	functions.set_global_shader(load("res://Scripts/Shaders/grayscale.shader"))
+#	functions.set_global_shader(load("res://Scripts/Shaders/third_party/sepia.shader"))
+#	functions.set_global_shader_param("base", Color.crimson)
 
 func set_theme(theme: Theme) -> void:
 	"""

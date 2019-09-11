@@ -17,6 +17,7 @@ __meta__ = {
 }
 
 [node name="ShaderRectangle" type="ColorRect" parent="."]
+visible = false
 material = SubResource( 1 )
 margin_left = -960.0
 margin_top = -540.0

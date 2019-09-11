@@ -67,28 +67,28 @@ func save_player(slot: int) -> void:
 	#logger.verbose("Game Version: %s" % game_version)
 	var players_data : JSONParseResult # Data To Save
 	var players_data_result : Dictionary # players_data's Result
-	
+
 	var file_op : Directory = Directory.new() # Allows Performing Operations on Files (like moving or deleting a file)
-	
+
 	# Make Save File Backup Directory (if it does not exist)
 	if not file_op.dir_exists(backup_path):
 		# warning-ignore:return_value_discarded
 		file_op.make_dir(backup_path)
-	
+
 	var save_data : File = File.new()
-	
+
 	# Checks to See If Save File Exists
 	if save_data.file_exists(save_path):
 		#logger.verbose("Save File Exists!!!")
-		
+
 		# warning-ignore:return_value_discarded
 		save_data.open(save_path, File.READ_WRITE) # Open Save File For Reading/Writing
 		players_data = JSON.parse(save_data.get_as_text()) # Load existing Save File as JSON
-	
+
 		# Backup The Save File (I Want It To Back Up Regardless of if It Is Corrupted)
 		# warning-ignore:return_value_discarded
-		file_op.copy(save_path, save_path_backup) # Copy Save File to Backup	
-	
+		file_op.copy(save_path, save_path_backup) # Copy Save File to Backup
+
 		# Checks to Make Sure JSON was Parsed
 		# warning-ignore:unsafe_property_access
 		# warning-ignore:unsafe_property_access
@@ -96,41 +96,41 @@ func save_player(slot: int) -> void:
 			#logger.verbose("Save File Read and Imported As Dictionary!!!")
 			# warning-ignore:unsafe_property_access
 			players_data_result = players_data.result # Grabs Result From JSON (this is done now so I can grab the error code from earlier)
-			
+
 			# Should I merge this and the code from new save into a single function?
 			players_data_result["game_version"] = game_version
-			
+
 			# Temporarily Remove Locale From Player Info
 			if player_info.has("locale"):
 				locale = player_info.locale
 				player_info.erase("locale")
-			
+
 			# Note: Key has to be a string, otherwise Godot bugs out and adds duplicate keys to Dictionary
 			players_data_result[str(slot)] = player_info # Replaces Key In Dictionary With Updated Player_Info
-			
+
 			#logger.verbose(to_json(players_data)) # Print Save Data to stdout (Debug)
 			save_data.store_string(to_json(players_data_result))
 	else:
 		#logger.verbose("Save File Does Not Exist!!! Creating!!!")
 		# warning-ignore:return_value_discarded
 		save_data.open(save_path, File.WRITE) # Open Save File For Writing
-		
+
 		# Should I merge this and the code from existing save into a single function?
 		players_data_result["game_version"] = game_version
-		
+
 		player_info["char_unique_id"] = generate_character_unique_id()
-		
+
 		# Temporarily Remove Locale From Player Info
 		if player_info.has("locale"):
 			locale = player_info.locale
 			player_info.erase("locale")
-		
+
 		# Note: Key has to be a string, otherwise Godot bugs out and adds duplicate keys to Dictionary
 		players_data_result[str(slot)] = player_info
-		
+
 		#logger.verbose(to_json(players_data)) # Print Save Data to stdout (Debug)
 		save_data.store_string(to_json(players_data_result))
-		
+
 	player_info.locale = locale # Set Locale Back For Gamestate
 	save_data.close()
 
@@ -139,26 +139,26 @@ func load_player(slot: int) -> int:
 	#logger.verbose("Game Version: %s" % game_version)
 	#logger.verbose("Save Data Location: %s" % OS.get_user_data_dir())
 	#OS.shell_open(str("file://", OS.get_user_data_dir())) # Use this to open up user save data location (say to backup saves or downloaded resources/mods)
-	
+
 	var save_data : File = File.new()
-	
+
 	if not save_data.file_exists(save_directory.plus_file(save_file)): # Check If Save File Exists
 		#logger.verbose("Save File Does Not Exist!!! New Player?")
 		return -1 # Returns -1 to signal that loading save file failed (for reasons of non-existence)
-	
+
 	# warning-ignore:return_value_discarded
 	save_data.open(save_directory.plus_file(save_file), File.READ)
 	var json : JSONParseResult = JSON.parse(save_data.get_as_text())
-		
+
 	# Checks to Make Sure JSON was Parsed
 	if json.error == OK:
 		#logger.verbose("Save File Read!!!")
-		
+
 		# warning-ignore:unsafe_property_access
 		# warning-ignore:unsafe_property_access
 		if typeof(json.result) == TYPE_DICTIONARY:
 			#logger.verbose("Save File Imported As Dictionary!!!")
-			
+
 			# warning-ignore:unsafe_property_access
 			if json.result.has("game_version"):
 				# warning-ignore:unsafe_property_access
@@ -166,7 +166,7 @@ func load_player(slot: int) -> int:
 				logger.verbose("Game Version That Saved File Was: %s" % json.result["game_version"])
 			else:
 				logger.warning("Unknown What Game Version Saved File!!!")
-			
+
 			# warning-ignore:unsafe_property_access
 			if json.result.has(str(slot)):
 				# warning-ignore:unsafe_property_access
@@ -174,11 +174,11 @@ func load_player(slot: int) -> int:
 				var locale : String = player_info.locale
 				player_info = json.result[str(slot)]
 				player_info.locale = locale
-				
+
 				# Check if Save Data Has Debug Boolean
 				if player_info.has("debug"):
 					debug = bool(player_info.debug)
-				
+
 			else:
 				logger.warn("Player Slot Does Not Exist: %s" % slot)
 				return -2 # Returns -2 to signal that player slot does not exist
@@ -187,27 +187,27 @@ func load_player(slot: int) -> int:
 			return -3 # Returns -3 to signal that JSON cannot be interpreted as a Dictionary
 	else:
 		logger.error("Cannot Interpret Save!!! Invalid JSON!!!")
-		
+
 	save_data.close()
 	return 0
-	
+
 # Delete Player From Save
 # warning-ignore:unused_argument
 func delete_player(slot: int):
 	pass
-	
+
 # Checks If Slot Exists
 func check_if_slot_exists(slot: int) -> bool:
 	var save_data : File = File.new()
-	
+
 	if not save_data.file_exists(save_directory.plus_file(save_file)): # Check If Save File Exists
 		#logger.verbose("Save File Does Not Exist!!! So, Slot Does Not Exist!!!")
 		return false
-	
+
 # warning-ignore:return_value_discarded
 	save_data.open(save_directory.plus_file(save_file), File.READ)
 	var json : JSONParseResult = JSON.parse(save_data.get_as_text())
-		
+
 	# Checks to Make Sure JSON was Parsed
 	if json.error == OK:
 		# warning-ignore:unsafe_property_access
@@ -220,9 +220,9 @@ func check_if_slot_exists(slot: int) -> bool:
 			else:
 				#logger.verbose("Slot Does Not Exist: %s" % str(slot))
 				return false
-				
+
 	return false
-	
+
 # Generates Character Unique ID - Can Be Used to Correlate Server Player Save Data and Client Player Save Data
 # Not Safe to Manual Modification - If you want to have safe id, there needs to be some form of authentication the user cannot modify
 # Authentication can be server-side like in chat, or a login prompt before connecting to server. This can also be through Steam or some other third party service
