@@ -104,7 +104,26 @@ var shaders : Dictionary = {
 		"animated": false,
 		"description": "",
 		"seizure_warning": false
+	},
+	"whirl_strong": {
+		"path": "res://Scripts/Shaders/whirl_strong.shader",
+		"animated": true,
+		"description": "",
+		"seizure_warning": false
+	},
+	"animated_whirl": {
+		"path": "res://Scripts/Shaders/animated_whirl.shader",
+		"animated": false,
+		"description": "",
+		"seizure_warning": false
+	},
+	"weird_boxy_rotation": {
+		"path": "res://Scripts/Shaders/weird_boxy_rotation.shader",
+		"animated": true,
+		"description": "",
+		"seizure_warning": false
 	}
+
 }
 
 func process_commands(message: PoolStringArray) -> String:
