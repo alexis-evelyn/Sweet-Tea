@@ -1,5 +1,7 @@
 shader_type canvas_item;
 
+// Warning Very Broken!!! This may cause seizures!!!
+
 const float PI = 3.1415926535;
 
 // The problem with this is it starts rotating too fast after a few seconds until it just stops.
