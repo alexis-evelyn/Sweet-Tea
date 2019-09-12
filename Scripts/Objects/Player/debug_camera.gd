@@ -161,6 +161,7 @@ func update_camera_pos(position: Vector2) -> void:
 
 	self.position = Vector2(cross_x, cross_y)
 
+# warning-ignore:unused_argument
 func update_crosshair_pos(position: Vector2) -> void:
 	# Fix this so that it positions the label exactly in the middle instead of near it.
 
@@ -179,9 +180,11 @@ func update_cpu_usage_label() -> void:
 	cpu_usage_label.bbcode_text = key_begin_bbcode + "CPU Usage Not Implemented Yet - Need GDNative Module" + both_end_bbcode
 
 func update_memory_usage_label() -> void:
+	# warning-ignore:integer_division
 	memory_usage_label.bbcode_text = key_begin_bbcode + tr("memory_usage_label") % (value_begin_bbcode + str(OS.get_static_memory_usage()/1000000) + both_end_bbcode) + both_end_bbcode
 
 func update_time_since_start() -> void:
+	# warning-ignore:integer_division
 	engine_start_time_label.bbcode_text = key_begin_bbcode + tr("engine_start_time_label") % [value_begin_bbcode + str(OS.get_ticks_msec()/1000) + both_end_bbcode, value_begin_bbcode + str(OS.get_ticks_usec()) + both_end_bbcode] + both_end_bbcode
 
 func update_clock_label() -> void:

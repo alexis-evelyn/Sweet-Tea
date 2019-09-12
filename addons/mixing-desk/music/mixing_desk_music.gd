@@ -5,6 +5,7 @@ var tempo
 var bars
 var beats_in_bar
 var transition_beats
+# warning-ignore:unused_class_variable
 var can_shuffle = true
 
 enum play_style {play_once, loop, shuffle, endless}
@@ -65,9 +66,11 @@ func init_song(track):
 	var root = song._get_core()
 	current_song_num = track
 	current_song = songs[track]._get_core()
+	# warning-ignore:unused_variable
 	var inum = 0
 	repeats= 0
 	for i in root.get_children():
+		# warning-ignore:unused_variable
 		var bus = AudioServer.get_bus_count()
 		if song.fading_out:
 			i.get_child(0).stop(i)

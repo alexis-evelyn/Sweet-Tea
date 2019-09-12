@@ -1,10 +1,6 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=2 format=2]
 
 [ext_resource path="res://Scripts/Objects/Player/player_camera.gd" type="Script" id=1]
-[ext_resource path="res://Scripts/Shaders/third_party/bcs.shader" type="Shader" id=2]
-
-[sub_resource type="ShaderMaterial" id=1]
-shader = ExtResource( 2 )
 
 [node name="PlayerCamera" type="Camera2D"]
 current = true
@@ -15,7 +11,6 @@ __meta__ = {
 
 [node name="ShaderRectangle" type="ColorRect" parent="."]
 visible = false
-material = SubResource( 1 )
 margin_left = -960.0
 margin_top = -540.0
 margin_right = 960.0

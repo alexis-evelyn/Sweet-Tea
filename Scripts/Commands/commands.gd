@@ -175,6 +175,7 @@ func private_message(net_id: int, message: PoolStringArray) -> String:
 	"""
 
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	# warning-ignore:unused_variable
 	var permission_level : int = get_permission(command) # Gets Command's Permission Level
 
 	if not message.size() > 2:

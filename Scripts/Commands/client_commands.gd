@@ -175,6 +175,7 @@ func teleport_camera(message) -> String:
 
 		Not Meant to Be Called Directly
 	"""
+# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_arguments : PoolStringArray = message
 	command_arguments.remove(0)
@@ -224,6 +225,7 @@ func teleport_camera(message) -> String:
 
 func set_shader(message) -> String:
 	# /shader <shader_name> [world or game]
+	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_arguments : PoolStringArray = message
 	command_arguments.remove(0)
@@ -325,6 +327,7 @@ func load_default_params(shader_name: String, shader_rect: String) -> void:
 
 func set_shader_param(message) -> String:
 	# /shaderparam <key> <value> [world or game]
+# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_arguments : PoolStringArray = message
 	command_arguments.remove(0)
