@@ -49,7 +49,7 @@ var shaders : Dictionary = {
 		"path": "res://Scripts/Shaders/third_party/blur.shader",
 		"animated": false,
 		"default_params": {
-			"amount": 2.0 # (0-5) Not Tested
+			"blur": 2.0 # (0-5)
 		},
 		"description": "",
 		"seizure_warning": false
@@ -94,7 +94,7 @@ var shaders : Dictionary = {
 		"path": "res://Scripts/Shaders/third_party/sepia.shader",
 		"animated": false,
 		"default_params": {
-			"base": Color("#8b6867").to_rgba32() # Not Tested
+			"color": Color("#8b6867") # Defaults to Sepia Color
 		},
 		"description": "",
 		"seizure_warning": false
@@ -206,7 +206,7 @@ func set_shader(message) -> String:
 
 	if command_arguments.size() == 1:
 		# Assume world if world or game not specified
-		shader_name = command_arguments[0]
+		shader_name = command_arguments[0].to_lower()
 
 		if shader_name.to_lower() == tr("shader_remove_argument"):
 			# Remove Both Shaders
@@ -221,10 +221,11 @@ func set_shader(message) -> String:
 			return tr("shader_registry_corrupted_path") % shader_name
 
 		functions.set_world_shader(load(shaders.get(shader_name).path))
+		load_default_params(shader_name, tr("shader_world_argument"))
 		return tr("shader_command_success") % [shader_name, tr("shader_world_argument")]
 
 	elif command_arguments.size() == 2:
-		shader_name = command_arguments[0]
+		shader_name = command_arguments[0].to_lower()
 		var shader_rect : String = command_arguments[1]
 
 		if shader_rect.to_lower() == tr("shader_world_argument").to_lower():
@@ -240,6 +241,7 @@ func set_shader(message) -> String:
 				return tr("shader_registry_corrupted_path") % shader_name
 
 			functions.set_world_shader(load(shaders.get(shader_name).path))
+			load_default_params(shader_name, tr("shader_world_argument"))
 			return tr("shader_command_success") % [shader_name, tr("shader_world_argument")]
 		elif shader_rect.to_lower() == tr("shader_game_argument").to_lower():
 			if shader_name.to_lower() == tr("shader_remove_argument"):
@@ -254,6 +256,7 @@ func set_shader(message) -> String:
 				return tr("shader_registry_corrupted_path") % shader_name
 
 			functions.set_global_shader(load(shaders.get(shader_name).path))
+			load_default_params(shader_name, tr("shader_game_argument"))
 			return tr("shader_command_success") % [shader_name, tr("shader_game_argument")]
 		elif shader_rect.to_lower() == tr("shader_all_argument").to_lower():
 			if shader_name.to_lower() == tr("shader_remove_argument"):
@@ -270,9 +273,29 @@ func set_shader(message) -> String:
 
 			functions.set_world_shader(load(shaders.get(shader_name).path))
 			functions.set_global_shader(load(shaders.get(shader_name).path))
+			load_default_params(shader_name, tr("shader_world_argument"))
+			load_default_params(shader_name, tr("shader_game_argument"))
 			return tr("shader_command_success") % [shader_name, tr("shader_all_argument_reply")]
 
 	return tr("shader_command_invalid_arguments")
+
+func load_default_params(shader_name: String, shader_rect: String) -> void:
+	if not shaders.has(shader_name):
+		return
+
+	var shader_info : Dictionary = shaders.get(shader_name)
+
+	if not shader_info.has("default_params"):
+		return
+
+	var default_params : Dictionary = shader_info.default_params
+
+	if shader_rect.to_lower() == tr("shader_world_argument").to_lower():
+		for param in default_params:
+			functions.set_world_shader_param(param, default_params[param])
+	elif shader_rect.to_lower() == tr("shader_game_argument").to_lower():
+		for param in default_params:
+			functions.set_global_shader_param(param, default_params[param])
 
 func set_shader_param(message) -> String:
 	# /shaderparam <key> <value> [world or game]
@@ -287,16 +310,34 @@ func set_shader_param(message) -> String:
 		key = command_arguments[0]
 		value = command_arguments[1]
 
-		pass
+		var formatted_value = functions.check_data_type(value) # Used to return data in the correct format
+		functions.set_world_shader_param(key, formatted_value)
+
+		return tr("shaderparam_command_success") % [key, value, tr("shader_world_argument")]
 	elif command_arguments.size() == 3:
 		key = command_arguments[0]
 		value = command_arguments[1]
 
 		var shader_rect : String = command_arguments[2]
 
-		pass
+		if shader_rect.to_lower() == tr("shader_world_argument").to_lower():
+			var formatted_value = functions.check_data_type(value) # Used to return data in the correct format
+			functions.set_world_shader_param(key, formatted_value)
 
-	return ""
+			return tr("shaderparam_command_success") % [key, value, tr("shader_world_argument")]
+		elif shader_rect.to_lower() == tr("shader_game_argument").to_lower():
+			var formatted_value = functions.check_data_type(value) # Used to return data in the correct format
+			functions.set_global_shader_param(key, formatted_value)
+
+			return tr("shaderparam_command_success") % [key, value, tr("shader_game_argument")]
+		elif shader_rect.to_lower() == tr("shader_all_argument").to_lower():
+			var formatted_value = functions.check_data_type(value) # Used to return data in the correct format
+			functions.set_world_shader_param(key, formatted_value)
+			functions.set_global_shader_param(key, formatted_value)
+
+			return tr("shaderparam_command_success") % [key, value, tr("shader_all_argument")]
+
+	return "Ran"
 
 func get_class() -> String:
 	return "ClientCommands"

@@ -170,6 +170,11 @@ func set_world_shader_param(param: String, value) -> bool:
 		return false
 
 	var shader_material : ShaderMaterial = shader_screen.get_material()
+
+	if shader_material == null:
+		logger.error("Set World Shader Param - Failed to Get Shader Material for Shader")
+		return false
+
 	shader_material.set_shader_param(param, value)
 
 	return true
@@ -194,6 +199,7 @@ func remove_world_shader() -> bool:
 
 func set_global_shader(shader: Shader) -> bool:
 	if not get_tree().get_root().get_node("PlayerUI").has_node("Screen Shader"):
+		logger.error("Set World Shader Param - Failed to Get Shader Rectangle for Shader: %s" % shader.resource_path)
 		return false
 
 	var shader_screen : ColorRect = get_tree().get_root().get_node("PlayerUI").get_node("Screen Shader")
@@ -208,11 +214,17 @@ func set_global_shader(shader: Shader) -> bool:
 
 func set_global_shader_param(param: String, value) -> bool:
 	if not get_tree().get_root().get_node("PlayerUI").has_node("Screen Shader"):
+		logger.error("Set Global Shader Param - Failed to Get Shader Rectangle for Shader")
 		return false
 
 	var shader_screen : ColorRect = get_tree().get_root().get_node("PlayerUI").get_node("Screen Shader")
 
 	var shader_material : ShaderMaterial = shader_screen.get_material()
+
+	if shader_material == null:
+		logger.error("Set Global Shader Param - Failed to Get Shader Material for Shader")
+		return false
+
 	shader_material.set_shader_param(param, value)
 
 	return true
@@ -246,6 +258,16 @@ func remove_global_shader() -> bool:
 #	shader_screen.name = "Screen Shader"
 #
 #	get_tree().get_root().get_node("PlayerUI").add_child(shader_screen)
+
+func check_data_type(data: String):
+	# Check if hex code
+	if data.is_valid_html_color():
+		logger.superverbose("Data Type is Color!!!")
+		# It's a html color, so convert it to a color type
+		return Color(data)
+
+	# Return data back in string format if no matches
+	return data
 
 func get_class() -> String:
 	return "Functions"
