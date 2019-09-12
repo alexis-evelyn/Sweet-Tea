@@ -40,13 +40,13 @@ var shaders : Dictionary = {
 		"seizure_warning": false
 	},
 	"bcs": {
-		"path": "res://Scripts/Shaders/third_party/bcs.shader",
+		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/bcs.shader",
 		"animated": false,
 		"description": "",
 		"seizure_warning": false
 	},
 	"blur": {
-		"path": "res://Scripts/Shaders/third_party/blur.shader",
+		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/blur.shader",
 		"animated": false,
 		"default_params": {
 			"blur": 2.0 # (0-5)
@@ -55,43 +55,43 @@ var shaders : Dictionary = {
 		"seizure_warning": false
 	},
 	"contrasted": {
-		"path": "res://Scripts/Shaders/third_party/contrasted.shader",
+		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/contrasted.shader",
 		"animated": false,
 		"description": "",
 		"seizure_warning": false
 	},
 	"fisheye": {
-		"path": "res://Scripts/Shaders/third_party/fisheye.shader",
+		"path": "res://Scripts/Shaders/third_party/JEGX/fisheye.shader",
 		"animated": false,
 		"description": "",
 		"seizure_warning": false
 	},
 	"mirage": {
-		"path": "res://Scripts/Shaders/third_party/mirage.shader",
+		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/mirage.shader",
 		"animated": true,
 		"description": "",
 		"seizure_warning": false
 	},
 	"negative": {
-		"path": "res://Scripts/Shaders/third_party/negative.shader",
+		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/negative.shader",
 		"animated": false,
 		"description": "",
 		"seizure_warning": false
 	},
 	"normalized": {
-		"path": "res://Scripts/Shaders/third_party/normalized.shader",
+		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/normalized.shader",
 		"animated": false,
 		"description": "",
 		"seizure_warning": false
 	},
 	"pixelize": {
-		"path": "res://Scripts/Shaders/third_party/pixelize.shader",
+		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/pixelize.shader",
 		"animated": false,
 		"description": "",
 		"seizure_warning": false
 	},
 	"sepia": {
-		"path": "res://Scripts/Shaders/third_party/sepia.shader",
+		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/sepia.shader",
 		"animated": false,
 		"default_params": {
 			"color": Color("#8b6867") # Defaults to Sepia Color
@@ -100,7 +100,7 @@ var shaders : Dictionary = {
 		"seizure_warning": false
 	},
 	"whirl": {
-		"path": "res://Scripts/Shaders/third_party/whirl.shader",
+		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/whirl.shader",
 		"animated": false,
 		"description": "",
 		"seizure_warning": false

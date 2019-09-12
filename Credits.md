@@ -13,7 +13,11 @@ cripter - MIT License - https://github.com/Malkverbena/cripter
 MBedTLS - Apache 2.0 license - https://www.apache.org/licenses/LICENSE-2.0 from https://tls.mbed.org/
 UUID GDScript - MIT License - https://github.com/binogure-studio/godot-uuid/blob/master/LICENSE
 Mixing Desk Addon - MIT License - https://github.com/kyzfrintin/Godot-Mixing-Desk
+
+Shaders
+---------
 2D Screen-Space Shaders Demo - MIT/Godot License - https://godotengine.org/asset-library/asset/122 - https://github.com/godotengine/godot-demo-projects/blob/master/LICENSE.md
+Fisheye Shader - Not Specified, But Released As Tutorial - https://www.geeks3d.com/20140213/glsl-shader-library-fish-eye-and-dome-and-barrel-distortion-post-processing-filters/
 
 Fonts
 ---------
