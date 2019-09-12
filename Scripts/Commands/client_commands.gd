@@ -122,8 +122,15 @@ var shaders : Dictionary = {
 		"animated": true,
 		"description": "",
 		"seizure_warning": false
+	},
+	"flip": {
+		"path": "res://Scripts/Shaders/flip.shader",
+		"animated": true,
+		"default_params": {
+			"angle": 180,
+		}, "description": "",
+		"seizure_warning": false
 	}
-
 }
 
 func process_commands(message: PoolStringArray) -> String:

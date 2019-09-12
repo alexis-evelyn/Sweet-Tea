@@ -5,9 +5,6 @@
 
 [sub_resource type="ShaderMaterial" id=1]
 shader = ExtResource( 2 )
-shader_param/brightness = 0.8
-shader_param/contrast = 1.5
-shader_param/saturation = 1.8
 
 [node name="PlayerCamera" type="Camera2D"]
 current = true
