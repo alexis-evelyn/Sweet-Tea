@@ -125,7 +125,7 @@ var shaders : Dictionary = {
 	},
 	"flip": {
 		"path": "res://Scripts/Shaders/flip.shader",
-		"animated": true,
+		"animated": false,
 		"default_params": {
 			"angle": 180,
 		}, "description": "",
