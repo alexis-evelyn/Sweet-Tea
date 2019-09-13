@@ -130,6 +130,15 @@ var shaders : Dictionary = {
 			"angle": 180,
 		}, "description": "",
 		"seizure_warning": false
+	},
+	"greenscreen": {
+		"path": "res://Scripts/Shaders/chromakey.shader",
+		"animated": false,
+		"default_params": {
+			"color": Color("#0000ff"),
+			"forgiveness": Vector3(0.0, 0.0, 0.0)
+		}, "description": "",
+		"seizure_warning": false
 	}
 }
 
