@@ -21,7 +21,7 @@ func _ready():
 #	mixer.start_alone("SonicPi - Acid Walk", "Acid Walk")
 #	mixer.start_alone("Title Song", "Modern Plague")
 
-	mixer.play("Title Song")
+#	mixer.play("Title Song")
 
 func add_audio_effect() -> void:
 	# warning-ignore:unused_variable
