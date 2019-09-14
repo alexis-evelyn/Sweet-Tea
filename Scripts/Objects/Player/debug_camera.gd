@@ -27,6 +27,8 @@ var value_begin_bbcode : String = "[color=#" + value_color.to_html(true) + "]"
 var key_begin_bbcode : String = "[color=#" + key_color.to_html(true) + "]"
 var both_end_bbcode : String = "[/color]"
 
+onready var panelChat : Node = get_tree().get_root().get_node("PlayerUI/panelChat")
+
 onready var coor_label = $PlayerCoordinates
 onready var cam_coor_label = $CameraCoordinates
 onready var chunk_position_label = $ChunkPosition
@@ -80,16 +82,16 @@ func _process(_delta: float) -> void:
 	update_time_since_start()
 
 func _physics_process(_delta: float) -> void:
-	if Input.is_action_pressed("debug_up"):
+	if Input.is_action_pressed("debug_up") and !panelChat.visible:
 		translate(Vector2(0, -cam_speed))
 		update_camera_pos_label()
-	if Input.is_action_pressed("debug_down"):
+	if Input.is_action_pressed("debug_down") and !panelChat.visible:
 		translate(Vector2(0, cam_speed))
 		update_camera_pos_label()
-	if Input.is_action_pressed("debug_left"):
+	if Input.is_action_pressed("debug_left") and !panelChat.visible:
 		translate(Vector2(-cam_speed, 0))
 		update_camera_pos_label()
-	if Input.is_action_pressed("debug_right"):
+	if Input.is_action_pressed("debug_right") and !panelChat.visible:
 		translate(Vector2(cam_speed, 0))
 		update_camera_pos_label()
 

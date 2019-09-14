@@ -27,10 +27,12 @@ __meta__ = {
 }
 
 [node name="loadingBarPlain" type="ProgressBar" parent="background"]
-margin_left = 101.577
-margin_top = 335.86
-margin_right = 905.577
-margin_bottom = 540.86
+anchor_left = 0.25
+anchor_top = 0.45
+anchor_right = 0.75
+anchor_bottom = 0.65
+margin_right = 0.959961
+margin_bottom = 0.199951
 step = 1.0
 rounded = true
 percent_visible = false
