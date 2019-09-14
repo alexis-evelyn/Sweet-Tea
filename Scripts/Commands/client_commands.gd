@@ -137,7 +137,9 @@ var shaders : Dictionary = {
 		"default_params": {
 			#"shading": Color("#a9a9a9"),
 			"color": Color("#0000ff"),
-			"forgiveness": Vector3(0.0, 0.0, 0.0)
+			# I am still trying to figure out why they all have to be 1.0 to work perfectly.
+			# The test player's modulation is #0000ff. This is using the Godot icon that comes with a newly generated project.
+			"forgiveness": Vector3(1.0, 1.0, 1.0)
 		}, "description": "",
 		"seizure_warning": false
 	}

@@ -10,8 +10,20 @@ uniform vec3 forgiveness = vec3(0.0, 0.0, 0.0); // Amount to offset by to includ
 void fragment() {
 	vec3 screen = textureLod(SCREEN_TEXTURE, SCREEN_UV, 0.0).rgb;
 	
+	// If outside of Forgiveness Range, then Return True
+	// Add Forgiveness Value to Color and Determine if Outside of Forgiveness Range
+	bool plus_red = screen.r >= (color.r + forgiveness.r);
+	bool plus_blue = screen.b >= (color.b + forgiveness.b);
+	bool plus_green = screen.g >= (color.g + forgiveness.g);
+	
+	// Subtract Forgiveness Value From Color and Determine if Outside of Forgiveness Range
+	bool minus_red = screen.r <= (color.r - forgiveness.r);
+	bool minus_blue = screen.b <= (color.b - forgiveness.b);
+	bool minus_green = screen.g <= (color.g - forgiveness.g);
+	
 	// Add forgiveness here so the shader can get similar colors in the mix too.
-	if(screen.r != color.r || screen.g != color.g || screen.b != color.b) {
+//	if(screen.r != color.r || screen.g != color.g || screen.b != color.b) {
+	if(plus_red || plus_blue || plus_green || minus_red || minus_blue || minus_green) {
 		// Shade In Color
 		float v = dot(screen, vec3(0.33333, 0.33333, 0.33333));
 		v = sqrt(v);
