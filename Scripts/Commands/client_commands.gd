@@ -9,12 +9,6 @@ var shaders : Dictionary = {
 		"description": "",
 		"seizure_warning": false
 	},
-	"background": {
-		"path": "res://Scripts/Shaders/background.shader",
-		"animated": false,
-		"description": "",
-		"seizure_warning": false
-	},
 	"earthquake": {
 		"path": "res://Scripts/Shaders/earthquake.shader",
 		"animated": true,
