@@ -131,10 +131,11 @@ var shaders : Dictionary = {
 		}, "description": "",
 		"seizure_warning": false
 	},
-	"greenscreen": {
-		"path": "res://Scripts/Shaders/chromakey.shader",
+	"highlighter": {
+		"path": "res://Scripts/Shaders/highlighter.shader",
 		"animated": false,
 		"default_params": {
+			#"shading": Color("#a9a9a9"),
 			"color": Color("#0000ff"),
 			"forgiveness": Vector3(0.0, 0.0, 0.0)
 		}, "description": "",
@@ -336,7 +337,7 @@ func load_default_params(shader_name: String, shader_rect: String) -> void:
 
 func set_shader_param(message) -> String:
 	# /shaderparam <key> <value> [world or game]
-# warning-ignore:unused_variable
+	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_arguments : PoolStringArray = message
 	command_arguments.remove(0)
@@ -375,7 +376,7 @@ func set_shader_param(message) -> String:
 
 			return tr("shaderparam_command_success") % [key, value, tr("shader_all_argument")]
 
-	return "Ran"
+	return tr("shaderparam_command_invalid_arguments")
 
 func get_class() -> String:
 	return "ClientCommands"
