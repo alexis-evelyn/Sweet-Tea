@@ -266,8 +266,8 @@ func check_data_type(data: String):
 		# It's a html color, so convert it to a color type
 		return Color(data)
 
-	# Return data back in string format if no matches
-	return data
+	# Return data back in string format if no matches (or converts to proper type not explicitly checked for; e.g. Vector3)
+	return str2var(data)
 
 func get_class() -> String:
 	return "Functions"
