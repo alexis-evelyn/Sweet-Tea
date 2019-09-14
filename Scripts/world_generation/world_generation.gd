@@ -347,6 +347,7 @@ func generate_foreground(chunk_x: int, chunk_y: int, regenerate: bool = false) -
 		# A different function will handle loading the world from save.
 		return
 
+	# Check Out Perlin Noise Generation Tutorials...
 	generated_chunks_foreground.append(Vector2(chunk_x, chunk_y))
 
 	var noise = OpenSimplexNoise.new() # Create New SimplexNoise Generator
