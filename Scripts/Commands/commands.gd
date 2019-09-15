@@ -142,6 +142,10 @@ func get_permission(command: String) -> int:
 
 	return supported_commands[command]["permission"]
 
+# Check Player's Permission Level
+func check_permission(players_permission_level: int, command_permission_level: int) -> bool:
+	return players_permission_level <= command_permission_level && players_permission_level >= permission_level.get("server_owner")
+
 # Help Command
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
@@ -394,7 +398,7 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	# Get Player's Permission Level
-	if players_permission_level <= command_permission_level && players_permission_level >= permission_level.get("server_owner"):
+	if check_permission(players_permission_level, command_permission_level):
 		# Clears Loaded Chunks From Previous World Generator's Memory
 		var world_generation = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
 		world_generation.clear_player_chunks(net_id)
