@@ -22,7 +22,7 @@ var player_info : Dictionary = {
 	char_unique_id = "Not Set", # Unique Character ID (meant for servers so they can attach features to specific characters - very useful for server plugins
 	starting_world = "Not Set", # Spawn World - Saved to File so The World Loader Can Load The Spawn World Up (Say Permanent Chunk Loading - Will Be Loaded on Client when Client is Connected to Server. Similar idea to Starbound's Spaceship on Servers') - Not Meant to Spawn Players in (Meant for Server Player Only - E.g. Single Player).
 	saved_world = "", # Functionally the same thing as current_world, but meant for Single Player Only (the one exception is, the single player world is loaded on client when connected to server. Similar idea to Starbound's Spaceship on Servers) - Loads Player In Last Saved World
-	locale = TranslationServer.get_locale() # Helps Servers Know What Language To Use (for multilingual supporting servers)
+	locale = TranslationServer.get_locale(), # Helps Servers Know What Language To Use (for multilingual supporting servers)
 }
 
 # warning-ignore:unused_class_variable

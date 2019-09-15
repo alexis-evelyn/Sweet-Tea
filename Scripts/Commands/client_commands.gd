@@ -214,7 +214,7 @@ func teleport_camera(message) -> String:
 	else:
 		return tr("tp_camera_command_too_many_arguments")
 
-	#var permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
+	#var command_permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 
 	var world_name : String = spawn_handler.get_world_name(gamestate.net_id) # Pick world player is currently in
 
