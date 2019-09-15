@@ -35,8 +35,8 @@ var supported_commands : Dictionary = {
 	"createworld": {"description": "help_createworld_desc", "permission": permission_level.mod},
 	"spawn": {"description": "help_spawn_desc", "permission": permission_level.player},
 	"wspawn": {"description": "help_wspawn_desc", "permission": permission_level.player},
-	"setspawn": {"description": "help_setspawn_desc", "permission": permission_level.player},
-	"setwspawn": {"description": "help_setwspawn_desc", "permission": permission_level.player},
+	"setspawn": {"description": "help_setspawn_desc", "permission": permission_level.admin},
+	"setwspawn": {"description": "help_setwspawn_desc", "permission": permission_level.admin},
 	"tp": {"description": "help_tp_desc", "permission": permission_level.op},
 	"seed": {"description": "help_seed_desc", "permission": permission_level.server_owner},
 
@@ -512,11 +512,6 @@ func set_server_spawn(net_id: int, message: PoolStringArray) -> String:
 	var world_path : String = world_handler.starting_world
 
 	load_world_server_thread.start(world_handler, "load_world_server_threaded", [net_id, world_path])
-
-	if net_id == 1:
-		# If Server, show loading screen here.
-		pass
-
 	var world_name : String = load_world_server_thread.wait_to_finish()
 
 	# World Name not Found
@@ -531,7 +526,7 @@ func set_server_spawn(net_id: int, message: PoolStringArray) -> String:
 
 	var new_spawn : Vector2 = Vector2(0, 0)
 
-	# Either Get Coordinates From Player Position or From Arguments
+	# Get Coordinates From Player Position
 	world_gen_node.set_spawn(new_spawn)
 
 	return functions.get_translation("set_server_spawn_command_success", player_registrar.players[net_id].locale) % [new_spawn.x, new_spawn.y]
