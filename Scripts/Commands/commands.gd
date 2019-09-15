@@ -164,11 +164,12 @@ func help_command(net_id: int, message: PoolStringArray) -> String:
 
 	#output_array.append("Commands" + '\n')
 	#output_array.append("-----------------------" + "\n")
-	for command in supported_commands:
-		# TODO: Alphanumerically Sort Commands using PSA.insert(index, string)
-		output_array.append(command + ": " + functions.get_translation(supported_commands[str(command)]["description"], player_registrar.players[net_id].locale))
-		output_array.append(" - " + str(supported_commands[str(command)]["permission"]))
-		output_array.append('\n')
+	for supported_command in supported_commands:
+		# Only return commands the player has access to
+		if check_permission(players_permission_level, get_permission(supported_command)):
+			# TODO: Alphanumerically Sort Commands using PSA.insert(index, string)
+			output_array.append(supported_command + ": " + functions.get_translation(supported_commands[str(supported_command)]["description"], player_registrar.players[net_id].locale))
+			output_array.append('\n')
 
 	# I was hoping for a builtin method to convert array to string without the array brackets and commas
 	var output : String = ""
