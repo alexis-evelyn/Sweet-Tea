@@ -35,6 +35,8 @@ var supported_commands : Dictionary = {
 	"createworld": {"description": "help_createworld_desc", "permission": permission_level.mod},
 	"spawn": {"description": "help_spawn_desc", "permission": permission_level.player},
 	"wspawn": {"description": "help_wspawn_desc", "permission": permission_level.player},
+	"setspawn": {"description": "help_setspawn_desc", "permission": permission_level.player},
+	"setwspawn": {"description": "help_setwspawn_desc", "permission": permission_level.player},
 	"tp": {"description": "help_tp_desc", "permission": permission_level.op},
 	"seed": {"description": "help_seed_desc", "permission": permission_level.server_owner},
 
@@ -106,6 +108,10 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 			return server_spawn(net_id, message)
 		"wspawn":
 			return world_spawn(net_id, message)
+		"setspawn":
+			return set_server_spawn(net_id, message)
+		"setwspawn":
+			return set_world_spawn(net_id, message)
 		"tp":
 			return teleport(net_id, message)
 		"seed":
@@ -497,6 +503,62 @@ func world_spawn(net_id: int, message: PoolStringArray) -> String:
 		spawn_handler.change_world(world_name)
 
 	return functions.get_translation("world_spawn_command_success", player_registrar.players[net_id].locale)
+
+func set_server_spawn(net_id: int, message: PoolStringArray) -> String:
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var permission_level : int = get_permission(command) # Gets Command's Permission Level
+
+	var world_path : String = world_handler.starting_world
+
+	load_world_server_thread.start(world_handler, "load_world_server_threaded", [net_id, world_path])
+
+	if net_id == 1:
+		# If Server, show loading screen here.
+		pass
+
+	var world_name : String = load_world_server_thread.wait_to_finish()
+
+	# World Name not Found
+	if world_name == "":
+		return functions.get_translation("set_server_spawn_command_world_name_not_found", player_registrar.players[net_id].locale)
+
+	var world_gen_node : Node = spawn_handler.get_world_generator_node(world_name) # Get the node for the picked world
+
+	# World Gen Node not Found
+	if world_gen_node == null:
+		return functions.get_translation("set_server_spawn_command_world_node_not_found", player_registrar.players[net_id].locale) % [world_name]
+
+	var new_spawn : Vector2 = Vector2(0, 0)
+
+	# Either Get Coordinates From Player Position or From Arguments
+	world_gen_node.set_spawn(new_spawn)
+
+	return functions.get_translation("set_server_spawn_command_success", player_registrar.players[net_id].locale) % [new_spawn.x, new_spawn.y]
+
+func set_world_spawn(net_id: int, message: PoolStringArray) -> String:
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var permission_level : int = get_permission(command) # Gets Command's Permission Level
+
+	var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
+
+	# World Name not Found
+	if world_name == "":
+		return functions.get_translation("set_world_spawn_command_world_name_not_found", player_registrar.players[net_id].locale)
+
+	var world_gen_node : Node = spawn_handler.get_world_generator_node(world_name) # Get the node for the picked world
+
+	# World Gen Node not Found
+	if world_gen_node == null:
+		return functions.get_translation("set_world_spawn_command_world_node_not_found", player_registrar.players[net_id].locale) % [world_name]
+
+	var new_spawn : Vector2 = Vector2(0, 0)
+
+	# Either Get Coordinates From Player Position or From Arguments
+	world_gen_node.set_spawn(new_spawn)
+
+	return functions.get_translation("set_world_spawn_command_success", player_registrar.players[net_id].locale) % [new_spawn.x, new_spawn.y]
 
 func get_seed(net_id: int, message: PoolStringArray) -> String:
 	"""
