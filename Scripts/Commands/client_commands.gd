@@ -152,6 +152,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return set_shader(message)
 		"shaderparam":
 			return set_shader_param(message)
+		"debugdraw":
+			return set_debug_draw(message)
 		_:
 			return ""
 
@@ -372,6 +374,47 @@ func set_shader_param(message) -> String:
 			return tr("shaderparam_command_success") % [key, value, tr("shader_all_argument")]
 
 	return tr("shaderparam_command_invalid_arguments")
+
+# Only Useful in 3D
+func set_debug_draw(message) -> String:
+	# /debugdraw <mode>
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_arguments : PoolStringArray = message
+	command_arguments.remove(0)
+
+	return tr("debug_draw_command_2d_world")
+
+	if command_arguments.size() != 1:
+		return tr("debug_draw_command_invalid_number_of_arguments")
+
+	var mode : String = command_arguments[0]
+
+	var world_name : String = spawn_handler.get_world_name(gamestate.net_id) # Pick world player is currently in
+
+	if not spawn_handler.has_world_node(world_name):
+		return tr("debug_draw_command_missing_world_node")
+
+	if not spawn_handler.get_world_node(world_name).has_node("Viewport"):
+		return tr("debug_draw_command_missing_viewport_node")
+
+	var viewport : Node = spawn_handler.get_world_node(world_name).get_node("Viewport")
+
+	if mode == "disabled":
+		viewport.set_debug_draw(Viewport.DEBUG_DRAW_DISABLED)
+		return tr("debug_draw_command_disabled")
+	elif mode == "wireframe":
+		VisualServer.set_debug_generate_wireframes(true)
+		viewport.set_debug_draw(Viewport.DEBUG_DRAW_WIREFRAME)
+		return tr("debug_draw_command_wireframe")
+	elif mode == "overdraw":
+		viewport.set_debug_draw(Viewport.DEBUG_DRAW_OVERDRAW)
+		return tr("debug_draw_command_overdraw")
+	elif mode == "unshaded":
+		viewport.set_debug_draw(Viewport.DEBUG_DRAW_UNSHADED)
+		return tr("debug_draw_command_unshaded")
+
+	return tr("debug_draw_command_unknown_mode")
 
 func get_class() -> String:
 	return "ClientCommands"
