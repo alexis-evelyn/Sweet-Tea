@@ -9,6 +9,18 @@ var shaders : Dictionary = {
 		"description": "",
 		"seizure_warning": false
 	},
+	"polysexual_flag": {
+		"path": "res://Scripts/Shaders/lgbt/polysexual_flag.shader",
+		"animated": false,
+		"description": "",
+		"seizure_warning": false
+	},
+	"pansexual_flag": {
+		"path": "res://Scripts/Shaders/lgbt/pansexual_flag.shader",
+		"animated": false,
+		"description": "",
+		"seizure_warning": false
+	},
 	"animated_blur": {
 		"path": "res://Scripts/Shaders/animated_blur.shader",
 		"animated": true,
