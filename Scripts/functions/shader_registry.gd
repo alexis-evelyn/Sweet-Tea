@@ -96,6 +96,12 @@ var shaders : Dictionary = {
 	},
 
 	# Other Shaders
+	"animated_rainbow": {
+		"path": "res://Scripts/Shaders/third_party/ShaderToy/animated_rainbow_gradient.shader",
+		"animated": true,
+		"description": "",
+		"seizure_warning": false
+	},
 	"animated_blur": {
 		"path": "res://Scripts/Shaders/animated_blur.shader",
 		"animated": true,

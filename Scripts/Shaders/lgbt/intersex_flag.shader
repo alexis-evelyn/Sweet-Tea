@@ -8,6 +8,12 @@ shader_type canvas_item;
 uniform vec4 yellow = vec4(1, 0.847058823529412, 0, 1); // Yellow - #FFD800 (255,216,0)
 uniform vec4 purple = vec4(0.474509803921569, 0.007843137254902, 0.666666666666667, 1); // Purple - #7902aa (121,2,170)
 
+float draw_circle() {
+	vec2 dist = vec2(450.0, 500.0);
+	float radius = 147.0;
+	return 1.-smoothstep(radius-(radius*0.01), radius+(radius*0.01), dot(dist, dist)*4.0);
+}
+
 void fragment() {
 	// UV Coordinates Come From Bottom Left (Up is Positive and Right is Positive. Also, the coordinates are from 0 to 1, so knock yourself out)
 	vec2 uv = SCREEN_UV;
@@ -24,6 +30,7 @@ void fragment() {
 	if(set_yellow) {
 		COLOR.rgb = yellow.rgb*v;
 	} else {
-		COLOR.rgb = purple.rgb*v;
+//		COLOR.rgb = purple.rgb*v;
+		COLOR = vec4(draw_circle(), purple.rgb*v);
 	} 
 }
