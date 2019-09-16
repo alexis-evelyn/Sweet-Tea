@@ -3,6 +3,12 @@ class_name ClientCommands
 
 # Used by Shaders Command - May Move to Separate File
 var shaders : Dictionary = {
+	"transgender_flag": {
+		"path": "res://Scripts/Shaders/lgbt/transgender_flag.shader",
+		"animated": false,
+		"description": "",
+		"seizure_warning": false
+	},
 	"animated_blur": {
 		"path": "res://Scripts/Shaders/animated_blur.shader",
 		"animated": true,

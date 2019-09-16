@@ -50,47 +50,47 @@ func auth_user(username, token):
 	username_cache = username
 	token_cache = token
 	pass
-	
+
 func fetch_user(username=null, id=0):
 	_call_gj_api('/users/', {username = username, user_id = id})
 	pass
-	
+
 func fetch_friends():
 	_call_gj_api('/friends/',
 		{username = username_cache, user_token = token_cache})
 	pass
-	
+
 func open_session():
 	_call_gj_api('/sessions/open/',
 		{username = username_cache, user_token = token_cache})
 	pass
-	
+
 func ping_session():
 	_call_gj_api('/sessions/ping/',
 		{username = username_cache, user_token = token_cache})
 	pass
-	
+
 func close_session():
 	_call_gj_api('/sessions/close/',
 		{username = username_cache, user_token = token_cache})
 	pass
-	
+
 func check_session():
 	_call_gj_api('/sessions/check/',
 		{username = username_cache, user_token = token_cache})
 	pass
-	
+
 func fetch_trophy(achieved=null, trophy_ids=null):
 	_call_gj_api('/trophies/',
 		{username = username_cache, user_token = token_cache, achieved = achieved, trophy_id = trophy_ids})
 	pass
-	
+
 func set_trophy_achieved(trophy_id):
 	if username_cache!=null:
 		_call_gj_api('/trophies/add-achieved/',
 			{username = username_cache, user_token = token_cache, trophy_id = trophy_id})
 		pass
-	
+
 func remove_trophy_achieved(trophy_id):
 	_call_gj_api('/trophies/remove-achieved/',
 		{username = username_cache, user_token = token_cache, trophy_id = trophy_id})
@@ -105,45 +105,45 @@ func fetch_guest_scores(guest, table_id=null, limit=null, better_than=null, wors
 	_call_gj_api('/scores/',
 		{guest = guest, limit = limit, table_id = table_id, better_than = better_than, worse_than = worse_than})
 	pass
-	
+
 func fetch_global_scores(table_id=null, limit=null, better_than=null, worse_than=null):
 	_call_gj_api('/scores/',
 		{limit = limit, table_id = table_id, better_than = better_than, worse_than = worse_than})
 	pass
-	
+
 func add_score(score, sort, table_id=null):
 	if username_cache!=null:
 		_call_gj_api('/scores/add/',
 			{score = score, sort = sort, username = username_cache, user_token = token_cache, table_id = table_id})
 		pass
-	
+
 func add_guest_score(score, sort, guest, table_id=null):
 	_call_gj_api('/scores/add/',
 		{score = score, sort = sort, guest = guest, table_id = table_id})
 	pass
-	
+
 func fetch_score_rank(sort, table_id=null):
 	_call_gj_api('/scores/get_rank/', {sort = sort, table_id = table_id})
 	pass
-	
+
 func fetch_tables():
 	_call_gj_api('/scores/tables/',{})
 	pass
-	
+
 func fetch_data(key, global=true):
 	if global:
 		_call_gj_api('/data-store/', {key = key})
 	else:
 		_call_gj_api('/data-store/', {key = key, username = username_cache, user_token = token_cache})
 	pass
-	
+
 func set_data(key, data, global=true):
 	if global:
 		_call_gj_api('/data-store/set/', {key = key, data = data})
 	else:
 		_call_gj_api('/data-store/set/', {key = key, data = data, username = username_cache, user_token = token_cache})
 	pass
-	
+
 func update_data(key, operation, value, global=true):
 	if global:
 		_call_gj_api('/data-store/update/',
@@ -152,14 +152,14 @@ func update_data(key, operation, value, global=true):
 		_call_gj_api('/data-store/update/',
 			{key = key, operation = operation, value = value, username = username_cache, user_token = token_cache})
 	pass
-	
+
 func remove_data(key, global=true):
 	if global:
 		_call_gj_api('/data-store/remove/', {key = key})
 	else:
 		_call_gj_api('/data-store/remove/', {key = key, username = username_cache, token = token_cache})
 	pass
-	
+
 func get_data_keys(pattern=null, global=true):
 	if global:
 		_call_gj_api('/data-store/get-keys/', {pattern = pattern})
@@ -167,7 +167,7 @@ func get_data_keys(pattern=null, global=true):
 		_call_gj_api('/data-store/get-keys/',
 			{username = username_cache, user_token = token_cache, pattern = pattern})
 	pass
-	
+
 func fetch_time():
 	_call_gj_api('/time/',{})
 	pass
@@ -175,7 +175,7 @@ func fetch_time():
 func get_username():
 	return username_cache
 	pass
-	
+
 func get_user_token():
 	return token_cache
 	pass
@@ -249,7 +249,7 @@ func _compose_url(urlpath, parameters={}):
 		_verbose(final_url)
 	return final_url
 	pass
-	
+
 func _on_HTTPRequest_request_completed(result, response_code, headers, body):
 	if result != OK:
 		_complete_request()

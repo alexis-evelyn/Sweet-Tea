@@ -1,7 +1,5 @@
 shader_type canvas_item;
 
-// This is nowhere near completed yet, so don't expect it to work.
-
 // Note to Self, Alpha goes on the end and everything is on a range of 0 to 1. So, take your rgba values and divide each by 255.
 uniform vec4 shading = vec4(0.66274509803, 0.66274509803, 0.66274509803, 1); // Dark Gray #A9A9A9
 uniform vec4 color = vec4(0, 0.69411764705, 0.25098039215, 1); // Green Screen (Chromakey) Color
