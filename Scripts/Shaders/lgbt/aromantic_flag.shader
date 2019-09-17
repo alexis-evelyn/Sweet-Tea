@@ -9,8 +9,7 @@ uniform vec4 dark_green = vec4(0.23921568627451, 0.647058823529412, 0.2588235294
 uniform vec4 light_green = vec4(0.654901960784314, 0.827450980392157, 0.474509803921569, 1); // Light Green - #a7d379 rgb(167,211,121)
 uniform vec4 white = vec4(1, 1, 1, 1); // White - #FFF (255,255,255)
 uniform vec4 gray = vec4(0.662745098039216, 0.662745098039216, 0.662745098039216, 1); // Gray - #a9a9a9 rgb(169,169,169)
-uniform vec4 black = vec4(0, 0, 0, 1); // Black - #000 rgb(0,0,0)
-
+uniform vec4 black = vec4(0.3, 0.3, 0.3, 1); // Black - #000 (0,0,0) - Modified To Allow Transparency
 
 void fragment() {
 	// UV Coordinates Come From Bottom Left (Up is Positive and Right is Positive. Also, the coordinates are from 0 to 1, so knock yourself out)
