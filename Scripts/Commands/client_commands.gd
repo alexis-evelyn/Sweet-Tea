@@ -344,5 +344,9 @@ func take_screenshot(message) -> String:
 	else:
 		return tr("screenshot_command_failed_to_save") % [chosen_viewport.to_lower(), screenshot_filepath, save_success]
 
+func start_recording(message) -> String:
+	# Start Recording - May Do 30 Second Thing Where The Recording is Always Running.
+	return ""
+
 func get_class() -> String:
 	return "ClientCommands"
