@@ -272,6 +272,7 @@ func check_data_type(data: String):
 
 func take_screenshot(viewport: Viewport) -> Image:
 	screenshot = viewport.get_texture().get_data()
+	screenshot.flip_y() # For some reason, the screenshot is flipped, so we have to flip it ourself
 
 #	yield(get_tree(), "idle_frame")
 	# Thread this?

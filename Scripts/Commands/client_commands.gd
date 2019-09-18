@@ -285,22 +285,64 @@ func set_debug_draw(message) -> String:
 	return tr("debug_draw_command_unknown_mode")
 
 func take_screenshot(message) -> String:
-	# The beginnings of Screenshotting and Recording
-
-	var world_name : String = spawn_handler.get_world_name(gamestate.net_id) # Pick world player is currently in
-
-	if not spawn_handler.get_world_node(world_name).has_node("Viewport"):
-		return tr("tp_camera_command_missing_debug_camera")
-
-	var viewport : Viewport = spawn_handler.get_world_node(world_name).get_node("Viewport") # Just World
-	var viewport_two : Viewport = get_viewport() # Whole Screen
+	# /screenshot <game or world>
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_arguments : PoolStringArray = message
+	command_arguments.remove(0)
 
 	# This works with Shaders
 
-	var screenshot : Image = functions.take_screenshot(viewport_two)
-	screenshot.save_png("test.png") # Currently This Outputs Upside Down
+	# Determine Viewport to Screenshot
+	var chosen_viewport : String
+	if command_arguments.size() > 1:
+		return tr("screenshot_command_too_many_arguments")
+	elif command_arguments.size() == 1:
+		chosen_viewport = command_arguments[0] # <game or world>
+	else:
+		chosen_viewport = tr("screenshot_game_argument")
 
-	return "Captured Screen"
+	var viewport : Viewport
+
+	# Find Viewport to Screenshot
+	if chosen_viewport.to_lower() == tr("screenshot_world_argument").to_lower():
+		var world_name : String = spawn_handler.get_world_name(gamestate.net_id) # Pick world player is currently in
+
+		if not spawn_handler.get_world_node(world_name).has_node("Viewport"):
+			return tr("screenshot_command_missing_viewport")
+
+		viewport = spawn_handler.get_world_node(world_name).get_node("Viewport") # Just World
+	elif chosen_viewport.to_lower() == tr("screenshot_game_argument").to_lower():
+		viewport = get_viewport() # Whole Screen
+
+	# Get Formatted DateTime
+	var date_time = OS.get_datetime()
+	var time_milliseconds = OS.get_system_time_msecs() - (OS.get_system_time_secs() * 1000)
+	var formatted_time = tr("datetime_formatting_filename") % [int(date_time["hour"]), int(date_time["minute"]), int(date_time["second"]), time_milliseconds, OS.get_time_zone_info().name]
+
+	# Pick Save Location
+	var game_screenshot_folder : String = functions.get_translation(ProjectSettings.get_setting("application/config/name"), "en")
+	var screenshot_folder : String = "%s".plus_file(game_screenshot_folder) % [OS.get_system_dir(OS.SYSTEM_DIR_PICTURES)]
+	var screenshot_filename : String = "%s_%s.png" % [formatted_time, chosen_viewport.to_lower()]
+	var screenshot_filepath : String = (screenshot_folder.plus_file(screenshot_filename))
+
+	# Create Screenshot Folder if Missing
+	var screenshot_folder_reference : Directory = Directory.new()
+	if not screenshot_folder_reference.dir_exists(screenshot_folder):
+		var make_folder = screenshot_folder_reference.make_dir_recursive(screenshot_folder)
+
+		if make_folder != 0:
+			return tr("screenshot_command_failed_to_make_save_directory") % [screenshot_folder, make_folder]
+
+	# Take and Save Screenshot
+	var screenshot : Image = functions.take_screenshot(viewport)
+	var save_success = screenshot.save_png(screenshot_filepath)
+
+	# Return Status to Player
+	if save_success == 0:
+		return tr("screenshot_command_successful") % [chosen_viewport.to_lower(), screenshot_filepath]
+	else:
+		return tr("screenshot_command_failed_to_save") % [chosen_viewport.to_lower(), screenshot_filepath, save_success]
 
 func get_class() -> String:
 	return "ClientCommands"
