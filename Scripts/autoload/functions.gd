@@ -9,6 +9,7 @@ enum attention_reason {
 
 # Declare member variables here. Examples:
 var current_title : String = ""
+var screenshot : Image # Variable To Hold Screenshot
 
 # I may replace the default window title bar with my own. - https://www.youtube.com/watch?v=alKdkRJy-iY&list=PL0t9iz007UitFwiu33Vx4ZnjYQHH9th2r&index=4&t=0s
 func set_title(title: String):
@@ -268,6 +269,14 @@ func check_data_type(data: String):
 
 	# Return data back in string format if no matches (or converts to proper type not explicitly checked for; e.g. Vector3)
 	return str2var(data)
+
+func take_screenshot(viewport: Viewport) -> Image:
+	screenshot = viewport.get_texture().get_data()
+
+#	yield(get_tree(), "idle_frame")
+	# Thread this?
+
+	return screenshot
 
 func get_class() -> String:
 	return "Functions"

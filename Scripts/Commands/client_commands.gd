@@ -20,6 +20,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return set_shader_param(message)
 		"debugdraw":
 			return set_debug_draw(message)
+		"screenshot":
+			return take_screenshot(message)
 		_:
 			return ""
 
@@ -281,6 +283,24 @@ func set_debug_draw(message) -> String:
 		return tr("debug_draw_command_unshaded")
 
 	return tr("debug_draw_command_unknown_mode")
+
+func take_screenshot(message) -> String:
+	# The beginnings of Screenshotting and Recording
+
+	var world_name : String = spawn_handler.get_world_name(gamestate.net_id) # Pick world player is currently in
+
+	if not spawn_handler.get_world_node(world_name).has_node("Viewport"):
+		return tr("tp_camera_command_missing_debug_camera")
+
+	var viewport : Viewport = spawn_handler.get_world_node(world_name).get_node("Viewport") # Just World
+	var viewport_two : Viewport = get_viewport() # Whole Screen
+
+	# This works with Shaders
+
+	var screenshot : Image = functions.take_screenshot(viewport_two)
+	screenshot.save_png("test.png") # Currently This Outputs Upside Down
+
+	return "Captured Screen"
 
 func get_class() -> String:
 	return "ClientCommands"
