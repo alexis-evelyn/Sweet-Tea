@@ -219,6 +219,7 @@ func close_connection() -> void:
 
 		player_registrar.cleanup()
 		gamestate.net_id = 1 # Reset Network ID To 1 (default value)
+		gamestate.debug = false # Reset Debug Flag Incase Next World Doesn't Specify It
 		get_tree().set_network_peer(null) # Disable Network Peer
 
 	# Frees All Worlds From Memory (1 World if Client, All if Server)
