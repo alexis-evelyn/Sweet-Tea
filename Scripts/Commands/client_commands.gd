@@ -106,6 +106,7 @@ func set_shader(message) -> String:
 	command_arguments.remove(0)
 
 	var shader_name : String
+	var shader_readable_name : String
 
 	if command_arguments.size() == 1:
 		# Assume world if world or game not specified
@@ -123,9 +124,14 @@ func set_shader(message) -> String:
 		if not shaders.get(shader_name).has("path"):
 			return tr("shader_registry_corrupted_path") % shader_name
 
+		if not shaders.get(shader_name).has("name"):
+			shader_readable_name = shader_name
+		else:
+			shader_readable_name = shaders.get(shader_name).get("name")
+
 		functions.set_world_shader(load(shaders.get(shader_name).path))
 		load_default_params(shader_name, tr("shader_world_argument"))
-		return tr("shader_command_success") % [shader_name, tr("shader_world_argument")]
+		return tr("shader_command_success") % [shader_readable_name, tr("shader_world_argument")]
 
 	elif command_arguments.size() == 2:
 		shader_name = command_arguments[0].to_lower()
@@ -143,9 +149,14 @@ func set_shader(message) -> String:
 			if not shaders.get(shader_name).has("path"):
 				return tr("shader_registry_corrupted_path") % shader_name
 
+			if not shaders.get(shader_name).has("name"):
+				shader_readable_name = shader_name
+			else:
+				shader_readable_name = shaders.get(shader_name).get("name")
+
 			functions.set_world_shader(load(shaders.get(shader_name).path))
 			load_default_params(shader_name, tr("shader_world_argument"))
-			return tr("shader_command_success") % [shader_name, tr("shader_world_argument")]
+			return tr("shader_command_success") % [shader_readable_name, tr("shader_world_argument")]
 		elif shader_rect.to_lower() == tr("shader_game_argument").to_lower():
 			if shader_name.to_lower() == tr("shader_remove_argument"):
 				# Remove Global Shader
@@ -158,9 +169,14 @@ func set_shader(message) -> String:
 			if not shaders.get(shader_name).has("path"):
 				return tr("shader_registry_corrupted_path") % shader_name
 
+			if not shaders.get(shader_name).has("name"):
+				shader_readable_name = shader_name
+			else:
+				shader_readable_name = shaders.get(shader_name).get("name")
+
 			functions.set_global_shader(load(shaders.get(shader_name).path))
 			load_default_params(shader_name, tr("shader_game_argument"))
-			return tr("shader_command_success") % [shader_name, tr("shader_game_argument")]
+			return tr("shader_command_success") % [shader_readable_name, tr("shader_game_argument")]
 		elif shader_rect.to_lower() == tr("shader_all_argument").to_lower():
 			if shader_name.to_lower() == tr("shader_remove_argument"):
 				# Remove Both Shaders
@@ -174,11 +190,16 @@ func set_shader(message) -> String:
 			if not shaders.get(shader_name).has("path"):
 				return tr("shader_registry_corrupted_path") % shader_name
 
+			if not shaders.get(shader_name).has("name"):
+				shader_readable_name = shader_name
+			else:
+				shader_readable_name = shaders.get(shader_name).get("name")
+
 			functions.set_world_shader(load(shaders.get(shader_name).path))
 			functions.set_global_shader(load(shaders.get(shader_name).path))
 			load_default_params(shader_name, tr("shader_world_argument"))
 			load_default_params(shader_name, tr("shader_game_argument"))
-			return tr("shader_command_success") % [shader_name, tr("shader_all_argument_reply")]
+			return tr("shader_command_success") % [shader_readable_name, tr("shader_all_argument_reply")]
 
 	return tr("shader_command_invalid_arguments")
 
