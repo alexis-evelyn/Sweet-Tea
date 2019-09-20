@@ -93,7 +93,7 @@ func process_json_response(body: String):
 		pass
 		return
 
-	# Inside Dictioanry - version: string, schema: string, status: int, requestInformation: Dictionary, data: Integer Array
+	# Inside Dictionary - version: string, schema: string, status: int, requestInformation: Dictionary, data: Integer Array
 	# Inside requestInformation - serverVersion: string, generationTime: string, bytesRequested: int, bytesReturned: int, quotaRequestsRemaining: int, quotaBytesRemaining: int, generatorType: string
 
 #	logger.warn("Version: %s" % json_response.result.version)
