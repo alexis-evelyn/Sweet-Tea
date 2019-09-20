@@ -1,6 +1,8 @@
 extends Node
 class_name Hotbits
 
+# Unfinished But Mostly Ready For Use - May Use Later
+
 # Pulls Random Data From Geiger Counter At Fourmilabs. Can be used to retrieve truly random data in the quantum sense.
 # Take that determinism!!! :P
 
@@ -91,7 +93,8 @@ func process_json_response(body: String):
 		pass
 		return
 
-	# version: string, schema: string, status: int, requestInformation: Dictionary, data: Array
+	# Inside Dictioanry - version: string, schema: string, status: int, requestInformation: Dictionary, data: Integer Array
+	# Inside requestInformation - serverVersion: string, generationTime: string, bytesRequested: int, bytesReturned: int, quotaRequestsRemaining: int, quotaBytesRemaining: int, generatorType: string
 
 #	logger.warn("Version: %s" % json_response.result.version)
 #	logger.warn("Schema: %s" % json_response.result.schema)
@@ -104,7 +107,7 @@ func process_json_response(body: String):
 #		logger.warn("Byte: %s" % [byte])
 
 	if json_response.result.has("data"):
-		print("Has Data")
+		logger.verbose("Hotbits Bytes: %s" % json_response.result.data)
 
 func get_api_key() -> String:
 	if real_key.empty():
