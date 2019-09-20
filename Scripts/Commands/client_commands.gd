@@ -323,6 +323,10 @@ func take_screenshot(message) -> String:
 	else:
 		chosen_viewport = tr("screenshot_game_argument")
 
+	# Turns out Godot has ternary if statements
+	# 0 is either <game or world>
+	#chosen_viewport = command_arguments[0] if command_arguments.size() == 1 else tr("screenshot_game_argument")
+
 	var viewport : Viewport
 
 	# Find Viewport to Screenshot
