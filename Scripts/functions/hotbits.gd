@@ -29,7 +29,7 @@ var validate_domain : bool = true # Validate Domain if Using HTTPS.
 
 var real_key : String # Do Not Store Real Key in Code - Key To Be Requested From This Form: https://www.fourmilab.ch/hotbits/apikey_request.html
 
-var headers : Array = [
+var sent_headers : Array = [
 	"user-agent: %s" % [user_agent],
 	"Content-type: application/x-www-form-urlencoded"
 ]
@@ -51,9 +51,11 @@ enum password_type {
 	letters_numbers_and_punctuation = 3
 }
 
+var json_response : JSONParseResult # Response From Hotbits
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	request_data()
+#	request_data()
 	pass # Replace with function body.
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -61,8 +63,11 @@ func _ready():
 #	pass
 
 func request_data():
-	$HTTPRequest.request(api_url + to_query_string(query), headers, validate_domain, request_method)
+	$HTTPRequest.request(api_url + to_query_string(query), sent_headers, validate_domain, request_method)
 
+# warning-ignore:unused_argument
+# warning-ignore:unused_argument
+# warning-ignore:unused_argument
 func request_completed(result: int, response_code: int, headers: PoolStringArray, body: PoolByteArray):
 #	logger.verbose("Hotbits Result Code: %s" % result)
 #	logger.verbose("Hotbits Response Code: %s" % response_code)
@@ -70,14 +75,36 @@ func request_completed(result: int, response_code: int, headers: PoolStringArray
 #	for header in headers:
 #		logger.verbose("Hotbits Header: %s" % header)
 
-	logger.warn("Body: %s" % body.get_string_from_utf8())
+#	logger.warn("Body: %s" % body.get_string_from_utf8())
 
 	if data_format == "json":
 		# Run Function to Parse As Json (After Checking To Make Sure Not HTML Rate Limit Message)
-		pass
+		process_json_response(body.get_string_from_utf8())
 	else:
 		# Unrecognized Format, Print To Logger and stdout
 		logger.warn("Format: %s\nBody: %s" % [data_format, body.get_string_from_utf8()])
+
+func process_json_response(body: String):
+	json_response = JSON.parse(body)
+
+	if json_response.error != OK:
+		pass
+		return
+
+	# version: string, schema: string, status: int, requestInformation: Dictionary, data: Array
+
+#	logger.warn("Version: %s" % json_response.result.version)
+#	logger.warn("Schema: %s" % json_response.result.schema)
+#	logger.warn("Status: %s" % json_response.result.status)
+#
+#	for request_info in json_response.result.requestInformation:
+#		logger.warn("RequestInfo %s: %s" % [request_info, json_response.result.requestInformation.get(request_info)])
+#
+#	for byte in json_response.result.data:
+#		logger.warn("Byte: %s" % [byte])
+
+	if json_response.result.has("data"):
+		print("Has Data")
 
 func get_api_key() -> String:
 	if real_key.empty():

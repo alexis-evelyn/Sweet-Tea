@@ -33,35 +33,35 @@ func _ready():
 func set_text() -> void:
 	createCharacterButton.text = tr("create_character_button")
 	debugMode.text = tr("debug_mode_checkbox")
-	
+
 	worldSeed.placeholder_text = tr("world_seed_placeholder")
 	characterName.placeholder_text = tr("character_name_placeholder")
-	
+
 	#characterColor.text = tr("character_color")
 
 func create_character() -> void:
 	logger.info("Slot: %s" % slot)
-	
+
 	# Cool Color - #ff00ab
 	# Unless modded, the color output should always be a valid color
 	gamestate.player_info.char_color = get_picker_color()
-	
+
 	# Generate A Random Character ID
 	gamestate.player_info.char_unique_id = gamestate.generate_character_unique_id()
-	
+
 	# Unless modded, the checkbox should always be a valid boolean value
 	gamestate.debug = debugMode.is_pressed()
-	
+
 	# Set Character's Name
 	gamestate.player_info.name = get_character_name()
-	
+
 	# Set World's Seed
 	if get_seed() == "":
 		if worldSeed.text == "":
 			set_seed("Randomly Generated Seed")
 		else:
 			set_seed(worldSeed.text)
-	
+
 	# This is setup so worldgen does not happen if the new character was created for the purpose of joining a server.
 	# This will help save processing time as worldgen can be delayed until later
 	if is_client:
@@ -73,15 +73,15 @@ func create_character() -> void:
 		create_world()
 		gamestate.save_player(slot)
 		network.start_server()
-	
+
 	$PlayerCreationWindow.hide() # Hides Own Popup Menu
 	emit_signal("character_created") # Alerts Player Selection Menu That It Can Continue Processing The Scene To Load (If Any)
 
 # This is a function as I need to call this in player selection without resetting the character's variables
 func create_world() -> void:
 	# Should I Thread This?
-	
-	
+
+
 	# Setup loading screen on separate thread here and listen or signals from world loader.
 #	if not get_tree().get_root().has_node("LoadingScreen"):
 #		loading_screen = load(loading_screen_name).instance()
@@ -95,7 +95,7 @@ func create_world() -> void:
 	var world_name : String = world_handler.create_world_server_threaded([-1, world_seed, Vector2(0, 0)])
 
 	gamestate.player_info.starting_world = "user://worlds/".plus_file(world_name)
-	
+
 #	gamestate.save_player(slot)
 
 	logger.verbose("Player Creation Menu - Starting Server (Singleplayer)")
@@ -105,7 +105,7 @@ func create_world() -> void:
 func get_picker_color() -> String:
 	# This is a function for if I eventually modify the color to make it play nicer with the background.
 	return characterColor.color.to_html(false)
-	
+
 func get_character_name() -> String:
 	if characterName.text == "":
 		return get_random_name()
@@ -136,10 +136,10 @@ func _about_to_show() -> void:
 func _about_to_hide() -> void:
 	"""
 		Reset Title to Before
-		
+
 		Not Meant to Be Called Directly
 	"""
-	
+
 	functions.set_title(old_title)
 
 func get_class() -> String:

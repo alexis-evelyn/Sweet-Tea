@@ -274,6 +274,8 @@ func set_debug_draw(message) -> String:
 
 	return tr("debug_draw_command_2d_world")
 
+	# Why is this marked as unreachable code?
+	# warning-ignore:unreachable_code
 	if command_arguments.size() != 1:
 		return tr("debug_draw_command_invalid_number_of_arguments")
 
@@ -369,6 +371,7 @@ func take_screenshot(message) -> String:
 	else:
 		return tr("screenshot_command_failed_to_save") % [chosen_viewport.to_lower(), screenshot_filepath, save_success]
 
+# warning-ignore:unused_argument
 func start_recording(message) -> String:
 	# Start Recording - May Do 30 Second Thing Where The Recording is Always Running.
 	return ""

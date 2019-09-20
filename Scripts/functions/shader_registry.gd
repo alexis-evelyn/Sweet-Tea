@@ -1,6 +1,7 @@
 extends Node
 
 # Used by Shaders Command in client_commands.gd
+# warning-ignore:unused_class_variable
 var shaders : Dictionary = {
 	# LGBT Shaders
 	"transgender_flag": {
