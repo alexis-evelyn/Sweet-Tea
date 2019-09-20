@@ -14,6 +14,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return server_ip(message)
 		"cam":
 			return teleport_camera(message)
+		"shaderinfo":
+			return shader_info(message)
 		"shader":
 			return set_shader(message)
 		"shaderparam":
@@ -36,7 +38,7 @@ func open_calculator(message: PoolStringArray) -> String:
 	return tr("open_calculator")
 
 # warning-ignore:unused_argument
-func server_ip(message) -> String:
+func server_ip(message: PoolStringArray) -> String:
 	var net : NetworkedMultiplayerENet = get_tree().get_network_peer()
 
 	if gamestate.net_id == 1:
@@ -44,13 +46,13 @@ func server_ip(message) -> String:
 
 	return tr("server_ip_command") % net.get_peer_address(1)
 
-func teleport_camera(message) -> String:
+func teleport_camera(message: PoolStringArray) -> String:
 	"""
 		Teleport Camera To Coordinates Command
 
 		Not Meant to Be Called Directly
 	"""
-# warning-ignore:unused_variable
+	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_arguments : PoolStringArray = message
 	command_arguments.remove(0)
@@ -98,7 +100,27 @@ func teleport_camera(message) -> String:
 
 	return tr("tp_camera_command_success") % [coordinates.x, coordinates.y]
 
-func set_shader(message) -> String:
+func shader_info(message: PoolStringArray) -> String:
+	# /shaderinfo [shader_name]
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_arguments : PoolStringArray = message
+	command_arguments.remove(0)
+
+	var response : PoolStringArray
+
+	for shader in shaders:
+		response.append("ID: %s" % shader)
+		response.append("Name: %s" % shaders[shader].name)
+		response.append("Description: %s" % shaders[shader].description)
+		response.append("Seizure Warning: %s" % shaders[shader].seizure_warning)
+		response.append("")
+
+	response.remove(response.size()-1)
+
+	return response.join("\n")
+
+func set_shader(message: PoolStringArray) -> String:
 	# /shader <shader_name> [world or game]
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
@@ -221,7 +243,7 @@ func load_default_params(shader_name: String, shader_rect: String) -> void:
 		for param in default_params:
 			functions.set_global_shader_param(param, default_params[param])
 
-func set_shader_param(message) -> String:
+func set_shader_param(message: PoolStringArray) -> String:
 	# /shaderparam <key> <value> [world or game]
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
@@ -265,7 +287,7 @@ func set_shader_param(message) -> String:
 	return tr("shaderparam_command_invalid_arguments")
 
 # Only Useful in 3D
-func set_debug_draw(message) -> String:
+func set_debug_draw(message: PoolStringArray) -> String:
 	# /debugdraw <mode>
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
@@ -307,7 +329,7 @@ func set_debug_draw(message) -> String:
 
 	return tr("debug_draw_command_unknown_mode")
 
-func take_screenshot(message) -> String:
+func take_screenshot(message: PoolStringArray) -> String:
 	# /screenshot <game or world>
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
@@ -372,7 +394,7 @@ func take_screenshot(message) -> String:
 		return tr("screenshot_command_failed_to_save") % [chosen_viewport.to_lower(), screenshot_filepath, save_success]
 
 # warning-ignore:unused_argument
-func start_recording(message) -> String:
+func start_recording(message: PoolStringArray) -> String:
 	# Start Recording - May Do 30 Second Thing Where The Recording is Always Running.
 	return ""
 

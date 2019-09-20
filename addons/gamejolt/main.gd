@@ -282,6 +282,6 @@ func _next_call_from_queue():
 	_call_gj_api(nextCall[0], nextCall[1])
 	pass
 
-func _verbose(message):
+func _verbose(message: String):
 	if verbose:
 		logger.verbose('[GAMEJOLT] ' + message)

@@ -166,7 +166,7 @@ var shaders : Dictionary = {
 		"default_params": {
 			"blur": 2.0 # (0-5)
 		},
-		"description": "Blur the World Like An Out of Focus Lense",
+		"description": "Blur the World Like An Out of Focus Lens",
 		"seizure_warning": false
 	},
 	"contrasted": {
@@ -267,7 +267,7 @@ var shaders : Dictionary = {
 			"color": Color("#0000ff"),
 			# The test player's modulation is #0000ff. This is using the Godot icon that comes with a newly generated project.
 			"forgiveness": Vector3(0.0, 0.0, 1.0)
-		}, "description": "Reverse Chromakey. Instead of Shading the Chromkey Color, Shader everything else. Acts like Sepia Shader, but ignores a certain color.",
+		}, "description": "Reverse Chromakey. Instead of Shading the Chromkey Color, Shades everything else. Acts like Sepia Shader, but ignores a certain color.",
 		"seizure_warning": false
 	}
 }
