@@ -103,6 +103,8 @@ func teleport_camera(message: PoolStringArray) -> String:
 func shader_info(message: PoolStringArray) -> String:
 	# /shaderinfo [shader_name]
 	# warning-ignore:unused_variable
+#	TranslationServer.set_locale("mz")
+
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_arguments : PoolStringArray = message
 	command_arguments.remove(0)
@@ -110,10 +112,10 @@ func shader_info(message: PoolStringArray) -> String:
 	var response : PoolStringArray
 
 	for shader in shaders:
-		response.append("ID: %s" % shader)
-		response.append("Name: %s" % shaders[shader].name)
-		response.append("Description: %s" % shaders[shader].description)
-		response.append("Seizure Warning: %s" % shaders[shader].seizure_warning)
+		response.append(tr("shader_info_command_id") % shader)
+		response.append(tr("shader_info_command_name") % tr(shaders[shader].name))
+		response.append(tr("shader_info_command_description") % tr(shaders[shader].description))
+		response.append(tr("shader_info_command_seizure_warning") % shaders[shader].seizure_warning)
 		response.append("")
 
 	response.remove(response.size()-1)
@@ -149,7 +151,7 @@ func set_shader(message: PoolStringArray) -> String:
 		if not shaders.get(shader_name).has("name"):
 			shader_readable_name = shader_name
 		else:
-			shader_readable_name = shaders.get(shader_name).get("name")
+			shader_readable_name = tr(shaders.get(shader_name).name)
 
 		functions.set_world_shader(load(shaders.get(shader_name).path))
 		load_default_params(shader_name, tr("shader_world_argument"))

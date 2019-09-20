@@ -5,137 +5,137 @@ extends Node
 var shaders : Dictionary = {
 	# LGBT Shaders
 	"transgender_flag": {
-		"name": "Transgender Flag",
+		"name": "transgender_flag_name",
 		"lgbt": true, # Used to Verify That This is A LGBT Shader
 		"path": "res://Scripts/Shaders/lgbt/transgender_flag.shader",
 		"animated": false,
-		"description": "Transgender Flag in Shader Form",
+		"description": "transgender_flag_description",
 		"seizure_warning": false
 	},
 	"polysexual_flag": {
-		"name": "Polysexual Flag",
+		"name": "polysexual_flag_name",
 		"lgbt": true, # Custom Keys Can Be Added To Help With Mods/Builtin Functions to Organize/Setup Shaders
 		"path": "res://Scripts/Shaders/lgbt/polysexual_flag.shader",
 		"animated": false,
-		"description": "Polysexual Flag in Shader Form",
+		"description": "polysexual_flag_description",
 		"seizure_warning": false
 	},
 	"pansexual_flag": {
-		"name": "Pansexual Flag",
+		"name": "pansexual_flag_name",
 		"lgbt": true,
 		"path": "res://Scripts/Shaders/lgbt/pansexual_flag.shader",
 		"animated": false,
-		"description": "Pansexual Flag in Shader Form",
+		"description": "pansexual_flag_description",
 		"seizure_warning": false
 	},
 	"nonbinary_flag": {
-		"name": "Non-binary Flag",
+		"name": "nonbinary_flag_name",
 		"lgbt": true,
 		"path": "res://Scripts/Shaders/lgbt/non-binary_flag.shader",
 		"animated": false,
-		"description": "Non-binary Flag in Shader Form",
+		"description": "nonbinary_flag_description",
 		"seizure_warning": false
 	},
 	"lgbt_flag": {
-		"name": "LGBT Pride Flag",
+		"name": "lgbt_flag_name",
 		"lgbt": true,
 		"path": "res://Scripts/Shaders/lgbt/lgbt_flag.shader",
 		"animated": false,
-		"description": "LGBT Flag in Shader Form",
+		"description": "lgbt_flag_description",
 		"seizure_warning": false
 	},
 	"lesbian_flag": {
-		"name": "Lesbian Flag",
+		"name": "lesbian_flag_name",
 		"lgbt": true,
 		"path": "res://Scripts/Shaders/lgbt/lesbian_flag.shader",
 		"animated": false,
-		"description": "Lesbian Flag in Shader Form",
+		"description": "lesbian_flag_description",
 		"seizure_warning": false
 	},
 	"intersex_flag": {
-		"name": "Intersex Flag",
+		"name": "intersex_flag_name",
 		"lgbt": true,
 		"path": "res://Scripts/Shaders/lgbt/intersex_flag.shader",
 		"animated": false,
-		"description": "Intersex Flag in Shader Form. Not Finished!!!",
+		"description": "intersex_flag_description",
 		"seizure_warning": false
 	},
 	"genderqueer_flag": {
-		"name": "Genderqueer Flag",
+		"name": "genderqueer_flag_name",
 		"lgbt": true,
 		"path": "res://Scripts/Shaders/lgbt/genderqueer_flag.shader",
 		"animated": false,
-		"description": "Genderqueer Flag in Shader Form",
+		"description": "genderqueer_flag_description",
 		"seizure_warning": false
 	},
 	"genderfluid_flag": {
-		"name": "Genderfluid Flag",
+		"name": "genderfluid_flag_name",
 		"lgbt": true,
 		"path": "res://Scripts/Shaders/lgbt/genderfluid_flag.shader",
 		"animated": false,
-		"description": "Genderfluid Flag in Shader Form",
+		"description": "genderfluid_flag_description",
 		"seizure_warning": false
 	},
 	"bisexual_flag": {
-		"name": "Bisexual Flag",
+		"name": "bisexual_flag_name",
 		"lgbt": true,
 		"path": "res://Scripts/Shaders/lgbt/bisexual_flag.shader",
 		"animated": false,
-		"description": "Bisexual Flag in Shader Form",
+		"description": "bisexual_flag_description",
 		"seizure_warning": false
 	},
 	"asexual_flag": {
-		"name": "Asexual Flag",
+		"name": "asexual_flag_name",
 		"lgbt": true,
 		"path": "res://Scripts/Shaders/lgbt/asexual_flag.shader",
 		"animated": false,
-		"description": "Asexual Flag in Shader Form",
+		"description": "asexual_flag_description",
 		"seizure_warning": false
 	},
 	"aromantic_flag": {
-		"name": "Aromantic Flag",
+		"name": "aromantic_flag_name",
 		"lgbt": true,
 		"path": "res://Scripts/Shaders/lgbt/aromantic_flag.shader",
 		"animated": false,
-		"description": "Aromantic Flag in Shader Form",
+		"description": "aromantic_flag_description",
 		"seizure_warning": false
 	},
 	"agender_flag": {
-		"name": "Agender Flag",
+		"name": "agender_flag_name",
 		"lgbt": true,
 		"path": "res://Scripts/Shaders/lgbt/agender_flag.shader",
 		"animated": false,
-		"description": "Agender Flag in Shader Form",
+		"description": "agender_flag_description",
 		"seizure_warning": false
 	},
 
 	# Other Shaders
 	"animated_rainbow": {
-		"name": "Animated Rainbow",
+		"name": "animated_rainbow_name",
 		"path": "res://Scripts/Shaders/third_party/ShaderToy/animated_rainbow_gradient.shader",
 		"animated": true,
-		"description": "Animated Rainbow Gradient Copied and Modified From ShaderToy Starting Shader",
+		"description": "animated_rainbow_description",
 		"seizure_warning": false
 	},
 	"animated_blur": {
-		"name": "Animated Blur",
+		"name": "animated_blur_name",
 		"path": "res://Scripts/Shaders/animated_blur.shader",
 		"animated": true,
-		"description": "Blur Shader, But Phases In And Out. Useful for Confusion Based Effects.",
+		"description": "animated_blur_description",
 		"seizure_warning": false
 	},
 	"earthquake": {
-		"name": "Earthquake",
+		"name": "earthquake_name",
 		"path": "res://Scripts/Shaders/earthquake.shader",
 		"animated": true,
-		"description": "Shake the World Like an Earthquake",
+		"description": "earthquake_description",
 		"seizure_warning": true # TODO: Find our what to look for to accurately predict potential seizure causing shaders
 	},
 	"fabric_of_time": {
-		"name": "Fabric of Time",
+		"name": "fabric_of_time_name",
 		"path": "res://Scripts/Shaders/fabric_of_time.shader",
 		"animated": true,
-		"description": "Reminds Me Of Physics SpaceTime Illustrations, But Cooler",
+		"description": "fabric_of_time_description",
 		"seizure_warning": false
 	},
 	"grayscale": {
@@ -259,7 +259,7 @@ var shaders : Dictionary = {
 		"seizure_warning": false
 	},
 	"highlighter": {
-		"name": "Highlighter (The Darkener)",
+		"name": "highlighter_name",
 		"path": "res://Scripts/Shaders/highlighter.shader",
 		"animated": false,
 		"default_params": {
@@ -267,7 +267,7 @@ var shaders : Dictionary = {
 			"color": Color("#0000ff"),
 			# The test player's modulation is #0000ff. This is using the Godot icon that comes with a newly generated project.
 			"forgiveness": Vector3(0.0, 0.0, 1.0)
-		}, "description": "Reverse Chromakey. Instead of Shading the Chromkey Color, Shades everything else. Acts like Sepia Shader, but ignores a certain color.",
+		}, "description": "highlighter_description",
 		"seizure_warning": false
 	}
 }
