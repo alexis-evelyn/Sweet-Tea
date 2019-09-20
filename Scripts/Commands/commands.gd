@@ -192,6 +192,7 @@ func private_message(net_id: int, message: PoolStringArray) -> String:
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	# warning-ignore:unused_variable
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
+	# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	if not message.size() > 2:
@@ -273,7 +274,9 @@ func kick_player(net_id: int, message: PoolStringArray) -> String:
 		Not Meant to Be Called Directly
 	"""
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	# warning-ignore:unused_variable
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
+	# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	# player_control
@@ -289,7 +292,9 @@ func kick_player_ip(net_id: int, message: PoolStringArray) -> String:
 		Not Meant to Be Called Directly
 	"""
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	# warning-ignore:unused_variable
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
+	# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	# warning-ignore:unused_variable
@@ -308,7 +313,9 @@ func ban_player(net_id: int, message: PoolStringArray) -> String:
 		Not Meant to Be Called Directly
 	"""
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	# warning-ignore:unused_variable
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
+	# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	# player_control
@@ -324,7 +331,9 @@ func ban_player_ip(net_id: int, message: PoolStringArray) -> String:
 		Not Meant to Be Called Directly
 	"""
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	# warning-ignore:unused_variable
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
+	# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	# player_control
@@ -343,6 +352,7 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
+	# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	var world_path : String = "user://worlds/World 2"
@@ -440,7 +450,9 @@ func shutdown_server(net_id: int, message: PoolStringArray) -> String:
 	"""
 
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	# warning-ignore:unused_variable
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
+	# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	return functions.get_translation("shutdown_server_no_permission", player_registrar.players[net_id].locale) % permission_level
@@ -454,6 +466,7 @@ func server_spawn(net_id: int, message: PoolStringArray) -> String:
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
+	# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	var world_path : String = world_handler.starting_world
@@ -500,6 +513,7 @@ func world_spawn(net_id: int, message: PoolStringArray) -> String:
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
+	# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
@@ -526,6 +540,7 @@ func set_server_spawn(net_id: int, message: PoolStringArray) -> String:
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
+	# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	var world_path : String = world_handler.starting_world
@@ -554,6 +569,7 @@ func set_world_spawn(net_id: int, message: PoolStringArray) -> String:
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
+# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
@@ -584,6 +600,7 @@ func get_seed(net_id: int, message: PoolStringArray) -> String:
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
+# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	# Get Seed From World Player Is In
