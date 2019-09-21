@@ -139,123 +139,123 @@ var shaders : Dictionary = {
 		"seizure_warning": false
 	},
 	"grayscale": {
-		"name": "Grayscale",
+		"name": "grayscale_name",
 		"path": "res://Scripts/Shaders/grayscale.shader",
 		"animated": false,
-		"description": "Shade Using A More Realistic Grayscale (For Black and White Photography Effect)",
+		"description": "grayscale_description",
 		"seizure_warning": false
 	},
 	"peeling_back_reality": {
-		"name": "Peeling Back Reality",
+		"name": "peeling_back_reality_name",
 		"path": "res://Scripts/Shaders/peeling_back_reality.shader",
 		"animated": false,
-		"description": "Kinda Looks Like Reality Itself Is Being Pulled Backwards. Can Be Improved and Animated.",
+		"description": "peeling_back_reality_description",
 		"seizure_warning": false
 	},
 	"bcs": {
-		"name": "Brightness, Contrast, Saturation",
+		"name": "bcs_name",
 		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/bcs.shader",
 		"animated": false,
-		"description": "Demo Shader For Adjusting Brightness, Contrast, and Saturation",
+		"description": "bcs_description",
 		"seizure_warning": false
 	},
 	"blur": {
-		"name": "Blur",
+		"name": "blur_name",
 		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/blur.shader",
 		"animated": false,
 		"default_params": {
 			"blur": 2.0 # (0-5)
 		},
-		"description": "Blur the World Like An Out of Focus Lens",
+		"description": "blur_description",
 		"seizure_warning": false
 	},
 	"contrasted": {
-		"name": "Contrasted",
+		"name": "contrasted_name",
 		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/contrasted.shader",
 		"animated": false,
-		"description": "Demo Shader to Up The Contrast. With Some Modification, It Could Look Whitewashed.",
+		"description": "contrasted_description",
 		"seizure_warning": false
 	},
 	"fisheye": {
-		"name": "Fisheye",
+		"name": "fisheye_name",
 		"path": "res://Scripts/Shaders/third_party/JEGX/fisheye.shader",
 		"animated": false,
-		"description": "Fisheye Effect. Adjusts Fisheye to Screen Resolution.",
+		"description": "fisheye_description",
 		"seizure_warning": false
 	},
 	"mirage": {
-		"name": "Mirage",
+		"name": "mirage_name",
 		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/mirage.shader",
 		"animated": true,
-		"description": "Produces a Mirage Effect. More Useful in 3D Sand Environments.",
+		"description": "mirage_description",
 		"seizure_warning": false
 	},
 	"negative": {
-		"name": "Negative",
+		"name": "negative_name",
 		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/negative.shader",
 		"animated": false,
-		"description": "Inverts the Colors of the World",
+		"description": "negative_description",
 		"seizure_warning": false
 	},
 	"normalize": {
-		"name": "Normalize",
+		"name": "normalize_name",
 		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/normalized.shader",
 		"animated": false,
-		"description": "Brings colors closer together. Not too dark and not too bright. Could use some work to find a center brightness.",
+		"description": "normalize_description",
 		"seizure_warning": false
 	},
 	"pixelize": {
-		"name": "Pixelize",
+		"name": "pixelize_name",
 		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/pixelize.shader",
 		"animated": false,
-		"description": "Makes everything look super low res and pixelated.",
+		"description": "pixelize_description",
 		"seizure_warning": false
 	},
 	"sepia": {
-		"name": "Sepia",
+		"name": "sepia_name",
 		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/sepia.shader",
 		"animated": false,
 		"default_params": {
 			"color": Color("#8b6867") # Defaults to Sepia Color
 		},
-		"description": "Tone the world to a certain color. Color is adjustable using /shaderparam",
+		"description": "sepia_description",
 		"seizure_warning": false
 	},
 	"whirl": {
-		"name": "Whirl",
+		"name": "whirl_name",
 		"path": "res://Scripts/Shaders/third_party/Official Godot Shaders/whirl.shader",
 		"animated": false,
-		"description": "Twists the World In A Whirlpool like Fashion.",
+		"description": "whirl_description",
 		"seizure_warning": false
 	},
 	"whirl_strong": {
-		"name": "Strong Whirl",
+		"name": "whirl_strong_name",
 		"path": "res://Scripts/Shaders/whirl_strong.shader",
 		"animated": true,
-		"description": "Twists the World In A Whirlpool like Fashion.",
+		"description": "whirl_strong_description",
 		"seizure_warning": false
 	},
 	"animated_whirl": {
-		"name": "Animated Whirl",
+		"name": "animated_whirl_name",
 		"path": "res://Scripts/Shaders/animated_whirl.shader",
 		"animated": false,
-		"description": "Twists the World In A Whirlpool like Fashion, but Animated.",
+		"description": "animated_whirl_description",
 		"seizure_warning": false
 	},
 	"weird_boxy_rotation": {
-		"name": "Weird Boxy Shader",
+		"name": "weird_boxy_rotation_name",
 		"path": "res://Scripts/Shaders/weird_boxy_rotation.shader",
 		"animated": true,
-		"description": "A weird, random effect produced by accident when I was trying to flip the screen.",
+		"description": "weird_boxy_rotation_description",
 		"seizure_warning": false
 	},
 	"flip": {
-		"name": "Screen Flip",
+		"name": "flip_name",
 		"path": "res://Scripts/Shaders/flip.shader",
 		"animated": false,
 		"default_params": {
 			"angle": 180,
-		}, "description": "Flip the screen by some number of degrees.",
+		}, "description": "flip_description",
 		"seizure_warning": false
 	},
 	"highlighter": {
