@@ -7,5 +7,6 @@ Links To Help With Writing Great Lore
 * Tips on Writing Lore (Reddit Worldbuilding) - https://www.reddit.com/r/worldbuilding/comments/2s4fit/tips_on_writing_lore/
 * The Three Pillars of Game Writing (Youtube) - https://www.youtube.com/watch?v=wNNXdoj7cCQ
 * Google Search "how to write great lore for a game"
+* TV Tropes (To Figure Out Good and Bad Ideas) - https://tvtropes.org/
 
 Future Lore Writing Will Be Here...
