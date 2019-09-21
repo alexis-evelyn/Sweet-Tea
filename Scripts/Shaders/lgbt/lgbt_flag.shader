@@ -18,7 +18,7 @@ void fragment() {
 	
 	vec3 screen = textureLod(SCREEN_TEXTURE, uv, 0.0).rgb;
 	
-	// Shade In Color
+	// Make Screen Color Slightly Darker Before Apply Shading
 	float v = dot(screen, vec3(0.33333, 0.33333, 0.33333));
 	v = sqrt(v);
 	
