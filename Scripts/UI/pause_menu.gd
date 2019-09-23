@@ -16,6 +16,8 @@ func _ready():
 #	pass
 
 func pause() -> void:
+	# TODO (IMPORTANT): Detect if Game is Open to Lan
+
 	paused = true
 	get_tree().paused = true
 	self.visible = true
@@ -27,6 +29,8 @@ func pause() -> void:
 		Engine.time_scale = 0.0
 
 func resume() -> void:
+	# TODO (IMPORTANT): Detect if Game is Open to Lan
+
 	paused = false
 	get_tree().paused = false
 	self.visible = false
@@ -35,6 +39,11 @@ func resume() -> void:
 	# If this causes trouble with say animations on the pause menu, I may have to find another solution for shaders
 	if pause_shaders:
 		Engine.time_scale = time_scale
+
+func open_to_lan() -> void:
+	# Look at LanFinder Helper and Make Sure It Isn't Activated Until Open to Lan
+	# Also Look at Network Too and Change If Accepting New Players
+	pass
 
 func set_theme(theme: Theme) -> void:
 	.set_theme(theme)

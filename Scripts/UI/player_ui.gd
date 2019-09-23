@@ -58,7 +58,7 @@ func _input(event) -> void:
 
 	# Closes Connection (Client and Server)
 	# I plan on replacing this with a "pause" menu - it will only pause on singleplayer
-	if event.is_action_pressed("quit_world") and !panelChat.visible:
+	if event.is_action_pressed("quit_world") and !panelChat.visible and !pauseMenu.visible:
 		# TODO: Replace Me Soon
 		network.close_connection()
 
