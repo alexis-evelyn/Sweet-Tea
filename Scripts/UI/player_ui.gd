@@ -30,14 +30,8 @@ func _input(event) -> void:
 	if event.is_action("show_playerlist") and !pauseMenu.paused:
 		panelPlayerList.show_player_list()
 
-	if event.is_action_released("show_playerlist") and !pauseMenu.paused :
+	if event.is_action_released("show_playerlist") and !pauseMenu.paused:
 		panelPlayerList.hide_player_list()
-
-	if event.is_action_pressed("pause") and !pauseMenu.visible:
-		pauseMenu.pause()
-	elif event.is_action_pressed("resume") and pauseMenu.visible:
-		pauseMenu.resume()
-
 
 	# Makes Chat Window Visible
 	if event.is_action_pressed("chat_command") and !pauseMenu.paused and !panelChat.visible and !is_calc_open():
@@ -55,6 +49,12 @@ func _input(event) -> void:
 	# Makes Chat Window Invisible
 	if event.is_action_pressed("chat_hide") and !pauseMenu.paused and panelChat.visible:
 		panelChat.hide_panelchat()
+		return # Prevents Forwarding Escape Key to Pause Menu
+
+	if event.is_action_pressed("pause") and !pauseMenu.visible:
+		pauseMenu.pause()
+	elif event.is_action_pressed("resume") and pauseMenu.visible:
+		pauseMenu.resume()
 
 	# Closes Connection (Client and Server)
 	# I plan on replacing this with a "pause" menu - it will only pause on singleplayer

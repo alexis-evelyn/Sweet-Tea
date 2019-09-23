@@ -8403,7 +8403,7 @@ data = {
 flags = 0
 flags = 0
 image = SubResource( 1151 )
-size = Vector2( 16, 16 )
+size = Vector2( 64, 64 )
 
 [sub_resource type="StyleBoxFlat" id=1153]
 content_margin_left = 8.0
