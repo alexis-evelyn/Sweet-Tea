@@ -9,6 +9,7 @@ onready var panelPlayerList : Node = $panelPlayerList
 onready var panelChat : Node = $panelChat
 # warning-ignore:unused_class_variable
 onready var panelStats : Node = $panelPlayerStats
+onready var pauseMenu : Node = $PauseMenu
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -26,32 +27,39 @@ func _input(event) -> void:
 		return
 
 	# This allows user to see player list (I will eventually add support to change keys and maybe joystick support)
-	if event.is_action("show_playerlist"):
+	if event.is_action("show_playerlist") and !pauseMenu.paused:
 		panelPlayerList.show_player_list()
 
-	if event.is_action_released("show_playerlist"):
+	if event.is_action_released("show_playerlist") and !pauseMenu.paused :
 		panelPlayerList.hide_player_list()
 
+	if event.is_action_pressed("pause") and !pauseMenu.visible:
+		pauseMenu.pause()
+	elif event.is_action_pressed("resume") and pauseMenu.visible:
+		pauseMenu.resume()
+
+
 	# Makes Chat Window Visible
-	if event.is_action_pressed("chat_command") and !panelChat.visible and !is_calc_open():
+	if event.is_action_pressed("chat_command") and !pauseMenu.paused and !panelChat.visible and !is_calc_open():
 		panelChat.show_panelchat()
 		panelChat.get_node("userChat").grab_focus() # Causes LineEdit (where user types) to grab focus of keyboard
 		panelChat.get_node("userChat").set_text("") # Replaces text with a Forward Slash
 		panelChat.get_node("userChat").set_cursor_position(1) # Moves Caret In Front of Slash
 		panelChat.just_opened = true
 
-	if event.is_action_pressed("chat_show") and !panelChat.visible and !is_calc_open():
+	if event.is_action_pressed("chat_show") and !pauseMenu.paused and !panelChat.visible and !is_calc_open():
 		panelChat.show_panelchat()
 		panelChat.get_node("userChat").grab_focus() # Causes LineEdit (where user types) to grab focus of keyboard
 		panelChat.just_opened = true
 
 	# Makes Chat Window Invisible
-	if event.is_action_pressed("chat_hide") and panelChat.visible:
+	if event.is_action_pressed("chat_hide") and !pauseMenu.paused and panelChat.visible:
 		panelChat.hide_panelchat()
 
 	# Closes Connection (Client and Server)
 	# I plan on replacing this with a "pause" menu - it will only pause on singleplayer
 	if event.is_action_pressed("quit_world") and !panelChat.visible:
+		# TODO: Replace Me Soon
 		network.close_connection()
 
 # Make Sure Game Saves World On Quit or Crash

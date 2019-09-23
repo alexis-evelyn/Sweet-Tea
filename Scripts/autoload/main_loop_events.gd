@@ -78,6 +78,9 @@ func _notification(what: int) -> void:
 			about_game()
 		_: # Default Result - Put at Bottom of Match Results
 			pass
+		MainLoop.NOTIFICATION_PAUSED:
+			# A script not attached to a node has no way of running when the game is paused, so if the message below ever prints, then that has changed.
+			logger.warn("Autoloaded Scripts Can Now Run When Game is Paused!!!")
 
 func _size_change_detector(_thread_data) -> void:
 	while true:
