@@ -68,7 +68,8 @@ func _ready() -> void:
 	get_tree().connect("server_disconnected", self, "close_connection")
 
 	load_server_icon()
-	logger.superverbose("Server Info: %s" % server_info)
+	logger.debug("Game Version: %s" % gamestate.game_version)
+#	logger.superverbose("Server Info: %s" % server_info) # This screws with the logging because of the icon
 
 # Loads Server Icon For Transmission to Clients
 func load_server_icon():
