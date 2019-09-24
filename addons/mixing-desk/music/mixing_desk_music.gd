@@ -109,18 +109,19 @@ func clear_song(track):
 		AudioServer.remove_bus(bus)
 		inum += 1
 
+# Disabled Because Ridiculous CPU Usage
 #updates place in song and detects beats/bars
-func _process(delta):
-	if suppress_beat > 0:
-		suppress_beat -= delta
-		return
-	if playing:
-		time = current_song.get_child(0).get_playback_position()
-		beat = int(floor(((time/beats_in_sec) * 1000.0) + 1.0))
-		_fade_binds()
-		if beat != last_beat && (beat - 1) % int(bars * beats_in_bar) + 1 != last_beat:
-			_beat()
-		last_beat = beat
+#func _process(delta):
+#	if suppress_beat > 0:
+#		suppress_beat -= delta
+#		return
+#	if playing:
+#		time = current_song.get_child(0).get_playback_position()
+#		beat = int(floor(((time/beats_in_sec) * 1000.0) + 1.0))
+#		_fade_binds()
+#		if beat != last_beat && (beat - 1) % int(bars * beats_in_bar) + 1 != last_beat:
+#			_beat()
+#		last_beat = beat
 
 
 
