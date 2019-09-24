@@ -414,9 +414,7 @@ func test_mazawalza(message: PoolStringArray) -> String:
 	# First Character is \ue000
 	# Apple Character is \uf8ff
 #	var output = "Mazawalza:  Apple: "
-#	var output = "Mazawalza: "
-#	var output = "Mazawalza Missing Last Char: "
-#	var output = "Mazawalza Missing First and Last Char:"
+#	var output = "Mazawalza: "
 #	var output = "Apple: "
 #	var output : String = "language_name: %s - [font=%s]\uf8ff[/font] %s" % [functions.get_translation("language_name", "en"), mazawalza_font.resource_path, functions.get_translation("language_name", "mz")]
 
