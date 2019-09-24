@@ -77,23 +77,27 @@ func get_translation(key: String, locale: String) -> String:
 	# Also make sure to add support for po files later.
 	var translations : PoolStringArray = ProjectSettings.get_setting("locale/translations")
 	# warning-ignore:unassigned_variable
-	var selected_translation : PoolStringArray
+	var selected_translations : PoolStringArray
 
 	for translation in translations:
 		#res://Assets/Languages/default.pr.translation
 		var translation_locale : String = translation.rsplit(".", false, 2)[1]
-		#logger.verbose"Translation File: %s" % translation_locale)
+#		logger.debug("Translation File: %s" % translation_locale)
+#		print("Translation File: '%s' - Translation: %s" % [translation_locale, translation])
 
 		if translation_locale == locale:
-			selected_translation.append(translation)
+			selected_translations.append(translation)
 
 	# If No Translation File Found, Then Just Return. This will crash on debug builds, but not release builds.
-	if selected_translation.size() == 0:
+	if selected_translations.size() == 0:
 		logger.error("No Translation File Found For Locale '%s'" % locale)
 		return "No Translation File Found For Locale '%s'" % locale
 
-	var translator : Translation = load(selected_translation[0]) # I may add support for searching more than one file of the same locale later.
-	var message = translator.get_message(key)
+	var translator : Translation
+	var message : String
+	for selected_translation in selected_translations:
+		translator = load(selected_translation)
+		message = translator.get_message(key)#.c_unescape()
 
 	# Should I check if the translation came back successful or will translator handle it for me?
 

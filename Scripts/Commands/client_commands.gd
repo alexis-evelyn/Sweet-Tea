@@ -406,18 +406,22 @@ func test_mazawalza(message: PoolStringArray) -> String:
 
 	var mazawalza_font : DynamicFont = load("res://Assets/Fonts/dynamicfont/mazawalza-regular.tres")
 
-	# Does Godot Not Support Unicode Other Than Latin-1 Characters? I may have to create my own font display system if this is the case.
-	var output : String = "Character (Other Number Forms - ↉) 8595: '%s'" % char(8595)
+	# Note To Self: Pay More Attention to Unicode ID in Fontstruct! :P
+	# Note To Others: I spent a good few hours trying to figure out why Godot was showing a dinosaur head (57344) when I was trying to get it to display my test symbol for Mazawalza (56192). Looking for the symbol manually in FontForge helped me see what was wrong (my not paying enough attention).
+
+#	var output : String = "Character (Other Number Forms - ↉) 8595: '%s'" % char(8595)
 #	var output : String = "Character (Mazawalza) 57344: '[font=%s]%s[/font]'" % [mazawalza_font.resource_path, char(57344)]
+#	var output : String = "Character (Mazawalza - FontForge Check - 0xdb80 '\udb80') 56192: '[font=%s]%s[/font]'" % [mazawalza_font.resource_path, char(56192)]
 #	var output : String = "Character (Apple) 63743: '%s'" % char(63743)
 
 	# Online Character Map - https://unicodes.smpc.io/%EE%80%80
+	# Online Character Map (Correct Character - 0xdb80) - https://unicodes.smpc.io/surrogate-DB80
 	# Mazawalza Character is \ue000
 	# Apple Character is \uf8ff
 #	var output = "Mazawalza:  Apple: "
 #	var output = "Mazawalza: "
 #	var output = "Apple: "
-#	var output : String = "language_name: %s - [font=%s]\uf8ff[/font] %s" % [functions.get_translation("language_name", "en"), mazawalza_font.resource_path, functions.get_translation("language_name", "mz")]
+	var output : String = "dictionary_language_name: %s - [font=%s]'%s'[/font]" % [functions.get_translation("dictionary_language_name", "en"), mazawalza_font.resource_path, functions.get_translation("dictionary_language_name", "mz")]
 
 	return output
 

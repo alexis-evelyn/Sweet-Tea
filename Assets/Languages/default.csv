@@ -60,7 +60,7 @@ help_tp_desc,Teleport to Specified Coordinates,,,,
 help_wspawn_desc,Teleport to World Spawn,,,,
 kick_player_command_no_permission,Kick Player and Optional Message - Permission Needed: %s,,,,
 kick_player_ip_command_no_permission,Kick Player By IP and Optional Message - Permission Needed:%s,,,,
-language_name,English,Español,日本人,???,Pirate
+language_name,English,Español,日本人,\udb80,Pirate
 last_name_list,"{""NB"":[""Smith"",""Johnson"",""Miller"",""Evans"",""Jones"",""Williams"",""Brown""]}",,,,
 load_character_button,Load Character,,,,Join yer mate
 main_menu_title,Sweet Tea,,,,Rum
