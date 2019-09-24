@@ -24,6 +24,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return set_debug_draw(message)
 		"screenshot":
 			return take_screenshot(message)
+		"mazawalza":
+			return test_mazawalza(message)
 		_:
 			return ""
 
@@ -394,6 +396,31 @@ func take_screenshot(message: PoolStringArray) -> String:
 		return tr("screenshot_command_successful") % [chosen_viewport.to_lower(), screenshot_filepath]
 	else:
 		return tr("screenshot_command_failed_to_save") % [chosen_viewport.to_lower(), screenshot_filepath, save_success]
+
+func test_mazawalza(message: PoolStringArray) -> String:
+	# /screenshot <game or world>
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_arguments : PoolStringArray = message
+	command_arguments.remove(0)
+
+	var mazawalza_font : DynamicFont = load("res://Assets/Fonts/dynamicfont/mazawalza-regular.tres")
+
+	# Does Godot Not Support Unicode Other Than Latin-1 Characters? I may have to create my own font display system if this is the case.
+	var output : String = "Character (Other Number Forms - ↉↉) 8595: '%s'" % char(8595)
+#	var output : String = "Character (Mazawalza) 57344: '[font=%s]%s[/font]'" % [mazawalza_font.resource_path, char(57344)]
+#	var output : String = "Character (Apple) 63743: '%s'" % char(63743)
+
+	# First Character is \ue000
+	# Apple Character is \uf8ff
+#	var output = "Mazawalza:  Apple: "
+#	var output = "Mazawalza: "
+#	var output = "Mazawalza Missing Last Char: "
+#	var output = "Mazawalza Missing First and Last Char:"
+#	var output = "Apple: "
+#	var output : String = "language_name: %s - [font=%s]\uf8ff[/font] %s" % [functions.get_translation("language_name", "en"), mazawalza_font.resource_path, functions.get_translation("language_name", "mz")]
+
+	return output
 
 # warning-ignore:unused_argument
 func start_recording(message: PoolStringArray) -> String:
