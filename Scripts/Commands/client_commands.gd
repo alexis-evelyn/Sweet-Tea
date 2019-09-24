@@ -374,7 +374,8 @@ func take_screenshot(message: PoolStringArray) -> String:
 	var formatted_time = tr("datetime_formatting_filename") % [int(date_time["hour"]), int(date_time["minute"]), int(date_time["second"]), time_milliseconds, OS.get_time_zone_info().name]
 
 	# Pick Save Location
-	var game_screenshot_folder : String = functions.get_translation(ProjectSettings.get_setting("application/config/name"), "en")
+#	var game_screenshot_folder : String = functions.get_translation(ProjectSettings.get_setting("application/config/name"), "en") # For Some Reason, This Just Quit Working. Maybe it Has To Do With The Space in The Name Plus The New Addition Of Reading Multiple Translation Files?
+	var game_screenshot_folder : String = ProjectSettings.get_setting("application/config/name")
 	var screenshot_folder : String = "%s".plus_file(game_screenshot_folder) % [OS.get_system_dir(OS.SYSTEM_DIR_PICTURES)]
 	var screenshot_filename : String = "%s_%s.png" % [formatted_time, chosen_viewport.to_lower()]
 	var screenshot_filepath : String = (screenshot_folder.plus_file(screenshot_filename))
