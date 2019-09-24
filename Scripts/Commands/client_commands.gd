@@ -399,6 +399,7 @@ func take_screenshot(message: PoolStringArray) -> String:
 
 func test_mazawalza(message: PoolStringArray) -> String:
 	# https://www.branah.com/unicode-converter
+	# https://www.reddit.com/r/godot/comments/d8risz/how_do_i_use_a_utf16_representation_of_a_unicode/
 
 	# /screenshot <game or world>
 	# warning-ignore:unused_variable
@@ -413,6 +414,8 @@ func test_mazawalza(message: PoolStringArray) -> String:
 	# Online Character Map (\udb80) - https://unicodes.smpc.io/surrogate-DB80
 	# Mazawalza Character is \udb80
 #	var output : String = "Mazawalza: '[font=%s]�[/font]'" % mazawalza_font.resource_path
+
+#	var output : String = "Mazawalza: '[font=%s]%s[/font]'" % [mazawalza_font.resource_path, tr("dictionary_language_name")]
 
 #	var output : String = "Character (Mazawalza - 0xdb80 '\udb80') 56192: '[font=%s]%s[/font]'" % [mazawalza_font.resource_path, char(56192)]
 	var output : String = "dictionary_language_name: %s - [font=%s]'%s'[/font]" % [functions.get_translation("dictionary_language_name", "en"), mazawalza_font.resource_path, functions.get_translation("dictionary_language_name", "mz")]
