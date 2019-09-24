@@ -407,7 +407,7 @@ func test_mazawalza(message: PoolStringArray) -> String:
 	var mazawalza_font : DynamicFont = load("res://Assets/Fonts/dynamicfont/mazawalza-regular.tres")
 
 	# Does Godot Not Support Unicode Other Than Latin-1 Characters? I may have to create my own font display system if this is the case.
-	var output : String = "Character (Other Number Forms - ↉↉) 8595: '%s'" % char(8595)
+	var output : String = "Character (Other Number Forms - ↉) 8595: '%s'" % char(8595)
 #	var output : String = "Character (Mazawalza) 57344: '[font=%s]%s[/font]'" % [mazawalza_font.resource_path, char(57344)]
 #	var output : String = "Character (Apple) 63743: '%s'" % char(63743)
 
