@@ -411,7 +411,7 @@ func test_mazawalza(message: PoolStringArray) -> String:
 #	var output : String = "Character (Mazawalza) 57344: '[font=%s]%s[/font]'" % [mazawalza_font.resource_path, char(57344)]
 #	var output : String = "Character (Apple) 63743: '%s'" % char(63743)
 
-	# First Character is \ue000
+	# Mazawalza Character is \ue000
 	# Apple Character is \uf8ff
 #	var output = "Mazawalza:  Apple: "
 #	var output = "Mazawalza: "
