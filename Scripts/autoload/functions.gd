@@ -283,6 +283,31 @@ func take_screenshot(viewport: Viewport) -> Image:
 
 	return screenshot
 
+# Parses For Unicode Strings (It doesn't actually parse Unicode, it just converts Unicode representations of characters to Unicode)
+func parse_for_unicode(string: String) -> String:
+	# I am Releasing This Function to Public Domain
+	# http://kunststube.net/encoding/
+
+	# Pull Hex From Unicode String Representation
+	var unicode_chars : PoolStringArray = string.split("\\u", false)
+	var unicode_ints : PoolIntArray
+
+	logger.superverbose("Pre-Parsed String: %s" % string)
+	logger.superverbose("Unicode Chars Size: %s" % unicode_chars.size())
+
+	# Convert Hex to Integers
+	for x in range(0, unicode_chars.size()):
+		logger.superverbose("Hex Character: %s" % unicode_chars[x].strip_edges())
+		unicode_chars.set(x, "0x%s" % unicode_chars[x].strip_edges())
+		unicode_ints.append(unicode_chars[x].hex_to_int())
+
+	# Convert Integers to Characters
+	var joined_chars : String
+	for unicode_int in unicode_ints:
+		joined_chars += char(unicode_int)
+
+	return joined_chars
+
 func get_class() -> String:
 	return "Functions"
 

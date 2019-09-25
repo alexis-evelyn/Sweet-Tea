@@ -419,7 +419,10 @@ func test_mazawalza(message: PoolStringArray) -> String:
 #	var output : String = "Mazawalza: '[font=%s]%s[/font]'" % [mazawalza_font.resource_path, tr("dictionary_language_name")]
 
 #	var output : String = "Character (Mazawalza - 0xdb80 '\udb80') 56192: '[font=%s]%s[/font]'" % [mazawalza_font.resource_path, char(56192)]
-	var output : String = "dictionary_language_name: %s - [font=%s]'%s'[/font]" % [functions.get_translation("dictionary_language_name", "en"), mazawalza_font.resource_path, functions.get_translation("dictionary_language_name", "mz")]
+
+	var client_translation : String = tr("dictionary_language_name") #functions.get_translation("dictionary_language_name", "en")
+	var mazawalza_translation : String = functions.parse_for_unicode(functions.get_translation("dictionary_language_name", "mz"))
+	var output : String = "dictionary_language_name: %s - [font=%s]'%s'[/font]" % [client_translation, mazawalza_font.resource_path, mazawalza_translation]
 
 	return output
 
