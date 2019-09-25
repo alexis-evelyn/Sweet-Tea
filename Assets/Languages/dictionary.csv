@@ -3,25 +3,28 @@ translation_authors,"[""Alex Evelyn""]","[""Alex Evelyn""]"
 Translation Notes,"This is meant to be a dictionary to be used to translate Mazawalza to other languages. Feel free to add your own. Mazawalza is a language based on concepts and intention, not words. It is based on the the idea of pasigraphy.",
 Why unicode representation?,"Godot's TranslationServer (at the time of writing) cannot handle UTF-16, so I have to convert the unicode representation in game to be able to be used.",
 What is Mazawalza?,"Mazawalza is a magic based language for the lore of my game. As such, the concepts behind the characters will be geared toward spells and potions. Unlike Mincraft's random symbols with enchanting tables, I want these symbols to have meaning so that someone who puts the effort to learn to read it can understand what the spells and potions do.",
+What are modifiers?,Modifies the effect of the symbol it is above (could be in different locations as the language develops).,
 dictionary_language_name,Mazawalza,\udb80
-meaning_language_name,,
-dictionary_,Closed Mazawalza,\udb81
-meaning_,Dark Spell Marker?,
+meaning_language_name,The name of the language. Symbolizes light.,
+dictionary_language_name_closed,Closed Mazawalza,\udb81
+meaning_language_name_closed,"The name of the language, but symbolizes dark.",
 dictionary_,Rounded Square,\udb82
-meaning_,2D World? Nah!!!,
+meaning_,,
 dictionary_,Closed Rounded Square,\udb83
 meaning_,,
 dictionary_,Square,\udb84
 meaning_,,
 dictionary_,Closed Square,\udb85
 meaning_,,
-dictionary_camera_closed,Closed Camera,\udb86
-meaning_camera_closed,,
-dictionary_camera_open,Open Camera,\udb87
-meaning_camera_open,,
-dictionary_,Modifier... NTS: Figure Out What To Do With This.,\udb88
-meaning_,,
-dictionary_,Closed Eye,\udb89
-meaning_,,
-dictionary_,Open Eye,\udb8a
-meaning_,,
+dictionary_camera,Open Camera,\udb86
+meaning_camera,"Like Open Eye, But For Sensors (Technology). Can be used to magically enhance technology.",
+dictionary_camera_closed,Closed Camera,\udb87
+meaning_camera_closed,"Like Closed Eye, But For Sensors (Technology). Helps hide from technology.",
+dictionary_effect_strength,Improved Strength of Effect,\udb88
+meaning_effect_strength,Improve Strength of Effect of Spells/Potions. Could Cost More.,
+dictionary_effect_weakness,Improved Weakness of Effect,\udb89
+meaning_effect_weakness,Improve Weakness of Effect of Spells/Potions. Could Cost More.,
+dictionary_eye,Open Eye,\udb8a
+meaning_eye,Makes things seen.,
+dictionary_eye_closed,Closed Eye,\udb8b
+meaning_eye_closed,Makes things unseen. Invisible or blind. Determined by darkness or lightness of spell/potion.,

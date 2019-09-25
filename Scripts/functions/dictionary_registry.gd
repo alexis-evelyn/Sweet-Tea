@@ -14,8 +14,44 @@ extends Node
 
 # Declare member variables here. Examples:
 var mazawalza : Dictionary = {
-# Tag (Dictionary Key), Unicode Representation, Meaning, Modifier, Etc...
-# Don't Access Dictionary Directly. Use Getter Function to Fill in Missing Info For Current Locale
+	# Tag (Dictionary Key), Unicode Representation, Meaning, Modifier, Etc...
+	# Don't Access Dictionary Directly. Use Getter Function to Fill in Missing Info For Current Locale
+	"language_name": {
+
+	},
+	"language_name_closed": {
+
+	},
+	"rs": {
+
+	},
+	"rsc": {
+
+	},
+	"s": {
+
+	},
+	"sc": {
+
+	},
+	"camera": {
+
+	},
+	"camera_closed": {
+
+	},
+	"effect_strength": {
+
+	},
+	"effect_weakness": {
+
+	},
+	"eye": {
+
+	},
+	"eye_closed": {
+
+	}
 }
 
 # Called when the node enters the scene tree for the first time.
