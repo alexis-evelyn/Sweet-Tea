@@ -119,7 +119,7 @@ func list_game_translations() -> Dictionary:
 
 		if game_translation_name == translation_name:
 			var translation_locale : String = translation.rsplit(".", false, 2)[1]
-			translation_names.locales.append({"locale": translation_locale, "name": TranslationServer.get_locale_name(translation_locale), "native_name": get_translation("language_name", translation_locale)})
+			translation_names.locales.append({"locale": translation_locale, "name": TranslationServer.get_locale_name(translation_locale), "native_name": get_translation("language_name", translation_locale), "font_regular": get_translation("language_font_regular", translation_locale)})
 
 #			logger.superverbose("Native Language Name: %s" % get_translation("language_name", translation_locale))
 #			logger.superverbose("Translation: %s/%s" % [translation_locale, TranslationServer.get_locale_name(translation_locale)])
