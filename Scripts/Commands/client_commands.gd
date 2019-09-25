@@ -407,9 +407,9 @@ func read_dictionary(message: PoolStringArray) -> String:
 
 	# How do I make a searchable dictionary efficiently?
 
-	var client_translation : String = tr("dictionary_language_name")
-	var mazawalza_translation : String = functions.parse_for_unicode(functions.get_translation("dictionary_language_name", "mz"))
-	var output : String = "dictionary_language_name: %s - [font=%s]'%s'[/font]" % [client_translation, gamestate.mazawalza_regular.resource_path, mazawalza_translation]
+	var client_translation : String = tr("entry_language_name")
+	var mazawalza_translation : String = functions.parse_for_unicode(functions.get_translation("entry_language_name", "mz"))
+	var output : String = "entry_language_name: %s - [font=%s]'%s'[/font]" % [client_translation, gamestate.mazawalza_regular.resource_path, mazawalza_translation]
 
 	return output
 

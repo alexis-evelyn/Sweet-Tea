@@ -54,6 +54,9 @@ var mazawalza : Dictionary = {
 	}
 }
 
+var entry : String = "entry_"
+var meaning : String = "meaning_"
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
