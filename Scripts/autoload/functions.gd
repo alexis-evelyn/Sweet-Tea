@@ -297,7 +297,7 @@ func parse_for_unicode(string: String) -> String:
 
 	# Convert Hex to Integers
 	for x in range(0, unicode_chars.size()):
-		logger.superverbose("Hex Character: %s" % unicode_chars[x].strip_edges())
+		logger.superverbose("Hex Character: 0x%s" % unicode_chars[x].strip_edges())
 		unicode_chars.set(x, "0x%s" % unicode_chars[x].strip_edges())
 		unicode_ints.append(unicode_chars[x].hex_to_int())
 
