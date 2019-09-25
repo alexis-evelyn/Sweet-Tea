@@ -9,6 +9,12 @@ var backups_save_file : String = "characters_%date%.json" # Backup Save File Nam
 
 var game_version : String = ProjectSettings.get_setting("application/config/Version")
 
+# Mazawalza Fonts
+var mazawalza_regular : DynamicFont = load("res://Assets/Fonts/dynamicfont/mazawalza-regular.tres")
+#var mazawalza_bold : DynamicFont = load("res://Assets/Fonts/dynamicfont/mazawalza-bold.tres") # This does not exist. Probably Never Will Given What Font is Used For.
+#var mazawalza_italic : DynamicFont = load("res://Assets/Fonts/dynamicfont/mazawalza-italic.tres") # This Will Never Exist Given What Font is Used For.
+#var mazawalza_bold_italic : DynamicFont = load("res://Assets/Fonts/dynamicfont/mazawalza-bold-italic.tres") # This Will Never Exist Given What Font is Used For.
+
 # warning-ignore:unused_class_variable
 var game_theme : Theme = preload("res://Assets/Themes/default_theme.tres")
 # warning-ignore:unused_class_variable

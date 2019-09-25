@@ -24,8 +24,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return set_debug_draw(message)
 		"screenshot":
 			return take_screenshot(message)
-		"mazawalza":
-			return test_mazawalza(message)
+		"dict":
+			return read_dictionary(message)
 		_:
 			return ""
 
@@ -398,31 +398,18 @@ func take_screenshot(message: PoolStringArray) -> String:
 	else:
 		return tr("screenshot_command_failed_to_save") % [chosen_viewport.to_lower(), screenshot_filepath, save_success]
 
-func test_mazawalza(message: PoolStringArray) -> String:
-	# https://www.branah.com/unicode-converter
-	# https://www.reddit.com/r/godot/comments/d8risz/how_do_i_use_a_utf16_representation_of_a_unicode/
-
-	# /screenshot <game or world>
+func read_dictionary(message: PoolStringArray) -> String:
+	# /dict <word>
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_arguments : PoolStringArray = message
 	command_arguments.remove(0)
 
-	var mazawalza_font : DynamicFont = load("res://Assets/Fonts/dynamicfont/mazawalza-regular.tres")
-#	print("Mazawalza Character: '\udb80'")
-#	logger.file("Mazawalza Character: '\udb80'")
+	# How do I make a searchable dictionary efficiently?
 
-	# Online Character Map (\udb80) - https://unicodes.smpc.io/surrogate-DB80
-	# Mazawalza Character is \udb80
-#	var output : String = "Mazawalza: '[font=%s]�[/font]'" % mazawalza_font.resource_path
-
-#	var output : String = "Mazawalza: '[font=%s]%s[/font]'" % [mazawalza_font.resource_path, tr("dictionary_language_name")]
-
-#	var output : String = "Character (Mazawalza - 0xdb80 '\udb80') 56192: '[font=%s]%s[/font]'" % [mazawalza_font.resource_path, char(56192)]
-
-	var client_translation : String = tr("dictionary_language_name") #functions.get_translation("dictionary_language_name", "en")
+	var client_translation : String = tr("dictionary_language_name")
 	var mazawalza_translation : String = functions.parse_for_unicode(functions.get_translation("dictionary_language_name", "mz"))
-	var output : String = "dictionary_language_name: %s - [font=%s]'%s'[/font]" % [client_translation, mazawalza_font.resource_path, mazawalza_translation]
+	var output : String = "dictionary_language_name: %s - [font=%s]'%s'[/font]" % [client_translation, gamestate.mazawalza_regular.resource_path, mazawalza_translation]
 
 	return output
 
