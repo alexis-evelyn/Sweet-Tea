@@ -19,64 +19,80 @@ var mazawalza : Dictionary = {
 	"language_name": {
 		"character": "\udb80",
 		"entry": "entry_language_name",
-		"meaning": "meaning_language_name"
+		"meaning": "meaning_language_name",
+		"effect": effect.language_name
 	},
 	"language_name_closed": {
 		"character": "\udb81",
 		"entry": "entry_language_name_closed",
-		"meaning": "meaning_language_name_closed"
+		"meaning": "meaning_language_name_closed",
+		"effect": effect.language_name_closed
 	},
 	"rs": {
 		"character": "\udb82",
 		"entry": "entry_",
-		"meaning": "meaning_"
+		"meaning": "meaning_",
+		"effect": effect.rs
 	},
 	"rsc": {
 		"character": "\udb83",
 		"entry": "entry_",
-		"meaning": "meaning_"
+		"meaning": "meaning_",
+		"effect": effect.rsc
 	},
 	"s": {
 		"character": "\udb84",
 		"entry": "entry_",
-		"meaning": "meaning_"
+		"meaning": "meaning_",
+		"effect": effect.s
 	},
 	"sc": {
 		"character": "\udb85",
 		"entry": "entry_",
-		"meaning": "meaning_"
+		"meaning": "meaning_",
+		"effect": effect.sc
 	},
 	"camera": {
 		"character": "\udb86",
 		"entry": "entry_camera",
-		"meaning": "meaning_camera"
+		"meaning": "meaning_camera",
+		"effect": effect.camera
 	},
 	"camera_closed": {
 		"character": "\udb87",
 		"entry": "entry_camera_closed",
-		"meaning": "meaning_camera_closed"
+		"meaning": "meaning_camera_closed",
+		"effect": effect.camera_closed
 	},
 	"effect_strength": {
 		"character": "\udb88",
 		"entry": "entry_effect_strength",
 		"meaning": "meaning_effect_strength",
-		"modifier": modifier.strength
+		"modifier": modifier.strength,
 	},
 	"effect_weakness": {
 		"character": "\udb89",
 		"entry": "entry_effect_weakness",
 		"meaning": "meaning_effect_weakness",
-		"modifier": modifier.weakness
+		"modifier": modifier.weakness,
 	},
 	"eye": {
 		"character": "\udb8a",
 		"entry": "entry_eye",
-		"meaning": "meaning_eye"
+		"meaning": "meaning_eye",
+		"effect": effect.eye
 	},
 	"eye_closed": {
 		"character": "\udb8b",
 		"entry": "entry_eye_closed",
-		"meaning": "meaning_eye_closed"
+		"meaning": "meaning_eye_closed",
+		"effect": effect.eye_closed
+	},
+	"confusion": {
+		"character": "\udb8c",
+		"entry": "entry_confusion",
+		"meaning": "meaning_confusion",
+		"effect": effect.confusion
 	}
 }
 
@@ -88,6 +104,21 @@ var meaning : String = "meaning_"
 enum modifier {
 	strength = 0,
 	weakness = 1
+}
+
+# Effects
+enum effect {
+	language_name = 0,
+	language_name_closed = 1,
+	rs = 2,
+	rsc = 3,
+	s = 4,
+	sc = 5,
+	camera = 6,
+	camera_closed = 7,
+	eye = 8,
+	eye_closed = 9,
+	confusion = 10
 }
 
 # Called when the node enters the scene tree for the first time.
