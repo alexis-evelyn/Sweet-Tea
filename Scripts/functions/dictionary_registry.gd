@@ -28,30 +28,30 @@ var mazawalza : Dictionary = {
 		"meaning": "meaning_language_name_closed",
 		"effect": effect.language_name_closed
 	},
-	"rs": {
-		"character": "\udb82",
-		"entry": "entry_",
-		"meaning": "meaning_",
-		"effect": effect.rs
-	},
-	"rsc": {
-		"character": "\udb83",
-		"entry": "entry_",
-		"meaning": "meaning_",
-		"effect": effect.rsc
-	},
-	"s": {
-		"character": "\udb84",
-		"entry": "entry_",
-		"meaning": "meaning_",
-		"effect": effect.s
-	},
-	"sc": {
-		"character": "\udb85",
-		"entry": "entry_",
-		"meaning": "meaning_",
-		"effect": effect.sc
-	},
+#	"rs": {
+#		"character": "\udb82",
+#		"entry": "entry_",
+#		"meaning": "meaning_",
+#		"effect": effect.rs
+#	},
+#	"rsc": {
+#		"character": "\udb83",
+#		"entry": "entry_",
+#		"meaning": "meaning_",
+#		"effect": effect.rsc
+#	},
+#	"s": {
+#		"character": "\udb84",
+#		"entry": "entry_",
+#		"meaning": "meaning_",
+#		"effect": effect.s
+#	},
+#	"sc": {
+#		"character": "\udb85",
+#		"entry": "entry_",
+#		"meaning": "meaning_",
+#		"effect": effect.sc
+#	},
 	"camera": {
 		"character": "\udb86",
 		"entry": "entry_camera",
