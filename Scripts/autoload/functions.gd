@@ -97,7 +97,11 @@ func get_translation(key: String, locale: String) -> String:
 	var message : String
 	for selected_translation in selected_translations:
 		translator = load(selected_translation)
-		message = translator.get_message(key)#.c_unescape()
+
+		# Only Set Message if Translation File Has Value (Last File's Value is Used)
+		if not translator.get_message(key).empty():
+			message = translator.get_message(key)#.c_unescape()
+#			print("Translation Message: %s - Selected Translation: %s" % [message, selected_translation])
 
 	# Should I check if the translation came back successful or will translator handle it for me?
 
