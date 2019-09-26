@@ -409,12 +409,22 @@ func read_dictionary(message: PoolStringArray) -> String:
 
 	# How do I make a searchable dictionary efficiently?
 	var output : String = "[font=%s]" % gamestate.mazawalza_regular.resource_path
+	var player_locale_entry : String
+	var mazawalza_locale_entry : String
+
 	for entry in dictionary.get_effects():
 		# Don't Allow Modifiers to Show Up
 		if dictionary.get_effect_detail(entry).has("modifier"):
 			continue
 
-		output += functions.parse_for_unicode(functions.get_translation(dictionary.get_effect_detail(entry).entry, "mz"))
+		player_locale_entry = tr(dictionary.get_effect_detail(entry).entry)
+		mazawalza_locale_entry = functions.parse_for_unicode(functions.get_translation(dictionary.get_effect_detail(entry).entry, "mz"))
+
+		# Don't Allow Empty Entries
+		if mazawalza_locale_entry.strip_edges().empty():
+			continue
+
+		output += "%s: %s\n" % [player_locale_entry, mazawalza_locale_entry]
 	output += "[/font]"
 
 #	var client_translation : String = tr("entry_language_name")

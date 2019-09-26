@@ -4,7 +4,6 @@
 [ext_resource path="res://Assets/Fonts/ttf/FiraCode-Regular.ttf" type="DynamicFontData" id=2]
 
 [resource]
-size = 60
 use_mipmaps = true
 font_data = ExtResource( 1 )
 fallback/0 = ExtResource( 2 )
