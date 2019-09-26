@@ -4,6 +4,8 @@ class_name ClientCommands
 var shaders_class = preload("res://Scripts/functions/shader_registry.gd").new()
 var shaders : Dictionary = shaders_class.shaders
 
+var dictionary = preload("res://Scripts/functions/dictionary_registry.gd").new()
+
 func process_commands(message: PoolStringArray) -> String:
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 
@@ -406,10 +408,18 @@ func read_dictionary(message: PoolStringArray) -> String:
 	command_arguments.remove(0)
 
 	# How do I make a searchable dictionary efficiently?
+	var output : String = "[font=%s]" % gamestate.mazawalza_regular.resource_path
+	for entry in dictionary.get_effects():
+		# Don't Allow Modifiers to Show Up
+		if dictionary.get_effect_detail(entry).has("modifier"):
+			continue
 
-	var client_translation : String = tr("entry_language_name")
-	var mazawalza_translation : String = functions.parse_for_unicode(functions.get_translation("entry_language_name", "mz"))
-	var output : String = "entry_language_name: %s - [font=%s]'%s'[/font]" % [client_translation, gamestate.mazawalza_regular.resource_path, mazawalza_translation]
+		output += functions.parse_for_unicode(functions.get_translation(dictionary.get_effect_detail(entry).entry, "mz"))
+	output += "[/font]"
+
+#	var client_translation : String = tr("entry_language_name")
+#	var mazawalza_translation : String = functions.parse_for_unicode(functions.get_translation("entry_language_name", "mz"))
+#	var output : String = "entry_language_name: %s - [font=%s]'%s'[/font]" % [client_translation, gamestate.mazawalza_regular.resource_path, mazawalza_translation]
 
 	return output
 

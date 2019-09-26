@@ -128,3 +128,18 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+
+func get_effects() -> Array:
+	return mazawalza.keys()
+
+func get_effect_detail(effect_name: String) -> Dictionary:
+	if not mazawalza.has(effect_name):
+		# Do Something
+		pass
+
+	return mazawalza.get(effect_name)
+
+func search_dictionary(some_kind_of_search_in_dictionary_form: Dictionary) -> Dictionary:
+	# Perform Search Here!!!
+
+	return mazawalza # Replace Me With Results From Search
