@@ -1,0 +1,1 @@
+This folder is for the Dictionary's ItemList. As it appears I cannot have the font converted to png live without some major c code and manual parsing of the font file. So, instead I used FontForge and Gimp to produce these images of the font's symbols.

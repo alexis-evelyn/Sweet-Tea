@@ -37,8 +37,7 @@ __meta__ = {
 }
 
 [node name="txtServerAddress" type="LineEdit" parent="panelNetwork/manualJoin"]
-margin_left = 5.0
-margin_right = 175.0
+margin_right = 164.0
 margin_bottom = 45.0
 expand_to_text_length = true
 clear_button_enabled = true
@@ -48,7 +47,7 @@ __meta__ = {
 }
 
 [node name="btnJoinServer" type="Button" parent="panelNetwork/manualJoin"]
-margin_left = 180.0
+margin_left = 172.0
 margin_right = 314.0
 margin_bottom = 45.0
 mouse_default_cursor_shape = 8
