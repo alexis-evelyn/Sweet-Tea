@@ -157,10 +157,12 @@ func handle_url_click(dictionary: Dictionary) -> void:
 			logger.verbose("The Players Dictionary is Missing ID: %s" % net_id)
 
 func show_panelchat() -> void:
+#	self.mouse_filter = Control.MOUSE_FILTER_STOP # Capture's Mouse Input
 	self.visible = true
 	self.show()
 
 func hide_panelchat() -> void:
+#	self.mouse_filter = Control.MOUSE_FILTER_IGNORE # Ignore's Mouse Input
 	self.visible = false
 	self.hide()
 
@@ -168,7 +170,7 @@ func hide_panelchat() -> void:
 func cleanup() -> void:
 	#logger.verbose("Clearing PlayerChat")
 
-	self.visible = false # Hides PlayerChat
+	hide_panelchat() # Hides PlayerChat
 	chatMessages.clear() # Clear Chat Messages
 
 func get_class() -> String:

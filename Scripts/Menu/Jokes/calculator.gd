@@ -240,8 +240,11 @@ func popup_calc() -> void:
 
 	#logger.verbose("Calc Get Rect: %s" % self.get_rect().size)
 
-	var calc_x : float = (ProjectSettings.get_setting("display/window/size/width")/2) - (self.get_rect().size.x/2)
-	var calc_y : float = (ProjectSettings.get_setting("display/window/size/height")/2) - (self.get_rect().size.x/2)
+#	var calc_x : float = (ProjectSettings.get_setting("display/window/size/width")/2) - (self.get_rect().size.x/2)
+#	var calc_y : float = (ProjectSettings.get_setting("display/window/size/height")/2) - (self.get_rect().size.x/2)
+
+	var calc_x : float = (get_tree().get_root().size.x/2) - (self.get_rect().size.x/2)
+	var calc_y : float = (get_tree().get_root().size.y/2) - (self.get_rect().size.x/2)
 
 	self.set_position(Vector2(calc_x, calc_y))
 	self.call_deferred("show")
