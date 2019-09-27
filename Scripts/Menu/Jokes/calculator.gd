@@ -14,7 +14,7 @@ var calculated : bool = false # Determine if the last action was a calculation.
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	self.window_title = tr("calculator_title")
-	
+
 	# Sadly I have to iterate through each and every node (I cannot just iterate through the parents).
 	# Allows Attaching Calculator Button Presses to Function
 	for columns in buttons.get_children():
@@ -22,20 +22,20 @@ func _ready() -> void:
 			for button in rows.get_children():
 				button.enabled_focus_mode = Control.FOCUS_NONE # Disables Keyboard and Mouse Focus
 				button.connect("pressed", self, "_button_pressed", [button]) # Connects Button to Function
-	
+
 	# Listens for cleanup_ui signal. Allows cleaning up on server shutdown.
 	get_tree().get_root().get_node("PlayerUI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
-	
+
 	# Sets the Calculator's Theme
 	set_theme(gamestate.game_theme)
-	
+
 	# Show Calculator
 	popup_calc()
 
 # Calculator Button Was Pressed
 func _button_pressed(button: Node) -> void:
 	#logger.verbose("Pressed: %s" % button.name)
-	
+
 	if button.name == "Equals":
 		calculate_results()
 	elif button.name == "Clear":
@@ -52,7 +52,7 @@ func _button_pressed(button: Node) -> void:
 func _input(event) -> void:
 	if event is InputEventMouseButton:
 		set_focus_mode(Control.FOCUS_ALL)
-	
+
 	if event is InputEventKey and event.pressed:
 		match event.scancode:
 			KEY_0:
@@ -60,7 +60,7 @@ func _input(event) -> void:
 					# Doesn't have its own scancode on a standard keyboard
 					write_to_screen(")")
 					return
-				
+
 				write_to_screen("0")
 				return
 			KEY_1:
@@ -80,7 +80,7 @@ func _input(event) -> void:
 					# Doesn't have its own scancode on a standard keyboard
 					write_to_screen("%")
 					return
-				
+
 				write_to_screen("5")
 				return
 			KEY_6:
@@ -94,7 +94,7 @@ func _input(event) -> void:
 					# Doesn't have its own scancode on a standard keyboard
 					write_to_screen("*")
 					return
-				
+
 				write_to_screen("8")
 				return
 			KEY_9:
@@ -102,7 +102,7 @@ func _input(event) -> void:
 					# Doesn't have its own scancode on a standard keyboard
 					write_to_screen("(")
 					return
-				
+
 				write_to_screen("9")
 				return
 			KEY_ENTER:
@@ -152,7 +152,7 @@ func _input(event) -> void:
 				if event.shift:
 					write_to_screen("+")
 					return
-				
+
 				calculate_results()
 				return
 			_: # Default Result - Put at Bottom of Match Results
@@ -166,9 +166,9 @@ func write_to_screen(character: String) -> void:
 	if calculated:
 		clear_screen()
 		calculated = false
-	
+
 	screen.add_text(character)
-	
+
 	# Remove Leading zeros if character pressed was not a zero.
 	if character != "0":
 		screen.bbcode_text = "[right]" + screen.text.lstrip("0")
@@ -186,29 +186,29 @@ func erase_character() -> void:
 		calculated = false
 		clear_screen()
 		return
-	
+
 	screen.bbcode_text = "[right]" + screen.text.substr(0, screen.text.length()-1)
 
 # Calculate Results
 func calculate_results() -> void:
 	#logger.verbose("Calculating...")
 	#logger.verbose("Formula: %s" % screen.text)
-	
+
 	# How to deal with Integer Divison? Modulus only Works With Integers (otherwise a parse error).
 	# Symbols to Look For (, ), %, /, *, +, -
-	
+
 	if calculated:
 		calculated = false
 		clear_screen()
-	
+
 	# https://docs.godotengine.org/en/3.1/classes/class_expression.html#description
 	# Using expressions allows handling code without crashing the game because of errors (like syntax errors).
 	var error = expression.parse(screen.text, [])
-	
+
 	if error != OK:
 		#logger.verbose("Calc Expression Error: %s" % expression.get_error_text())
 		return
-		
+
 	var result = expression.execute([], null, false) # Setting show_error to false keeps the parser from complaining about dividing by 0.
 	if not expression.has_execute_failed():
 		screen.bbcode_text = "[right]" + str(result)
@@ -237,9 +237,9 @@ func _calc_hide() -> void:
 # Show Calculator Window
 func popup_calc() -> void:
 	#get_tree().set_input_as_handled()
-	
+
 	#logger.verbose("Calc Get Rect: %s" % self.get_rect().size)
-	
+
 	var calc_x : float = (ProjectSettings.get_setting("display/window/size/width")/2) - (self.get_rect().size.x/2)
 	var calc_y : float = (ProjectSettings.get_setting("display/window/size/height")/2) - (self.get_rect().size.x/2)
 

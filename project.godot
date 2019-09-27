@@ -84,6 +84,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/Menu/main_menu.gd"
 }, {
+"base": "WindowDialog",
+"class": "Mazawalza_Dictionary",
+"language": "GDScript",
+"path": "res://Scripts/Menu/dictionary.gd"
+}, {
 "base": "ParallaxBackground",
 "class": "MenuBackground",
 "language": "GDScript",
@@ -225,6 +230,7 @@ _global_script_class_icons={
 "Logger": "",
 "MainLoopEvents": "",
 "MainMenu": "",
+"Mazawalza_Dictionary": "",
 "MenuBackground": "",
 "MixingDeskMusic": "",
 "ModLoader": "",
@@ -256,7 +262,8 @@ _global_script_class_icons={
 
 config/name="Sweet Tea"
 run/main_scene="res://Menus/ModLoader.tscn"
-config/icon="res://Assets/Icons/game_icon.png"
+config/icon="res://Assets/Icons/game_icon/game_icon_64.png"
+config/macos_native_icon="res://Assets/Icons/game_icon/game_icon_1024.icns"
 config/Version="0.0.1-alpha"
 "config/Gamejolt API Key"="601c6f6b5e75332551187791609d1630"
 "config/Gamejolt Game ID"="430985"
