@@ -75,6 +75,7 @@ network_menu_join_server_button,Join Server,,,,Sail the seas!!!
 network_menu_title,Connect To A Server,,,,Sail the seas
 new_character_button,New Character,,,,Find yer mate
 open_calculator,Opening Calculator...,,,,
+open_dictionary,Opening Dictionary...,,,,
 options_button,Options,,,,Fix Yer Ship
 physics_fps_label,Physics FPS: %s,,,,
 player_coordinate_label,Player: %s,,,,

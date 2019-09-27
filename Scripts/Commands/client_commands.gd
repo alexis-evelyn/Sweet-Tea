@@ -407,6 +407,15 @@ func read_dictionary(message: PoolStringArray) -> String:
 	var command_arguments : PoolStringArray = message
 	command_arguments.remove(0)
 
+	# If No Arguments Specified, Open GUI Dictionary
+	# Else Continue Onto Text Dictionary Search
+	if command_arguments.size() == 0 and not get_tree().get_root().has_node("Mazawalza_Dictionary"):
+		var dictionary : Node = preload("res://Menus/Dictionary.tscn").instance()
+		dictionary.name = "Mazawalza_Dictionary"
+
+		get_tree().get_root().add_child(dictionary)
+		return tr("open_dictionary")
+
 	# How do I make a searchable dictionary efficiently?
 	var output : String = "[font=%s]" % gamestate.mazawalza_regular.resource_path
 	var player_locale_entry : String

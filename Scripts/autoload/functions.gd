@@ -102,6 +102,7 @@ func get_translation(key: String, locale: String) -> String:
 		if not translator.get_message(key).empty():
 			message = translator.get_message(key)#.c_unescape()
 #			print("Translation Message: %s - Selected Translation: %s" % [message, selected_translation])
+			break # Stop Searching Once First Instance of Key-Value is Found (Helps Speed Up Return of Value)
 
 	# Should I check if the translation came back successful or will translator handle it for me?
 
