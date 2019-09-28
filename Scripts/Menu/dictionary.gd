@@ -38,7 +38,9 @@ func populate_dictionary() -> void:
 #	var output : String = "[font=%s]" % gamestate.mazawalza_regular.resource_path
 	var item_text : String # Item Text For ItemList
 	var item_hint : String # Item Hint For Hovering Over ItemList
+	# warning-ignore:unused_variable
 	var entry : Dictionary # Detailed Dictionary of Entry
+	# warning-ignore:unused_variable
 	var player_locale_entry : String # Current Locale's Definition of Entry
 #	var mazawalza_locale_entry : String # Mazawalza's Unicode Symbol
 #	var font : DynamicFont = gamestate.mazawalza_regular # Font to Use For Mazawalza

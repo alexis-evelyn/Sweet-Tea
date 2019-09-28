@@ -57,102 +57,131 @@ func _input(event) -> void:
 		match event.scancode:
 			KEY_0:
 				if event.shift:
+					get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 					# Doesn't have its own scancode on a standard keyboard
 					write_to_screen(")")
 					return
 
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen("0")
 				return
 			KEY_1:
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen("1")
 				return
 			KEY_2:
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen("2")
 				return
 			KEY_3:
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen("3")
 				return
 			KEY_4:
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen("4")
 				return
 			KEY_5:
 				if event.shift:
+					get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 					# Doesn't have its own scancode on a standard keyboard
 					write_to_screen("%")
 					return
 
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen("5")
 				return
 			KEY_6:
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen("6")
 				return
 			KEY_7:
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen("7")
 				return
 			KEY_8:
 				if event.shift:
+					get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 					# Doesn't have its own scancode on a standard keyboard
 					write_to_screen("*")
 					return
 
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen("8")
 				return
 			KEY_9:
 				if event.shift:
+					get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 					# Doesn't have its own scancode on a standard keyboard
 					write_to_screen("(")
 					return
 
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen("9")
 				return
 			KEY_ENTER:
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				calculate_results()
 				return
 			KEY_C:
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				clear_screen()
 				return
 			# Handle Non-Numeric Keys
 			KEY_BACKSPACE:
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				erase_character()
 				return
 			KEY_ESCAPE:
+#				print("Close Calculator!!!")
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				close_calculator()
 				return
 			KEY_PERIOD:
 				# Untested
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen(".")
 				return
 			KEY_ASTERISK:
 				# Untested
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen("*")
 				return
 			KEY_SLASH:
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen("/")
 				return
 			KEY_PLUS:
 				# Untested
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen("+")
 				return
 			KEY_MINUS:
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen("-")
 				return
 			KEY_PERCENT:
 				# Untested
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen("%")
 				return
 			KEY_PARENLEFT:
 				# Untested
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen("(")
 				return
 			KEY_PARENRIGHT:
 				# Untested
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				write_to_screen(")")
 				return
 			KEY_EQUAL:
 				if event.shift:
+					get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 					write_to_screen("+")
 					return
 
+				get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 				calculate_results()
 				return
 			_: # Default Result - Put at Bottom of Match Results
@@ -248,6 +277,10 @@ func popup_calc() -> void:
 
 	self.set_position(Vector2(calc_x, calc_y))
 	self.call_deferred("show")
+
+	self.set_focus_mode(Control.FOCUS_ALL) # Allows Calculator to Grab Focus of Keyboard and Mouse
+	self.grab_focus() # Grabs Focus of Keyboard
+#	self.grab_click_focus()
 
 # Sets Calculator's Theme
 func set_theme(theme: Theme) -> void:

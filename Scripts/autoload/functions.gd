@@ -295,6 +295,7 @@ func parse_for_unicode(string: String) -> String:
 
 	# Pull Hex From Unicode String Representation
 	var unicode_chars : PoolStringArray = string.split("\\u", false)
+	# warning-ignore:unassigned_variable
 	var unicode_ints : PoolIntArray
 
 	logger.superverbose("Pre-Parsed String: %s" % string)
@@ -307,7 +308,7 @@ func parse_for_unicode(string: String) -> String:
 		unicode_ints.append(unicode_chars[x].hex_to_int())
 
 	# Convert Integers to Characters
-	var joined_chars : String
+	var joined_chars : String = ""
 	for unicode_int in unicode_ints:
 		joined_chars += char(unicode_int)
 

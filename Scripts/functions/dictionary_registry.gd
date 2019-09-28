@@ -110,7 +110,9 @@ var mazawalza : Dictionary = {
 }
 
 # May Use. May Not
+# warning-ignore:unused_class_variable
 var entry : String = "entry_"
+# warning-ignore:unused_class_variable
 var meaning : String = "meaning_"
 
 # Effect Modifiers
@@ -152,6 +154,7 @@ func get_effect_detail(effect_name: String) -> Dictionary:
 
 	return mazawalza.get(effect_name)
 
+# warning-ignore:unused_argument
 func search_dictionary(some_kind_of_search_in_dictionary_form: Dictionary) -> Dictionary:
 	# Perform Search Here!!!
 

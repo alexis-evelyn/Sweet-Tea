@@ -16,6 +16,7 @@ var NWSC : String = PoolByteArray(['U+8203']).get_string_from_utf8() # No Width 
 
 onready var chatMessages : Node = $chatMessages
 onready var chatInput : Node = $userChat
+# warning-ignore:unused_class_variable
 onready var closeButton : Node = $closeChat
 
 # Supposed to Request Window Attention - Only Works if Window is Out of Focus
@@ -108,6 +109,7 @@ master func chat_message_server(message: String) -> int:
 func _on_userChat_gui_input(event) -> void:
 	if event is InputEventKey and not just_opened:
 		if event.is_action_pressed("chat_send") and chatInput.text.rstrip(" ").lstrip(" ") != "":
+			get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 			# TODO (IMPORTANT): Create Way to Store Command History (maybe full chat history?)
 
 			arguments = chatInput.text.split(" ", false, 0) # Convert Message into Arguments
@@ -119,6 +121,7 @@ func _on_userChat_gui_input(event) -> void:
 
 			chatInput.text = ""
 	else:
+		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 		just_opened = false
 
 # When URLs are Clicked in Chat Window

@@ -4,6 +4,7 @@ class_name ClientCommands
 var shaders_class = preload("res://Scripts/functions/shader_registry.gd").new()
 var shaders : Dictionary = shaders_class.shaders
 
+# warning-ignore:unused_class_variable
 var dictionary = preload("res://Scripts/functions/dictionary_registry.gd").new()
 
 func process_commands(message: PoolStringArray) -> String:
@@ -115,6 +116,7 @@ func shader_info(message: PoolStringArray) -> String:
 	var command_arguments : PoolStringArray = message
 	command_arguments.remove(0)
 
+	# warning-ignore:unassigned_variable
 	var response : PoolStringArray
 
 	for shader in shaders:
@@ -418,6 +420,7 @@ func read_dictionary(message: PoolStringArray) -> String:
 		get_tree().get_root().get_node("PlayerUI").add_child(dictionary)
 		return tr("open_dictionary")
 
+	# warning-ignore:unassigned_variable
 	var output
 
 #	var client_translation : String = tr("entry_language_name")
