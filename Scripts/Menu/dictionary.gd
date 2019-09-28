@@ -37,6 +37,7 @@ func populate_dictionary() -> void:
 	# How do I make a searchable dictionary efficiently?
 #	var output : String = "[font=%s]" % gamestate.mazawalza_regular.resource_path
 	var item_text : String # Item Text For ItemList
+	var item_hint : String # Item Hint For Hovering Over ItemList
 	var entry : Dictionary # Detailed Dictionary of Entry
 	var player_locale_entry : String # Current Locale's Definition of Entry
 #	var mazawalza_locale_entry : String # Mazawalza's Unicode Symbol
@@ -50,7 +51,6 @@ func populate_dictionary() -> void:
 			pass # NOP
 
 		entry = dictionary.get_effect_detail(entry) # Get Dictionary For Effect
-		player_locale_entry = tr(entry.entry) # Get Current Locale's Definition of Entry
 #		mazawalza_locale_entry = functions.parse_for_unicode(functions.get_translation(entry.entry, "mz"))
 
 		# Don't Allow Empty Entries
@@ -67,10 +67,11 @@ func populate_dictionary() -> void:
 		font_icon.create_from_image(font_image) # Create Texture From ImageTexture
 
 #		output += "%s: %s\n" % [player_locale_entry, mazawalza_locale_entry]
-		item_text = "%s" %  [player_locale_entry]
+		item_text = tr(entry.meaning) # Get Current Locale's Definition of Entry
+		item_hint = tr(entry.entry) # Get Current Locale's Definition of Entry
 		entries.add_item(item_text, font_icon, true) # Text, Icon, Selectable
 		entries.set_item_metadata(entries.get_item_count() - 1, entry) # Useful for Storing More Info The Displayed to Users - Can be Used When Entry is Clicked
-		entries.set_item_tooltip(entries.get_item_count() - 1, "Display Something When Hovered Over!!!")
+		entries.set_item_tooltip(entries.get_item_count() - 1, item_hint)
 
 #	output += "[/font]"
 

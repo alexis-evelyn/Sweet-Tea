@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Scripts/UI/player_ui.gd" type="Script" id=1]
-[ext_resource path="res://PlayerUI/panelChat.tscn" type="PackedScene" id=2]
-[ext_resource path="res://PlayerUI/panelPlayerList.tscn" type="PackedScene" id=3]
+[ext_resource path="res://PlayerUI/panelPlayerList.tscn" type="PackedScene" id=2]
+[ext_resource path="res://PlayerUI/panelChat.tscn" type="PackedScene" id=3]
 [ext_resource path="res://PlayerUI/PlayerStats.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Menus/PauseMenu.tscn" type="PackedScene" id=5]
 
@@ -13,7 +13,7 @@ bg_color = Color( 0.486275, 0.00784314, 0.996078, 0.588235 )
 pause_mode = 2
 script = ExtResource( 1 )
 
-[node name="panelPlayerList" parent="." instance=ExtResource( 3 )]
+[node name="panelPlayerList" parent="." instance=ExtResource( 2 )]
 pause_mode = 1
 visible = false
 
@@ -23,7 +23,7 @@ visible = false
 anchor_top = 0.82
 custom_styles/panel = SubResource( 1 )
 
-[node name="panelChat" parent="." instance=ExtResource( 2 )]
+[node name="panelChat" parent="." instance=ExtResource( 3 )]
 pause_mode = 1
 visible = false
 
