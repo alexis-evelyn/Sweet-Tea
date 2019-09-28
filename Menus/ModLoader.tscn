@@ -3,7 +3,6 @@
 [ext_resource path="res://Scripts/Menu/mods.gd" type="Script" id=1]
 [ext_resource path="res://Assets/Icons/game_icon/game_icon_64.png" type="Texture" id=2]
 
-
 [node name="ModLoader" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0

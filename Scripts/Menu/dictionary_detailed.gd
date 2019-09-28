@@ -19,7 +19,10 @@ func _ready():
 #	pass
 
 func populate(json: Dictionary) -> void:
-	self.window_title = "TR - Modifier or Effect"
+	if json.has("effect"):
+		self.window_title = tr("generic_key_value") % [tr("mazawalza_effect"), json.effect]
+	elif json.has("modifier"):
+		self.window_title = tr("generic_key_value") % [tr("mazawalza_modifier"), json.modifier]
 
 	character.bbcode_text = "[font=%s]%s[/font]" % [gamestate.mazawalza_regular.resource_path, json.character]
 	entry.text = "%s" % [tr(json.entry)]

@@ -43,6 +43,7 @@ dictionary_title,Mazawalza Dictionary,,,,
 engine_start_time_label,Time Since Game Start: %s Seconds - %s Microseconds,,,,
 first_name_list,"{""Masc"":[""John"",""James"",""Brandon"",""Robert"",""Robert""],""Fem"":[""Emma"",""Amelia"",""Mary"",""Ava"",""Autumn"",""Evelyn"",""Alexis"",""Jane""],""NB"":[""Alex"",""Sam"",""Chris"",""Mel"",""Avery"",""Alexis"",""Jess""]}",,,,
 fps_label,FPS: %s/%s,,,,
+generic_key_value,%s: %s,,,,
 handle_url_click,Clicked Player Name: %s Player ID: %s,,,,
 help_ban_desc,Bans Player Specified As Argument,,,,
 help_banip_desc,Bans IP Address From Joining Server,,,,
@@ -66,6 +67,8 @@ language_name,English,Español,日本人,\udb80,Pirate
 last_name_list,"{""NB"":[""Smith"",""Johnson"",""Miller"",""Evans"",""Jones"",""Williams"",""Brown""]}",,,,
 load_character_button,Load Character,,,,Join yer mate
 main_menu_title,Sweet Tea,,,,Rum
+mazawalza_effect,Effect,,,,
+mazawalza_modifier,Modifier,,,,
 memory_usage_label,Static Memory Usage: %s Megabytes,,,,
 missing_max_player_count,-,,,,
 missing_player_count,-,,,,
