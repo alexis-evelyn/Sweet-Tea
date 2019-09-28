@@ -3,6 +3,7 @@ class_name Mazawalza_Dictionary
 
 # Declare member variables here. Examples:
 onready var entries : ItemList = $background/entries
+onready var details : Node = get_parent().get_node("DetailedInfo")
 
 var dictionary = preload("res://Scripts/functions/dictionary_registry.gd").new()
 
@@ -10,16 +11,12 @@ var dictionary = preload("res://Scripts/functions/dictionary_registry.gd").new()
 func _ready():
 	self.window_title = tr("dictionary_title")
 
-#	# Sadly I have to iterate through each and every node (I cannot just iterate through the parents).
-#	# Allows Attaching Calculator Button Presses to Function
-#	for columns in buttons.get_children():
-#		for rows in columns.get_children():
-#			for button in rows.get_children():
-#				button.enabled_focus_mode = Control.FOCUS_NONE # Disables Keyboard and Mouse Focus
-#				button.connect("pressed", self, "_button_pressed", [button]) # Connects Button to Function
-
 	# Listens for cleanup_ui signal. Allows cleaning up on server shutdown.
 	get_tree().get_root().get_node("PlayerUI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
+
+	# ItemList Handling - https://docs.godotengine.org/en/3.1/classes/class_itemlist.html
+	entries.connect("item_selected", self, "item_selected") # Detect Selected Item
+	entries.connect("item_activated", self, "item_activated") # Detect When Item Is Double Clicked (or Enter Pressed)
 
 	# Sets the Dictionary's Theme
 	set_theme(gamestate.game_theme)
@@ -101,3 +98,23 @@ func cleanup():
 
 func get_class() -> String:
 	return "Mazawalza_Dictionary"
+
+func item_selected(index: int) -> void:
+	var json : Dictionary = entries.get_item_metadata(index)
+
+	logger.debug("Selected Item: %s" % index)
+	logger.superverbose("Metadata: %s" % json)
+
+func item_activated(index: int) -> void:
+	var json : Dictionary = entries.get_item_metadata(index)
+
+	logger.debug("Activated Item: %s" % index)
+	logger.superverbose("Metadata: %s" % json)
+
+	details.populate(json)
+
+func _about_to_show() -> void:
+	pass # Replace with function body.
+
+func _dict_hide() -> void:
+	pass # Replace with function body.

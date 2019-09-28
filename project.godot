@@ -89,6 +89,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/Menu/dictionary.gd"
 }, {
+"base": "WindowDialog",
+"class": "Mazawalza_Dictionary_Detailed",
+"language": "GDScript",
+"path": "res://Scripts/Menu/dictionary_detailed.gd"
+}, {
 "base": "ParallaxBackground",
 "class": "MenuBackground",
 "language": "GDScript",
@@ -231,6 +236,7 @@ _global_script_class_icons={
 "MainLoopEvents": "",
 "MainMenu": "",
 "Mazawalza_Dictionary": "",
+"Mazawalza_Dictionary_Detailed": "",
 "MenuBackground": "",
 "MixingDeskMusic": "",
 "ModLoader": "",
