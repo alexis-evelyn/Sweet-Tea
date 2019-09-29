@@ -1,9 +1,23 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Scripts/UI/pause_menu.gd" type="Script" id=1]
+[ext_resource path="res://Assets/Fonts/ttf/FiraCode-Bold.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Assets/Fonts/ttf/FiraCode-Regular.ttf" type="DynamicFontData" id=3]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.0392157, 0.0352941, 0.0392157, 0.705882 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 60
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 60
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 3 )
 
 [node name="PauseMenu" type="Control"]
 anchor_right = 1.0
@@ -17,13 +31,65 @@ __meta__ = {
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_styles/panel = SubResource( 1 )
-
-[node name="label" type="Label" parent="."]
-margin_left = 762.0
-margin_top = 126.0
-margin_right = 926.0
-margin_bottom = 185.0
-text = "Pause Menu"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Title" type="RichTextLabel" parent="background"]
+anchor_top = 0.1
+anchor_right = 1.0
+anchor_bottom = 0.2
+custom_fonts/bold_font = SubResource( 2 )
+custom_fonts/normal_font = SubResource( 3 )
+bbcode_enabled = true
+bbcode_text = "[b][center]Pause Menu[/center][/b]"
+text = "Pause Menu"
+scroll_active = false
+
+[node name="Resume" type="Button" parent="background"]
+anchor_left = 0.4
+anchor_top = 0.2
+anchor_right = 0.6
+anchor_bottom = 0.2
+margin_bottom = 37.0
+text = "Resume"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Options" type="Button" parent="background"]
+anchor_left = 0.4
+anchor_top = 0.25
+anchor_right = 0.6
+anchor_bottom = 0.25
+margin_bottom = 37.0
+text = "Options"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OpenToLan" type="Button" parent="background"]
+anchor_left = 0.4
+anchor_top = 0.3
+anchor_right = 0.6
+anchor_bottom = 0.3
+margin_bottom = 37.0
+text = "Open To Lan"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Quit" type="Button" parent="background"]
+anchor_left = 0.4
+anchor_top = 0.35
+anchor_right = 0.6
+anchor_bottom = 0.35
+margin_bottom = 37.0
+text = "Quit"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="background/Resume" to="." method="resume"]
+[connection signal="pressed" from="background/Options" to="." method="options"]
+[connection signal="pressed" from="background/OpenToLan" to="." method="open_to_lan"]
+[connection signal="pressed" from="background/Quit" to="." method="quit"]

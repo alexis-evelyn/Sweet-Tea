@@ -2,6 +2,12 @@ extends Control
 class_name PauseMenu
 
 # Declare member variables here. Examples:
+onready var title : RichTextLabel = $background/Title
+onready var resume_button : Button = $background/Resume
+onready var options_button : Button = $background/Options
+onready var open_to_lan_button : Button = $background/OpenToLan
+onready var quit_button : Button = $background/Quit
+
 var paused : bool = false
 var time_scale : float = 0.0
 
@@ -50,3 +56,12 @@ func set_theme(theme: Theme) -> void:
 
 func get_class() -> String:
 	return "PauseMenu"
+
+
+func options():
+	pass # Replace with function body.
+
+
+func quit():
+	network.close_connection()
+	resume()

@@ -63,13 +63,6 @@ func _input(event) -> void:
 		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 		pauseMenu.resume()
 
-	# Closes Connection (Client and Server)
-	# I plan on replacing this with a "pause" menu - it will only pause on singleplayer
-	if event.is_action_pressed("quit_world") and !panelChat.visible and !pauseMenu.visible:
-		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
-		# TODO: Replace Me Soon
-		network.close_connection()
-
 # Make Sure Game Saves World On Quit or Crash
 func _notification(what: int) -> void:
 	# This isn't an override of the normal behavior, it just allows listening for the events and doing something based on the event happening.
