@@ -84,5 +84,9 @@ func options():
 	pass # Replace with function body.
 
 func quit():
+	open_to_lan_button.set_disabled(false) # Enable Open to Lan Button
+	open_to_lan_button.focus_mode = Control.FOCUS_ALL # Enable Ability to Focus on Button
+	is_open_to_lan = false # Mark that game is not open to lan
+
 	network.close_connection()
 	resume()

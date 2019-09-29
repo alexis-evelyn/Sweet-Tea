@@ -29,6 +29,10 @@ func listen_for_clients(thread_data) -> void:
 
 	#logger.verbose("Starting To Listen For Clients!!!")
 	while udp_peer.is_listening():
+		if get_tree().get_network_peer() == null:
+			# Used to terminate thread early (if still being used by client) without crashing the server.
+			break
+
 		udp_peer.wait() # Makes PacketPeerUDP wait until it receives a packet (to save on CPU usage) - This works because listen_for_clients(...) is on a different thread.
 		logger.verbose("Server Finder Helper Listening!!!")
 
@@ -38,6 +42,10 @@ func listen_for_clients(thread_data) -> void:
 			pass
 
 		while udp_peer.get_available_packet_count() > 0:
+			if get_tree().get_network_peer() == null:
+				# Used to terminate thread early (if still being used by client) without crashing the server.
+				break
+
 			logger.superverbose("Received Packet!!!")
 			var bytes : PoolByteArray = udp_peer.get_packet()
 			var client_ip : String = udp_peer.get_packet_ip()
@@ -124,7 +132,7 @@ func set_port() -> int:
 
 func _exit_tree():
 	udp_peer.close()
-	#server.wait_to_finish()
+#	server.wait_to_finish()
 
 func get_class() -> String:
 	return "ServerFinderHelper"
