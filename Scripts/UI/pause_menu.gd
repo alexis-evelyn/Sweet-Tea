@@ -3,7 +3,7 @@ class_name PauseMenu
 
 # Declare member variables here. Examples:
 #onready var title : RichTextLabel = $background/Title
-onready var resume_button : Button = $background/Resume
+onready var resume_button : Button = $background/buttons/Resume
 #onready var options_button : Button = $background/Options
 #onready var open_to_lan_button : Button = $background/OpenToLan
 #onready var quit_button : Button = $background/Quit
@@ -18,7 +18,6 @@ var pause_shaders : bool = true
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set_theme(gamestate.game_theme)
-	resume_button.grab_focus()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -26,6 +25,8 @@ func _ready():
 
 func pause() -> void:
 	# TODO (IMPORTANT): Detect if Game is Open to Lan
+
+	resume_button.grab_focus()
 
 	paused = true
 	get_tree().paused = true

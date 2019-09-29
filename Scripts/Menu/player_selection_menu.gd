@@ -21,7 +21,6 @@ func _ready() -> void:
 		slot.connect("pressed", self, "_character_slot_pressed", [slot])
 
 	set_theme(gamestate.game_theme)
-#	set_theme(null)
 
 # Used to set a menu to load after loading character.
 func set_menu(set_scene: String) -> void:

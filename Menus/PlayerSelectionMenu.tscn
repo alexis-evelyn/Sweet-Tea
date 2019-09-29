@@ -6,7 +6,6 @@
 bg_color = Color( 0.203922, 0.239216, 0.317647, 0.901961 )
 
 [node name="PlayerSelectionWindow" type="WindowDialog"]
-visible = true
 anchor_bottom = 0.4
 margin_right = 80.0
 window_title = "Select Character"
