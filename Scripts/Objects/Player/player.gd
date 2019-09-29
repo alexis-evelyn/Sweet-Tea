@@ -4,6 +4,7 @@ class_name Player
 # Declare member variables here:
 onready var panelChat : Node = get_tree().get_root().get_node("PlayerUI/panelChat")
 onready var playerStats : Node = get_tree().get_root().get_node("PlayerUI/panelPlayerStats")
+onready var pauseMenu : Node = get_tree().get_root().get_node("PlayerUI/PauseMenu")
 
 const UP : Vector2 = Vector2(0, -1)
 const LEFT : Vector2 = Vector2(-1, 0)
@@ -96,7 +97,7 @@ func _physics_process(_delta: float) -> void:
 	if not get_tree().has_network_peer():
 		return # Should Be Connected Here
 
-	if is_network_master():
+	if is_network_master() and not pauseMenu.is_paused():
 		if Input.is_action_pressed("move_up") and !panelChat.visible:
 #			logger.superverbose("Up")
 			motion.y = max(motion.y - ACCELERATION, -MAX_SPEED)

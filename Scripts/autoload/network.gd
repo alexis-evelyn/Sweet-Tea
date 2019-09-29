@@ -40,6 +40,8 @@ onready var playerChat : Node = get_tree().get_root().get_node("PlayerUI/panelCh
 
 var max_pixel_width : int = 32
 
+var refuse_new_connections : bool = true
+
 # TODO: Make sure to verify the data is valid and coherent
 # Server Info to Send to Clients
 var server_info : Dictionary = {
@@ -109,12 +111,17 @@ func start_server() -> void:
 	# https://docs.godotengine.org/en/3.1/classes/class_networkedmultiplayerenet.html
 	net.set_bind_ip(server_info.bind_address) # Sets the IP Address the Server Binds to
 
+	# https://docs.godotengine.org/en/3.1/classes/class_packetpeer.html#class-packetpeer-property-allow-object-decoding
+	net.set_allow_object_decoding(false) # Prevents Allowing An Object to Be Decoded To Prevent Remote Code Execution
+
 	# Could Not Create Server (probably port already in use or Failed Permissions)
 	var server_error : int = net.create_server(server_info.used_port, server_info.max_players - 1)
 	if (server_error != OK): # The -1 for max players is so the player count correctly matches the max player count (as apparently the max player amount does not include the server player)
 		logger.fatal("Failed to create server")
 		emit_signal("failed_server", server_error) # Something else will listen for this signal and act accordingly
 		return
+
+	net.set_refuse_new_connections(refuse_new_connections) # Refuse New Connections - Can be Disabled By Opening to Lan
 
 	# Disabled Because Not Implemented - #logger.verbose("Port: %s" % net.get_port())
 

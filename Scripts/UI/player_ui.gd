@@ -27,16 +27,16 @@ func _input(event) -> void:
 		return
 
 	# This allows user to see player list (I will eventually add support to change keys and maybe joystick support)
-	if event.is_action("show_playerlist") and !pauseMenu.paused:
+	if event.is_action("show_playerlist") and !pauseMenu.is_paused():
 		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 		panelPlayerList.show_player_list()
 
-	if event.is_action_released("show_playerlist") and !pauseMenu.paused:
+	if event.is_action_released("show_playerlist") and !pauseMenu.is_paused():
 		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 		panelPlayerList.hide_player_list()
 
 	# Makes Chat Window Visible
-	if event.is_action_pressed("chat_command") and !pauseMenu.paused and !panelChat.visible and !is_calc_open():
+	if event.is_action_pressed("chat_command") and !pauseMenu.is_paused() and !panelChat.visible and !is_calc_open():
 		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 		panelChat.show_panelchat() # Prevent's Input from Being Sent to Any _unhandled_input functions
 		panelChat.get_node("userChat").grab_focus() # Causes LineEdit (where user types) to grab focus of keyboard
@@ -44,14 +44,14 @@ func _input(event) -> void:
 		panelChat.get_node("userChat").set_cursor_position(1) # Moves Caret In Front of Slash
 		panelChat.just_opened = true
 
-	if event.is_action_pressed("chat_show") and !pauseMenu.paused and !panelChat.visible and !is_calc_open():
+	if event.is_action_pressed("chat_show") and !pauseMenu.is_paused() and !panelChat.visible and !is_calc_open():
 		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 		panelChat.show_panelchat()
 		panelChat.get_node("userChat").grab_focus() # Causes LineEdit (where user types) to grab focus of keyboard
 		panelChat.just_opened = true
 
 	# Makes Chat Window Invisible
-	if event.is_action_pressed("chat_hide") and !pauseMenu.paused and panelChat.visible:
+	if event.is_action_pressed("chat_hide") and !pauseMenu.is_paused() and panelChat.visible:
 		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 		panelChat.hide_panelchat()
 		return # Prevents Forwarding Escape Key to Pause Menu

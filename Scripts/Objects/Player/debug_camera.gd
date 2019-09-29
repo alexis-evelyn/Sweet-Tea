@@ -28,6 +28,7 @@ var key_begin_bbcode : String = "[color=#" + key_color.to_html(true) + "]"
 var both_end_bbcode : String = "[/color]"
 
 onready var panelChat : Node = get_tree().get_root().get_node("PlayerUI/panelChat")
+onready var pauseMenu : Node = get_tree().get_root().get_node("PlayerUI/PauseMenu")
 
 onready var coor_label = $PlayerCoordinates
 onready var cam_coor_label = $CameraCoordinates
@@ -82,6 +83,11 @@ func _process(_delta: float) -> void:
 	update_time_since_start()
 
 func _physics_process(_delta: float) -> void:
+	update_physics_fps_label()
+
+	if pauseMenu.is_paused():
+		return
+
 	if Input.is_action_pressed("debug_up") and !panelChat.visible:
 		translate(Vector2(0, -cam_speed))
 		update_camera_pos_label()
@@ -96,7 +102,6 @@ func _physics_process(_delta: float) -> void:
 		update_camera_pos_label()
 
 	update_player_pos_label()
-	update_physics_fps_label()
 
 func get_player_node() -> Node:
 	#logger.verbose("Parent: %s" % get_parent().name)

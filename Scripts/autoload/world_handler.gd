@@ -134,7 +134,7 @@ func start_server() -> void:
 		emit_signal("server_started", gamestate.player_info) # Sends Server Player's Info To Spawn Code
 
 	network.start_encryption_server() # Start Encryption For Server
-	network.start_server_finder_helper() # Start Lan Server Finder Helper
+#	network.start_server_finder_helper() # Start Lan Server Finder Helper - Moved to Pause Menu
 
 # Client World Loading Code (client side only)
 puppet func load_world_client() -> void:
