@@ -2,11 +2,13 @@ extends Control
 class_name PauseMenu
 
 # Declare member variables here. Examples:
-onready var title : RichTextLabel = $background/Title
+#onready var title : RichTextLabel = $background/Title
 onready var resume_button : Button = $background/Resume
-onready var options_button : Button = $background/Options
-onready var open_to_lan_button : Button = $background/OpenToLan
-onready var quit_button : Button = $background/Quit
+#onready var options_button : Button = $background/Options
+#onready var open_to_lan_button : Button = $background/OpenToLan
+#onready var quit_button : Button = $background/Quit
+
+#var ui_select_group_name : String = "Pause Menu UI Select"
 
 var paused : bool = false
 var time_scale : float = 0.0
@@ -16,6 +18,7 @@ var pause_shaders : bool = true
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set_theme(gamestate.game_theme)
+	resume_button.grab_focus()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Scripts/UI/pause_menu.gd" type="Script" id=1]
 [ext_resource path="res://Assets/Fonts/ttf/FiraCode-Bold.ttf" type="DynamicFontData" id=2]
@@ -18,6 +18,9 @@ size = 60
 use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 3 )
+
+[sub_resource type="ButtonGroup" id=4]
+resource_name = "Pause Menu UI Select"
 
 [node name="PauseMenu" type="Control"]
 anchor_right = 1.0
@@ -46,45 +49,57 @@ bbcode_text = "[b][center]Pause Menu[/center][/b]"
 text = "Pause Menu"
 scroll_active = false
 
-[node name="Resume" type="Button" parent="background"]
+[node name="Resume" type="Button" parent="background" groups=[
+"Pause Menu UI Select",
+]]
 anchor_left = 0.4
 anchor_top = 0.2
 anchor_right = 0.6
 anchor_bottom = 0.2
 margin_bottom = 37.0
+group = SubResource( 4 )
 text = "Resume"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Options" type="Button" parent="background"]
+[node name="Options" type="Button" parent="background" groups=[
+"Pause Menu UI Select",
+]]
 anchor_left = 0.4
 anchor_top = 0.25
 anchor_right = 0.6
 anchor_bottom = 0.25
 margin_bottom = 37.0
+group = SubResource( 4 )
 text = "Options"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="OpenToLan" type="Button" parent="background"]
+[node name="OpenToLan" type="Button" parent="background" groups=[
+"Pause Menu UI Select",
+]]
 anchor_left = 0.4
 anchor_top = 0.3
 anchor_right = 0.6
 anchor_bottom = 0.3
 margin_bottom = 37.0
+group = SubResource( 4 )
 text = "Open To Lan"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Quit" type="Button" parent="background"]
+[node name="Quit" type="Button" parent="background" groups=[
+"Pause Menu UI Select",
+]]
 anchor_left = 0.4
 anchor_top = 0.35
 anchor_right = 0.6
 anchor_bottom = 0.35
 margin_bottom = 37.0
+group = SubResource( 4 )
 text = "Quit"
 __meta__ = {
 "_edit_use_anchors_": false

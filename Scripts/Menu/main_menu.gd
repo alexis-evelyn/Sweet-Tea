@@ -35,6 +35,16 @@ signal script_setup # Used to let mods know MainMenu has finished loading
 # Android - https://stackoverflow.com/a/2364842/6828099
 # IOS - https://stackoverflow.com/a/9097503/6828099
 
+#onready var buttons : VBoxContainer = $Menu/Buttons
+
+onready var singleplayer_button : Button = $Menu/Buttons/Singleplayer
+#onready var multiplayer_button : Button = $Menu/Buttons/Multiplayer
+#onready var options_button : Button = $Menu/Buttons/Options
+#onready var quit_button : Button = $Menu/Buttons/Quit
+
+#var ui_select_group_name : String = "Main Menu UI Select"
+#onready var ui_select_group : ButtonGroup = get_tree().get_nodes_in_group(ui_select_group_name)
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	functions.set_title(tr("main_menu_title"))
@@ -46,6 +56,8 @@ func _ready() -> void:
 	# The reason I keep these settings here is because it prevents the splash screen from loading
 	OS.set_borderless_window(settings.window_borderless)
 	OS.set_window_resizable(settings.window_resizable)
+
+	singleplayer_button.grab_focus() # Make Singleplayer Button Grab Focus
 
 	emit_signal("script_setup") # Let mods know MainMenu is finished loading
 
@@ -125,6 +137,49 @@ func _on_Quit_pressed() -> void:
 	"""
 
 	main_loop_events.quit() # Quits Game
+
+#func _input(event: InputEvent) -> void:
+##	get_tree().get_nodes_in_group(ui_select_group_name) # Get Nodes of Group
+##	get_tree().call_group(ui_select_group_name, "my_function") # Call Function on All Nodes of Group
+#
+#	if event.is_action_pressed("ui_focus_next") or event.is_action_pressed("ui_right") or event.is_action_pressed("ui_down"):
+#		print("Grab Focus Next")
+#
+#		if singleplayer_button.has_focus():
+#			multiplayer_button.grab_focus()
+#			get_tree().set_input_as_handled()
+#		elif multiplayer_button.has_focus():
+#			options_button.grab_focus()
+#			get_tree().set_input_as_handled()
+#		elif options_button.has_focus():
+#			quit_button.grab_focus()
+#			get_tree().set_input_as_handled()
+#		elif quit_button.has_focus():
+#			singleplayer_button.grab_focus()
+#			get_tree().set_input_as_handled()
+#		else:
+#			singleplayer_button.grab_focus()
+#			get_tree().set_input_as_handled()
+#
+#	elif event.is_action_pressed("ui_focus_prev") or event.is_action_pressed("ui_left") or event.is_action_pressed("ui_up"):
+#		print("Grab Focus Previous")
+#
+#		if singleplayer_button.has_focus():
+#			quit_button.grab_focus()
+#			get_tree().set_input_as_handled()
+#		elif multiplayer_button.has_focus():
+#			singleplayer_button.grab_focus()
+#			get_tree().set_input_as_handled()
+#		elif options_button.has_focus():
+#			multiplayer_button.grab_focus()
+#			get_tree().set_input_as_handled()
+#		elif quit_button.has_focus():
+#			options_button.grab_focus()
+#			get_tree().set_input_as_handled()
+#		else:
+#			quit_button.grab_focus()
+#			get_tree().set_input_as_handled()
+
 
 func get_class() -> String:
 	return "MainMenu"
