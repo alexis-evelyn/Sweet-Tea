@@ -1,9 +1,8 @@
-extends Control
+extends WindowDialog
 class_name PlayerSelectionMenu
 
 # Declare member variables here. Examples:
-onready var playerSelectionWindow : Node = $PlayerSelectionWindow
-onready var playerSlots : Node = $PlayerSelectionWindow/background/PlayerSlots
+onready var playerSlots : Node = $background/PlayerSlots
 
 var scene : String = "" # Menu to load if set
 var old_title : String = "" # Title From Before Window Was Shown
@@ -14,14 +13,15 @@ var creation_menu : Node # Player Creation Menu
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	playerSelectionWindow.window_title = tr("select_character_title") # Can be used for translation code
-	playerSelectionWindow.get_close_button().disabled = true # Disable X Button (use theme or gdscript to remove disabled x texture)
-	playerSelectionWindow.get_close_button().set_disabled_texture(ImageTexture.new()) # Create Empty Texture For Disabled Close Button - This cannot be specifically chosen by the theme alone
+	self.window_title = tr("select_character_title") # Can be used for translation code
+	self.get_close_button().disabled = true # Disable X Button (use theme or gdscript to remove disabled x texture)
+	self.get_close_button().set_disabled_texture(ImageTexture.new()) # Create Empty Texture For Disabled Close Button - This cannot be specifically chosen by the theme alone
 
 	for slot in playerSlots.get_children():
 		slot.connect("pressed", self, "_character_slot_pressed", [slot])
 
-	playerSlots.get_child(0).grab_focus()
+	set_theme(gamestate.game_theme)
+#	set_theme(null)
 
 # Used to set a menu to load after loading character.
 func set_menu(set_scene: String) -> void:
@@ -101,7 +101,7 @@ func _character_slot_pressed(button: Node) -> void:
 		creation_menu.set_slot(slot) # Passes Slot Number to Character Creation Window
 #		creation_menu.set_seed("World Creation Seed")
 
-		playerSelectionWindow.hide() # Hide own Popup Window
+		self.hide() # Hide own Popup Window
 		creation_menu.get_node("PlayerCreationWindow").popup_centered()
 
 		if yielding:
@@ -150,8 +150,24 @@ func _about_to_hide() -> void:
 
 	functions.set_title(old_title)
 
+func _notification(what: int) -> void:
+	match what:
+		WindowDialog.NOTIFICATION_POST_POPUP:
+			#	playerSlots.get_child(0).focus_mode = Control.FOCUS_ALL
+			playerSlots.get_child(0).grab_focus()
+
 func _exit_tree():
 	pass
+
+
+func set_theme(theme: Theme) -> void:
+	"""
+		Sets Up Player Selection Menu's Theme
+
+		Supply Theme Resource
+	"""
+
+	.set_theme(theme)
 
 func get_class() -> String:
 	return "PlayerSelectionMenu"

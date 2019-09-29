@@ -12,7 +12,6 @@ __meta__ = {
 }
 
 [node name="PlayerCreationWindow" type="WindowDialog" parent="."]
-visible = true
 margin_left = 355.057
 margin_top = 87.234
 margin_right = 662.057

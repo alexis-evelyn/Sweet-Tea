@@ -154,7 +154,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/autoload/player_registrar.gd"
 }, {
-"base": "Control",
+"base": "WindowDialog",
 "class": "PlayerSelectionMenu",
 "language": "GDScript",
 "path": "res://Scripts/Menu/player_selection_menu.gd"

@@ -5,24 +5,17 @@
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.203922, 0.239216, 0.317647, 0.901961 )
 
-[node name="PlayerSelectionMenu" type="Control"]
+[node name="PlayerSelectionWindow" type="WindowDialog"]
+visible = true
+anchor_bottom = 0.4
+margin_right = 80.0
+window_title = "Select Character"
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PlayerSelectionWindow" type="WindowDialog" parent="."]
-visible = true
-margin_left = 355.057
-margin_top = 87.234
-margin_right = 662.057
-margin_bottom = 542.234
-window_title = "Select Character"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="background" type="Panel" parent="PlayerSelectionWindow"]
+[node name="background" type="Panel" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_bottom = -12.0
@@ -31,38 +24,38 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PlayerSlots" type="VBoxContainer" parent="PlayerSelectionWindow/background"]
+[node name="PlayerSlots" type="VBoxContainer" parent="background"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Slot 0" type="Button" parent="PlayerSelectionWindow/background/PlayerSlots"]
-margin_right = 307.0
+[node name="Slot 0" type="Button" parent="background/PlayerSlots"]
+margin_right = 272.0
 margin_bottom = 37.0
 text = "New Character"
 flat = true
 
-[node name="Slot 1" type="Button" parent="PlayerSelectionWindow/background/PlayerSlots"]
+[node name="Slot 1" type="Button" parent="background/PlayerSlots"]
 margin_top = 45.0
-margin_right = 307.0
+margin_right = 272.0
 margin_bottom = 82.0
 text = "New Character"
 flat = true
 
-[node name="Slot 2" type="Button" parent="PlayerSelectionWindow/background/PlayerSlots"]
+[node name="Slot 2" type="Button" parent="background/PlayerSlots"]
 margin_top = 90.0
-margin_right = 307.0
+margin_right = 272.0
 margin_bottom = 127.0
 text = "New Character"
 flat = true
 
-[node name="Slot 3" type="Button" parent="PlayerSelectionWindow/background/PlayerSlots"]
+[node name="Slot 3" type="Button" parent="background/PlayerSlots"]
 margin_top = 135.0
-margin_right = 307.0
+margin_right = 272.0
 margin_bottom = 172.0
 text = "New Character"
 flat = true
-[connection signal="about_to_show" from="PlayerSelectionWindow" to="." method="_about_to_show"]
-[connection signal="popup_hide" from="PlayerSelectionWindow" to="." method="_about_to_hide"]
+[connection signal="about_to_show" from="." to="." method="_about_to_show"]
+[connection signal="popup_hide" from="." to="." method="_about_to_hide"]

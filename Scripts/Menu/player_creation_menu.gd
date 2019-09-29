@@ -142,5 +142,14 @@ func _about_to_hide() -> void:
 
 	functions.set_title(old_title)
 
+func _notification(what: int) -> void:
+	match what:
+		WindowDialog.NOTIFICATION_POST_POPUP:
+			# Logical First Button on WindowDialog
+			# TODO: Get Rid of Control Node - Useful For Detecting Post Popup Notifications
+#			playerSlots.get_child(0).focus_mode = Control.FOCUS_ALL
+#			playerSlots.get_child(0).grab_focus()
+			pass
+
 func get_class() -> String:
 	return "PlayerCreationMenu"

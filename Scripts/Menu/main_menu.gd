@@ -102,9 +102,8 @@ func _on_Singleplayer_pressed() -> void:
 		Not Meant to Be Called Directly
 	"""
 
-	var player_selection_menu : Node = $Menu/PlayerSelectionMenu
-	var player_selection_window : Node = player_selection_menu.get_node("PlayerSelectionWindow")
-	player_selection_menu.set_menu("") # Set's menu to load after selecting player
+	var player_selection_window : Node = $Menu/PlayerSelectionWindow
+	player_selection_window.set_menu("") # Set's menu to load after selecting player
 	player_selection_window.popup_centered()
 
 func _on_Multiplayer_pressed() -> void:
@@ -114,9 +113,8 @@ func _on_Multiplayer_pressed() -> void:
 		Not Meant to Be Called Directly
 	"""
 
-	var player_selection_menu : Node = $Menu/PlayerSelectionMenu
-	var player_selection_window : Node = player_selection_menu.get_node("PlayerSelectionWindow")
-	player_selection_menu.set_menu("res://Menus/NetworkMenu.tscn") # Set's menu to load after selecting player
+	var player_selection_window : Node = $Menu/PlayerSelectionWindow
+	player_selection_window.set_menu("res://Menus/NetworkMenu.tscn") # Set's menu to load after selecting player
 	player_selection_window.popup_centered()
 
 func _on_Options_pressed() -> void:
