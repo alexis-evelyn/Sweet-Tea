@@ -65,7 +65,6 @@ func populate_dictionary() -> void:
 		var font_icon : ImageTexture = ImageTexture.new() # Placed Here To Create New Texture Every Loop
 		font_icon.create_from_image(font_image) # Create Texture From ImageTexture
 
-#		output += "%s: %s\n" % [player_locale_entry, mazawalza_locale_entry]
 		item_text = tr(entry.meaning) # Get Current Locale's Definition of Entry
 		item_hint = tr(entry.entry) # Get Current Locale's Definition of Entry
 		entries.add_item(item_text, font_icon, true) # Text, Icon, Selectable

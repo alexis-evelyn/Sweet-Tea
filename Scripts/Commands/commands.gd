@@ -171,6 +171,7 @@ func help_command(net_id: int, message: PoolStringArray) -> String:
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	var output_array : PoolStringArray = PoolStringArray()
+	var key_value_format : String = functions.get_translation("generic_key_value", str(player_registrar.players[net_id].locale))
 
 	#output_array.append("Commands" + '\n')
 	#output_array.append("-----------------------" + "\n")
@@ -178,7 +179,7 @@ func help_command(net_id: int, message: PoolStringArray) -> String:
 		# Only return commands the player has access to
 		if check_permission(players_permission_level, get_permission(supported_command)):
 			# TODO: Alphanumerically Sort Commands using PSA.insert(index, string)
-			output_array.append("%s: %s" % [supported_command, functions.get_translation(supported_commands[str(supported_command)]["description"], str(player_registrar.players[net_id].locale))])
+			output_array.append(key_value_format % [supported_command, functions.get_translation(supported_commands[str(supported_command)]["description"], str(player_registrar.players[net_id].locale))])
 
 	return output_array.join('\n')
 
