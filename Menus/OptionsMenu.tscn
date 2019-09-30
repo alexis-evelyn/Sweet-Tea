@@ -3,7 +3,327 @@
 [ext_resource path="res://Scripts/Menu/options_menu.gd" type="Script" id=1]
 
 [node name="OptionsMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Menu" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Buttons" type="VBoxContainer" parent="Menu"]
+margin_left = 932.0
+margin_top = 337.0
+margin_right = 988.0
+margin_bottom = 742.0
+alignment = 1
+
+[node name="Locale" type="HBoxContainer" parent="Menu/Buttons"]
+margin_top = 24.0
+margin_right = 56.0
+margin_bottom = 24.0
+
+[node name="lblLocale" type="RichTextLabel" parent="Menu/Buttons/Locale"]
+text = "Locale"
+
+[node name="btnLeft" type="TextureButton" parent="Menu/Buttons/Locale"]
+margin_left = 8.0
+margin_right = 8.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lblSelectedLocale" type="RichTextLabel" parent="Menu/Buttons/Locale"]
+margin_left = 16.0
+margin_right = 16.0
+text = "Selected Locale..."
+
+[node name="btnRight" type="TextureButton" parent="Menu/Buttons/Locale"]
+margin_left = 24.0
+margin_right = 24.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lblControls" type="RichTextLabel" parent="Menu/Buttons"]
+margin_top = 32.0
+margin_right = 56.0
+margin_bottom = 32.0
+text = "Controls"
+
+[node name="KeyboardConfig" type="HBoxContainer" parent="Menu/Buttons"]
+margin_top = 40.0
+margin_right = 56.0
+margin_bottom = 77.0
+
+[node name="lblKeyboardConfig" type="RichTextLabel" parent="Menu/Buttons/KeyboardConfig"]
+margin_bottom = 37.0
+text = "Keyboard Config"
+
+[node name="btnKeyboardConfig" type="Button" parent="Menu/Buttons/KeyboardConfig"]
+margin_left = 8.0
+margin_right = 32.0
+margin_bottom = 37.0
+
+[node name="lblVideo" type="RichTextLabel" parent="Menu/Buttons"]
+margin_top = 85.0
+margin_right = 56.0
+margin_bottom = 85.0
+text = "Video"
+
+[node name="Fullscreen" type="HBoxContainer" parent="Menu/Buttons"]
+margin_top = 93.0
+margin_right = 56.0
+margin_bottom = 141.0
+
+[node name="lblFullscreen" type="RichTextLabel" parent="Menu/Buttons/Fullscreen"]
+margin_bottom = 48.0
+text = "Full Screen"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ckbFullscreen" type="CheckBox" parent="Menu/Buttons/Fullscreen"]
+margin_left = 8.0
+margin_right = 56.0
+margin_bottom = 48.0
+
+[node name="WindowSize" type="HBoxContainer" parent="Menu/Buttons"]
+visible = false
+margin_top = 125.0
+margin_right = 56.0
+margin_bottom = 157.0
+
+[node name="lblWindowSize" type="RichTextLabel" parent="Menu/Buttons/WindowSize"]
+margin_bottom = 32.0
+text = "Window Size"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="sldWindowSize" type="HSlider" parent="Menu/Buttons/WindowSize"]
+margin_left = 8.0
+margin_right = 40.0
+margin_bottom = 32.0
+
+[node name="VSync" type="HBoxContainer" parent="Menu/Buttons"]
+margin_top = 149.0
+margin_right = 56.0
+margin_bottom = 197.0
+
+[node name="lblVSync" type="RichTextLabel" parent="Menu/Buttons/VSync"]
+margin_bottom = 48.0
+text = "Vertical Sync"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ckbVSync" type="CheckBox" parent="Menu/Buttons/VSync"]
+margin_left = 8.0
+margin_right = 56.0
+margin_bottom = 48.0
+
+[node name="FPS" type="HBoxContainer" parent="Menu/Buttons"]
+margin_top = 205.0
+margin_right = 56.0
+margin_bottom = 205.0
+
+[node name="lblFPS" type="RichTextLabel" parent="Menu/Buttons/FPS"]
+text = "FPS"
+
+[node name="btnLeft" type="TextureButton" parent="Menu/Buttons/FPS"]
+margin_left = 8.0
+margin_right = 8.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lblSelectedFPS" type="RichTextLabel" parent="Menu/Buttons/FPS"]
+margin_left = 16.0
+margin_right = 16.0
+text = "Selected FPS..."
+
+[node name="btnRight" type="TextureButton" parent="Menu/Buttons/FPS"]
+margin_left = 24.0
+margin_right = 24.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ShaderUsage" type="HBoxContainer" parent="Menu/Buttons"]
+visible = false
+margin_top = 209.0
+margin_right = 56.0
+margin_bottom = 209.0
+
+[node name="lblShaderUsage" type="RichTextLabel" parent="Menu/Buttons/ShaderUsage"]
+text = "Shader Usage?"
+
+[node name="btnLeft" type="TextureButton" parent="Menu/Buttons/ShaderUsage"]
+margin_left = 8.0
+margin_right = 8.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lblSelectedShaderUsage" type="RichTextLabel" parent="Menu/Buttons/ShaderUsage"]
+margin_left = 16.0
+margin_right = 16.0
+text = "Selected Shader Usage..."
+
+[node name="btnRight" type="TextureButton" parent="Menu/Buttons/ShaderUsage"]
+margin_left = 24.0
+margin_right = 24.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lblAudio" type="RichTextLabel" parent="Menu/Buttons"]
+margin_top = 213.0
+margin_right = 56.0
+margin_bottom = 213.0
+text = "Audio"
+
+[node name="MusicVolume" type="HBoxContainer" parent="Menu/Buttons"]
+margin_top = 221.0
+margin_right = 56.0
+margin_bottom = 253.0
+
+[node name="lblMusicVolume" type="RichTextLabel" parent="Menu/Buttons/MusicVolume"]
+margin_bottom = 32.0
+text = "Music Volume"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="sldMusicVolume" type="HSlider" parent="Menu/Buttons/MusicVolume"]
+margin_left = 8.0
+margin_right = 40.0
+margin_bottom = 32.0
+
+[node name="SoundVolume" type="HBoxContainer" parent="Menu/Buttons"]
+margin_top = 261.0
+margin_right = 56.0
+margin_bottom = 293.0
+
+[node name="lblSoundVolume" type="RichTextLabel" parent="Menu/Buttons/SoundVolume"]
+margin_bottom = 32.0
+text = "Sound Volume"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="sldSoundVolume" type="HSlider" parent="Menu/Buttons/SoundVolume"]
+margin_left = 8.0
+margin_right = 40.0
+margin_bottom = 32.0
+
+[node name="lblAdvancedSetting" type="RichTextLabel" parent="Menu/Buttons"]
+margin_top = 301.0
+margin_right = 56.0
+margin_bottom = 301.0
+text = "Advanced Settings"
+
+[node name="LPUM" type="HBoxContainer" parent="Menu/Buttons"]
+margin_top = 309.0
+margin_right = 56.0
+margin_bottom = 357.0
+
+[node name="lblLPUM" type="RichTextLabel" parent="Menu/Buttons/LPUM"]
+margin_bottom = 48.0
+text = "Low Process Usage Mode"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ckbLPUM" type="CheckBox" parent="Menu/Buttons/LPUM"]
+margin_left = 8.0
+margin_right = 56.0
+margin_bottom = 48.0
+
+[node name="PhysicsFPS" type="HBoxContainer" parent="Menu/Buttons"]
+margin_top = 365.0
+margin_right = 56.0
+margin_bottom = 365.0
+
+[node name="lblPhysicsFPS" type="RichTextLabel" parent="Menu/Buttons/PhysicsFPS"]
+text = "Physics FPS"
+
+[node name="btnLeft" type="TextureButton" parent="Menu/Buttons/PhysicsFPS"]
+margin_left = 8.0
+margin_right = 8.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lblSelectedPhysicsFPS" type="RichTextLabel" parent="Menu/Buttons/PhysicsFPS"]
+margin_left = 16.0
+margin_right = 16.0
+text = "Selected FPS..."
+
+[node name="btnRight" type="TextureButton" parent="Menu/Buttons/PhysicsFPS"]
+margin_left = 24.0
+margin_right = 24.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PhysicsJitterFix" type="HBoxContainer" parent="Menu/Buttons"]
+margin_top = 373.0
+margin_right = 56.0
+margin_bottom = 373.0
+
+[node name="lblPhysicsJitterFix" type="RichTextLabel" parent="Menu/Buttons/PhysicsJitterFix"]
+text = "Physics Jitter Fix"
+
+[node name="btnLeft" type="TextureButton" parent="Menu/Buttons/PhysicsJitterFix"]
+margin_left = 8.0
+margin_right = 8.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lblSelectedJitterPhysicsFix" type="RichTextLabel" parent="Menu/Buttons/PhysicsJitterFix"]
+margin_left = 16.0
+margin_right = 16.0
+text = "Physics Jitter Fix..."
+
+[node name="btnRight" type="TextureButton" parent="Menu/Buttons/PhysicsJitterFix"]
+margin_left = 24.0
+margin_right = 24.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimeScale" type="HBoxContainer" parent="Menu/Buttons"]
+margin_top = 381.0
+margin_right = 56.0
+margin_bottom = 381.0
+
+[node name="lblTimeScale" type="RichTextLabel" parent="Menu/Buttons/TimeScale"]
+text = "Engine's Time Scale"
+
+[node name="btnLeft" type="TextureButton" parent="Menu/Buttons/TimeScale"]
+margin_left = 8.0
+margin_right = 8.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lblSelectedTimeScale" type="RichTextLabel" parent="Menu/Buttons/TimeScale"]
+margin_left = 16.0
+margin_right = 16.0
+text = "Time Scale..."
+
+[node name="btnRight" type="TextureButton" parent="Menu/Buttons/TimeScale"]
+margin_left = 24.0
+margin_right = 24.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
