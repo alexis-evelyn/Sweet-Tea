@@ -444,11 +444,11 @@ func set_debug_collisions(message: PoolStringArray) -> String:
 		return tr("debug_collisions_invalid_number_of_arguments") % [tr("bool_true"), tr("bool_false")]
 
 	if command_arguments[0].to_lower() == tr("bool_true").to_lower():
-		get_tree().debug_collisions_hint = true
+		get_tree().set_debug_collisions_hint(true)
 #		get_tree().reload_current_scene()
 		return tr("debug_collisions_set_bool") % command_arguments[0]
 	elif command_arguments[0].to_lower() == tr("bool_false").to_lower():
-		get_tree().debug_collisions_hint = false
+		get_tree().set_debug_collisions_hint(false)
 #		get_tree().reload_current_scene()
 		return tr("debug_collisions_set_bool") % command_arguments[0]
 
