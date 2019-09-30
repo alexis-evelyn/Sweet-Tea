@@ -149,7 +149,7 @@ func load_chunks(net_id: int, position: Vector2, instant_load: bool = false, ren
 	#logger.verbose("Player %s has Position %s!!!" % [net_id, position])
 
 	load_chunks_thread.start(self, "load_chunks_threaded", [net_id, position, render_distance, instant_load])
-	load_chunks_thread.wait_to_finish()
+#	load_chunks_thread.wait_to_finish()
 
 #	load_chunks_threaded([net_id, position, render_distance, instant_load])
 
@@ -215,6 +215,9 @@ func load_chunks_threaded(thread_data: Array):
 
 					yield(delay_packet_processing_timer, "timeout") # Pause World Generation/Loading until timer runs out!
 #					#logger.verbose("Timer Finished")
+
+	# Close Thread Out When Finished (It turns out threads do not autoclose themselves.)
+	load_chunks_thread.wait_to_finish()
 
 func center_chunk(position: Vector2, update_debug: bool = false) -> Vector2:
 	# We use world coordinates to spawn blocks. No conversion needed.

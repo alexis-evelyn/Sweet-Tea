@@ -4,8 +4,8 @@ class_name MainLoopEvents
 signal resized # Real Window is Resized
 
 # Declare member variables here. Examples:
-var window_size : Vector2 = OS.get_real_window_size()
-var window_size_detection : Thread = Thread.new()
+#var window_size : Vector2 = OS.get_real_window_size()
+#var window_size_detection : Thread = Thread.new()
 
 var theme : Theme # Get Game's Theme
 var default_font : DynamicFont # Get Default Font
@@ -23,8 +23,8 @@ func _ready() -> void:
 
 	# This does not get triggered if stretch mode is viewport
 #	get_tree().get_root().connect("size_changed", self, "screen_size_changed")
-	connect("resized", self, "screen_size_changed")
-	window_size_detection.start(self, "_size_change_detector")
+#	connect("resized", self, "screen_size_changed")
+#	window_size_detection.start(self, "_size_change_detector")
 
 # Called When MainLoop Event Happens
 func _notification(what: int) -> void:
@@ -79,26 +79,32 @@ func _notification(what: int) -> void:
 		_: # Default Result - Put at Bottom of Match Results
 			pass
 
-func _size_change_detector(_thread_data) -> void:
-	while true:
-		yield(get_tree().create_timer(0.5), "timeout")
-
-		if window_size != OS.get_real_window_size():
-			window_size = OS.get_real_window_size()
-			emit_signal("resized")
+#func _size_change_detector(_thread_data) -> void:
+#	# This function is currently useless as I do not have to manually adjust font sizes anymore.
+#	# To save on processing power, I am disabling the while loop.
+#
+#	while true:
+#		yield(get_tree().create_timer(0.5), "timeout")
+#
+#		if window_size != OS.get_real_window_size():
+#			window_size = OS.get_real_window_size()
+#			emit_signal("resized")
+#
+#	# This is currently unreachable code, but it is here so I don't forget it if I change the window size detection later
+#	window_size_detection.wait_to_finish() # Close Thread When Finished!!!
 
 # This is supposed to be called last right before the game quits, but that doesn't work (maybe it can only do it in a custom MainLoop?).
 # https://docs.godotengine.org/en/3.1/classes/class_mainloop.html#class-mainloop-method-finalize
 func _finalize():
 	logger.info("Goodbye!!!")
 
-func screen_size_changed() -> void:
-	# This is supposed to change the font size so the font is smooth.
-	logger.superverbose("Window Size: %s" % window_size)
+#func screen_size_changed() -> void:
+#	# This is supposed to change the font size so the font is smooth.
+#	logger.superverbose("Window Size: %s" % window_size)
 #	logger.superverbose("Default Font Size: %s" % default_font_size)
-
-##	var font_size : int = (((float(window_size.x)) / (float(window_size.y))) * float(default_font_size))
-##	var font_size : int = (float(window_size.x)/2) / float(default_font_size)
+#
+#	var font_size : int = (((float(window_size.x)) / (float(window_size.y))) * float(default_font_size))
+#	var font_size : int = (float(window_size.x)/2) / float(default_font_size)
 #	var font_size : int = (((float(window_size.x)) / (float(window_size.y))) * float(default_font_size))
 #	font_size = default_font.size + (font_size - default_font.size)
 #

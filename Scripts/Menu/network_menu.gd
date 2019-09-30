@@ -6,6 +6,7 @@ class_name MultiplayerMenu
 
 onready var server_address : LineEdit = $panelNetwork/manualJoin/txtServerAddress
 onready var join_server_button : Button = $panelNetwork/manualJoin/btnJoinServer
+# warning-ignore:unused_class_variable
 onready var search_button : Button = $panelNetwork/manualJoin/btnRefreshSearch
 onready var lan_servers : ItemList = $panelNetwork/lanServers
 
@@ -14,6 +15,7 @@ var server_finder : ServerFinder
 const lan_client : String = "res://Scripts/lan/client.gd"
 const default_icon : Resource = preload("res://Assets/Blocks/grass-debug.png")
 
+# warning-ignore:unused_class_variable
 var max_servers : int = 50 # Apply a maximum number of servers to show
 var servers : Array # Keep track of already added servers - to avoid duplicates
 var server_list : Dictionary # Used to Store Server Information
@@ -125,12 +127,12 @@ func set_language_text():
 
 func setup_server_finder() -> Node:
 	# Setup Broadcast Listener Script
-	var server_finder = Node.new()
-	server_finder.set_script(preload(lan_client)) # Attach A Script to Node
-	server_finder.set_name("ServerFinder") # Give Node A Unique ID
-	add_child(server_finder)
+	var server_finder_node = Node.new()
+	server_finder_node.set_script(preload(lan_client)) # Attach A Script to Node
+	server_finder_node.set_name("ServerFinder") # Give Node A Unique ID
+	add_child(server_finder_node)
 
-	return server_finder
+	return server_finder_node
 
 func set_theme(theme: Theme) -> void:
 	"""

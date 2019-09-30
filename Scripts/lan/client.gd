@@ -57,6 +57,8 @@ func find_servers(peer: PacketPeerUDP) -> void:
 			process_message(server_ip, server_port, bytes) # Process Message From Client
 
 	search_timer.call_deferred('free') # Prevents Resume Failed From Object Class Being Expired (Have to Use Call Deferred Free or it will crash free() causes an attempted to remove reference error and queue_free() does not exist)
+	logger.verbose("Find Servers Finished!!!")
+	client.wait_to_finish()
 
 # Parse Dictionary Sent By Server
 func parse_server_info(server_ip: String, server_port: int, json: Dictionary) -> void:
@@ -109,7 +111,9 @@ func search_for_servers() -> void:
 		This is meant to be called directly.
 	"""
 
+	logger.verbose("Client is Active: %s!!!" % client.is_active())
 	if not client.is_active():
+		logger.verbose("Finding Servers!!!")
 		client.start(self, "find_servers", udp_peer)
 
 func _exit_tree():

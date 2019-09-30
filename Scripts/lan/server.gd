@@ -70,6 +70,9 @@ func listen_for_clients(thread_data) -> void:
 			# Apparently using yield with a timer here causes the server to crash when the client uses /changeworld or /spawn. Using OS.delay_msec(...) solves this issue.
 			OS.delay_msec(delay_packet_processing_time_milliseconds)
 
+	# Close Thread When Finished
+	server.wait_to_finish() # Threads Do Not Autoclose When Finished, So I Close It Myself
+
 func process_message(client_ip: String, client_port: int, bytes: PoolByteArray):
 	# If Failed to Retrieve Client Info, Then Don't Continue
 	if client_ip == null or client_port == 0:
