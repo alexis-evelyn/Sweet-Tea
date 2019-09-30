@@ -69,32 +69,32 @@ func loaded_background_chunks():
 
 # New World
 func loaded_foreground_tiles():
-	logger.debug("Loading Screen - Loaded Foreground Tiles!!!")
+	logger.superverbose("Loading Screen - Loaded Foreground Tiles!!!")
 	set_progress_value(50)
 
 # New World
 func loaded_background_tiles():
-	logger.debug("Loading Screen - Loaded Background Tiles!!!")
+	logger.superverbose("Loading Screen - Loaded Background Tiles!!!")
 	set_progress_value(60)
 
 func failed_loading_world():
-	logger.debug("Loading Screen - Failed Loading World!!!")
+	logger.superverbose("Loading Screen - Failed Loading World!!!")
 #	get_tree().change_scene(main_menu)
 	network.close_connection()
 	close_loading_screen()
 
 func world_created():
-	logger.debug("Loading Screen - World Created!!!")
+	logger.superverbose("Loading Screen - World Created!!!")
 	set_progress_value(100)
 	close_loading_screen()
 
 func world_loaded_server():
-	logger.debug("Loading Screen - Server World Loaded!!!")
+	logger.superverbose("Loading Screen - Server World Loaded!!!")
 	set_progress_value(100)
 	close_loading_screen()
 
 func world_loaded_client():
-	logger.debug("Loading Screen - World Loaded Client!!!")
+	logger.superverbose("Loading Screen - World Loaded Client!!!")
 	set_progress_value(100)
 	close_loading_screen()
 
