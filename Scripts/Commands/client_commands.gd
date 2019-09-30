@@ -29,6 +29,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return take_screenshot(message)
 		"dict":
 			return read_dictionary(message)
+		"debugcollisions":
+			return set_debug_collisions(message)
 		_:
 			return ""
 
@@ -428,6 +430,29 @@ func read_dictionary(message: PoolStringArray) -> String:
 #	var output : String = "entry_language_name: %s - [font=%s]'%s'[/font]" % [client_translation, gamestate.mazawalza_regular.resource_path, mazawalza_translation]
 
 	return output
+
+func set_debug_collisions(message: PoolStringArray) -> String:
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_arguments : PoolStringArray = message
+	command_arguments.remove(0)
+
+#		get_tree().debug_collisions_hint = true
+#		get_tree().debug_navigation_hint = true
+
+	if command_arguments.size() != 1:
+		return tr("debug_collisions_invalid_number_of_arguments") % [tr("bool_true"), tr("bool_false")]
+
+	if command_arguments[0].to_lower() == tr("bool_true").to_lower():
+		get_tree().debug_collisions_hint = true
+#		get_tree().reload_current_scene()
+		return tr("debug_collisions_set_bool") % command_arguments[0]
+	elif command_arguments[0].to_lower() == tr("bool_false").to_lower():
+		get_tree().debug_collisions_hint = false
+#		get_tree().reload_current_scene()
+		return tr("debug_collisions_set_bool") % command_arguments[0]
+
+	return tr("debug_collisions_unknown_argument") % command_arguments[0]
 
 # warning-ignore:unused_argument
 func start_recording(message: PoolStringArray) -> String:
