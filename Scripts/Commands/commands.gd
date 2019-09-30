@@ -180,8 +180,6 @@ func help_command(net_id: int, message: PoolStringArray) -> String:
 			# TODO: Alphanumerically Sort Commands using PSA.insert(index, string)
 			output_array.append("%s: %s" % [supported_command, functions.get_translation(supported_commands[str(supported_command)]["description"], str(player_registrar.players[net_id].locale))])
 
-	output_array.remove(output_array.size()-1) # Remove the last newline character from array
-
 	return output_array.join('\n')
 
 # Private Message User
