@@ -80,32 +80,32 @@ func teleport_camera(message: PoolStringArray) -> String:
 		else:
 			pass
 
-		return tr("tp_camera_command_not_enough_arguments")
+		return tr("teleport_camera_command_not_enough_arguments")
 	elif command_arguments.size() == 3:
 		# Teleport Camera Player to Other Location (if alphabetical characters are first)
 		# Disable Safety Check (if alphabetical characters are third)
 
 		# Not Implemented
 
-		return tr("tp_camera_command_too_many_arguments")
+		return tr("teleport_camera_command_too_many_arguments")
 	elif command_arguments.size() == 0:
-		return tr("tp_camera_command_not_enough_arguments")
+		return tr("teleport_camera_command_not_enough_arguments")
 	else:
-		return tr("tp_camera_command_too_many_arguments")
+		return tr("teleport_camera_command_too_many_arguments")
 
 	#var command_permission_level : int = supported_commands[str(command)]["permission"] # Gets Command's Permission Level
 
 	var world_name : String = spawn_handler.get_world_name(gamestate.net_id) # Pick world player is currently in
 
 	if not spawn_handler.get_world_node(world_name).has_node("Viewport/DebugCamera"):
-		return tr("tp_camera_command_missing_debug_camera")
+		return tr("teleport_camera_command_missing_debug_camera")
 
 	var camera : Camera2D = spawn_handler.get_world_node(world_name).get_node("Viewport/DebugCamera")
 
 	camera.update_camera_pos(coordinates)
 	camera.update_camera_pos_label()
 
-	return tr("tp_camera_command_success") % [coordinates.x, coordinates.y]
+	return tr("teleport_camera_command_success") % [coordinates.x, coordinates.y]
 
 func shader_info(message: PoolStringArray) -> String:
 	# /shaderinfo [shader_name]

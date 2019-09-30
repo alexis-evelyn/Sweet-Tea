@@ -10,6 +10,9 @@ class_name ServerCommands
 # Integer Constants for Determining Permission Levels of Commands (basically only allow those with permission to use or even see the commands they have permission for)
 # Note: The lower the number is, the more power the permission level has.
 enum permission_level {
+	# Anything below 0 is automatically denied as the permission level that the command is supposed to have is unknown.
+	# Someone could have badly implemented a nuke the world command and forgot to set the permission in supported_commands.
+	# Let's not nuke the world because someone forgot to add it to the dictionary.
 	missing_permission = -2, # Missing Permission From Command From Permission List
 	missing_command = -1, # Missing Command From Permission List
 
@@ -39,6 +42,7 @@ var supported_commands : Dictionary = {
 	"setwspawn": {"description": "help_setwspawn_desc", "permission": permission_level.admin},
 	"tp": {"description": "help_tp_desc", "permission": permission_level.op},
 	"seed": {"description": "help_seed_desc", "permission": permission_level.server_owner},
+	"servertime": {"description": "help_servertime_desc", "permission": permission_level.player},
 
 	# These are the essentially same command
 	"msg": {"description": "help_msg_desc", "permission": permission_level.player},
@@ -144,6 +148,12 @@ func get_permission(command: String) -> int:
 
 # Check Player's Permission Level
 func check_permission(players_permission_level: int, command_permission_level: int) -> bool:
+	# What this does is it checks if the player's permission level is lower or equal to the command's required permission level.
+	# It then checks if the player's permission level is at least that of a server owner.
+	# Lower numbers means more permission. However, a number lower than the server owner means the player is denied.
+	# If a player's permission number is higher than the command's required number, then the player is also denied.
+	# In my setup, the player's permission number has to be greater than 0 and less than or equal to the command's permission number.
+
 	return players_permission_level <= command_permission_level && players_permission_level >= permission_level.get("server_owner")
 
 # Help Command
@@ -168,17 +178,11 @@ func help_command(net_id: int, message: PoolStringArray) -> String:
 		# Only return commands the player has access to
 		if check_permission(players_permission_level, get_permission(supported_command)):
 			# TODO: Alphanumerically Sort Commands using PSA.insert(index, string)
-			output_array.append("%s: %s\n" % [supported_command, functions.get_translation(supported_commands[str(supported_command)]["description"], str(player_registrar.players[net_id].locale))])
-
-	# I was hoping for a builtin method to convert array to string without the array brackets and commas
-	var output : String = ""
+			output_array.append("%s: %s" % [supported_command, functions.get_translation(supported_commands[str(supported_command)]["description"], str(player_registrar.players[net_id].locale))])
 
 	output_array.remove(output_array.size()-1) # Remove the last newline character from array
 
-	for line in output_array:
-		output += line
-
-	return str(output)
+	return output_array.join('\n')
 
 # Private Message User
 func private_message(net_id: int, message: PoolStringArray) -> String:
@@ -351,45 +355,42 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
-	# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
-	var world_path : String = "user://worlds/World 2"
-#	var world_name : String = world_handler.load_world_server(net_id, world_path)
+	if check_permission(players_permission_level, command_permission_level):
+		var world_path : String = "user://worlds/World 2"
+#		var world_name : String = world_handler.load_world_server(net_id, world_path)
 
-	load_world_server_thread.start(world_handler, "load_world_server_threaded", [net_id, world_path])
+		load_world_server_thread.start(world_handler, "load_world_server_threaded", [net_id, world_path])
 
-	if net_id == 1:
-		# If Server, show loading screen here.
-		pass
+		if net_id == 1:
+			# If Server, show loading screen here.
+			pass
 
-	var world_name : String = load_world_server_thread.wait_to_finish()
+		var world_name : String = load_world_server_thread.wait_to_finish()
 
-	# Clears Loaded Chunks From Previous World Generator's Memory
-	var world_generation = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
-	world_generation.clear_player_chunks(net_id)
-	#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
+		# Clears Loaded Chunks From Previous World Generator's Memory
+		var world_generation = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
+		world_generation.clear_player_chunks(net_id)
+		#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
 
-	if world_name == "":
-		# TODO: Replace world_path in error message with name user gave!!!
-		return functions.get_translation("change_world_command_failed_load_world", player_registrar.players[net_id].locale) % [world_path, net_id]
+		if world_name == "":
+			# TODO: Replace world_path in error message with name user gave!!!
+			return functions.get_translation("change_world_command_failed_load_world", player_registrar.players[net_id].locale) % [world_path, net_id]
 
-	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
+		spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 
-	player_registrar.players[net_id].current_world = world_name # Update World Player is In (server-side)
+		player_registrar.players[net_id].current_world = world_name # Update World Player is In (server-side)
 
-	if net_id != 1:
-		#logger.verbose("NetID Change World: %s" % net_id)
-		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name)
-	else:
-		#logger.verbose("Server Change World: %s" % net_id)
-		spawn_handler.change_world(world_name)
+		if net_id != 1:
+			#logger.verbose("NetID Change World: %s" % net_id)
+			spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name)
+		else:
+			#logger.verbose("Server Change World: %s" % net_id)
+			spawn_handler.change_world(world_name)
 
-	# Use Client's Language To Determine What Strings to Use
-
-	# Psuedo Code
-	# var client_title : String = TranslationServer.get_translation("set_client_title", "language")
-	return functions.get_translation("change_world_command_success", player_registrar.players[net_id].locale) % [net_id, world_path]
+		return functions.get_translation("change_world_command_success", player_registrar.players[net_id].locale) % [net_id, world_path]
+	return functions.get_translation("change_world_no_permission", player_registrar.players[net_id].locale)
 
 # Change Player's World - Server Side Only
 func create_world(net_id: int, message: PoolStringArray) -> String:
@@ -454,7 +455,12 @@ func shutdown_server(net_id: int, message: PoolStringArray) -> String:
 	# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
-	return functions.get_translation("shutdown_server_no_permission", player_registrar.players[net_id].locale) % permission_level
+	if check_permission(players_permission_level, command_permission_level):
+		# Server is Shutdown, so player cannot see the message regardless
+		network.close_connection()
+		return ""
+
+	return functions.get_translation("shutdown_server_no_permission", player_registrar.players[net_id].locale)
 
 func server_spawn(net_id: int, message: PoolStringArray) -> String:
 	"""
@@ -468,40 +474,42 @@ func server_spawn(net_id: int, message: PoolStringArray) -> String:
 	# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
-	var world_path : String = world_handler.starting_world
-#	var world_name : String = world_handler.load_world_server(net_id, world_path)
+	if check_permission(players_permission_level, command_permission_level):
+		var world_path : String = world_handler.starting_world
+#		var world_name : String = world_handler.load_world_server(net_id, world_path)
 
-	load_world_server_thread.start(world_handler, "load_world_server_threaded", [net_id, world_path])
+		load_world_server_thread.start(world_handler, "load_world_server_threaded", [net_id, world_path])
 
-	if net_id == 1:
-		# If Server, show loading screen here.
-		pass
+		if net_id == 1:
+			# If Server, show loading screen here.
+			pass
 
-	var world_name : String = load_world_server_thread.wait_to_finish()
+		var world_name : String = load_world_server_thread.wait_to_finish()
 
-	# Clears Loaded Chunks From Previous World Generator's Memory
-	var world_generation : TileMap = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
-	world_generation.clear_player_chunks(net_id)
-	#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
+		# Clears Loaded Chunks From Previous World Generator's Memory
+		var world_generation : TileMap = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
+		world_generation.clear_player_chunks(net_id)
+		#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
 
-	if world_name == "":
-		# TODO: Replace world_path in error message with name user gave!!!
-		return functions.get_translation("spawn_command_failed", player_registrar.players[net_id].locale) % [world_path, net_id]
+		if world_name == "":
+			# TODO: Replace world_path in error message with name user gave!!!
+			return functions.get_translation("spawn_command_failed", player_registrar.players[net_id].locale) % [world_path, net_id]
 
-	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
+		spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 
-	player_registrar.players[net_id].current_world = world_name # Update World Player is In (server-side)
+		player_registrar.players[net_id].current_world = world_name # Update World Player is In (server-side)
 
-	player_registrar.players[net_id].world_spawn = true # Set To Use World's Spawn Location
+		player_registrar.players[net_id].world_spawn = true # Set To Use World's Spawn Location
 
-	if net_id != 1:
-		#logger.verbose("NetID Change World: %s" % net_id)
-		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name)
-	else:
-		#logger.verbose("Server Change World: %s" % net_id)
-		spawn_handler.change_world(world_name)
+		if net_id != 1:
+			#logger.verbose("NetID Change World: %s" % net_id)
+			spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name)
+		else:
+			#logger.verbose("Server Change World: %s" % net_id)
+			spawn_handler.change_world(world_name)
 
-	return functions.get_translation("spawn_command_success", player_registrar.players[net_id].locale)
+		return functions.get_translation("spawn_command_success", player_registrar.players[net_id].locale)
+	return functions.get_translation("spawn_command_no_permission", player_registrar.players[net_id].locale)
 
 func world_spawn(net_id: int, message: PoolStringArray) -> String:
 	"""
@@ -515,25 +523,27 @@ func world_spawn(net_id: int, message: PoolStringArray) -> String:
 	# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
-	var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
+	if check_permission(players_permission_level, command_permission_level):
+		var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
 
-	# Clears Loaded Chunks From Previous World Generator's Memory
-	var world_generation : TileMap = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
-	world_generation.clear_player_chunks(net_id)
-	#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
+		# Clears Loaded Chunks From Previous World Generator's Memory
+		var world_generation : TileMap = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
+		world_generation.clear_player_chunks(net_id)
+		#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
 
-	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
+		spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 
-	player_registrar.players[net_id].world_spawn = true # Set To Use World's Spawn Location
+		player_registrar.players[net_id].world_spawn = true # Set To Use World's Spawn Location
 
-	if net_id != 1:
-		#logger.verbose("NetID Change World: %s" % net_id)
-		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name, true)
-	else:
-		#logger.verbose("Server Change World: %s" % net_id)
-		spawn_handler.change_world(world_name)
+		if net_id != 1:
+			#logger.verbose("NetID Change World: %s" % net_id)
+			spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name, true)
+		else:
+			#logger.verbose("Server Change World: %s" % net_id)
+			spawn_handler.change_world(world_name)
 
-	return functions.get_translation("world_spawn_command_success", player_registrar.players[net_id].locale)
+		return functions.get_translation("world_spawn_command_success", player_registrar.players[net_id].locale)
+	return functions.get_translation("world_spawn_command_no_permission", player_registrar.players[net_id].locale)
 
 func set_server_spawn(net_id: int, message: PoolStringArray) -> String:
 	# warning-ignore:unused_variable
@@ -542,53 +552,56 @@ func set_server_spawn(net_id: int, message: PoolStringArray) -> String:
 	# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
-	var world_path : String = world_handler.starting_world
+	if check_permission(players_permission_level, command_permission_level):
+		var world_path : String = world_handler.starting_world
 
-	load_world_server_thread.start(world_handler, "load_world_server_threaded", [net_id, world_path])
-	var world_name : String = load_world_server_thread.wait_to_finish()
+		load_world_server_thread.start(world_handler, "load_world_server_threaded", [net_id, world_path])
+		var world_name : String = load_world_server_thread.wait_to_finish()
 
-	# World Name not Found
-	if world_name == "":
-		return functions.get_translation("set_server_spawn_command_world_name_not_found", player_registrar.players[net_id].locale)
+		# World Name not Found
+		if world_name == "":
+			return functions.get_translation("set_server_spawn_command_world_name_not_found", player_registrar.players[net_id].locale)
 
-	var world_gen_node : TileMap = spawn_handler.get_world_generator_node(world_name) # Get the node for the picked world
+		var world_gen_node : TileMap = spawn_handler.get_world_generator_node(world_name) # Get the node for the picked world
 
-	# World Gen Node not Found
-	if world_gen_node == null:
-		return functions.get_translation("set_server_spawn_command_world_node_not_found", player_registrar.players[net_id].locale) % [world_name]
+		# World Gen Node not Found
+		if world_gen_node == null:
+			return functions.get_translation("set_server_spawn_command_world_node_not_found", player_registrar.players[net_id].locale) % [world_name]
 
-	var new_spawn : Vector2 = Vector2(0, 0)
+		var new_spawn : Vector2 = Vector2(0, 0)
 
-	# Get Coordinates From Player Position
-	world_gen_node.set_spawn(new_spawn)
+		# Get Coordinates From Player Position
+		world_gen_node.set_spawn(new_spawn)
 
-	return functions.get_translation("set_server_spawn_command_success", player_registrar.players[net_id].locale) % [new_spawn.x, new_spawn.y]
+		return functions.get_translation("set_server_spawn_command_success", player_registrar.players[net_id].locale) % [new_spawn.x, new_spawn.y]
+	return functions.get_translation("set_server_spawn_command_no_permission", player_registrar.players[net_id].locale)
 
 func set_world_spawn(net_id: int, message: PoolStringArray) -> String:
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
-# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
-	var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
+	if check_permission(players_permission_level, command_permission_level):
+		var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
 
-	# World Name not Found
-	if world_name == "":
-		return functions.get_translation("set_world_spawn_command_world_name_not_found", player_registrar.players[net_id].locale)
+		# World Name not Found
+		if world_name == "":
+			return functions.get_translation("set_world_spawn_command_world_name_not_found", player_registrar.players[net_id].locale)
 
-	var world_gen_node : TileMap = spawn_handler.get_world_generator_node(world_name) # Get the node for the picked world
+		var world_gen_node : TileMap = spawn_handler.get_world_generator_node(world_name) # Get the node for the picked world
 
-	# World Gen Node not Found
-	if world_gen_node == null:
-		return functions.get_translation("set_world_spawn_command_world_node_not_found", player_registrar.players[net_id].locale) % [world_name]
+		# World Gen Node not Found
+		if world_gen_node == null:
+			return functions.get_translation("set_world_spawn_command_world_node_not_found", player_registrar.players[net_id].locale) % [world_name]
 
-	var new_spawn : Vector2 = Vector2(0, 0)
+		var new_spawn : Vector2 = Vector2(0, 0)
 
-	# Either Get Coordinates From Player Position or From Arguments
-	world_gen_node.set_spawn(new_spawn)
+		# Either Get Coordinates From Player Position or From Arguments
+		world_gen_node.set_spawn(new_spawn)
 
-	return functions.get_translation("set_world_spawn_command_success", player_registrar.players[net_id].locale) % [new_spawn.x, new_spawn.y]
+		return functions.get_translation("set_world_spawn_command_success", player_registrar.players[net_id].locale) % [new_spawn.x, new_spawn.y]
+	return functions.get_translation("set_world_spawn_command_no_permission", player_registrar.players[net_id].locale)
 
 func get_seed(net_id: int, message: PoolStringArray) -> String:
 	"""
@@ -599,24 +612,31 @@ func get_seed(net_id: int, message: PoolStringArray) -> String:
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
-	# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
-	# Get Seed From World Player Is In
-	var world_generation : TileMap = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
-	var world_seed : int = world_generation.world_seed
+	if check_permission(players_permission_level, command_permission_level):
+		# Get Seed From World Player Is In
+		var world_generation : TileMap = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
+		var world_seed : int = world_generation.world_seed
 
-	return functions.get_translation("world_seed_command_success", player_registrar.players[net_id].locale) % world_seed
+		return functions.get_translation("world_seed_command_success", player_registrar.players[net_id].locale) % world_seed
+	return functions.get_translation("world_seed_command_no_permission", player_registrar.players[net_id].locale)
 
 func get_server_time(net_id: int, message: PoolStringArray) -> String:
-	var date_time : Dictionary
-	var formatted_time : String
-	var time_milliseconds : int
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
+	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
-	date_time = OS.get_datetime()
-	time_milliseconds = OS.get_system_time_msecs() - (OS.get_system_time_secs() * 1000)
-	formatted_time = tr("datetime_formatting") % [int(date_time["hour"]), int(date_time["minute"]), int(date_time["second"]), time_milliseconds, OS.get_time_zone_info().name]
-	return functions.get_translation("servertime_command_success", player_registrar.players[net_id].locale) % formatted_time
+	if check_permission(players_permission_level, command_permission_level):
+		var date_time : Dictionary
+		var formatted_time : String
+		var time_milliseconds : int
+
+		date_time = OS.get_datetime()
+		time_milliseconds = OS.get_system_time_msecs() - (OS.get_system_time_secs() * 1000)
+		formatted_time = tr("datetime_formatting") % [int(date_time["hour"]), int(date_time["minute"]), int(date_time["second"]), time_milliseconds, OS.get_time_zone_info().name]
+		return functions.get_translation("servertime_command_success", player_registrar.players[net_id].locale) % formatted_time
+	return functions.get_translation("servertime_command_no_permission", player_registrar.players[net_id].locale)
 
 func teleport(net_id: int, message: PoolStringArray) -> String:
 	"""
@@ -629,58 +649,64 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
-	var command_arguments : PoolStringArray = message
-	command_arguments.remove(0)
+	if check_permission(players_permission_level, command_permission_level):
+		var command_arguments : PoolStringArray = message
+		command_arguments.remove(0)
 
-	var coordinates : Vector2
-	if command_arguments.size() == 2:
-		# TODO: If - (minus) is specified as coordinate, use current coordinate in place instead of 0.
-		var x_coor : int = convert(command_arguments[0], TYPE_INT)
-		var y_coor : int = convert(command_arguments[1], TYPE_INT)
+		var coordinates : Vector2
+		if command_arguments.size() == 2:
+			# TODO: If - (minus) is specified as coordinate, use current coordinate in place instead of 0.
+			var x_coor : int = convert(command_arguments[0], TYPE_INT)
+			var y_coor : int = convert(command_arguments[1], TYPE_INT)
 
-		coordinates = Vector2(x_coor, y_coor)
-	elif command_arguments.size() == 1:
-		# Teleport to Player (Not Implemented)
-		var player_id : int = convert(command_arguments[0], TYPE_INT)
+			coordinates = Vector2(x_coor, y_coor)
+		elif command_arguments.size() == 1:
+			# Teleport to Player (Not Implemented)
+			# I may have different permission sublevels for this command.
+			# I would have to decide what the best way to implement "sublevels" are.
+			# I think it would need more finegrained control than just, are you high enough?
 
-		if player_registrar.players.has(player_id):
-			pass
+			var player_id : int = convert(command_arguments[0], TYPE_INT)
+
+			if player_registrar.players.has(player_id):
+				pass
+			else:
+				pass
+
+			return functions.get_translation("teleport_command_not_enough_arguments", player_registrar.players[net_id].locale)
+		elif command_arguments.size() == 3:
+			# Teleport Player to Other Location (if alphabetical characters are first)
+			# Disable Safety Check (if alphabetical characters are third)
+
+			# Not Implemented
+
+			return functions.get_translation("teleport_command_too_many_arguments", player_registrar.players[net_id].locale)
+		elif command_arguments.size() == 0:
+			return functions.get_translation("teleport_command_not_enough_arguments", player_registrar.players[net_id].locale)
 		else:
-			pass
+			return functions.get_translation("teleport_command_too_many_arguments", player_registrar.players[net_id].locale)
 
-		return functions.get_translation("tp_command_not_enough_arguments", player_registrar.players[net_id].locale)
-	elif command_arguments.size() == 3:
-		# Teleport Player to Other Location (if alphabetical characters are first)
-		# Disable Safety Check (if alphabetical characters are third)
+		var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
 
-		# Not Implemented
+		# Clears Loaded Chunks From Previous World Generator's Memory
+		var world_generation = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
+		world_generation.clear_player_chunks(net_id)
+		#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
 
-		return functions.get_translation("tp_command_too_many_arguments", player_registrar.players[net_id].locale)
-	elif command_arguments.size() == 0:
-		return functions.get_translation("tp_command_not_enough_arguments", player_registrar.players[net_id].locale)
-	else:
-		return functions.get_translation("tp_command_too_many_arguments", player_registrar.players[net_id].locale)
+		spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 
-	var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
+	#	player_registrar.players[net_id].spawn_coordinates = coordinates # Set To Use World's Spawn Location
+		player_registrar.players[net_id].spawn_coordinates_safety_off = coordinates # Set To Use World's Spawn Location
 
-	# Clears Loaded Chunks From Previous World Generator's Memory
-	var world_generation = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
-	world_generation.clear_player_chunks(net_id)
-	#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
+		if net_id != 1:
+			#logger.verbose("NetID Change World: %s" % net_id)
+			spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name, true)
+		else:
+			#logger.verbose("Server Change World: %s" % net_id)
+			spawn_handler.change_world(world_name)
 
-	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
-
-#	player_registrar.players[net_id].spawn_coordinates = coordinates # Set To Use World's Spawn Location
-	player_registrar.players[net_id].spawn_coordinates_safety_off = coordinates # Set To Use World's Spawn Location
-
-	if net_id != 1:
-		#logger.verbose("NetID Change World: %s" % net_id)
-		spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name, true)
-	else:
-		#logger.verbose("Server Change World: %s" % net_id)
-		spawn_handler.change_world(world_name)
-
-	return functions.get_translation("tp_command_success", player_registrar.players[net_id].locale) % [coordinates.x, coordinates.y]
+		return functions.get_translation("teleport_command_success", player_registrar.players[net_id].locale) % [coordinates.x, coordinates.y]
+	return functions.get_translation("teleport_command_no_permission", player_registrar.players[net_id].locale)
 
 func get_class() -> String:
 	return "ServerCommands"
