@@ -148,8 +148,11 @@ func load_chunks(net_id: int, position: Vector2, instant_load: bool = false, ren
 	# * - Looping the world on the horizontal access only applies to non-infinite worlds. Release will only support non-infinite worlds (afterwards if the game does well, I will work on infinite worlds).
 	#logger.verbose("Player %s has Position %s!!!" % [net_id, position])
 
-	load_chunks_thread.start(self, "load_chunks_threaded", [net_id, position, render_distance, instant_load])
-#	load_chunks_thread.wait_to_finish()
+	# Make sure Thread is not already active so Godot does not complain and spam the log.
+	# Not necessary, I had to force waiting to finish before next processing otherwise tiles and sometimes chunks will be missing.
+	if not load_chunks_thread.is_active():
+		load_chunks_thread.start(self, "load_chunks_threaded", [net_id, position, render_distance, instant_load])
+		load_chunks_thread.wait_to_finish()
 
 #	load_chunks_threaded([net_id, position, render_distance, instant_load])
 
@@ -217,7 +220,7 @@ func load_chunks_threaded(thread_data: Array):
 #					#logger.verbose("Timer Finished")
 
 	# Close Thread Out When Finished (It turns out threads do not autoclose themselves.)
-	load_chunks_thread.wait_to_finish()
+#	load_chunks_thread.wait_to_finish()
 
 func center_chunk(position: Vector2, update_debug: bool = false) -> Vector2:
 	# We use world coordinates to spawn blocks. No conversion needed.

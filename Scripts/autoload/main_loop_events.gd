@@ -1,7 +1,7 @@
 extends Node
 class_name MainLoopEvents
 
-signal resized # Real Window is Resized
+#signal resized # Real Window is Resized
 
 # Declare member variables here. Examples:
 #var window_size : Vector2 = OS.get_real_window_size()
