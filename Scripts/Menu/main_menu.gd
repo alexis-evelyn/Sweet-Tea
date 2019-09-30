@@ -35,6 +35,8 @@ signal script_setup # Used to let mods know MainMenu has finished loading
 # Android - https://stackoverflow.com/a/2364842/6828099
 # IOS - https://stackoverflow.com/a/9097503/6828099
 
+onready var player_selection_window : PlayerSelectionMenu = $PlayerSelectionWindow
+
 #onready var buttons : VBoxContainer = $Menu/Buttons
 
 onready var singleplayer_button : Button = $Menu/Buttons/Singleplayer
@@ -103,7 +105,6 @@ func _on_Singleplayer_pressed() -> void:
 		Not Meant to Be Called Directly
 	"""
 
-	var player_selection_window : PlayerSelectionMenu = $Menu/PlayerSelectionWindow
 	player_selection_window.set_menu("") # Set's menu to load after selecting player
 	player_selection_window.popup_centered()
 
@@ -114,7 +115,6 @@ func _on_Multiplayer_pressed() -> void:
 		Not Meant to Be Called Directly
 	"""
 
-	var player_selection_window : PlayerSelectionMenu = $Menu/PlayerSelectionWindow
 	player_selection_window.set_menu("res://Menus/NetworkMenu.tscn") # Set's menu to load after selecting player
 	player_selection_window.popup_centered()
 
