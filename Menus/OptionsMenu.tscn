@@ -17,313 +17,363 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="Buttons" type="VBoxContainer" parent="Menu"]
-margin_left = 932.0
-margin_top = 337.0
-margin_right = 988.0
-margin_bottom = 742.0
-alignment = 1
+[node name="Options" type="Node" parent="Menu"]
 
-[node name="Locale" type="HBoxContainer" parent="Menu/Buttons"]
-margin_top = 24.0
-margin_right = 56.0
-margin_bottom = 24.0
+[node name="Locale" type="HBoxContainer" parent="Menu/Options"]
+anchor_left = 0.3
+anchor_top = 0.2
+anchor_right = 0.7
+anchor_bottom = 0.23
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="lblLocale" type="RichTextLabel" parent="Menu/Buttons/Locale"]
+[node name="lblLocale" type="RichTextLabel" parent="Menu/Options/Locale"]
+margin_bottom = 32.0
 text = "Locale"
 
-[node name="btnLeft" type="TextureButton" parent="Menu/Buttons/Locale"]
+[node name="btnLeft" type="TextureButton" parent="Menu/Options/Locale"]
 margin_left = 8.0
 margin_right = 8.0
+margin_bottom = 32.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblSelectedLocale" type="RichTextLabel" parent="Menu/Buttons/Locale"]
+[node name="lblSelectedLocale" type="RichTextLabel" parent="Menu/Options/Locale"]
 margin_left = 16.0
 margin_right = 16.0
+margin_bottom = 32.0
 text = "Selected Locale..."
 
-[node name="btnRight" type="TextureButton" parent="Menu/Buttons/Locale"]
+[node name="btnRight" type="TextureButton" parent="Menu/Options/Locale"]
 margin_left = 24.0
 margin_right = 24.0
+margin_bottom = 32.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblControls" type="RichTextLabel" parent="Menu/Buttons"]
-margin_top = 32.0
-margin_right = 56.0
-margin_bottom = 32.0
+[node name="lblControls" type="RichTextLabel" parent="Menu/Options"]
+anchor_left = 0.3
+anchor_top = 0.26
+anchor_right = 0.7
+anchor_bottom = 0.29
+margin_top = 2.0
+margin_bottom = 2.0
 text = "Controls"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="KeyboardConfig" type="HBoxContainer" parent="Menu/Buttons"]
-margin_top = 40.0
-margin_right = 56.0
-margin_bottom = 77.0
+[node name="KeyboardConfig" type="HBoxContainer" parent="Menu/Options"]
+anchor_left = 0.3
+anchor_top = 0.29
+anchor_right = 0.7
+anchor_bottom = 0.32
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="lblKeyboardConfig" type="RichTextLabel" parent="Menu/Buttons/KeyboardConfig"]
+[node name="lblKeyboardConfig" type="RichTextLabel" parent="Menu/Options/KeyboardConfig"]
 margin_bottom = 37.0
 text = "Keyboard Config"
 
-[node name="btnKeyboardConfig" type="Button" parent="Menu/Buttons/KeyboardConfig"]
+[node name="btnKeyboardConfig" type="Button" parent="Menu/Options/KeyboardConfig"]
 margin_left = 8.0
 margin_right = 32.0
 margin_bottom = 37.0
 
-[node name="lblVideo" type="RichTextLabel" parent="Menu/Buttons"]
-margin_top = 85.0
-margin_right = 56.0
-margin_bottom = 85.0
+[node name="lblVideo" type="RichTextLabel" parent="Menu/Options"]
+anchor_left = 0.3
+anchor_top = 0.32
+anchor_right = 0.7
+anchor_bottom = 0.35
+margin_top = -1.0
+margin_bottom = -1.0
 text = "Video"
 
-[node name="Fullscreen" type="HBoxContainer" parent="Menu/Buttons"]
-margin_top = 93.0
-margin_right = 56.0
-margin_bottom = 141.0
+[node name="Fullscreen" type="HBoxContainer" parent="Menu/Options"]
+anchor_left = 0.299
+anchor_top = 0.35
+anchor_right = 0.699291
+anchor_bottom = 0.394
+margin_left = 0.558716
+margin_bottom = -15.12
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="lblFullscreen" type="RichTextLabel" parent="Menu/Buttons/Fullscreen"]
+[node name="lblFullscreen" type="RichTextLabel" parent="Menu/Options/Fullscreen"]
 margin_bottom = 48.0
 text = "Full Screen"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ckbFullscreen" type="CheckBox" parent="Menu/Buttons/Fullscreen"]
+[node name="ckbFullscreen" type="CheckBox" parent="Menu/Options/Fullscreen"]
 margin_left = 8.0
 margin_right = 56.0
 margin_bottom = 48.0
 
-[node name="WindowSize" type="HBoxContainer" parent="Menu/Buttons"]
+[node name="WindowSize" type="HBoxContainer" parent="Menu/Options"]
 visible = false
-margin_top = 125.0
-margin_right = 56.0
-margin_bottom = 157.0
+anchor_left = 0.3
+anchor_top = 0.2
+anchor_right = 0.7
+anchor_bottom = 0.3
 
-[node name="lblWindowSize" type="RichTextLabel" parent="Menu/Buttons/WindowSize"]
+[node name="lblWindowSize" type="RichTextLabel" parent="Menu/Options/WindowSize"]
 margin_bottom = 32.0
 text = "Window Size"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="sldWindowSize" type="HSlider" parent="Menu/Buttons/WindowSize"]
+[node name="sldWindowSize" type="HSlider" parent="Menu/Options/WindowSize"]
 margin_left = 8.0
 margin_right = 40.0
 margin_bottom = 32.0
 
-[node name="VSync" type="HBoxContainer" parent="Menu/Buttons"]
-margin_top = 149.0
-margin_right = 56.0
-margin_bottom = 197.0
+[node name="VSync" type="HBoxContainer" parent="Menu/Options"]
+anchor_left = 0.3
+anchor_top = 0.39
+anchor_right = 0.7
+anchor_bottom = 0.42
 
-[node name="lblVSync" type="RichTextLabel" parent="Menu/Buttons/VSync"]
+[node name="lblVSync" type="RichTextLabel" parent="Menu/Options/VSync"]
 margin_bottom = 48.0
 text = "Vertical Sync"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ckbVSync" type="CheckBox" parent="Menu/Buttons/VSync"]
+[node name="ckbVSync" type="CheckBox" parent="Menu/Options/VSync"]
 margin_left = 8.0
 margin_right = 56.0
 margin_bottom = 48.0
 
-[node name="FPS" type="HBoxContainer" parent="Menu/Buttons"]
-margin_top = 205.0
-margin_right = 56.0
-margin_bottom = 205.0
+[node name="FPS" type="HBoxContainer" parent="Menu/Options"]
+anchor_left = 0.3
+anchor_top = 0.42
+anchor_right = 0.7
+anchor_bottom = 0.45
 
-[node name="lblFPS" type="RichTextLabel" parent="Menu/Buttons/FPS"]
+[node name="lblFPS" type="RichTextLabel" parent="Menu/Options/FPS"]
+margin_bottom = 32.0
 text = "FPS"
 
-[node name="btnLeft" type="TextureButton" parent="Menu/Buttons/FPS"]
+[node name="btnLeft" type="TextureButton" parent="Menu/Options/FPS"]
 margin_left = 8.0
 margin_right = 8.0
+margin_bottom = 32.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblSelectedFPS" type="RichTextLabel" parent="Menu/Buttons/FPS"]
+[node name="lblSelectedFPS" type="RichTextLabel" parent="Menu/Options/FPS"]
 margin_left = 16.0
 margin_right = 16.0
+margin_bottom = 32.0
 text = "Selected FPS..."
 
-[node name="btnRight" type="TextureButton" parent="Menu/Buttons/FPS"]
+[node name="btnRight" type="TextureButton" parent="Menu/Options/FPS"]
 margin_left = 24.0
 margin_right = 24.0
+margin_bottom = 32.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ShaderUsage" type="HBoxContainer" parent="Menu/Buttons"]
+[node name="ShaderUsage" type="HBoxContainer" parent="Menu/Options"]
 visible = false
-margin_top = 209.0
-margin_right = 56.0
-margin_bottom = 209.0
+anchor_left = 0.3
+anchor_top = 0.2
+anchor_right = 0.7
+anchor_bottom = 0.3
 
-[node name="lblShaderUsage" type="RichTextLabel" parent="Menu/Buttons/ShaderUsage"]
+[node name="lblShaderUsage" type="RichTextLabel" parent="Menu/Options/ShaderUsage"]
 text = "Shader Usage?"
 
-[node name="btnLeft" type="TextureButton" parent="Menu/Buttons/ShaderUsage"]
+[node name="btnLeft" type="TextureButton" parent="Menu/Options/ShaderUsage"]
 margin_left = 8.0
 margin_right = 8.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblSelectedShaderUsage" type="RichTextLabel" parent="Menu/Buttons/ShaderUsage"]
+[node name="lblSelectedShaderUsage" type="RichTextLabel" parent="Menu/Options/ShaderUsage"]
 margin_left = 16.0
 margin_right = 16.0
 text = "Selected Shader Usage..."
 
-[node name="btnRight" type="TextureButton" parent="Menu/Buttons/ShaderUsage"]
+[node name="btnRight" type="TextureButton" parent="Menu/Options/ShaderUsage"]
 margin_left = 24.0
 margin_right = 24.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblAudio" type="RichTextLabel" parent="Menu/Buttons"]
-margin_top = 213.0
-margin_right = 56.0
-margin_bottom = 213.0
+[node name="lblAudio" type="RichTextLabel" parent="Menu/Options"]
+anchor_left = 0.3
+anchor_top = 0.45
+anchor_right = 0.7
+anchor_bottom = 0.48
 text = "Audio"
 
-[node name="MusicVolume" type="HBoxContainer" parent="Menu/Buttons"]
-margin_top = 221.0
-margin_right = 56.0
-margin_bottom = 253.0
+[node name="MusicVolume" type="HBoxContainer" parent="Menu/Options"]
+anchor_left = 0.3
+anchor_top = 0.48
+anchor_right = 0.7
+anchor_bottom = 0.51
 
-[node name="lblMusicVolume" type="RichTextLabel" parent="Menu/Buttons/MusicVolume"]
+[node name="lblMusicVolume" type="RichTextLabel" parent="Menu/Options/MusicVolume"]
 margin_bottom = 32.0
 text = "Music Volume"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="sldMusicVolume" type="HSlider" parent="Menu/Buttons/MusicVolume"]
+[node name="sldMusicVolume" type="HSlider" parent="Menu/Options/MusicVolume"]
 margin_left = 8.0
 margin_right = 40.0
 margin_bottom = 32.0
 
-[node name="SoundVolume" type="HBoxContainer" parent="Menu/Buttons"]
-margin_top = 261.0
-margin_right = 56.0
-margin_bottom = 293.0
+[node name="SoundVolume" type="HBoxContainer" parent="Menu/Options"]
+anchor_left = 0.3
+anchor_top = 0.51
+anchor_right = 0.7
+anchor_bottom = 0.54
 
-[node name="lblSoundVolume" type="RichTextLabel" parent="Menu/Buttons/SoundVolume"]
+[node name="lblSoundVolume" type="RichTextLabel" parent="Menu/Options/SoundVolume"]
 margin_bottom = 32.0
 text = "Sound Volume"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="sldSoundVolume" type="HSlider" parent="Menu/Buttons/SoundVolume"]
+[node name="sldSoundVolume" type="HSlider" parent="Menu/Options/SoundVolume"]
 margin_left = 8.0
 margin_right = 40.0
 margin_bottom = 32.0
 
-[node name="lblAdvancedSetting" type="RichTextLabel" parent="Menu/Buttons"]
-margin_top = 301.0
-margin_right = 56.0
-margin_bottom = 301.0
+[node name="lblAdvancedSetting" type="RichTextLabel" parent="Menu/Options"]
+anchor_left = 0.3
+anchor_top = 0.54
+anchor_right = 0.7
+anchor_bottom = 0.57
 text = "Advanced Settings"
 
-[node name="LPUM" type="HBoxContainer" parent="Menu/Buttons"]
-margin_top = 309.0
-margin_right = 56.0
-margin_bottom = 357.0
+[node name="LPUM" type="HBoxContainer" parent="Menu/Options"]
+anchor_left = 0.3
+anchor_top = 0.57
+anchor_right = 0.7
+anchor_bottom = 0.6
 
-[node name="lblLPUM" type="RichTextLabel" parent="Menu/Buttons/LPUM"]
+[node name="lblLPUM" type="RichTextLabel" parent="Menu/Options/LPUM"]
 margin_bottom = 48.0
 text = "Low Process Usage Mode"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ckbLPUM" type="CheckBox" parent="Menu/Buttons/LPUM"]
+[node name="ckbLPUM" type="CheckBox" parent="Menu/Options/LPUM"]
 margin_left = 8.0
 margin_right = 56.0
 margin_bottom = 48.0
 
-[node name="PhysicsFPS" type="HBoxContainer" parent="Menu/Buttons"]
-margin_top = 365.0
-margin_right = 56.0
-margin_bottom = 365.0
+[node name="PhysicsFPS" type="HBoxContainer" parent="Menu/Options"]
+anchor_left = 0.3
+anchor_top = 0.6
+anchor_right = 0.7
+anchor_bottom = 0.63
 
-[node name="lblPhysicsFPS" type="RichTextLabel" parent="Menu/Buttons/PhysicsFPS"]
+[node name="lblPhysicsFPS" type="RichTextLabel" parent="Menu/Options/PhysicsFPS"]
+margin_bottom = 32.0
 text = "Physics FPS"
 
-[node name="btnLeft" type="TextureButton" parent="Menu/Buttons/PhysicsFPS"]
+[node name="btnLeft" type="TextureButton" parent="Menu/Options/PhysicsFPS"]
 margin_left = 8.0
 margin_right = 8.0
+margin_bottom = 32.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblSelectedPhysicsFPS" type="RichTextLabel" parent="Menu/Buttons/PhysicsFPS"]
+[node name="lblSelectedPhysicsFPS" type="RichTextLabel" parent="Menu/Options/PhysicsFPS"]
 margin_left = 16.0
 margin_right = 16.0
+margin_bottom = 32.0
 text = "Selected FPS..."
 
-[node name="btnRight" type="TextureButton" parent="Menu/Buttons/PhysicsFPS"]
+[node name="btnRight" type="TextureButton" parent="Menu/Options/PhysicsFPS"]
 margin_left = 24.0
 margin_right = 24.0
+margin_bottom = 32.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PhysicsJitterFix" type="HBoxContainer" parent="Menu/Buttons"]
-margin_top = 373.0
-margin_right = 56.0
-margin_bottom = 373.0
+[node name="PhysicsJitterFix" type="HBoxContainer" parent="Menu/Options"]
+anchor_left = 0.3
+anchor_top = 0.63
+anchor_right = 0.7
+anchor_bottom = 0.66
 
-[node name="lblPhysicsJitterFix" type="RichTextLabel" parent="Menu/Buttons/PhysicsJitterFix"]
+[node name="lblPhysicsJitterFix" type="RichTextLabel" parent="Menu/Options/PhysicsJitterFix"]
+margin_bottom = 32.0
 text = "Physics Jitter Fix"
 
-[node name="btnLeft" type="TextureButton" parent="Menu/Buttons/PhysicsJitterFix"]
+[node name="btnLeft" type="TextureButton" parent="Menu/Options/PhysicsJitterFix"]
 margin_left = 8.0
 margin_right = 8.0
+margin_bottom = 32.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblSelectedJitterPhysicsFix" type="RichTextLabel" parent="Menu/Buttons/PhysicsJitterFix"]
+[node name="lblSelectedJitterPhysicsFix" type="RichTextLabel" parent="Menu/Options/PhysicsJitterFix"]
 margin_left = 16.0
 margin_right = 16.0
+margin_bottom = 32.0
 text = "Physics Jitter Fix..."
 
-[node name="btnRight" type="TextureButton" parent="Menu/Buttons/PhysicsJitterFix"]
+[node name="btnRight" type="TextureButton" parent="Menu/Options/PhysicsJitterFix"]
 margin_left = 24.0
 margin_right = 24.0
+margin_bottom = 32.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TimeScale" type="HBoxContainer" parent="Menu/Buttons"]
-margin_top = 381.0
-margin_right = 56.0
-margin_bottom = 381.0
+[node name="TimeScale" type="HBoxContainer" parent="Menu/Options"]
+anchor_left = 0.3
+anchor_top = 0.66
+anchor_right = 0.7
+anchor_bottom = 0.69
 
-[node name="lblTimeScale" type="RichTextLabel" parent="Menu/Buttons/TimeScale"]
+[node name="lblTimeScale" type="RichTextLabel" parent="Menu/Options/TimeScale"]
+margin_bottom = 32.0
 text = "Engine's Time Scale"
 
-[node name="btnLeft" type="TextureButton" parent="Menu/Buttons/TimeScale"]
+[node name="btnLeft" type="TextureButton" parent="Menu/Options/TimeScale"]
 margin_left = 8.0
 margin_right = 8.0
+margin_bottom = 32.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblSelectedTimeScale" type="RichTextLabel" parent="Menu/Buttons/TimeScale"]
+[node name="lblSelectedTimeScale" type="RichTextLabel" parent="Menu/Options/TimeScale"]
 margin_left = 16.0
 margin_right = 16.0
+margin_bottom = 32.0
 text = "Time Scale..."
 
-[node name="btnRight" type="TextureButton" parent="Menu/Buttons/TimeScale"]
+[node name="btnRight" type="TextureButton" parent="Menu/Options/TimeScale"]
 margin_left = 24.0
 margin_right = 24.0
+margin_bottom = 32.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
