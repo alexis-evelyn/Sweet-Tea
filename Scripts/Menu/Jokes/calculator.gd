@@ -33,7 +33,7 @@ func _ready() -> void:
 	popup_calc()
 
 # Calculator Button Was Pressed
-func _button_pressed(button: Node) -> void:
+func _button_pressed(button: Button) -> void:
 	#logger.verbose("Pressed: %s" % button.name)
 
 	if button.name == "Equals":

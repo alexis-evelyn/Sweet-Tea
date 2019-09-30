@@ -13,7 +13,7 @@ var cam_speed : int = 70
 var last_position_resize : Vector2
 var offset_position_label : Vector2 = Vector2(0, 11)
 
-var player : Node
+var player : Node2D
 var powerstate_status : String
 
 var date_time : Dictionary
@@ -27,8 +27,8 @@ var value_begin_bbcode : String = "[color=#" + value_color.to_html(true) + "]"
 var key_begin_bbcode : String = "[color=#" + key_color.to_html(true) + "]"
 var both_end_bbcode : String = "[/color]"
 
-onready var panelChat : Node = get_tree().get_root().get_node("PlayerUI/panelChat")
-onready var pauseMenu : Node = get_tree().get_root().get_node("PlayerUI/PauseMenu")
+onready var panelChat : Panel = get_tree().get_root().get_node("PlayerUI/panelChat")
+onready var pauseMenu : Panel = get_tree().get_root().get_node("PlayerUI/PauseMenu")
 
 onready var coor_label = $PlayerCoordinates
 onready var cam_coor_label = $CameraCoordinates
@@ -46,7 +46,7 @@ onready var engine_start_time_label = $TimeSinceStart
 onready var crosshair = $Crosshair
 
 onready var world : Node = get_parent().get_parent()
-onready var world_generator : Node = world.get_node("Viewport/WorldGrid/WorldGen")
+onready var world_generator : TileMap = world.get_node("Viewport/WorldGrid/WorldGen")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

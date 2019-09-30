@@ -32,11 +32,13 @@ const enc_client : String = "res://Scripts/Security/client_encryption.gd"
 # UPNP Game Forwarding
 const game_forwarding : String = "res://Scripts/upnp/upnp.gd"
 
+onready var pauseMenu : PauseMenu = get_tree().get_root().get_node("PlayerUI/PauseMenu")
+
 # Reference to Player List
-onready var playerUI : Node = get_tree().get_root().get_node("PlayerUI")
-onready var playerList : Node = get_tree().get_root().get_node("PlayerUI/panelPlayerList")
-onready var playerStats : Node = get_tree().get_root().get_node("PlayerUI/panelPlayerStats")
-onready var playerChat : Node = get_tree().get_root().get_node("PlayerUI/panelChat")
+onready var playerUI : PlayerUI = get_tree().get_root().get_node("PlayerUI")
+onready var playerList : Panel = get_tree().get_root().get_node("PlayerUI/panelPlayerList")
+onready var playerStats : Panel = get_tree().get_root().get_node("PlayerUI/panelPlayerStats")
+onready var playerChat : Panel = get_tree().get_root().get_node("PlayerUI/panelChat")
 
 var max_pixel_width : int = 32
 
@@ -283,6 +285,8 @@ func _on_player_disconnected(id: int) -> void:
 # Successfully Joined Server (Client Side Only)
 func _on_connected_to_server() -> void:
 	connected = true
+
+	pauseMenu.set_client_mode() # Remove Open to Lan Button
 
 	var net : NetworkedMultiplayerENet = get_tree().get_network_peer()
 	functions.set_title(tr("connected_to_server_title") % [net.get_peer_address(1), net.get_peer_port(1)]) # 1 is the server's id

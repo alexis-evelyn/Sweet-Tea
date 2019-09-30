@@ -2,9 +2,9 @@ extends KinematicBody2D
 class_name Player
 
 # Declare member variables here:
-onready var panelChat : Node = get_tree().get_root().get_node("PlayerUI/panelChat")
-onready var playerStats : Node = get_tree().get_root().get_node("PlayerUI/panelPlayerStats")
-onready var pauseMenu : Node = get_tree().get_root().get_node("PlayerUI/PauseMenu")
+onready var panelChat : Panel = get_tree().get_root().get_node("PlayerUI/panelChat")
+onready var playerStats : Panel = get_tree().get_root().get_node("PlayerUI/panelPlayerStats")
+onready var pauseMenu : Control = get_tree().get_root().get_node("PlayerUI/PauseMenu")
 
 const UP : Vector2 = Vector2(0, -1)
 const LEFT : Vector2 = Vector2(-1, 0)
@@ -21,9 +21,9 @@ var motion : Vector2 = Vector2()
 
 var player_name: String
 var players: Node
-var world_generator: Node
+var world_generator: TileMap
 
-var camera: Node
+var camera: Camera2D
 
 func _enter_tree() -> void:
 	# Activate Debug Camera if Gamestate Debug Camera Boolean is True
@@ -78,7 +78,7 @@ func _ready() -> void:
 func detect_loading_screen_closed() -> void:
 	if get_tree().get_root().has_node("LoadingScreen"):
 		# For Server - Loading Screen
-		var loading_screen : Node = get_tree().get_root().get_node("LoadingScreen")
+		var loading_screen : LoadingScreen = get_tree().get_root().get_node("LoadingScreen")
 		loading_screen.connect("loading_screen_closed", self, "loading_screen_closed")
 	else:
 		# For Clients - Loading Screen Not Implemented Yet

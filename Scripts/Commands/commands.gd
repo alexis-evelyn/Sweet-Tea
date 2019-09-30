@@ -480,7 +480,7 @@ func server_spawn(net_id: int, message: PoolStringArray) -> String:
 	var world_name : String = load_world_server_thread.wait_to_finish()
 
 	# Clears Loaded Chunks From Previous World Generator's Memory
-	var world_generation : Node = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
+	var world_generation : TileMap = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
 	world_generation.clear_player_chunks(net_id)
 	#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
 
@@ -518,7 +518,7 @@ func world_spawn(net_id: int, message: PoolStringArray) -> String:
 	var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
 
 	# Clears Loaded Chunks From Previous World Generator's Memory
-	var world_generation : Node = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
+	var world_generation : TileMap = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
 	world_generation.clear_player_chunks(net_id)
 	#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
 
@@ -551,7 +551,7 @@ func set_server_spawn(net_id: int, message: PoolStringArray) -> String:
 	if world_name == "":
 		return functions.get_translation("set_server_spawn_command_world_name_not_found", player_registrar.players[net_id].locale)
 
-	var world_gen_node : Node = spawn_handler.get_world_generator_node(world_name) # Get the node for the picked world
+	var world_gen_node : TileMap = spawn_handler.get_world_generator_node(world_name) # Get the node for the picked world
 
 	# World Gen Node not Found
 	if world_gen_node == null:
@@ -577,7 +577,7 @@ func set_world_spawn(net_id: int, message: PoolStringArray) -> String:
 	if world_name == "":
 		return functions.get_translation("set_world_spawn_command_world_name_not_found", player_registrar.players[net_id].locale)
 
-	var world_gen_node : Node = spawn_handler.get_world_generator_node(world_name) # Get the node for the picked world
+	var world_gen_node : TileMap = spawn_handler.get_world_generator_node(world_name) # Get the node for the picked world
 
 	# World Gen Node not Found
 	if world_gen_node == null:
@@ -599,11 +599,11 @@ func get_seed(net_id: int, message: PoolStringArray) -> String:
 	# warning-ignore:unused_variable
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
-# warning-ignore:unused_variable
+	# warning-ignore:unused_variable
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	# Get Seed From World Player Is In
-	var world_generation : Node = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
+	var world_generation : TileMap = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
 	var world_seed : int = world_generation.world_seed
 
 	return functions.get_translation("world_seed_command_success", player_registrar.players[net_id].locale) % world_seed

@@ -37,7 +37,7 @@ var loaded_worlds : Dictionary = {}
 var file_check : File = File.new() # Check to see if world's file path exists
 
 var world_data_dict : Dictionary = {}
-var loading_screen : Node
+var loading_screen : LoadingScreen
 
 var load_world_server_thread : Thread = Thread.new()
 
@@ -183,7 +183,7 @@ func load_template(location: String) -> Node:
 		var world_file : Resource = load(location) # Load World From File Location
 		var worlds : Node = get_tree().get_root().get_node("Worlds") # Get Worlds node
 
-		var world : Node = world_file.instance() # Instance Loaded World
+		var world : ViewportContainer = world_file.instance() # Instance Loaded World
 
 		# If Client, Unload Previous World
 		# TODO: Keep Client only worlds loaded when inviting players to client worlds is implemnted.
@@ -227,8 +227,8 @@ func load_world_server(net_id: int, location: String) -> String:
 
 	# Checks to Make sure World isn't already loaded
 	if loaded_worlds.has(world_meta):
-		var world : Node = get_tree().get_root().get_node("Worlds").get_node(loaded_worlds[world_meta]) # World was already loaded (as tracked in loaded_worlds Array)
-		var world_grid : Node = spawn_handler.get_world_grid(loaded_worlds[world_meta])
+		var world : ViewportContainer = get_tree().get_root().get_node("Worlds").get_node(loaded_worlds[world_meta]) # World was already loaded (as tracked in loaded_worlds Array)
+		var world_grid : Node2D = spawn_handler.get_world_grid(loaded_worlds[world_meta])
 
 		if world_grid == null:
 			logger.error("Cannot Load World Grid for World '%s'" % world_meta)
@@ -342,7 +342,7 @@ func load_world_server(net_id: int, location: String) -> String:
 		logger.error("Failed To Parse JSON (Unknown Format) When Loading World!!!")
 		return ""
 
-func save_world(world: Node):
+func save_world(world: ViewportContainer):
 	world_data_dict.clear() # Clears Dictionary From Previous Uses
 
 	var world_generator = world.get_node("Viewport/WorldGrid/WorldGen")

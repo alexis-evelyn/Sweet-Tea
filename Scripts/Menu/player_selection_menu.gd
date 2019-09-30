@@ -2,14 +2,14 @@ extends WindowDialog
 class_name PlayerSelectionMenu
 
 # Declare member variables here. Examples:
-onready var playerSlots : Node = $background/PlayerSlots
+onready var playerSlots : VBoxContainer = $background/PlayerSlots
 
 var scene : String = "" # Menu to load if set
 var old_title : String = "" # Title From Before Window Was Shown
 var yielding : bool = false # Prevents data.blocked > 0 crash by preventing yielding more than once
 
 const player_creation_menu : String = "res://Menus/PlayerCreationMenu.tscn" # Player Creation Menu
-var creation_menu : Node # Player Creation Menu
+var creation_menu : PlayerCreationMenu # Player Creation Menu
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -47,7 +47,7 @@ func check_existing_slots() -> void:
 		else:
 			playerSlots.get_child(slot).set_text(tr("new_character_button")) # Change Button Text If Slot Does Not Exist in Save
 
-func _character_slot_pressed(button: Node) -> void:
+func _character_slot_pressed(button: Button) -> void:
 	"""
 		Detect Which Player Selection Button Was Pressed
 

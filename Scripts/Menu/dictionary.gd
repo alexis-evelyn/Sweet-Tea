@@ -3,7 +3,7 @@ class_name Mazawalza_Dictionary
 
 # Declare member variables here. Examples:
 onready var entries : ItemList = $background/entries
-onready var details : Node = get_parent().get_node("DetailedInfo")
+onready var details : Mazawalza_Dictionary_Detailed = get_parent().get_node("DetailedInfo")
 
 var dictionary = preload("res://Scripts/functions/dictionary_registry.gd").new()
 

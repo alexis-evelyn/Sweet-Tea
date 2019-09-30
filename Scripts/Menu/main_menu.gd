@@ -88,7 +88,7 @@ func set_theme(theme: Theme) -> void:
 #	buttons.get_node("Quit").add_font_override("font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres"))
 
 func set_language_text() -> void:
-	var buttons : Node = $Menu/Buttons
+	var buttons : VBoxContainer = $Menu/Buttons
 
 	buttons.get_node("Singleplayer").text = tr("singleplayer_button")
 	buttons.get_node("Multiplayer").text = tr("multiplayer_button")
@@ -102,7 +102,7 @@ func _on_Singleplayer_pressed() -> void:
 		Not Meant to Be Called Directly
 	"""
 
-	var player_selection_window : Node = $Menu/PlayerSelectionWindow
+	var player_selection_window : PlayerSelectionMenu = $Menu/PlayerSelectionWindow
 	player_selection_window.set_menu("") # Set's menu to load after selecting player
 	player_selection_window.popup_centered()
 
@@ -113,7 +113,7 @@ func _on_Multiplayer_pressed() -> void:
 		Not Meant to Be Called Directly
 	"""
 
-	var player_selection_window : Node = $Menu/PlayerSelectionWindow
+	var player_selection_window : PlayerSelectionMenu = $Menu/PlayerSelectionWindow
 	player_selection_window.set_menu("res://Menus/NetworkMenu.tscn") # Set's menu to load after selecting player
 	player_selection_window.popup_centered()
 

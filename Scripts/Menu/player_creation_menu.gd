@@ -17,7 +17,7 @@ var is_client : bool = false # Determine If Is Server or Client
 var world_seed : String = "" # Seed to use to generate world
 
 # warning-ignore:unused_class_variable
-var loading_screen : Node
+var loading_screen : LoadingScreen
 const loading_screen_name : String = "res://Menus/LoadingScreen.tscn" # Loading Screen
 
 #var create_world_server_thread : Thread = Thread.new()

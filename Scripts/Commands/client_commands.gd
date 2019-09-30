@@ -35,7 +35,7 @@ func process_commands(message: PoolStringArray) -> String:
 # warning-ignore:unused_argument
 func open_calculator(message: PoolStringArray) -> String:
 	if not get_tree().get_root().has_node("Calculator"):
-		var calc : Node = preload("res://Menus/Jokes/Calculator.tscn").instance()
+		var calc : Control = preload("res://Menus/Jokes/Calculator.tscn").instance()
 		calc.name = "Calculator"
 
 		get_tree().get_root().get_node("PlayerUI").add_child(calc)
@@ -100,7 +100,7 @@ func teleport_camera(message: PoolStringArray) -> String:
 	if not spawn_handler.get_world_node(world_name).has_node("Viewport/DebugCamera"):
 		return tr("tp_camera_command_missing_debug_camera")
 
-	var camera : Node = spawn_handler.get_world_node(world_name).get_node("Viewport/DebugCamera")
+	var camera : Camera2D = spawn_handler.get_world_node(world_name).get_node("Viewport/DebugCamera")
 
 	camera.update_camera_pos(coordinates)
 	camera.update_camera_pos_label()
@@ -321,7 +321,7 @@ func set_debug_draw(message: PoolStringArray) -> String:
 	if not spawn_handler.get_world_node(world_name).has_node("Viewport"):
 		return tr("debug_draw_command_missing_viewport_node")
 
-	var viewport : Node = spawn_handler.get_world_node(world_name).get_node("Viewport")
+	var viewport : Viewport = spawn_handler.get_world_node(world_name).get_node("Viewport")
 
 	if mode == "disabled":
 		viewport.set_debug_draw(Viewport.DEBUG_DRAW_DISABLED)
@@ -414,7 +414,7 @@ func read_dictionary(message: PoolStringArray) -> String:
 	# If No Arguments Specified, Open GUI Dictionary
 	# Else Continue Onto Text Dictionary Search
 	if command_arguments.size() == 0 and not get_tree().get_root().has_node("Mazawalza_Dictionary"):
-		var dictionary : Node = preload("res://Menus/Dictionary.tscn").instance()
+		var dictionary : Control = preload("res://Menus/Dictionary.tscn").instance()
 		dictionary.name = "Mazawalza_Dictionary"
 
 		get_tree().get_root().get_node("PlayerUI").add_child(dictionary)

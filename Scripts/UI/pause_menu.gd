@@ -83,10 +83,21 @@ func get_class() -> String:
 func options():
 	pass # Replace with function body.
 
+func set_client_mode(client: bool = true) -> void:
+	if client:
+		open_to_lan_button.set_disabled(true) # Disabled Open to Lan Button
+		open_to_lan_button.focus_mode = Control.FOCUS_NONE # Disable Ability to Focus on Button
+		open_to_lan_button.hide() # Hide Open to Lan Button
+	else:
+		open_to_lan_button.set_disabled(false) # Enable Open to Lan Button
+		open_to_lan_button.focus_mode = Control.FOCUS_ALL # Enable Ability to Focus on Button
+		open_to_lan_button.show() # Show Open to Lan Button
+
 func quit():
 	open_to_lan_button.set_disabled(false) # Enable Open to Lan Button
 	open_to_lan_button.focus_mode = Control.FOCUS_ALL # Enable Ability to Focus on Button
 	is_open_to_lan = false # Mark that game is not open to lan
+	set_client_mode(false) # Put Open to Lan Button Back
 
 	network.close_connection()
 	resume()

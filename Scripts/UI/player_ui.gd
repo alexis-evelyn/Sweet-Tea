@@ -5,11 +5,11 @@ class_name PlayerUI
 signal cleanup_ui
 
 # Declare member variables here. Examples:
-onready var panelPlayerList : Node = $panelPlayerList
-onready var panelChat : Node = $panelChat
+onready var panelPlayerList : Panel = $panelPlayerList
+onready var panelChat : Panel = $panelChat
 # warning-ignore:unused_class_variable
-onready var panelStats : Node = $panelPlayerStats
-onready var pauseMenu : Node = $PauseMenu
+onready var panelStats : Panel = $panelPlayerStats
+onready var pauseMenu : Control = $PauseMenu
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

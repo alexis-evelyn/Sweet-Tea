@@ -5,9 +5,9 @@ signal loading_screen_closed
 
 # Declare member variables here. Examples:
 # warning-ignore:unused_class_variable
-onready var loading_bar : Node = $background/loadingBar
+onready var loading_bar : TextureProgress = $background/loadingBar
 # warning-ignore:unused_class_variable
-onready var loading_bar_plain : Node = $background/loadingBarPlain
+onready var loading_bar_plain : ProgressBar = $background/loadingBarPlain
 
 var main_menu : String = "res://Menus/MainMenu.tscn"
 
@@ -103,7 +103,8 @@ func close_loading_screen():
 	self.queue_free()
 
 func set_progress_value(ending_value: int) -> void:
-	var bar : Node = loading_bar_plain
+	var bar : Range = loading_bar_plain
+	# warning-ignore:narrowing_conversion
 	var starting_value : int = bar.value
 
 	if starting_value < ending_value:

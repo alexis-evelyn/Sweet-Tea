@@ -14,10 +14,10 @@ var just_opened : bool = false
 # The NWSC is used to break up BBCode submitted by user without deleting characters - Should be able to be disabled by Server Request
 var NWSC : String = PoolByteArray(['U+8203']).get_string_from_utf8() # No Width Space Character (Used to be called RawArray?) - https://docs.godotengine.org/en/3.1/classes/class_poolbytearray.html
 
-onready var chatMessages : Node = $chatMessages
-onready var chatInput : Node = $userChat
+onready var chatMessages : RichTextLabel = $chatMessages
+onready var chatInput : LineEdit = $userChat
 # warning-ignore:unused_class_variable
-onready var closeButton : Node = $closeChat
+onready var closeButton : TextureButton = $closeChat
 
 # Supposed to Request Window Attention - Only Works if Window is Out of Focus
 #OS.request_attention()

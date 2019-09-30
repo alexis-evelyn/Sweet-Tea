@@ -121,7 +121,7 @@ func add_player(pinfo: Dictionary, net_id: int, coordinates: Vector2) -> void:
 	#if pinfo.has("actor_path"):
 	#	player_class = load(pinfo.actor_path)
 
-	var new_actor : Node = player_class.instance()
+	var new_actor : Node2D = player_class.instance()
 
 	# TODO: Make Sure Alpha is 255 (fully opaque). We don't want people cheating...
 	# Setup Player Customization
@@ -148,7 +148,7 @@ func add_player(pinfo: Dictionary, net_id: int, coordinates: Vector2) -> void:
 		# Add the player to the world
 		#add_child(new_actor)
 		var player_current_world : String = get_world_name(net_id)
-		var world_grid : Node = get_world_grid(player_current_world)
+		var world_grid : TileMap = get_world_grid(player_current_world)
 
 		if world_grid == null:
 			return

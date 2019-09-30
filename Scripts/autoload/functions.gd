@@ -135,7 +135,7 @@ func list_game_translations() -> Dictionary:
 
 func get_world_camera() -> ColorRect:
 	var shader_screen : ColorRect
-	var player : Node = spawn_handler.get_player_node(gamestate.net_id)
+	var player : Node2D = spawn_handler.get_player_node(gamestate.net_id)
 
 	if player == null:
 		return null
@@ -147,7 +147,7 @@ func get_world_camera() -> ColorRect:
 			logger.error("Set World Shader - Missing Current World Info")
 			return null
 
-		var world : Node = spawn_handler.get_world_node(gamestate.player_info.current_world)
+		var world : ViewportContainer = spawn_handler.get_world_node(gamestate.player_info.current_world)
 
 		if not world.get_node("Viewport").has_node("DebugCamera"):
 			logger.error("Set World Shader - Missing Debug Camera")
