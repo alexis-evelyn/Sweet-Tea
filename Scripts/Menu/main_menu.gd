@@ -179,6 +179,5 @@ func _on_Quit_pressed() -> void:
 #			quit_button.grab_focus()
 #			get_tree().set_input_as_handled()
 
-
 func get_class() -> String:
 	return "MainMenu"

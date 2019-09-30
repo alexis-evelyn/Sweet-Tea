@@ -61,5 +61,12 @@ margin_left = 322.0
 margin_right = 420.0
 margin_bottom = 45.0
 text = "Search"
+
+[node name="btnBack" type="Button" parent="panelNetwork/manualJoin"]
+margin_left = 428.0
+margin_right = 503.0
+margin_bottom = 45.0
+text = "Back"
 [connection signal="pressed" from="panelNetwork/manualJoin/btnJoinServer" to="." method="_on_btnJoin_pressed"]
 [connection signal="pressed" from="panelNetwork/manualJoin/btnRefreshSearch" to="." method="refresh_search_pressed"]
+[connection signal="pressed" from="panelNetwork/manualJoin/btnBack" to="." method="back_pressed"]

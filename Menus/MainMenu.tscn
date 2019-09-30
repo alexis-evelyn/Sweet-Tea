@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Scripts/Menu/main_menu.gd" type="Script" id=1]
-[ext_resource path="res://Menus/MenuBackground.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Menus/PlayerSelectionMenu.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Menus/PlayerSelectionMenu.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Menus/MenuBackground.tscn" type="PackedScene" id=3]
 
 [sub_resource type="ButtonGroup" id=1]
 resource_name = "Main Menu UI Select"
@@ -15,7 +15,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MenuBackground" parent="." instance=ExtResource( 2 )]
+[node name="MenuBackground" parent="." instance=ExtResource( 3 )]
 
 [node name="Menu" type="CenterContainer" parent="."]
 anchor_right = 1.0
@@ -72,7 +72,7 @@ rect_min_size = Vector2( 360, 60 )
 group = SubResource( 1 )
 text = "Quit"
 
-[node name="PlayerSelectionWindow" parent="Menu" instance=ExtResource( 3 )]
+[node name="PlayerSelectionWindow" parent="Menu" instance=ExtResource( 2 )]
 visible = true
 margin_left = 824.0
 margin_top = 539.0

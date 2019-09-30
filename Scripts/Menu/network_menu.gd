@@ -176,8 +176,11 @@ func _on_btnJoin_pressed() -> void:
 
 	network.join_server(ip, port)
 
-func refresh_search_pressed():
+func refresh_search_pressed() -> void:
 	server_finder.search_for_servers()
+
+func back_pressed() -> void:
+	get_tree().change_scene(ProjectSettings.get_setting("application/run/main_menu"))
 
 func get_class() -> String:
 	return "MultiplayerMenu"

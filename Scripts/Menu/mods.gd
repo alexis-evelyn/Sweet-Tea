@@ -9,7 +9,7 @@ class_name ModLoader
 # Declare member variables here. Examples:
 var mods_node : Node # Mods Node
 
-var scene_to_change_to = "res://Menus/MainMenu.tscn"
+var scene_to_change_to = ProjectSettings.get_setting("application/run/main_menu")
 var mods_folder : String = "user://mods/"
 var mods_installed : bool = false
 

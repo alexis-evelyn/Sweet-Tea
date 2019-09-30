@@ -248,7 +248,7 @@ func close_connection() -> void:
 
 	#logger.verbose("Attempt to Change Scene Tree To Main Menu")
 	# TODO: Maybe Pull Up A Disconnected Message GUI (which will then go to NetworkMenu)
-	get_tree().change_scene("res://Menus/MainMenu.tscn")
+	get_tree().change_scene(ProjectSettings.get_setting("application/run/main_menu"))
 
 # Notifies Player as to Why They Were Kicked (does not need to call disconnect)
 puppet func player_kicked(message: String) -> void:

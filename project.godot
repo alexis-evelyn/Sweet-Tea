@@ -273,6 +273,7 @@ config/macos_native_icon="res://Assets/Icons/game_icon/game_icon_1024.icns"
 config/Version="0.0.1-alpha"
 "config/Gamejolt API Key"="601c6f6b5e75332551187791609d1630"
 "config/Gamejolt Game ID"="430985"
+run/main_menu="res://Menus/MainMenu.tscn"
 
 [autoload]
 
