@@ -55,4 +55,11 @@ text = "Join Server"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="btnRefreshSearch" type="Button" parent="panelNetwork/manualJoin"]
+margin_left = 322.0
+margin_right = 420.0
+margin_bottom = 45.0
+text = "Search"
 [connection signal="pressed" from="panelNetwork/manualJoin/btnJoinServer" to="." method="_on_btnJoin_pressed"]
+[connection signal="pressed" from="panelNetwork/manualJoin/btnRefreshSearch" to="." method="refresh_search_pressed"]

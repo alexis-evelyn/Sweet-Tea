@@ -5,8 +5,11 @@ class_name MultiplayerMenu
 # Icon Loading Help - https://www.reddit.com/r/godot/comments/cy6nf3/how_safe_is_bytes2var/
 
 onready var server_address : LineEdit = $panelNetwork/manualJoin/txtServerAddress
-onready var join_server : Button = $panelNetwork/manualJoin/btnJoinServer
+onready var join_server_button : Button = $panelNetwork/manualJoin/btnJoinServer
+onready var search_button : Button = $panelNetwork/manualJoin/btnRefreshSearch
 onready var lan_servers : ItemList = $panelNetwork/lanServers
+
+var server_finder : ServerFinder
 
 const lan_client : String = "res://Scripts/lan/client.gd"
 const default_icon : Resource = preload("res://Assets/Blocks/grass-debug.png")
@@ -25,7 +28,8 @@ func _ready() -> void:
 	set_theme(gamestate.game_theme)
 
 	setup_server_list() # Setup Server List
-	find_servers().connect("add_server", self, "add_server") # Add Server to GUI
+	server_finder = setup_server_finder()
+	server_finder.connect("add_server", self, "add_server") # Add Server to GUI
 
 	# ItemList Handling - https://docs.godotengine.org/en/3.1/classes/class_itemlist.html
 	lan_servers.connect("item_selected", self, "item_selected") # Detect Selected Item
@@ -117,9 +121,9 @@ func item_activated(index: int) -> void:
 
 func set_language_text():
 	server_address.placeholder_text = tr("network_menu_address_placeholder")
-	join_server.text = tr("network_menu_join_server_button")
+	join_server_button.text = tr("network_menu_join_server_button")
 
-func find_servers() -> Node:
+func setup_server_finder() -> Node:
 	# Setup Broadcast Listener Script
 	var server_finder = Node.new()
 	server_finder.set_script(preload(lan_client)) # Attach A Script to Node
@@ -169,6 +173,9 @@ func _on_btnJoin_pressed() -> void:
 	port = int(address[1].rstrip(" ").lstrip(" "))
 
 	network.join_server(ip, port)
+
+func refresh_search_pressed():
+	server_finder.search_for_servers()
 
 func get_class() -> String:
 	return "MultiplayerMenu"

@@ -33,16 +33,16 @@ func _ready():
 func find_servers(peer: PacketPeerUDP) -> void:
 	peer.listen(0, "*", packet_buffer_size) # Listen for replies from server (the server knows your port, so )
 	#logger.verbose("Starting To Search for Servers!!!")
-	
+
 	var search_timer : SceneTreeTimer = get_tree().create_timer(search_time) # Creates a One Shot Timer (One Shot means it only runs once)
 
 	while peer.is_listening() and search_timer.time_left > 0:
 		#logger.verbose("Find Servers Time Left (Seconds): %s" % search_timer.time_left)
 		poll_for_servers(peer)
-		
+
 		delay_broadcast_search = Timer.new() # Create Search For Servers Timer
 		get_tree().get_root().call_deferred("add_child", delay_broadcast_search)
-		
+
 		delay_broadcast_search.set_wait_time(delay_broadcast_time_seconds) # Execute Every delay_broadcast_time_seconds Seconds
 		delay_broadcast_search.start() # Start Timer
 		yield(delay_broadcast_search, "timeout")
@@ -53,9 +53,9 @@ func find_servers(peer: PacketPeerUDP) -> void:
 			var bytes : PoolByteArray = peer.get_packet()
 			var server_ip : String = peer.get_packet_ip()
 			var server_port : int = peer.get_packet_port()
-			
+
 			process_message(server_ip, server_port, bytes) # Process Message From Client
-			
+
 	search_timer.call_deferred('free') # Prevents Resume Failed From Object Class Being Expired (Have to Use Call Deferred Free or it will crash free() causes an attempted to remove reference error and queue_free() does not exist)
 
 # Parse Dictionary Sent By Server
@@ -65,16 +65,16 @@ func parse_server_info(server_ip: String, server_port: int, json: Dictionary) ->
 #	for key in json.keys():
 #		logger.verbose("%s: %s" % [key, json.get(key)])
 #	logger.verbose("---------------------------------------------------")
-	
+
 	emit_signal("add_server", json, server_ip, server_port) # Add server to GUI
 
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
 func process_message(server_ip: String, server_port: int, bytes: PoolByteArray):
 	#logger.verbose("Server Reply: %s" % bytes.get_string_from_ascii())
-	
+
 	var json : JSONParseResult = JSON.parse(bytes.get_string_from_ascii())
-		
+
 	# Checks to Make Sure JSON was Parsed
 	if json.error == OK:
 		# warning-ignore:unsafe_property_access
@@ -86,14 +86,14 @@ func poll_for_servers(peer: PacketPeerUDP) -> void:
 	# This loops through all addresses to broadcast to and sends a message to see if server replies.
 	var message : String
 	var bytes : PoolByteArray
-	
+
 	for address in addresses:
 		peer.set_dest_address(address, used_server_port)
-		
+
 		message = calling_card % gamestate.game_version
 		message += "\nname: %s" % gamestate.player_info.name
 		message += "\ncharacter_unique_id: %s" % gamestate.player_info.char_unique_id
-		
+
 		bytes = message.to_ascii()
 		peer.put_packet(bytes)
 
@@ -101,21 +101,21 @@ func set_server_port() -> int:
 	# Has to be a hardcoded port? Not if I used a third party server, but I am trying to only use the third party server for auth.
 	used_server_port = 4000
 	return used_server_port
-	
+
 func search_for_servers() -> void:
 	"""
 		Search for Servers (will be used by refresh button)
-	
+
 		This is meant to be called directly.
 	"""
-	
+
 	if not client.is_active():
 		client.start(self, "find_servers", udp_peer)
-	
+
 func _exit_tree():
 	if is_instance_valid(delay_broadcast_search): # Make sure to only attempt to free the timer if the timer wasn't already freed (say due to running out of timer).
 		delay_broadcast_search.queue_free()
-		
+
 	udp_peer.close()
 	#client.wait_to_finish()
 
