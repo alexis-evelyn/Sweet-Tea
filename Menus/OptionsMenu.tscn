@@ -10,370 +10,556 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Menu" type="CenterContainer" parent="."]
+[node name="Background" type="Panel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 2.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Scroll" type="ScrollContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
-"_edit_use_anchors_": true
+"_edit_use_anchors_": false
 }
 
-[node name="Options" type="Node" parent="Menu"]
+[node name="Center" type="GridContainer" parent="Scroll"]
+margin_right = 1920.0
+margin_bottom = 1080.0
+size_flags_horizontal = 7
+size_flags_vertical = 3
+columns = 3
 
-[node name="Locale" type="HBoxContainer" parent="Menu/Options"]
-anchor_left = 0.3
-anchor_top = 0.2
-anchor_right = 0.7
-anchor_bottom = 0.23
+[node name="LeftSpacer" type="Control" parent="Scroll/Center"]
+visible = false
+margin_right = 634.0
+margin_bottom = 1080.0
+size_flags_horizontal = 3
+
+[node name="Options" type="VBoxContainer" parent="Scroll/Center"]
+margin_right = 1904.0
+margin_bottom = 1080.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 10
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Locale" type="HBoxContainer" parent="Scroll/Center/Options"]
+margin_right = 1904.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblLocale" type="RichTextLabel" parent="Menu/Options/Locale"]
-margin_bottom = 32.0
+[node name="lblLocale" type="RichTextLabel" parent="Scroll/Center/Options/Locale"]
+margin_right = 470.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Locale"
+scroll_active = false
 
-[node name="btnLeft" type="TextureButton" parent="Menu/Options/Locale"]
-margin_left = 8.0
-margin_right = 8.0
-margin_bottom = 32.0
+[node name="btnLeft" type="TextureButton" parent="Scroll/Center/Options/Locale"]
+margin_left = 478.0
+margin_right = 948.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblSelectedLocale" type="RichTextLabel" parent="Menu/Options/Locale"]
-margin_left = 16.0
-margin_right = 16.0
-margin_bottom = 32.0
+[node name="lblSelectedLocale" type="RichTextLabel" parent="Scroll/Center/Options/Locale"]
+margin_left = 956.0
+margin_right = 1426.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Selected Locale..."
+scroll_active = false
 
-[node name="btnRight" type="TextureButton" parent="Menu/Options/Locale"]
-margin_left = 24.0
-margin_right = 24.0
-margin_bottom = 32.0
+[node name="btnRight" type="TextureButton" parent="Scroll/Center/Options/Locale"]
+margin_left = 1434.0
+margin_right = 1904.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblControls" type="RichTextLabel" parent="Menu/Options"]
-anchor_left = 0.3
-anchor_top = 0.26
-anchor_right = 0.7
-anchor_bottom = 0.29
-margin_top = 2.0
-margin_bottom = 2.0
+[node name="lblControls" type="RichTextLabel" parent="Scroll/Center/Options"]
+margin_top = 63.0
+margin_right = 1904.0
+margin_bottom = 116.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_colors/default_color = Color( 0.313726, 1, 0, 1 )
 text = "Controls"
+scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="KeyboardConfig" type="HBoxContainer" parent="Menu/Options"]
-anchor_left = 0.3
-anchor_top = 0.29
-anchor_right = 0.7
-anchor_bottom = 0.32
+[node name="KeyboardConfig" type="HBoxContainer" parent="Scroll/Center/Options"]
+margin_top = 126.0
+margin_right = 1904.0
+margin_bottom = 179.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblKeyboardConfig" type="RichTextLabel" parent="Menu/Options/KeyboardConfig"]
-margin_bottom = 37.0
+[node name="lblKeyboardConfig" type="RichTextLabel" parent="Scroll/Center/Options/KeyboardConfig"]
+margin_right = 948.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Keyboard Config"
+scroll_active = false
 
-[node name="btnKeyboardConfig" type="Button" parent="Menu/Options/KeyboardConfig"]
-margin_left = 8.0
-margin_right = 32.0
-margin_bottom = 37.0
+[node name="btnKeyboardConfig" type="Button" parent="Scroll/Center/Options/KeyboardConfig"]
+margin_left = 956.0
+margin_right = 1904.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="lblVideo" type="RichTextLabel" parent="Menu/Options"]
-anchor_left = 0.3
-anchor_top = 0.32
-anchor_right = 0.7
-anchor_bottom = 0.35
-margin_top = -1.0
-margin_bottom = -1.0
+[node name="lblVideo" type="RichTextLabel" parent="Scroll/Center/Options"]
+margin_top = 189.0
+margin_right = 1904.0
+margin_bottom = 242.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_colors/default_color = Color( 0.313726, 1, 0, 1 )
 text = "Video"
-
-[node name="Fullscreen" type="HBoxContainer" parent="Menu/Options"]
-anchor_left = 0.299
-anchor_top = 0.35
-anchor_right = 0.699291
-anchor_bottom = 0.394
-margin_left = 0.558716
-margin_bottom = -15.12
+scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblFullscreen" type="RichTextLabel" parent="Menu/Options/Fullscreen"]
-margin_bottom = 48.0
+[node name="Fullscreen" type="HBoxContainer" parent="Scroll/Center/Options"]
+margin_top = 252.0
+margin_right = 1904.0
+margin_bottom = 305.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lblFullscreen" type="RichTextLabel" parent="Scroll/Center/Options/Fullscreen"]
+margin_right = 948.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Full Screen"
+scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ckbFullscreen" type="CheckBox" parent="Menu/Options/Fullscreen"]
-margin_left = 8.0
-margin_right = 56.0
-margin_bottom = 48.0
+[node name="ckbFullscreen" type="CheckBox" parent="Scroll/Center/Options/Fullscreen"]
+margin_left = 956.0
+margin_right = 1904.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="WindowSize" type="HBoxContainer" parent="Menu/Options"]
-visible = false
-anchor_left = 0.3
-anchor_top = 0.2
-anchor_right = 0.7
-anchor_bottom = 0.3
+[node name="WindowSize" type="HBoxContainer" parent="Scroll/Center/Options"]
+margin_top = 315.0
+margin_right = 1904.0
+margin_bottom = 368.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="lblWindowSize" type="RichTextLabel" parent="Menu/Options/WindowSize"]
-margin_bottom = 32.0
+[node name="lblWindowSize" type="RichTextLabel" parent="Scroll/Center/Options/WindowSize"]
+margin_right = 948.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Window Size"
+scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="sldWindowSize" type="HSlider" parent="Menu/Options/WindowSize"]
-margin_left = 8.0
-margin_right = 40.0
-margin_bottom = 32.0
+[node name="sldWindowSize" type="HSlider" parent="Scroll/Center/Options/WindowSize"]
+margin_left = 956.0
+margin_right = 1904.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="VSync" type="HBoxContainer" parent="Menu/Options"]
-anchor_left = 0.3
-anchor_top = 0.39
-anchor_right = 0.7
-anchor_bottom = 0.42
+[node name="VSync" type="HBoxContainer" parent="Scroll/Center/Options"]
+margin_top = 378.0
+margin_right = 1904.0
+margin_bottom = 431.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="lblVSync" type="RichTextLabel" parent="Menu/Options/VSync"]
-margin_bottom = 48.0
+[node name="lblVSync" type="RichTextLabel" parent="Scroll/Center/Options/VSync"]
+margin_right = 948.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Vertical Sync"
+scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ckbVSync" type="CheckBox" parent="Menu/Options/VSync"]
-margin_left = 8.0
-margin_right = 56.0
-margin_bottom = 48.0
+[node name="ckbVSync" type="CheckBox" parent="Scroll/Center/Options/VSync"]
+margin_left = 956.0
+margin_right = 1904.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="FPS" type="HBoxContainer" parent="Menu/Options"]
-anchor_left = 0.3
-anchor_top = 0.42
-anchor_right = 0.7
-anchor_bottom = 0.45
+[node name="FPS" type="HBoxContainer" parent="Scroll/Center/Options"]
+margin_top = 441.0
+margin_right = 1904.0
+margin_bottom = 494.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="lblFPS" type="RichTextLabel" parent="Menu/Options/FPS"]
-margin_bottom = 32.0
+[node name="lblFPS" type="RichTextLabel" parent="Scroll/Center/Options/FPS"]
+margin_right = 470.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "FPS"
+scroll_active = false
 
-[node name="btnLeft" type="TextureButton" parent="Menu/Options/FPS"]
-margin_left = 8.0
-margin_right = 8.0
-margin_bottom = 32.0
+[node name="btnLeft" type="TextureButton" parent="Scroll/Center/Options/FPS"]
+margin_left = 478.0
+margin_right = 948.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblSelectedFPS" type="RichTextLabel" parent="Menu/Options/FPS"]
-margin_left = 16.0
-margin_right = 16.0
-margin_bottom = 32.0
+[node name="lblSelectedFPS" type="RichTextLabel" parent="Scroll/Center/Options/FPS"]
+margin_left = 956.0
+margin_right = 1426.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Selected FPS..."
+scroll_active = false
 
-[node name="btnRight" type="TextureButton" parent="Menu/Options/FPS"]
-margin_left = 24.0
-margin_right = 24.0
-margin_bottom = 32.0
+[node name="btnRight" type="TextureButton" parent="Scroll/Center/Options/FPS"]
+margin_left = 1434.0
+margin_right = 1904.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ShaderUsage" type="HBoxContainer" parent="Menu/Options"]
-visible = false
-anchor_left = 0.3
-anchor_top = 0.2
-anchor_right = 0.7
-anchor_bottom = 0.3
+[node name="ShaderUsage" type="HBoxContainer" parent="Scroll/Center/Options"]
+margin_top = 504.0
+margin_right = 1904.0
+margin_bottom = 557.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="lblShaderUsage" type="RichTextLabel" parent="Menu/Options/ShaderUsage"]
+[node name="lblShaderUsage" type="RichTextLabel" parent="Scroll/Center/Options/ShaderUsage"]
+margin_right = 470.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Shader Usage?"
+scroll_active = false
 
-[node name="btnLeft" type="TextureButton" parent="Menu/Options/ShaderUsage"]
-margin_left = 8.0
-margin_right = 8.0
+[node name="btnLeft" type="TextureButton" parent="Scroll/Center/Options/ShaderUsage"]
+margin_left = 478.0
+margin_right = 948.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblSelectedShaderUsage" type="RichTextLabel" parent="Menu/Options/ShaderUsage"]
-margin_left = 16.0
-margin_right = 16.0
+[node name="lblSelectedShaderUsage" type="RichTextLabel" parent="Scroll/Center/Options/ShaderUsage"]
+margin_left = 956.0
+margin_right = 1426.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Selected Shader Usage..."
+scroll_active = false
 
-[node name="btnRight" type="TextureButton" parent="Menu/Options/ShaderUsage"]
-margin_left = 24.0
-margin_right = 24.0
+[node name="btnRight" type="TextureButton" parent="Scroll/Center/Options/ShaderUsage"]
+margin_left = 1434.0
+margin_right = 1904.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblAudio" type="RichTextLabel" parent="Menu/Options"]
-anchor_left = 0.3
-anchor_top = 0.45
-anchor_right = 0.7
-anchor_bottom = 0.48
+[node name="lblAudio" type="RichTextLabel" parent="Scroll/Center/Options"]
+margin_top = 567.0
+margin_right = 1904.0
+margin_bottom = 620.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_colors/default_color = Color( 0.313726, 1, 0, 1 )
 text = "Audio"
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="MusicVolume" type="HBoxContainer" parent="Menu/Options"]
-anchor_left = 0.3
-anchor_top = 0.48
-anchor_right = 0.7
-anchor_bottom = 0.51
+[node name="MusicVolume" type="HBoxContainer" parent="Scroll/Center/Options"]
+margin_top = 630.0
+margin_right = 1904.0
+margin_bottom = 683.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="lblMusicVolume" type="RichTextLabel" parent="Menu/Options/MusicVolume"]
-margin_bottom = 32.0
+[node name="lblMusicVolume" type="RichTextLabel" parent="Scroll/Center/Options/MusicVolume"]
+margin_right = 948.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Music Volume"
+scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="sldMusicVolume" type="HSlider" parent="Menu/Options/MusicVolume"]
-margin_left = 8.0
-margin_right = 40.0
-margin_bottom = 32.0
+[node name="sldMusicVolume" type="HSlider" parent="Scroll/Center/Options/MusicVolume"]
+margin_left = 956.0
+margin_right = 1904.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="SoundVolume" type="HBoxContainer" parent="Menu/Options"]
-anchor_left = 0.3
-anchor_top = 0.51
-anchor_right = 0.7
-anchor_bottom = 0.54
+[node name="SoundVolume" type="HBoxContainer" parent="Scroll/Center/Options"]
+margin_top = 693.0
+margin_right = 1904.0
+margin_bottom = 746.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="lblSoundVolume" type="RichTextLabel" parent="Menu/Options/SoundVolume"]
-margin_bottom = 32.0
+[node name="lblSoundVolume" type="RichTextLabel" parent="Scroll/Center/Options/SoundVolume"]
+margin_right = 948.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Sound Volume"
+scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="sldSoundVolume" type="HSlider" parent="Menu/Options/SoundVolume"]
-margin_left = 8.0
-margin_right = 40.0
-margin_bottom = 32.0
+[node name="sldSoundVolume" type="HSlider" parent="Scroll/Center/Options/SoundVolume"]
+margin_left = 956.0
+margin_right = 1904.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="lblAdvancedSetting" type="RichTextLabel" parent="Menu/Options"]
-anchor_left = 0.3
-anchor_top = 0.54
-anchor_right = 0.7
-anchor_bottom = 0.57
+[node name="lblAdvancedSetting" type="RichTextLabel" parent="Scroll/Center/Options"]
+margin_top = 756.0
+margin_right = 1904.0
+margin_bottom = 809.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_colors/default_color = Color( 0.313726, 1, 0, 1 )
 text = "Advanced Settings"
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="LPUM" type="HBoxContainer" parent="Menu/Options"]
-anchor_left = 0.3
-anchor_top = 0.57
-anchor_right = 0.7
-anchor_bottom = 0.6
+[node name="LPUM" type="HBoxContainer" parent="Scroll/Center/Options"]
+margin_top = 819.0
+margin_right = 1904.0
+margin_bottom = 872.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="lblLPUM" type="RichTextLabel" parent="Menu/Options/LPUM"]
-margin_bottom = 48.0
+[node name="lblLPUM" type="RichTextLabel" parent="Scroll/Center/Options/LPUM"]
+margin_right = 948.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Low Process Usage Mode"
+scroll_active = false
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ckbLPUM" type="CheckBox" parent="Menu/Options/LPUM"]
-margin_left = 8.0
-margin_right = 56.0
-margin_bottom = 48.0
+[node name="ckbLPUM" type="CheckBox" parent="Scroll/Center/Options/LPUM"]
+margin_left = 956.0
+margin_right = 1904.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="PhysicsFPS" type="HBoxContainer" parent="Menu/Options"]
-anchor_left = 0.3
-anchor_top = 0.6
-anchor_right = 0.7
-anchor_bottom = 0.63
+[node name="PhysicsFPS" type="HBoxContainer" parent="Scroll/Center/Options"]
+margin_top = 882.0
+margin_right = 1904.0
+margin_bottom = 935.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="lblPhysicsFPS" type="RichTextLabel" parent="Menu/Options/PhysicsFPS"]
-margin_bottom = 32.0
+[node name="lblPhysicsFPS" type="RichTextLabel" parent="Scroll/Center/Options/PhysicsFPS"]
+margin_right = 470.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Physics FPS"
+scroll_active = false
 
-[node name="btnLeft" type="TextureButton" parent="Menu/Options/PhysicsFPS"]
-margin_left = 8.0
-margin_right = 8.0
-margin_bottom = 32.0
+[node name="btnLeft" type="TextureButton" parent="Scroll/Center/Options/PhysicsFPS"]
+margin_left = 478.0
+margin_right = 948.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblSelectedPhysicsFPS" type="RichTextLabel" parent="Menu/Options/PhysicsFPS"]
-margin_left = 16.0
-margin_right = 16.0
-margin_bottom = 32.0
+[node name="lblSelectedPhysicsFPS" type="RichTextLabel" parent="Scroll/Center/Options/PhysicsFPS"]
+margin_left = 956.0
+margin_right = 1426.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Selected FPS..."
+scroll_active = false
 
-[node name="btnRight" type="TextureButton" parent="Menu/Options/PhysicsFPS"]
-margin_left = 24.0
-margin_right = 24.0
-margin_bottom = 32.0
+[node name="btnRight" type="TextureButton" parent="Scroll/Center/Options/PhysicsFPS"]
+margin_left = 1434.0
+margin_right = 1904.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PhysicsJitterFix" type="HBoxContainer" parent="Menu/Options"]
-anchor_left = 0.3
-anchor_top = 0.63
-anchor_right = 0.7
-anchor_bottom = 0.66
+[node name="PhysicsJitterFix" type="HBoxContainer" parent="Scroll/Center/Options"]
+margin_top = 945.0
+margin_right = 1904.0
+margin_bottom = 998.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="lblPhysicsJitterFix" type="RichTextLabel" parent="Menu/Options/PhysicsJitterFix"]
-margin_bottom = 32.0
+[node name="lblPhysicsJitterFix" type="RichTextLabel" parent="Scroll/Center/Options/PhysicsJitterFix"]
+margin_right = 470.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Physics Jitter Fix"
+scroll_active = false
 
-[node name="btnLeft" type="TextureButton" parent="Menu/Options/PhysicsJitterFix"]
-margin_left = 8.0
-margin_right = 8.0
-margin_bottom = 32.0
+[node name="btnLeft" type="TextureButton" parent="Scroll/Center/Options/PhysicsJitterFix"]
+margin_left = 478.0
+margin_right = 948.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblSelectedJitterPhysicsFix" type="RichTextLabel" parent="Menu/Options/PhysicsJitterFix"]
-margin_left = 16.0
-margin_right = 16.0
-margin_bottom = 32.0
+[node name="lblSelectedJitterPhysicsFix" type="RichTextLabel" parent="Scroll/Center/Options/PhysicsJitterFix"]
+margin_left = 956.0
+margin_right = 1426.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Physics Jitter Fix..."
+scroll_active = false
 
-[node name="btnRight" type="TextureButton" parent="Menu/Options/PhysicsJitterFix"]
-margin_left = 24.0
-margin_right = 24.0
-margin_bottom = 32.0
+[node name="btnRight" type="TextureButton" parent="Scroll/Center/Options/PhysicsJitterFix"]
+margin_left = 1434.0
+margin_right = 1904.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TimeScale" type="HBoxContainer" parent="Menu/Options"]
-anchor_left = 0.3
-anchor_top = 0.66
-anchor_right = 0.7
-anchor_bottom = 0.69
+[node name="TimeScale" type="HBoxContainer" parent="Scroll/Center/Options"]
+margin_top = 1008.0
+margin_right = 1904.0
+margin_bottom = 1061.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="lblTimeScale" type="RichTextLabel" parent="Menu/Options/TimeScale"]
-margin_bottom = 32.0
+[node name="lblTimeScale" type="RichTextLabel" parent="Scroll/Center/Options/TimeScale"]
+margin_right = 470.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Engine's Time Scale"
+scroll_active = false
 
-[node name="btnLeft" type="TextureButton" parent="Menu/Options/TimeScale"]
-margin_left = 8.0
-margin_right = 8.0
-margin_bottom = 32.0
+[node name="btnLeft" type="TextureButton" parent="Scroll/Center/Options/TimeScale"]
+margin_left = 478.0
+margin_right = 948.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="lblSelectedTimeScale" type="RichTextLabel" parent="Menu/Options/TimeScale"]
-margin_left = 16.0
-margin_right = 16.0
-margin_bottom = 32.0
+[node name="lblSelectedTimeScale" type="RichTextLabel" parent="Scroll/Center/Options/TimeScale"]
+margin_left = 956.0
+margin_right = 1426.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 text = "Time Scale..."
+scroll_active = false
 
-[node name="btnRight" type="TextureButton" parent="Menu/Options/TimeScale"]
-margin_left = 24.0
-margin_right = 24.0
-margin_bottom = 32.0
+[node name="btnRight" type="TextureButton" parent="Scroll/Center/Options/TimeScale"]
+margin_left = 1434.0
+margin_right = 1904.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="centerContainer" type="CenterContainer" parent="Scroll/Center/Options"]
+margin_top = 1071.0
+margin_right = 1904.0
+margin_bottom = 1071.0
+
+[node name="RightSpacer" type="Control" parent="Scroll/Center"]
+visible = false
+margin_left = 960.0
+margin_right = 1912.0
+margin_bottom = 1080.0
+size_flags_horizontal = 3
