@@ -69,6 +69,8 @@ func _ready():
 	translate_labels_to_locale() # Translate Labels to Currently Set Locale
 	retrieve_current_values() # Retrieve Current Values and Set in Options Menu
 
+	set_theme(gamestate.game_theme)
+
 func translate_labels_to_locale() -> void:
 	"""
 		...
@@ -176,3 +178,6 @@ func time_scale_right_pressed() -> void:
 
 func get_class() -> String:
 	return "OptionsMenu"
+
+func set_theme(theme: Theme) -> void:
+	.set_theme(theme)

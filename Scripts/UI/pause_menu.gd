@@ -81,7 +81,8 @@ func get_class() -> String:
 	return "PauseMenu"
 
 func options():
-	pass # Replace with function body.
+	var options_menu : OptionsMenu = load("res://Menus/OptionsMenu.tscn").instance()
+	add_child(options_menu)
 
 func set_client_mode(client: bool = true) -> void:
 	if client:
