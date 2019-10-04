@@ -26,6 +26,29 @@ func _input(event) -> void:
 	if not get_tree().has_network_peer() or not network.connected:
 		return
 
+	if event is InputEventJoypadButton:
+		logger.debug("Pressed Joypad Button: %s - Pressure (If Applicable): %s" % [Input.get_joy_button_string(event.get_button_index()), event.get_pressure()])
+#		logger.debug("Pressed Joypad Button: %s - Pressure (If Applicable): %s" % [event.get_button_index(), event.get_pressure()])
+
+#		logger.debug("Share Button: %s" % Input.get_joy_button_string(17))
+#		logger.debug("Controller GUID 0: %s" % Input.get_joy_guid(0))
+#		logger.debug("Controller GUID 1: %s" % Input.get_joy_guid(1))
+
+		# Fixed Guide (Sony Logo) and Share Button in Godot - https://github.com/alex-evelyn/Godot-3.2-Sweet-Tea/commit/37e8be7946794fba1783c95255a6a23cad167758
+		if event.is_action_pressed("test_guide"):
+			logger.error("Logo Button Pressed!!!")
+
+		if event.is_action_pressed("test_share"):
+			logger.error("Share Button Pressed!!!")
+
+		if event.get_button_index() == 16: # PS Button
+			Input.start_joy_vibration(event.get_device(), 1, 1, 3)
+#			logger.debug("Device: %s" % event.get_device())
+	elif event is InputEventJoypadMotion:
+#		logger.debug("Pressed Joypad Axis: %s - Value (-1.0, 1.0): %s" % [event.get_axis(), event.get_axis_value()])
+		pass
+
+
 	# This allows user to see player list (I will eventually add support to change keys and maybe joystick support)
 	if event.is_action("show_playerlist") and !pauseMenu.is_paused():
 		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions

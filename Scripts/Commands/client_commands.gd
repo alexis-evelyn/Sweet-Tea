@@ -31,6 +31,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return read_dictionary(message)
 		"debugcollisions":
 			return set_debug_collisions(message)
+		"testvibration":
+			return test_joy_vibration(message)
 		_:
 			return ""
 
@@ -458,6 +460,15 @@ func set_debug_collisions(message: PoolStringArray) -> String:
 func start_recording(message: PoolStringArray) -> String:
 	# Start Recording - May Do 30 Second Thing Where The Recording is Always Running.
 	return ""
+
+func test_joy_vibration(message: PoolStringArray) -> String:
+	# Test Vibration of Controller
+	Input.start_joy_vibration(1, 100, 100, 10)
+
+	for controller in Input.get_connected_joypads():
+		print(controller)
+
+	return "Testing..."
 
 func get_class() -> String:
 	return "ClientCommands"
