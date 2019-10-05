@@ -20,11 +20,23 @@ func _ready() -> void:
 	get_tree().set_auto_accept_quit(false) # Disables Default Quit Action - Allows Override to Handle Other Code (e.g. saving or in a meta horror game, play a creepy voice)
 	get_tree().connect("files_dropped", self, "_drop_files")
 	#get_tree().connect("tree_changed", self, "_tree_changed")
+	Input.connect("joy_connection_changed", self, "joy_connection_changed") # DEtect Joystick Connection
 
 	# This does not get triggered if stretch mode is viewport
 #	get_tree().get_root().connect("size_changed", self, "screen_size_changed")
 #	connect("resized", self, "screen_size_changed")
 #	window_size_detection.start(self, "_size_change_detector")
+
+	set_process(false)
+#	set_process_input(true) #
+#	set_process_internal(true) #
+#	set_process_priority(100) #
+#	set_process_unhandled_input(true) #
+#	set_process_unhandled_key_input(true) #
+#	set_physics_process(true) #
+#	set_physics_process_internal(true) #
+#	set_scene_instance_load_placeholder(true) #
+#	set_block_signals(false) #
 
 # Called When MainLoop Event Happens
 func _notification(what: int) -> void:
@@ -78,6 +90,20 @@ func _notification(what: int) -> void:
 			about_game()
 		_: # Default Result - Put at Bottom of Match Results
 			pass
+
+# warning-ignore:unused_argument
+func _process(delta: float) -> void:
+#	var device : int
+#	var connected : bool
+#	var name : String
+#	var guid : String
+#
+#	Input.joy_connection_changed(device, connected, name, guid)
+
+	pass
+
+func joy_connection_changed(device: int, connected: bool) -> void:
+	logger.debug("Device: %s - Connected: %s" % [device, connected])
 
 #func _size_change_detector(_thread_data) -> void:
 #	# This function is currently useless as I do not have to manually adjust font sizes anymore.

@@ -36,12 +36,12 @@ func _input(event) -> void:
 
 		# Fixed Guide (Sony Logo) and Share Button in Godot - https://github.com/alex-evelyn/Godot-3.2-Sweet-Tea/commit/37e8be7946794fba1783c95255a6a23cad167758
 		if event.is_action_pressed("test_guide"):
-			logger.error("Logo Button Pressed!!!")
+			logger.debug("Logo Button Pressed!!!")
 
 		if event.is_action_pressed("test_share"):
-			logger.error("Share Button Pressed!!!")
+			logger.debug("Share Button Pressed!!!")
 
-		if event.get_button_index() == 16: # PS Button
+		if event.get_button_index() == JOY_GUIDE: # PS Button
 			Input.start_joy_vibration(event.get_device(), 1, 1, 3)
 #			logger.debug("Device: %s" % event.get_device())
 	elif event is InputEventJoypadMotion:
