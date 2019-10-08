@@ -22,13 +22,6 @@ func _ready() -> void:
 #	pass
 
 func _input(event) -> void:
-	# This statement can run regardless if world is loaded.
-	if Input.is_action_pressed("toggle_fullscreen") and !panelChat.visible:
-			if OS.window_fullscreen:
-				OS.window_fullscreen = false
-			else:
-				OS.window_fullscreen = true
-
 	# Checks to See if connected to server (if not, just return)
 	if not get_tree().has_network_peer() or not network.connected:
 		return
@@ -93,6 +86,17 @@ func _input(event) -> void:
 	elif event.is_action_pressed("resume") and pauseMenu.visible:
 		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 		pauseMenu.resume()
+
+	if Input.is_action_just_released("toggle_fullscreen") and !panelChat.visible:
+		# For some reason this gets buggy and takes over all controls if using is_action_pressed(...).
+		# So, is_action_just_released it is then.
+
+		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
+
+		if OS.window_fullscreen:
+			OS.window_fullscreen = false
+		else:
+			OS.window_fullscreen = true
 
 # Make Sure Game Saves World On Quit or Crash
 func _notification(what: int) -> void:
