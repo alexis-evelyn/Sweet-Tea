@@ -11,15 +11,18 @@ const LEFT : Vector2 = Vector2(-1, 0)
 const RIGHT : Vector2 = Vector2(1, 0)
 const DOWN : Vector2 = Vector2(0, 1)
 
-const ACCELERATION : int = 200 # Originally 50
-const GRAVITY : int = 20
-const MAX_SPEED : int = 400 # Originally 200
-const JUMP_HEIGHT : int = -500
+const ACCELERATION : int = 50 # Originally 50 (Moonwalk 200)
+const GRAVITY : int = 20 # Originally 20 (Moonwalk 20)
+const MAX_SPEED : int = 200 # Originally 200 (Moonwalk 400)
+const JUMP_HEIGHT : int = -500 # Originally -500 (Moonwalk -500)
 
 const MAX_DASH_SPEED_MULTIPLIER : Vector2 = Vector2(3.0, 3.0) # Max Dash Speeed
 const DASH_TIMEOUT : float = 1.0 # How long before allow dash again
 
+# Only apply friction when controls are not actively being used.
+# This is meant as a way to implement a sliding stop.
 var friction : bool = false # Is player moving?
+var gravity_enabled : bool = true # Enable Gravity (and Disable Flying)
 
 var motion : Vector2 = Vector2()
 
@@ -101,21 +104,27 @@ func _physics_process(_delta: float) -> void:
 	if not get_tree().has_network_peer():
 		return # Should Be Connected Here
 
+	if gravity_enabled:
+		motion.y += GRAVITY
+#		move_and_slide(Vector2(0, GRAVITY), UP)
+
 	if is_network_master() and not pauseMenu.is_paused():
 		if Input.is_action_pressed("move_up") and !panelChat.visible:
-			friction = false
-#			logger.superverbose("Up")
+			if not gravity_enabled:
+				friction = false
+#				logger.superverbose("Up")
 
-			# Action Strength is a Value Between 0 and 1.
-			# The keyboard always produces 1 when pressed.
-			# An analog joystick can produce any value.
-			# This will allow finer control when a joystick is used.
-			motion.y = max((motion.y - ACCELERATION) * Input.get_action_strength("move_up"), -MAX_SPEED)
+				# Action Strength is a Value Between 0 and 1.
+				# The keyboard always produces 1 when pressed.
+				# An analog joystick can produce any value.
+				# This will allow finer control when a joystick is used.
+				motion.y = max((motion.y - ACCELERATION) * Input.get_action_strength("move_up"), -MAX_SPEED)
 		elif Input.is_action_pressed("move_down") and !panelChat.visible:
-			friction = false
+			if not gravity_enabled:
+				friction = false
 
-#			logger.superverbose("Down")
-			motion.y = min((motion.y + ACCELERATION) * Input.get_action_strength("move_down"), MAX_SPEED)
+#				logger.superverbose("Down")
+				motion.y = min((motion.y + ACCELERATION) * Input.get_action_strength("move_down"), MAX_SPEED)
 		else:
 			friction = true;
 			#$Sprite.play("Idle");
@@ -136,7 +145,10 @@ func _physics_process(_delta: float) -> void:
 
 		if Input.is_action_pressed("player_jump") and !panelChat.visible:
 			# Look at old project for jump code and then add in a feature for detecting how long jump is held.
-			pass
+			if is_on_floor() and gravity_enabled:
+				# Why does the jump height get exponentially higher when moving left or right?
+				# Fix this!!!
+				motion.y = JUMP_HEIGHT
 
 		if Input.is_action_pressed("speed_boost") and !panelChat.visible:
 			# This causes it to slightly go down and right (both positive).
@@ -144,15 +156,21 @@ func _physics_process(_delta: float) -> void:
 			motion.x = motion.x + (Input.get_action_strength("speed_boost") * MAX_DASH_SPEED_MULTIPLIER.x)
 			motion.y = motion.y + (Input.get_action_strength("speed_boost") * MAX_DASH_SPEED_MULTIPLIER.y)
 
-		if friction == true:
-			motion.x = lerp(motion.x, 0, 0.2)
-			motion.y = lerp(motion.y, 0, 0.2)
-			friction = false
+		if is_on_floor():
+			if friction == true:
+				motion.x = lerp(motion.x, 0, 0.2)
+				motion.y = lerp(motion.y, 0, 0.2)
+				friction = false
+		else:
+			if friction == true:
+				motion.x = lerp(motion.x, 0, 0.05)
+				motion.y = lerp(motion.y, 0, 0.05)
+				friction = false
 
 		#if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))):
 		if motion.abs() != Vector2(0, 0):
 #			logger.superverbose("Motion: (%s, %s)" % [abs(motion.x), abs(motion.y)])
-			motion = move_and_slide(motion)
+			motion = move_and_slide(motion, UP)
 			send_to_clients(motion)
 
 			# Load Chunks to Send to Server Player
@@ -183,7 +201,7 @@ puppet func move_player(mot: Vector2) -> void:
 	# Adjust timer to your needs. The faster the timer, the smoother the player movement on client side. The slower the timer, the less processing power the server needs to correct coordinates. Timer will cause jerky movement when lagging.
 
 	# Can test_move(...) be used to make is_locked() stop complaining? This function is server side as the player's client is the master of this node.
-	move_and_slide(mot) # This works because this move_and_slide is tied to this node (even on the other clients).
+	move_and_slide(mot, UP) # This works because this move_and_slide is tied to this node (even on the other clients).
 
 	# Load Chunks to Send to Client
 	if get_tree().is_network_server():
