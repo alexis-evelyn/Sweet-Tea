@@ -11,11 +11,15 @@ const LEFT : Vector2 = Vector2(-1, 0)
 const RIGHT : Vector2 = Vector2(1, 0)
 const DOWN : Vector2 = Vector2(0, 1)
 
-const ACCELERATION : int = 50
-#const GRAVITY : int = 20
-const MAX_SPEED : int = 200
-#const JUMP_HEIGHT : int = -500
-var friction : bool = false
+const ACCELERATION : int = 200 # Originally 50
+const GRAVITY : int = 20
+const MAX_SPEED : int = 400 # Originally 200
+const JUMP_HEIGHT : int = -500
+
+const MAX_DASH_SPEED_MULTIPLIER : Vector2 = Vector2(3.0, 3.0) # Max Dash Speeed
+const DASH_TIMEOUT : float = 1.0 # How long before allow dash again
+
+var friction : bool = false # Is player moving?
 
 var motion : Vector2 = Vector2()
 
@@ -99,24 +103,46 @@ func _physics_process(_delta: float) -> void:
 
 	if is_network_master() and not pauseMenu.is_paused():
 		if Input.is_action_pressed("move_up") and !panelChat.visible:
+			friction = false
 #			logger.superverbose("Up")
-			motion.y = max(motion.y - ACCELERATION, -MAX_SPEED)
+
+			# Action Strength is a Value Between 0 and 1.
+			# The keyboard always produces 1 when pressed.
+			# An analog joystick can produce any value.
+			# This will allow finer control when a joystick is used.
+			motion.y = max((motion.y - ACCELERATION) * Input.get_action_strength("move_up"), -MAX_SPEED)
 		elif Input.is_action_pressed("move_down") and !panelChat.visible:
+			friction = false
+
 #			logger.superverbose("Down")
-			motion.y = min(motion.y + ACCELERATION, MAX_SPEED)
+			motion.y = min((motion.y + ACCELERATION) * Input.get_action_strength("move_down"), MAX_SPEED)
 		else:
 			friction = true;
 			#$Sprite.play("Idle");
 
 		if Input.is_action_pressed("move_left") and !panelChat.visible:
+			friction = false
+
 #			logger.superverbose("Left")
-			motion.x = max(motion.x - ACCELERATION, -MAX_SPEED)
+			motion.x = max((motion.x - ACCELERATION) * Input.get_action_strength("move_left"), -MAX_SPEED)
 		elif Input.is_action_pressed("move_right") and !panelChat.visible:
+			friction = false
+
 #			logger.superverbose("Right")
-			motion.x = min(motion.x + ACCELERATION, MAX_SPEED)
+			motion.x = min((motion.x + ACCELERATION) * Input.get_action_strength("move_right"), MAX_SPEED)
 		else:
 			friction = true;
 			#$Sprite.play("Idle");
+
+		if Input.is_action_pressed("player_jump") and !panelChat.visible:
+			# Look at old project for jump code and then add in a feature for detecting how long jump is held.
+			pass
+
+		if Input.is_action_pressed("speed_boost") and !panelChat.visible:
+			# This causes it to slightly go down and right (both positive).
+			# Figure out how to make it dash.
+			motion.x = motion.x + (Input.get_action_strength("speed_boost") * MAX_DASH_SPEED_MULTIPLIER.x)
+			motion.y = motion.y + (Input.get_action_strength("speed_boost") * MAX_DASH_SPEED_MULTIPLIER.y)
 
 		if friction == true:
 			motion.x = lerp(motion.x, 0, 0.2)

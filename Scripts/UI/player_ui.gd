@@ -22,6 +22,13 @@ func _ready() -> void:
 #	pass
 
 func _input(event) -> void:
+	# This statement can run regardless if world is loaded.
+	if Input.is_action_pressed("toggle_fullscreen") and !panelChat.visible:
+			if OS.window_fullscreen:
+				OS.window_fullscreen = false
+			else:
+				OS.window_fullscreen = true
+
 	# Checks to See if connected to server (if not, just return)
 	if not get_tree().has_network_peer() or not network.connected:
 		return
@@ -44,6 +51,7 @@ func _input(event) -> void:
 		if event.get_button_index() == JOY_GUIDE: # PS Button
 			Input.start_joy_vibration(event.get_device(), 1, 1, 3)
 #			logger.debug("Device: %s" % event.get_device())
+
 	elif event is InputEventJoypadMotion:
 #		logger.debug("Pressed Joypad Axis: %s - Value (-1.0, 1.0): %s" % [event.get_axis(), event.get_axis_value()])
 		pass
