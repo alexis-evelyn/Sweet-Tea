@@ -14,7 +14,7 @@ const DOWN : Vector2 = Vector2(0, 1)
 const ACCELERATION : int = 50 # Originally 50 (Moonwalk 200)
 const GRAVITY : int = 20 # Originally 20 (Moonwalk 20)
 const MAX_SPEED : int = 200 # Originally 200 (Moonwalk 400)
-const JUMP_HEIGHT : int = -500 # Originally -500 (Moonwalk -500)
+const JUMP_HEIGHT : int = -400 # Originally -500 (Moonwalk -500)
 
 const MAX_DASH_SPEED_MULTIPLIER : Vector2 = Vector2(3.0, 3.0) # Max Dash Speeed
 const DASH_TIMEOUT : float = 1.0 # How long before allow dash again
@@ -151,20 +151,23 @@ func _physics_process(_delta: float) -> void:
 				motion.y = JUMP_HEIGHT
 
 		if Input.is_action_pressed("speed_boost") and !panelChat.visible:
-			# This causes it to slightly go down and right (both positive).
-			# Figure out how to make it dash.
 			motion.x = motion.x + (Input.get_action_strength("speed_boost") * MAX_DASH_SPEED_MULTIPLIER.x)
 			motion.y = motion.y + (Input.get_action_strength("speed_boost") * MAX_DASH_SPEED_MULTIPLIER.y)
 
 		if is_on_floor():
-			if friction == true:
+			if friction:
 				motion.x = lerp(motion.x, 0, 0.2)
 				motion.y = lerp(motion.y, 0, 0.2)
 				friction = false
-		else:
-			if friction == true:
-				motion.x = lerp(motion.x, 0, 0.05)
-				motion.y = lerp(motion.y, 0, 0.05)
+		elif gravity_enabled:
+			motion.x = lerp(motion.x, 0, 0.05)
+			motion.y = lerp(motion.y, 0, 0.05)
+			friction = false
+		elif not gravity_enabled:
+			# For When Gravity is Disabled
+			if friction:
+				motion.x = lerp(motion.x, 0, 0.2)
+				motion.y = lerp(motion.y, 0, 0.2)
 				friction = false
 
 		#if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))):
@@ -257,6 +260,12 @@ func player_camera(activated : bool = true):
 
 		# This allows me to align camera to Player
 		add_child(camera)
+
+func get_gravity_state() -> bool:
+	return self.gravity_enabled
+
+func set_gravity_state(enable_gravity: bool = true) -> void:
+	self.gravity_enabled = enable_gravity
 
 # Disable the camera when the player is despawned
 func _exit_tree() -> void:
