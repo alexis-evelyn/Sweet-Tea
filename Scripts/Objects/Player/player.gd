@@ -16,7 +16,7 @@ const GRAVITY : int = 20 # Originally 20 (Moonwalk 20)
 const MAX_SPEED : int = 200 # Originally 200 (Moonwalk 400)
 const JUMP_HEIGHT : int = -400 # Originally -500 (Moonwalk -500)
 
-const MAX_DASH_SPEED_MULTIPLIER : Vector2 = Vector2(3.0, 3.0) # Max Dash Speeed
+const MAX_DASH_SPEED_MULTIPLIER : Vector2 = Vector2(30.0, 30.0) # Max Dash Speeed
 const DASH_TIMEOUT : float = 1.0 # How long before allow dash again
 
 # Only apply friction when controls are not actively being used.
@@ -151,8 +151,7 @@ func _physics_process(_delta: float) -> void:
 				motion.y = JUMP_HEIGHT
 
 		if Input.is_action_pressed("speed_boost") and !panelChat.visible:
-			motion.x = motion.x + (Input.get_action_strength("speed_boost") * MAX_DASH_SPEED_MULTIPLIER.x)
-			motion.y = motion.y + (Input.get_action_strength("speed_boost") * MAX_DASH_SPEED_MULTIPLIER.y)
+			self.dash()
 
 		if is_on_floor():
 			if friction:
@@ -266,6 +265,12 @@ func get_gravity_state() -> bool:
 
 func set_gravity_state(enable_gravity: bool = true) -> void:
 	self.gravity_enabled = enable_gravity
+
+func dash() -> void:
+	# Dashing will be a bit complicated (as it has states and cooldown), so it gets its own function.
+
+	motion.x = motion.x + (Input.get_action_strength("speed_boost") * MAX_DASH_SPEED_MULTIPLIER.x)
+	motion.y = motion.y + (Input.get_action_strength("speed_boost") * MAX_DASH_SPEED_MULTIPLIER.y)
 
 # Disable the camera when the player is despawned
 func _exit_tree() -> void:
