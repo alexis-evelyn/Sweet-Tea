@@ -1,6 +1,9 @@
 extends Control
 class_name MainMenu
 
+var konami_max_position : int = 10 # ↑ ↑ ↓ ↓ ← → ← → ⓑ ⓐ
+var konami_position : int = 0 # Max 10.
+
 signal script_setup # Used to let mods know MainMenu has finished loading
 
 # Super Efficiency
@@ -136,6 +139,60 @@ func _on_Quit_pressed() -> void:
 	"""
 
 	main_loop_events.quit() # Quits Game
+
+func _input(event: InputEvent) -> void:
+	# Code: ↑ ↑ ↓ ↓ ← → ← → ⓑ ⓐ
+	if event.is_action_pressed("ui_up"):
+		if konami_position < 2:
+			konami_position += 1
+			logger.superverbose("Konami Up: %s" % konami_position)
+		else:
+			if not event.is_echo():
+				# If not echo, then reset position back to 1.
+				konami_position = 1
+				logger.superverbose("Konami Up Echo: %s" % konami_position)
+
+			# If is Echo, This is not reset because it is the first key to be pressed.
+	elif event.is_action_pressed("ui_down"):
+		if (konami_position >= 2) and (konami_position < 4):
+			konami_position += 1
+			logger.superverbose("Konami Down: %s" % konami_position)
+		else:
+			konami_position = 0
+	elif event.is_action_pressed("ui_left"):
+		if (konami_position == 4) or (konami_position == 6):
+			konami_position += 1
+			logger.superverbose("Konami Left: %s" % konami_position)
+		else:
+			konami_position = 0
+	elif event.is_action_pressed("ui_right"):
+		if (konami_position == 5) or (konami_position == 7):
+			konami_position += 1
+			logger.superverbose("Konami Right: %s" % konami_position)
+		else:
+			konami_position = 0
+	elif event.is_action_pressed("key_b"):
+		if (konami_position == 8):
+			konami_position += 1
+			logger.superverbose("Konami B: %s" % konami_position)
+		else:
+			konami_position = 0
+	elif event.is_action_pressed("key_a"):
+		if (konami_position == 9):
+			konami_position += 1
+			logger.superverbose("Konami A: %s" % konami_position)
+		else:
+			konami_position = 0
+
+	if konami_position == konami_max_position:
+		# Will be used to unlock advanced settings which could potentially destroy the game.
+		# Can also unlock key bindings for settings such as increasing/decreasing the timescale of the engine.
+		logger.debug("Konami Code Entered!!!")
+		get_tree().set_input_as_handled()
+
+		konami_position = 0 # Code Entered, So, Reset Code
+
+		# Unlock Advanced (Potentially Game Destroying Settings)
 
 #func _input(event: InputEvent) -> void:
 ##	get_tree().get_nodes_in_group(ui_select_group_name) # Get Nodes of Group
