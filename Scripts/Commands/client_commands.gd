@@ -463,6 +463,7 @@ func start_recording(message: PoolStringArray) -> String:
 	# Start Recording - May Do 30 Second Thing Where The Recording is Always Running.
 	return ""
 
+# warning-ignore:unused_argument
 func test_joy_vibration(message: PoolStringArray) -> String:
 	# Test Vibration of Controller
 	Input.start_joy_vibration(1, 100, 100, 10)
@@ -472,6 +473,7 @@ func test_joy_vibration(message: PoolStringArray) -> String:
 
 	return "Testing..."
 
+# warning-ignore:unused_argument
 func toggle_gravity(message: PoolStringArray) -> String:
 	var player_base : Node2D = spawn_handler.get_player_node(gamestate.net_id)
 
