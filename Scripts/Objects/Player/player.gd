@@ -19,6 +19,8 @@ const JUMP_HEIGHT : int = -400 # Originally -500 (Moonwalk -500)
 const MAX_DASH_SPEED_MULTIPLIER : Vector2 = Vector2(30.0, 30.0) # Max Dash Speeed
 const DASH_TIMEOUT : float = 1.0 # How long before allow dash again
 
+const CORRECT_COORDINATES_TIMEOUT : float = 0.05 # Execute Every Fifth of a Second (almost completely smooth and keeps laptop cool with just one client)
+
 # Only apply friction when controls are not actively being used.
 # This is meant as a way to implement a sliding stop.
 var friction : bool = false # Is player moving?
@@ -78,7 +80,7 @@ func _ready() -> void:
 
 		# Every Quarter of A Second Seems to Produce the Most Seamless Experience without Causing the Server to Catch Fire
 		# This still needs to be tested in an environment with real latency. The Wait Time Should Be Configurable.
-		correct_coordinates_timer.set_wait_time(0.05) # Execute Every Fifth of a Second (almost completely smooth and keeps laptop cool with just one client)
+		correct_coordinates_timer.set_wait_time(CORRECT_COORDINATES_TIMEOUT) # Execute Every Fifth of a Second (almost completely smooth and keeps laptop cool with just one client)
 		correct_coordinates_timer.start() # Start Timer
 	elif is_network_master() and gamestate.debug:
 		world_generator.center_chunk(self.position, true) # Allows DebugCamera to be Updated on Chunk Position
