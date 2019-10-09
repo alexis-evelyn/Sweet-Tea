@@ -24,6 +24,7 @@ const DASH_TIMEOUT : float = 1.0 # How long before allow dash again
 var friction : bool = false # Is player moving?
 var gravity_enabled : bool = true # Enable Gravity (and Disable Flying)
 
+var player_transform : Transform2D = Transform2D(0, get_position())
 var motion : Vector2 = Vector2()
 
 var player_name: String
@@ -150,9 +151,6 @@ func _physics_process(_delta: float) -> void:
 				# Fix this!!!
 				motion.y = JUMP_HEIGHT
 
-		if Input.is_action_pressed("speed_boost") and !panelChat.visible:
-			self.dash()
-
 		if is_on_floor():
 			if friction:
 				motion.x = lerp(motion.x, 0, 0.2)
@@ -201,9 +199,11 @@ puppet func move_player(mot: Vector2) -> void:
 	# This error is heavily dependent on how smoothly the client can move (the faster the timer ends on correcting coordinates, the less of this error that will show up when a player decides to change to the opposite direction all of a sudden).
 	# I think this error is a movement check (making sure the KinematicBody2d is not stuck). Hence, why it triggers on move_and_slide(...). It fails the space locked test in body_test_ray_separation of Godot's physics engine code.
 	# Adjust timer to your needs. The faster the timer, the smoother the player movement on client side. The slower the timer, the less processing power the server needs to correct coordinates. Timer will cause jerky movement when lagging.
+	player_transform = Transform2D(0, get_position())
 
 	# Can test_move(...) be used to make is_locked() stop complaining? This function is server side as the player's client is the master of this node.
-	move_and_slide(mot, UP) # This works because this move_and_slide is tied to this node (even on the other clients).
+	if test_move(player_transform, mot):
+		move_and_slide(mot) # This works because this move_and_slide is tied to this node (even on the other clients).
 
 	# Load Chunks to Send to Client
 	if get_tree().is_network_server():
@@ -265,12 +265,6 @@ func get_gravity_state() -> bool:
 
 func set_gravity_state(enable_gravity: bool = true) -> void:
 	self.gravity_enabled = enable_gravity
-
-func dash() -> void:
-	# Dashing will be a bit complicated (as it has states and cooldown), so it gets its own function.
-
-	motion.x = motion.x + (Input.get_action_strength("speed_boost") * MAX_DASH_SPEED_MULTIPLIER.x)
-	motion.y = motion.y + (Input.get_action_strength("speed_boost") * MAX_DASH_SPEED_MULTIPLIER.y)
 
 # Disable the camera when the player is despawned
 func _exit_tree() -> void:
