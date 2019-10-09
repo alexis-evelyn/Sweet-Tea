@@ -26,6 +26,9 @@ func _input(event) -> void:
 	if not get_tree().has_network_peer() or not network.connected:
 		return
 
+	if not main_loop_events.game_is_focused:
+		return
+
 	if event is InputEventJoypadButton:
 		logger.debug("Pressed Joypad Button: %s - Pressure (If Applicable): %s" % [Input.get_joy_button_string(event.get_button_index()), event.get_pressure()])
 #		logger.debug("Pressed Joypad Button: %s - Pressure (If Applicable): %s" % [event.get_button_index(), event.get_pressure()])

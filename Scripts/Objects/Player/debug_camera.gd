@@ -65,6 +65,7 @@ func _ready() -> void:
 	update_crosshair_pos()
 	update_camera_pos_label()
 	update_battery_label()
+	update_player_pos_label()
 
 func screen_size_changed() -> void:
 	# If camera is in same spot as player, then make sure it stays in that position.
@@ -86,6 +87,9 @@ func _physics_process(_delta: float) -> void:
 	update_physics_fps_label()
 
 	if pauseMenu.is_paused():
+		return
+
+	if not main_loop_events.game_is_focused:
 		return
 
 	if Input.is_action_pressed("debug_up") and !panelChat.visible:

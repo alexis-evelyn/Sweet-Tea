@@ -105,6 +105,9 @@ func _physics_process(_delta: float) -> void:
 	if not get_tree().has_network_peer():
 		return # Should Be Connected Here
 
+	if not main_loop_events.game_is_focused:
+		return
+
 	if gravity_enabled and not is_on_floor():
 		motion.y += GRAVITY
 #		move_and_slide(Vector2(0, GRAVITY), UP)

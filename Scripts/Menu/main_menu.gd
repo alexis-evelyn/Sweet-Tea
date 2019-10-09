@@ -141,6 +141,9 @@ func _on_Quit_pressed() -> void:
 	main_loop_events.quit() # Quits Game
 
 func _input(event: InputEvent) -> void:
+	if not main_loop_events.game_is_focused:
+		return
+
 	# Code: ↑ ↑ ↓ ↓ ← → ← → ⓑ ⓐ
 	if event.is_action_pressed("ui_up"):
 		if konami_position < 2:

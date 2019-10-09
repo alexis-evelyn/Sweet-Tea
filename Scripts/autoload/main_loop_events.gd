@@ -11,6 +11,8 @@ var theme : Theme # Get Game's Theme
 var default_font : DynamicFont # Get Default Font
 var default_font_size : int # Default Font Size
 
+var game_is_focused : bool = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	theme = gamestate.game_theme # Get Game's Theme
@@ -88,6 +90,10 @@ func _notification(what: int) -> void:
 			quit(397) # Sets Exit Code to 397 to indicate to script game has crashed. I may add more codes and an enum to identify what type of crash it is (if it is something unavoidable, like the system is broken, etc...)
 		MainLoop.NOTIFICATION_WM_ABOUT:
 			about_game()
+		MainLoop.NOTIFICATION_WM_FOCUS_IN:
+			game_is_focused = true
+		MainLoop.NOTIFICATION_WM_FOCUS_OUT:
+			game_is_focused = false
 		_: # Default Result - Put at Bottom of Match Results
 			pass
 

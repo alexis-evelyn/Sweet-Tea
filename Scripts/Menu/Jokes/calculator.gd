@@ -50,6 +50,9 @@ func _button_pressed(button: Button) -> void:
 
 # Handle Keyboard and Mouse Input
 func _input(event) -> void:
+	if not main_loop_events.game_is_focused:
+		return
+
 	if event is InputEventMouseButton:
 		set_focus_mode(Control.FOCUS_ALL)
 

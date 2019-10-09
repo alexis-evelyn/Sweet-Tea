@@ -107,6 +107,9 @@ master func chat_message_server(message: String) -> int:
 
 # Send Chat To Server
 func _on_userChat_gui_input(event) -> void:
+	if not main_loop_events.game_is_focused:
+		return
+
 	if event is InputEventKey and not just_opened:
 		if event.is_action_pressed("chat_send") and chatInput.text.rstrip(" ").lstrip(" ") != "":
 			get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
