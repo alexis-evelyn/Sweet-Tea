@@ -105,7 +105,7 @@ func _physics_process(_delta: float) -> void:
 	if not get_tree().has_network_peer():
 		return # Should Be Connected Here
 
-	if gravity_enabled:
+	if gravity_enabled and not is_on_floor():
 		motion.y += GRAVITY
 #		move_and_slide(Vector2(0, GRAVITY), UP)
 
@@ -199,11 +199,12 @@ puppet func move_player(mot: Vector2) -> void:
 	# This error is heavily dependent on how smoothly the client can move (the faster the timer ends on correcting coordinates, the less of this error that will show up when a player decides to change to the opposite direction all of a sudden).
 	# I think this error is a movement check (making sure the KinematicBody2d is not stuck). Hence, why it triggers on move_and_slide(...). It fails the space locked test in body_test_ray_separation of Godot's physics engine code.
 	# Adjust timer to your needs. The faster the timer, the smoother the player movement on client side. The slower the timer, the less processing power the server needs to correct coordinates. Timer will cause jerky movement when lagging.
-	player_transform = Transform2D(0, get_position())
+#	player_transform = Transform2D(get_rotation(), get_position())
 
 	# Can test_move(...) be used to make is_locked() stop complaining? This function is server side as the player's client is the master of this node.
-	if test_move(player_transform, mot):
-		move_and_slide(mot) # This works because this move_and_slide is tied to this node (even on the other clients).
+	# Yes, test move can severely limit is_locked(), but it causes new problems.
+#	if test_move(player_transform, mot):
+	move_and_slide(mot) # This works because this move_and_slide is tied to this node (even on the other clients).
 
 	# Load Chunks to Send to Client
 	if get_tree().is_network_server():
