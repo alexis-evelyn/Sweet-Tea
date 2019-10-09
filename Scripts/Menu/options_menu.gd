@@ -4,25 +4,43 @@ class_name OptionsMenu
 # Declare member variables here. Examples:
 
 # Option Labels
+# warning-ignore:unused_class_variable
 onready var locale_label : RichTextLabel = $Scroll/Center/Options/Locale/lblLocale
+# warning-ignore:unused_class_variable
 onready var keyboard_config_label : RichTextLabel = $Scroll/Center/Options/KeyboardConfig/lblKeyboardConfig
+# warning-ignore:unused_class_variable
 onready var keyboard_button : Button = $Scroll/Center/Options/KeyboardConfig/btnKeyboardConfig
+# warning-ignore:unused_class_variable
 onready var fullscreen_label : RichTextLabel = $Scroll/Center/Options/Fullscreen/lblFullscreen
+# warning-ignore:unused_class_variable
 onready var window_size_label : RichTextLabel = $Scroll/Center/Options/WindowSize/lblWindowSize
+# warning-ignore:unused_class_variable
 onready var vsync_label : RichTextLabel = $Scroll/Center/Options/VSync/lblVSync
+# warning-ignore:unused_class_variable
 onready var fps_label : RichTextLabel = $Scroll/Center/Options/Fullscreen/lblFullscreen
+# warning-ignore:unused_class_variable
 onready var shader_usage_label : RichTextLabel = $Scroll/Center/Options/ShaderUsage/lblShaderUsage
+# warning-ignore:unused_class_variable
 onready var music_volume_label : RichTextLabel = $Scroll/Center/Options/MusicVolume/lblMusicVolume
+# warning-ignore:unused_class_variable
 onready var sound_volume_label : RichTextLabel = $Scroll/Center/Options/SoundVolume/lblSoundVolume
+# warning-ignore:unused_class_variable
 onready var lpum_label : RichTextLabel = $Scroll/Center/Options/LPUM/lblLPUM
+# warning-ignore:unused_class_variable
 onready var physics_fps_label : RichTextLabel = $Scroll/Center/Options/PhysicsFPS/lblPhysicsFPS
+# warning-ignore:unused_class_variable
 onready var physics_jitter_fix_label : RichTextLabel = $Scroll/Center/Options/PhysicsFPS/lblPhysicsFPS
+# warning-ignore:unused_class_variable
 onready var timescale_label : RichTextLabel = $Scroll/Center/Options/TimeScale/lblSelectedTimeScale
 
 # Category Labels
+# warning-ignore:unused_class_variable
 onready var controls_label : RichTextLabel = $Scroll/Center/Options/lblControls
+# warning-ignore:unused_class_variable
 onready var video_label : RichTextLabel = $Scroll/Center/Options/lblVideo
+# warning-ignore:unused_class_variable
 onready var audio_label : RichTextLabel = $Scroll/Center/Options/lblAudio
+# warning-ignore:unused_class_variable
 onready var advanced_setting_label : RichTextLabel = $Scroll/Center/Options/lblAdvancedSetting
 
 # Option Values
@@ -131,6 +149,7 @@ func open_keyboard_config_pressed() -> void:
 func fullscreen_toggled(button_pressed: bool) -> void:
 	OS.window_fullscreen = button_pressed
 
+# warning-ignore:unused_argument
 func window_size_changed(value: float) -> void:
 	pass # Replace with function body.
 
@@ -149,9 +168,11 @@ func shader_usage_left_pressed() -> void:
 func shader_usage_right_pressed() -> void:
 	pass # Replace with function body.
 
+# warning-ignore:unused_argument
 func music_volume_changed(value: float) -> void:
 	pass # Replace with function body.
 
+# warning-ignore:unused_argument
 func sound_volume_changed(value: float) -> void:
 	pass # Replace with function body.
 

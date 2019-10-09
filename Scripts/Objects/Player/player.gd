@@ -105,15 +105,15 @@ func _physics_process(_delta: float) -> void:
 	if not get_tree().has_network_peer():
 		return # Should Be Connected Here
 
-	if not main_loop_events.game_is_focused:
-		return
-
 	if gravity_enabled and not is_on_floor():
 		motion.y += GRAVITY
 #		move_and_slide(Vector2(0, GRAVITY), UP)
 
-	if is_network_master() and not pauseMenu.is_paused():
-		if Input.is_action_pressed("move_up") and !panelChat.visible:
+	if not main_loop_events.game_is_focused:
+		return
+
+	if is_network_master() and (not pauseMenu.is_paused() or pauseMenu.is_open_to_lan):
+		if Input.is_action_pressed("move_up") and !panelChat.visible and not pauseMenu.is_paused():
 			if not gravity_enabled:
 				friction = false
 #				logger.superverbose("Up")
@@ -123,7 +123,7 @@ func _physics_process(_delta: float) -> void:
 				# An analog joystick can produce any value.
 				# This will allow finer control when a joystick is used.
 				motion.y = max((motion.y - ACCELERATION) * Input.get_action_strength("move_up"), -MAX_SPEED)
-		elif Input.is_action_pressed("move_down") and !panelChat.visible:
+		elif Input.is_action_pressed("move_down") and !panelChat.visible and not pauseMenu.is_paused():
 			if not gravity_enabled:
 				friction = false
 
@@ -133,12 +133,12 @@ func _physics_process(_delta: float) -> void:
 			friction = true;
 			#$Sprite.play("Idle");
 
-		if Input.is_action_pressed("move_left") and !panelChat.visible:
+		if Input.is_action_pressed("move_left") and !panelChat.visible and not pauseMenu.is_paused():
 			friction = false
 
 #			logger.superverbose("Left")
 			motion.x = max((motion.x - ACCELERATION) * Input.get_action_strength("move_left"), -MAX_SPEED)
-		elif Input.is_action_pressed("move_right") and !panelChat.visible:
+		elif Input.is_action_pressed("move_right") and !panelChat.visible and not pauseMenu.is_paused():
 			friction = false
 
 #			logger.superverbose("Right")
@@ -147,7 +147,7 @@ func _physics_process(_delta: float) -> void:
 			friction = true;
 			#$Sprite.play("Idle");
 
-		if Input.is_action_pressed("player_jump") and !panelChat.visible:
+		if Input.is_action_pressed("player_jump") and !panelChat.visible and not pauseMenu.is_paused():
 			# Look at old project for jump code and then add in a feature for detecting how long jump is held.
 			if is_on_floor() and gravity_enabled:
 				# Why does the jump height get exponentially higher when moving left or right?
