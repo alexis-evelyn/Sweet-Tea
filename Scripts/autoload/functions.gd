@@ -5,6 +5,20 @@ enum attention_reason {
 	private_message = 0
 }
 
+# To make it easier to check the host system type
+enum host_system {
+	unknown = -1,
+	android = 0,
+	haiku = 1,
+	iOS = 2,
+	html5 = 3,
+	OSX = 4,
+	Server = 5,
+	Windows = 6,
+	UWP = 7,
+	X11 = 8
+}
+
 # get_class() - https://godotengine.org/qa/46057/how-to-get-the-class-name-of-a-custom-node?show=46059#a46059
 
 # Declare member variables here. Examples:
@@ -313,6 +327,30 @@ func parse_for_unicode(string: String) -> String:
 		joined_chars += char(unicode_int)
 
 	return joined_chars
+
+# Used for Tracking What Host System We Are Running On
+func get_system() -> int:
+	match OS.get_name():
+		"Android":
+			return host_system.android
+		"Haiku":
+			return host_system.haiku
+		"iOS":
+			return host_system.iOS
+		"HTML5":
+			return host_system.html5
+		"OSX":
+			return host_system.OSX
+		"Server":
+			return host_system.Server
+		"Windows":
+			return host_system.Windows
+		"UWP":
+			return host_system.UWP
+		"X11":
+			return host_system.X11
+		_:
+			return host_system.unknown
 
 func get_class() -> String:
 	return "Functions"
