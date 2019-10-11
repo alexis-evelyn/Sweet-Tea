@@ -506,13 +506,37 @@ func toggle_debug_mode(message: PoolStringArray) -> String:
 
 	if gamestate.debug:
 		player.debug_camera(true) # Activates Debug Camera
-		# Should I Change World Tileset?
+
+		var worlds : Node = get_tree().get_root().get_node_or_null("Worlds")
+		var world_generator : TileMap
+
+		if worlds == null:
+			return "Missing Worlds"
+
+		for world in worlds.get_children():
+			world_generator = spawn_handler.get_world_generator_node(world.name)
+			world_generator.tile_set = world_generator.debug_tileset
+			world_generator.background_tilemap.tile_set = world_generator.debug_tileset_background
+			world_generator.set_shader_background_tiles()
+
 		# Should I Save Character's New Debug Mode State
 
 		return tr("toggle_debug_mode_command_on")
 	else:
 		player.player_camera(true) # Activates Regular Camera
-		# Should I Change World Tileset?
+
+		var worlds : Node = get_tree().get_root().get_node_or_null("Worlds")
+		var world_generator : TileMap
+
+		if worlds == null:
+			return "Missing Worlds"
+
+		for world in worlds.get_children():
+			world_generator = spawn_handler.get_world_generator_node(world.name)
+			world_generator.tile_set = world_generator.default_tileset
+			world_generator.background_tilemap.tile_set = world_generator.default_tileset_background
+			world_generator.set_shader_background_tiles()
+
 		# Should I Save Character's New Debug Mode State
 
 		return tr("toggle_debug_mode_command_off")
