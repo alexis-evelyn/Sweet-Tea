@@ -51,9 +51,15 @@ __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Locale" type="HBoxContainer" parent="Scroll/Center/Options"]
+[node name="btnBack" type="Button" parent="Scroll/Center/Options"]
 margin_right = 1904.0
-margin_bottom = 54.0
+margin_bottom = 37.0
+text = "Back"
+
+[node name="Locale" type="HBoxContainer" parent="Scroll/Center/Options"]
+margin_top = 47.0
+margin_right = 1904.0
+margin_bottom = 94.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -62,7 +68,7 @@ __meta__ = {
 
 [node name="lblLocale" type="RichTextLabel" parent="Scroll/Center/Options/Locale"]
 margin_right = 470.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
@@ -73,7 +79,7 @@ scroll_active = false
 [node name="btnLeft" type="TextureButton" parent="Scroll/Center/Options/Locale"]
 margin_left = 478.0
 margin_right = 948.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -83,7 +89,7 @@ __meta__ = {
 [node name="lblSelectedLocale" type="RichTextLabel" parent="Scroll/Center/Options/Locale"]
 margin_left = 956.0
 margin_right = 1426.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Selected Locale..."
@@ -92,7 +98,7 @@ scroll_active = false
 [node name="btnRight" type="TextureButton" parent="Scroll/Center/Options/Locale"]
 margin_left = 1434.0
 margin_right = 1904.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -100,9 +106,9 @@ __meta__ = {
 }
 
 [node name="lblControls" type="RichTextLabel" parent="Scroll/Center/Options"]
-margin_top = 64.0
+margin_top = 104.0
 margin_right = 1904.0
-margin_bottom = 118.0
+margin_bottom = 151.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_colors/default_color = Color( 0.313726, 1, 0, 1 )
@@ -113,9 +119,9 @@ __meta__ = {
 }
 
 [node name="KeyboardConfig" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 128.0
+margin_top = 161.0
 margin_right = 1904.0
-margin_bottom = 182.0
+margin_bottom = 208.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -124,7 +130,7 @@ __meta__ = {
 
 [node name="lblKeyboardConfig" type="RichTextLabel" parent="Scroll/Center/Options/KeyboardConfig"]
 margin_right = 948.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Keyboard Config"
@@ -133,14 +139,39 @@ scroll_active = false
 [node name="btnKeyboardConfig" type="Button" parent="Scroll/Center/Options/KeyboardConfig"]
 margin_left = 956.0
 margin_right = 1904.0
-margin_bottom = 54.0
+margin_bottom = 47.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="JoypadConfig" type="HBoxContainer" parent="Scroll/Center/Options"]
+margin_top = 218.0
+margin_right = 1904.0
+margin_bottom = 265.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lblJoypadConfig" type="RichTextLabel" parent="Scroll/Center/Options/JoypadConfig"]
+margin_right = 948.0
+margin_bottom = 47.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Joypad Config"
+scroll_active = false
+
+[node name="btnJoypadConfig" type="Button" parent="Scroll/Center/Options/JoypadConfig"]
+margin_left = 956.0
+margin_right = 1904.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="lblVideo" type="RichTextLabel" parent="Scroll/Center/Options"]
-margin_top = 192.0
+margin_top = 275.0
 margin_right = 1904.0
-margin_bottom = 246.0
+margin_bottom = 322.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_colors/default_color = Color( 0.313726, 1, 0, 1 )
@@ -151,9 +182,9 @@ __meta__ = {
 }
 
 [node name="Fullscreen" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 256.0
+margin_top = 332.0
 margin_right = 1904.0
-margin_bottom = 310.0
+margin_bottom = 380.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -162,7 +193,7 @@ __meta__ = {
 
 [node name="lblFullscreen" type="RichTextLabel" parent="Scroll/Center/Options/Fullscreen"]
 margin_right = 948.0
-margin_bottom = 54.0
+margin_bottom = 48.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Full Screen"
@@ -174,20 +205,20 @@ __meta__ = {
 [node name="ckbFullscreen" type="CheckBox" parent="Scroll/Center/Options/Fullscreen"]
 margin_left = 956.0
 margin_right = 1904.0
-margin_bottom = 54.0
+margin_bottom = 48.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="WindowSize" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 320.0
+margin_top = 390.0
 margin_right = 1904.0
-margin_bottom = 374.0
+margin_bottom = 437.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="lblWindowSize" type="RichTextLabel" parent="Scroll/Center/Options/WindowSize"]
 margin_right = 948.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Window Size"
@@ -199,14 +230,14 @@ __meta__ = {
 [node name="sldWindowSize" type="HSlider" parent="Scroll/Center/Options/WindowSize"]
 margin_left = 956.0
 margin_right = 1904.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VSync" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 384.0
+margin_top = 447.0
 margin_right = 1904.0
-margin_bottom = 438.0
+margin_bottom = 495.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -215,7 +246,7 @@ __meta__ = {
 
 [node name="lblVSync" type="RichTextLabel" parent="Scroll/Center/Options/VSync"]
 margin_right = 948.0
-margin_bottom = 54.0
+margin_bottom = 48.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Vertical Sync"
@@ -227,20 +258,20 @@ __meta__ = {
 [node name="ckbVSync" type="CheckBox" parent="Scroll/Center/Options/VSync"]
 margin_left = 956.0
 margin_right = 1904.0
-margin_bottom = 54.0
+margin_bottom = 48.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="FPS" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 448.0
+margin_top = 505.0
 margin_right = 1904.0
-margin_bottom = 502.0
+margin_bottom = 552.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="lblFPS" type="RichTextLabel" parent="Scroll/Center/Options/FPS"]
 margin_right = 470.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "FPS"
@@ -249,7 +280,7 @@ scroll_active = false
 [node name="btnLeft" type="TextureButton" parent="Scroll/Center/Options/FPS"]
 margin_left = 478.0
 margin_right = 948.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -259,7 +290,7 @@ __meta__ = {
 [node name="lblSelectedFPS" type="RichTextLabel" parent="Scroll/Center/Options/FPS"]
 margin_left = 956.0
 margin_right = 1426.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Selected FPS..."
@@ -268,7 +299,7 @@ scroll_active = false
 [node name="btnRight" type="TextureButton" parent="Scroll/Center/Options/FPS"]
 margin_left = 1434.0
 margin_right = 1904.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -276,15 +307,15 @@ __meta__ = {
 }
 
 [node name="ShaderUsage" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 512.0
+margin_top = 562.0
 margin_right = 1904.0
-margin_bottom = 566.0
+margin_bottom = 609.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="lblShaderUsage" type="RichTextLabel" parent="Scroll/Center/Options/ShaderUsage"]
 margin_right = 470.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Shader Usage?"
@@ -293,7 +324,7 @@ scroll_active = false
 [node name="btnLeft" type="TextureButton" parent="Scroll/Center/Options/ShaderUsage"]
 margin_left = 478.0
 margin_right = 948.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -303,7 +334,7 @@ __meta__ = {
 [node name="lblSelectedShaderUsage" type="RichTextLabel" parent="Scroll/Center/Options/ShaderUsage"]
 margin_left = 956.0
 margin_right = 1426.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Selected Shader Usage..."
@@ -312,7 +343,7 @@ scroll_active = false
 [node name="btnRight" type="TextureButton" parent="Scroll/Center/Options/ShaderUsage"]
 margin_left = 1434.0
 margin_right = 1904.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -320,9 +351,9 @@ __meta__ = {
 }
 
 [node name="lblAudio" type="RichTextLabel" parent="Scroll/Center/Options"]
-margin_top = 576.0
+margin_top = 619.0
 margin_right = 1904.0
-margin_bottom = 630.0
+margin_bottom = 666.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_colors/default_color = Color( 0.313726, 1, 0, 1 )
@@ -333,9 +364,9 @@ __meta__ = {
 }
 
 [node name="MusicVolume" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 640.0
+margin_top = 676.0
 margin_right = 1904.0
-margin_bottom = 694.0
+margin_bottom = 723.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -344,7 +375,7 @@ __meta__ = {
 
 [node name="lblMusicVolume" type="RichTextLabel" parent="Scroll/Center/Options/MusicVolume"]
 margin_right = 948.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Music Volume"
@@ -356,20 +387,20 @@ __meta__ = {
 [node name="sldMusicVolume" type="HSlider" parent="Scroll/Center/Options/MusicVolume"]
 margin_left = 956.0
 margin_right = 1904.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="SoundVolume" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 704.0
+margin_top = 733.0
 margin_right = 1904.0
-margin_bottom = 758.0
+margin_bottom = 780.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="lblSoundVolume" type="RichTextLabel" parent="Scroll/Center/Options/SoundVolume"]
 margin_right = 948.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Sound Volume"
@@ -381,14 +412,14 @@ __meta__ = {
 [node name="sldSoundVolume" type="HSlider" parent="Scroll/Center/Options/SoundVolume"]
 margin_left = 956.0
 margin_right = 1904.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="lblAdvancedSetting" type="RichTextLabel" parent="Scroll/Center/Options"]
-margin_top = 768.0
+margin_top = 790.0
 margin_right = 1904.0
-margin_bottom = 822.0
+margin_bottom = 837.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_colors/default_color = Color( 0.313726, 1, 0, 1 )
@@ -399,15 +430,15 @@ __meta__ = {
 }
 
 [node name="LPUM" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 832.0
+margin_top = 847.0
 margin_right = 1904.0
-margin_bottom = 886.0
+margin_bottom = 895.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="lblLPUM" type="RichTextLabel" parent="Scroll/Center/Options/LPUM"]
 margin_right = 948.0
-margin_bottom = 54.0
+margin_bottom = 48.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Low Process Usage Mode"
@@ -419,20 +450,20 @@ __meta__ = {
 [node name="ckbLPUM" type="CheckBox" parent="Scroll/Center/Options/LPUM"]
 margin_left = 956.0
 margin_right = 1904.0
-margin_bottom = 54.0
+margin_bottom = 48.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="PhysicsFPS" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 896.0
+margin_top = 905.0
 margin_right = 1904.0
-margin_bottom = 950.0
+margin_bottom = 952.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="lblPhysicsFPS" type="RichTextLabel" parent="Scroll/Center/Options/PhysicsFPS"]
 margin_right = 470.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Physics FPS"
@@ -441,7 +472,7 @@ scroll_active = false
 [node name="btnLeft" type="TextureButton" parent="Scroll/Center/Options/PhysicsFPS"]
 margin_left = 478.0
 margin_right = 948.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -451,7 +482,7 @@ __meta__ = {
 [node name="lblSelectedPhysicsFPS" type="RichTextLabel" parent="Scroll/Center/Options/PhysicsFPS"]
 margin_left = 956.0
 margin_right = 1426.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Selected FPS..."
@@ -460,7 +491,7 @@ scroll_active = false
 [node name="btnRight" type="TextureButton" parent="Scroll/Center/Options/PhysicsFPS"]
 margin_left = 1434.0
 margin_right = 1904.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -468,9 +499,9 @@ __meta__ = {
 }
 
 [node name="PhysicsJitterFix" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 960.0
+margin_top = 962.0
 margin_right = 1904.0
-margin_bottom = 1014.0
+margin_bottom = 1009.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -479,7 +510,7 @@ __meta__ = {
 
 [node name="lblPhysicsJitterFix" type="RichTextLabel" parent="Scroll/Center/Options/PhysicsJitterFix"]
 margin_right = 470.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Physics Jitter Fix"
@@ -488,7 +519,7 @@ scroll_active = false
 [node name="btnLeft" type="TextureButton" parent="Scroll/Center/Options/PhysicsJitterFix"]
 margin_left = 478.0
 margin_right = 948.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -498,7 +529,7 @@ __meta__ = {
 [node name="lblSelectedJitterPhysicsFix" type="RichTextLabel" parent="Scroll/Center/Options/PhysicsJitterFix"]
 margin_left = 956.0
 margin_right = 1426.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Physics Jitter Fix..."
@@ -507,7 +538,7 @@ scroll_active = false
 [node name="btnRight" type="TextureButton" parent="Scroll/Center/Options/PhysicsJitterFix"]
 margin_left = 1434.0
 margin_right = 1904.0
-margin_bottom = 54.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -515,7 +546,7 @@ __meta__ = {
 }
 
 [node name="TimeScale" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 1024.0
+margin_top = 1019.0
 margin_right = 1904.0
 margin_bottom = 1080.0
 size_flags_horizontal = 3
@@ -523,7 +554,7 @@ size_flags_vertical = 3
 
 [node name="lblTimeScale" type="RichTextLabel" parent="Scroll/Center/Options/TimeScale"]
 margin_right = 470.0
-margin_bottom = 56.0
+margin_bottom = 61.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Engine's Time Scale"
@@ -532,7 +563,7 @@ scroll_active = false
 [node name="btnLeft" type="TextureButton" parent="Scroll/Center/Options/TimeScale"]
 margin_left = 478.0
 margin_right = 948.0
-margin_bottom = 56.0
+margin_bottom = 61.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -542,7 +573,7 @@ __meta__ = {
 [node name="lblSelectedTimeScale" type="RichTextLabel" parent="Scroll/Center/Options/TimeScale"]
 margin_left = 956.0
 margin_right = 1426.0
-margin_bottom = 56.0
+margin_bottom = 61.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Time Scale..."
@@ -551,7 +582,7 @@ scroll_active = false
 [node name="btnRight" type="TextureButton" parent="Scroll/Center/Options/TimeScale"]
 margin_left = 1434.0
 margin_right = 1904.0
-margin_bottom = 56.0
+margin_bottom = 61.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -564,9 +595,11 @@ margin_left = 960.0
 margin_right = 1912.0
 margin_bottom = 1080.0
 size_flags_horizontal = 3
+[connection signal="pressed" from="Scroll/Center/Options/btnBack" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="Scroll/Center/Options/Locale/btnLeft" to="." method="locale_left_pressed"]
 [connection signal="pressed" from="Scroll/Center/Options/Locale/btnRight" to="." method="locale_right_pressed"]
 [connection signal="pressed" from="Scroll/Center/Options/KeyboardConfig/btnKeyboardConfig" to="." method="open_keyboard_config_pressed"]
+[connection signal="pressed" from="Scroll/Center/Options/JoypadConfig/btnJoypadConfig" to="." method="open_joypad_config_pressed"]
 [connection signal="toggled" from="Scroll/Center/Options/Fullscreen/ckbFullscreen" to="." method="fullscreen_toggled"]
 [connection signal="value_changed" from="Scroll/Center/Options/WindowSize/sldWindowSize" to="." method="window_size_changed"]
 [connection signal="toggled" from="Scroll/Center/Options/VSync/ckbVSync" to="." method="vsync_toggled"]

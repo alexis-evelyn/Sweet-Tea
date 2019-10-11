@@ -5,11 +5,17 @@ class_name OptionsMenu
 
 # Option Labels
 # warning-ignore:unused_class_variable
+onready var back_button : Button = $Scroll/Center/Options/btnBack
+# warning-ignore:unused_class_variable
 onready var locale_label : RichTextLabel = $Scroll/Center/Options/Locale/lblLocale
 # warning-ignore:unused_class_variable
 onready var keyboard_config_label : RichTextLabel = $Scroll/Center/Options/KeyboardConfig/lblKeyboardConfig
 # warning-ignore:unused_class_variable
 onready var keyboard_button : Button = $Scroll/Center/Options/KeyboardConfig/btnKeyboardConfig
+# warning-ignore:unused_class_variable
+onready var joypad_config_label : RichTextLabel = $Scroll/Center/Options/JoypadConfig/lblJoypadConfig
+# warning-ignore:unused_class_variable
+onready var joypad_button : Button = $Scroll/Center/Options/JoypadConfig/btnJoypadConfig
 # warning-ignore:unused_class_variable
 onready var fullscreen_label : RichTextLabel = $Scroll/Center/Options/Fullscreen/lblFullscreen
 # warning-ignore:unused_class_variable
@@ -89,6 +95,9 @@ func _ready():
 
 	set_theme(gamestate.game_theme)
 
+func _on_back_pressed() -> void:
+	self.queue_free()
+
 func translate_labels_to_locale() -> void:
 	"""
 		...
@@ -144,6 +153,9 @@ func locale_right_pressed() -> void:
 	pass # Replace with function body.
 
 func open_keyboard_config_pressed() -> void:
+	pass # Replace with function body.
+
+func open_joypad_config_pressed() -> void:
 	pass # Replace with function body.
 
 func fullscreen_toggled(button_pressed: bool) -> void:
