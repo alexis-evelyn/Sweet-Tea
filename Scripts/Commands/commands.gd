@@ -43,6 +43,7 @@ var supported_commands : Dictionary = {
 	"tp": {"description": "help_tp_desc", "permission": permission_level.op},
 	"seed": {"description": "help_seed_desc", "permission": permission_level.server_owner},
 	"servertime": {"description": "help_servertime_desc", "permission": permission_level.player},
+	"gravity": {"description": "help_gravity_desc", "permission": permission_level.op},
 
 	# These are the essentially same command
 	"msg": {"description": "help_msg_desc", "permission": permission_level.player},
@@ -126,6 +127,8 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 			return private_message(net_id, message)
 		"servertime":
 			return get_server_time(net_id, message)
+		"gravity":
+			return toggle_gravity(net_id, message)
 		_: # Default Result - Put at Bottom of Match Results
 			if command == "":
 				return ""
@@ -706,6 +709,46 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 
 		return functions.get_translation("teleport_command_success", player_registrar.players[net_id].locale) % [coordinates.x, coordinates.y]
 	return functions.get_translation("teleport_command_no_permission", player_registrar.players[net_id].locale)
+
+# warning-ignore:unused_argument
+func toggle_gravity(net_id: int, message: PoolStringArray) -> String:
+	"""
+		Toggle Player's Gravity
+
+		Not Meant to Be Called Directly
+	"""
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
+	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
+
+	if check_permission(players_permission_level, command_permission_level):
+		var player_base : Node2D = spawn_handler.get_player_node(net_id)
+
+		if player_base == null:
+			return functions.get_translation("toggle_gravity_command_missing_player_base", player_registrar.players[net_id].locale)
+
+		var player : Player = player_base.get_node_or_null("KinematicBody2D")
+
+		if player == null:
+			return functions.get_translation("toggle_gravity_command_missing_player_body", player_registrar.players[net_id].locale)
+
+		if player.get_gravity_state():
+			player.set_gravity_state(false)
+
+			if net_id != gamestate.net_id:
+				player.rpc_unreliable_id(net_id, "set_gravity_state", false) # If Player is Not Self, then Send to Client
+
+			return functions.get_translation("toggle_gravity_command_success_off", player_registrar.players[net_id].locale)
+		else:
+			player.set_gravity_state(true)
+
+			if net_id != gamestate.net_id:
+				player.rpc_unreliable_id(net_id, "set_gravity_state", true) # If Player is Not Self, then Send to Client
+
+			return functions.get_translation("toggle_gravity_command_success_on", player_registrar.players[net_id].locale)
+
+	return functions.get_translation("toggle_gravity_command_no_permission", player_registrar.players[net_id].locale)
 
 func get_class() -> String:
 	return "ServerCommands"

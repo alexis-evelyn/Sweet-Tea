@@ -15,6 +15,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return open_calculator(message)
 		"server_ip":
 			return server_ip(message)
+		"serverip":
+			return server_ip(message)
 		"cam":
 			return teleport_camera(message)
 		"shaderinfo":
@@ -33,8 +35,6 @@ func process_commands(message: PoolStringArray) -> String:
 			return set_debug_collisions(message)
 		"testvibration":
 			return test_joy_vibration(message)
-		"gravity":
-			return toggle_gravity(message)
 		_:
 			return ""
 
@@ -472,25 +472,6 @@ func test_joy_vibration(message: PoolStringArray) -> String:
 		print(controller)
 
 	return "Testing..."
-
-# warning-ignore:unused_argument
-func toggle_gravity(message: PoolStringArray) -> String:
-	var player_base : Node2D = spawn_handler.get_player_node(gamestate.net_id)
-
-	if player_base == null:
-		return tr("toggle_gravity_command_missing_player_base")
-
-	var player : Player = player_base.get_node_or_null("KinematicBody2D")
-
-	if player == null:
-		return tr("toggle_gravity_command_missing_player_body")
-
-	if player.get_gravity_state():
-		player.set_gravity_state(false)
-		return tr("toggle_gravity_command_success_off")
-	else:
-		player.set_gravity_state(true)
-		return tr("toggle_gravity_command_success_on")
 
 func get_class() -> String:
 	return "ClientCommands"

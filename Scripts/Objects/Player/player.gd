@@ -269,7 +269,7 @@ func player_camera(activated : bool = true):
 func get_gravity_state() -> bool:
 	return self.gravity_enabled
 
-func set_gravity_state(enable_gravity: bool = true) -> void:
+remote func set_gravity_state(enable_gravity: bool = true) -> void:
 	self.gravity_enabled = enable_gravity
 
 # Disable the camera when the player is despawned
