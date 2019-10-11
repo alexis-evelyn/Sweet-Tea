@@ -276,6 +276,9 @@ remote func set_gravity_state(enable_gravity: bool = true) -> void:
 func _exit_tree() -> void:
 	# When exiting the server, the camera will be freed before this code has a chance to free it.
 	# camera.is_inside_tree() checks to see if the camera has already been freed to prevent the game from crashing
+	remove_camera()
+
+func remove_camera() -> void:
 	if camera != null and camera.is_inside_tree():
 		camera.free()
 

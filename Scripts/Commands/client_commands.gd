@@ -25,6 +25,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return set_shader(message)
 		"shaderparam":
 			return set_shader_param(message)
+		"debug":
+			return toggle_debug_mode(message)
 		"debugdraw":
 			return set_debug_draw(message)
 		"screenshot":
@@ -486,6 +488,32 @@ func list_controllers(message: PoolStringArray) -> String:
 		return response.join("\n")
 
 	return tr("list_controllers_no_controllers")
+
+func toggle_debug_mode(message: PoolStringArray) -> String:
+	gamestate.debug = !gamestate.debug # Flip Gamestate Debug Boolean
+
+	var player_base : Node2D = spawn_handler.get_player_node(gamestate.net_id) # Get Player's Node
+
+	if player_base == null:
+		return tr("toggle_debug_mode_command_missing_player_base") # Failed To Get Player's Node
+
+	var player : Player = player_base.get_node_or_null("KinematicBody2D") # Get Player's KinematicBody2D
+
+	if player == null:
+		return tr("toggle_debug_mode_command_missing_player_base") # Failed to Get Player's KinematicBody2D
+
+	player.remove_camera() # Removes Old Camera
+
+	if gamestate.debug:
+		player.debug_camera(true) # Activates Debug Camera
+		# Should I Change World Tileset?
+
+		return tr("toggle_debug_mode_command_on")
+	else:
+		player.player_camera(true) # Activates Regular Camera
+		# Should I Change World Tileset?
+
+		return tr("toggle_debug_mode_command_off")
 
 func get_class() -> String:
 	return "ClientCommands"
