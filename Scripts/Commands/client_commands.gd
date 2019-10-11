@@ -500,7 +500,7 @@ func toggle_debug_mode(message: PoolStringArray) -> String:
 	var player : Player = player_base.get_node_or_null("KinematicBody2D") # Get Player's KinematicBody2D
 
 	if player == null:
-		return tr("toggle_debug_mode_command_missing_player_base") # Failed to Get Player's KinematicBody2D
+		return tr("toggle_debug_mode_command_missing_player_body") # Failed to Get Player's KinematicBody2D
 
 	player.remove_camera() # Removes Old Camera
 
@@ -511,15 +511,18 @@ func toggle_debug_mode(message: PoolStringArray) -> String:
 		var world_generator : TileMap
 
 		if worlds == null:
-			return "Missing Worlds"
+			return tr("toggle_debug_mode_command_missing_worlds_node")
 
 		for world in worlds.get_children():
 			world_generator = spawn_handler.get_world_generator_node(world.name)
-			world_generator.tile_set = world_generator.debug_tileset
-			world_generator.background_tilemap.tile_set = world_generator.debug_tileset_background
-			world_generator.set_shader_background_tiles()
+
+			if world_generator != null:
+				world_generator.tile_set = world_generator.debug_tileset
+				world_generator.background_tilemap.tile_set = world_generator.debug_tileset_background
+				world_generator.set_shader_background_tiles()
 
 		# Should I Save Character's New Debug Mode State
+#		gamestate.save_player(slot)
 
 		return tr("toggle_debug_mode_command_on")
 	else:
@@ -529,15 +532,18 @@ func toggle_debug_mode(message: PoolStringArray) -> String:
 		var world_generator : TileMap
 
 		if worlds == null:
-			return "Missing Worlds"
+			return tr("toggle_debug_mode_command_missing_worlds_node")
 
 		for world in worlds.get_children():
 			world_generator = spawn_handler.get_world_generator_node(world.name)
-			world_generator.tile_set = world_generator.default_tileset
-			world_generator.background_tilemap.tile_set = world_generator.default_tileset_background
-			world_generator.set_shader_background_tiles()
+
+			if world_generator != null:
+				world_generator.tile_set = world_generator.default_tileset
+				world_generator.background_tilemap.tile_set = world_generator.default_tileset_background
+				world_generator.set_shader_background_tiles()
 
 		# Should I Save Character's New Debug Mode State
+#		gamestate.save_player(slot)
 
 		return tr("toggle_debug_mode_command_off")
 
