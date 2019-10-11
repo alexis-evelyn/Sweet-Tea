@@ -22,7 +22,7 @@ func _ready() -> void:
 	get_tree().set_auto_accept_quit(false) # Disables Default Quit Action - Allows Override to Handle Other Code (e.g. saving or in a meta horror game, play a creepy voice)
 	get_tree().connect("files_dropped", self, "_drop_files")
 	#get_tree().connect("tree_changed", self, "_tree_changed")
-	Input.connect("joy_connection_changed", self, "joy_connection_changed") # DEtect Joystick Connection
+	Input.connect("joy_connection_changed", self, "joy_connection_changed") # Detect Joystick Connection
 
 	# This does not get triggered if stretch mode is viewport
 #	get_tree().get_root().connect("size_changed", self, "screen_size_changed")
@@ -39,6 +39,8 @@ func _ready() -> void:
 #	set_physics_process_internal(true) #
 #	set_scene_instance_load_placeholder(true) #
 #	set_block_signals(false) #
+
+#	Input.joy_connection_changed(0, true, "Name", "GUID") # This can be used to create a virtual controller. Using a custom connection method with a custom sdl mapping can create an InputMap friendly controller that is not standard.
 
 # Called When MainLoop Event Happens
 func _notification(what: int) -> void:
@@ -110,6 +112,11 @@ func _process(delta: float) -> void:
 
 func joy_connection_changed(device: int, connected: bool) -> void:
 	logger.debug("Device: %s - Connected: %s" % [device, connected])
+
+	if connected:
+		Input.start_joy_vibration(device, 1, 1, 0.5) # Vibrate Newly Connected Controller
+
+		logger.debug("Device Name: %s - GUID: %s" % [Input.get_joy_name(device), Input.get_joy_guid(device)])
 
 #func _size_change_detector(_thread_data) -> void:
 #	# This function is currently useless as I do not have to manually adjust font sizes anymore.

@@ -73,6 +73,8 @@ kick_player_ip_command_no_permission,Kick Player By IP and Optional Message - Pe
 language_font_regular,,,,res://Assets/Fonts/dynamicfont/mazawalza-regular.tres,
 language_name,English,Español,日本人,\udb80,Pirate
 last_name_list,"{""NB"":[""Smith"",""Johnson"",""Miller"",""Evans"",""Jones"",""Williams"",""Brown""]}",,,,
+list_controllers_command_line,ID: %s - Name: %s - GUID: %s,,,,
+list_controllers_no_controllers,You have no controllers connected...,,,,
 load_character_button,Load Character,,,,Join yer mate
 main_menu_title,Sweet Tea,,,,Rum
 mazawalza_effect,Effect,,,,

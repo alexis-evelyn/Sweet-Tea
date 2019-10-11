@@ -35,6 +35,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return set_debug_collisions(message)
 		"testvibration":
 			return test_joy_vibration(message)
+		"controllers":
+			return list_controllers(message)
 		_:
 			return ""
 
@@ -465,13 +467,25 @@ func start_recording(message: PoolStringArray) -> String:
 
 # warning-ignore:unused_argument
 func test_joy_vibration(message: PoolStringArray) -> String:
-	# Test Vibration of Controller
-	Input.start_joy_vibration(1, 100, 100, 10)
+	for controller in Input.get_connected_joypads():
+		# Test Vibration of Controller
+		Input.start_joy_vibration(controller, 100, 100, 10)
+
+		logger.debug(str(controller))
+
+	return "Testing... Not Fully Implemented. Don't Have Vibration Working For DS4 Controller Yet."
+
+# warning-ignore:unused_argument
+func list_controllers(message: PoolStringArray) -> String:
+	var response : PoolStringArray
 
 	for controller in Input.get_connected_joypads():
-		print(controller)
+		response.append(tr("list_controllers_command_line") % [controller, Input.get_joy_name(controller), Input.get_joy_guid(controller)])
 
-	return "Testing..."
+	if response.size() != 0:
+		return response.join("\n")
+
+	return tr("list_controllers_no_controllers")
 
 func get_class() -> String:
 	return "ClientCommands"
