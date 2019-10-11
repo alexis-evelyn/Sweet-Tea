@@ -507,11 +507,13 @@ func toggle_debug_mode(message: PoolStringArray) -> String:
 	if gamestate.debug:
 		player.debug_camera(true) # Activates Debug Camera
 		# Should I Change World Tileset?
+		# Should I Save Character's New Debug Mode State
 
 		return tr("toggle_debug_mode_command_on")
 	else:
 		player.player_camera(true) # Activates Regular Camera
 		# Should I Change World Tileset?
+		# Should I Save Character's New Debug Mode State
 
 		return tr("toggle_debug_mode_command_off")
 
