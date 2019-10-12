@@ -494,15 +494,10 @@ func list_controllers(message: PoolStringArray) -> String:
 func toggle_debug_mode(message: PoolStringArray) -> String:
 	gamestate.debug = !gamestate.debug # Flip Gamestate Debug Boolean
 
-	var player_base : Node2D = spawn_handler.get_player_node(gamestate.net_id) # Get Player's Node
-
-	if player_base == null:
-		return tr("toggle_debug_mode_command_missing_player_base") # Failed To Get Player's Node
-
-	var player : Player = player_base.get_node_or_null("KinematicBody2D") # Get Player's KinematicBody2D
+	var player : Player = spawn_handler.get_player_body_node(gamestate.net_id) # Get Player's Node
 
 	if player == null:
-		return tr("toggle_debug_mode_command_missing_player_body") # Failed to Get Player's KinematicBody2D
+		return tr("toggle_debug_mode_command_missing_player_node") # Failed to Get Player's KinematicBody2D
 
 	player.remove_camera() # Removes Old Camera
 

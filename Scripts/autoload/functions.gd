@@ -149,13 +149,13 @@ func list_game_translations() -> Dictionary:
 
 func get_world_camera() -> ColorRect:
 	var shader_screen : ColorRect
-	var player : Node2D = spawn_handler.get_player_node(gamestate.net_id)
+	var player : Node2D = spawn_handler.get_player_body_node(gamestate.net_id)
 
 	if player == null:
 		return null
 
-	if player.get_node("KinematicBody2D").has_node("PlayerCamera"):
-		shader_screen = player.get_node("KinematicBody2D").get_node("PlayerCamera").get_node("ShaderRectangle")
+	if player.has_node("PlayerCamera"):
+		shader_screen = player.get_node("PlayerCamera").get_node("ShaderRectangle")
 	else:
 		if not gamestate.player_info.has("current_world"):
 			logger.error("Set World Shader - Missing Current World Info")

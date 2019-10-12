@@ -303,6 +303,19 @@ func get_player_node(net_id: int) -> Node:
 
 	return get_world_grid(get_world_name(net_id)).get_node("Players").get_node(str(net_id))
 
+func get_player_body_node(net_id: int) -> Node:
+	# This can cause crash (changeworld client first, then server)
+	if get_world_grid(get_world_name(net_id)) == null or not get_world_grid(get_world_name(net_id)).has_node("Players"):
+		return null
+
+	if not get_world_grid(get_world_name(net_id)).get_node("Players").has_node(str(net_id)):
+		return null
+
+	if not get_world_grid(get_world_name(net_id)).get_node("Players").get_node(str(net_id)).has_node("KinematicBody2D"):
+		return null
+
+	return get_world_grid(get_world_name(net_id)).get_node("Players").get_node(str(net_id)).get_node("KinematicBody2D")
+
 func get_world_generator_node(world: String) -> Node:
 	if not get_world_grid(world).has_node("WorldGen"):
 		return null

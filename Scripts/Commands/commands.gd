@@ -36,8 +36,8 @@ var supported_commands : Dictionary = {
 
 	"changeworld": {"description": "help_changeworld_desc", "permission": permission_level.op},
 	"createworld": {"description": "help_createworld_desc", "permission": permission_level.mod},
-	"spawn": {"description": "help_spawn_desc", "permission": permission_level.player},
-	"wspawn": {"description": "help_wspawn_desc", "permission": permission_level.player},
+#	"spawn": {"description": "help_spawn_desc", "permission": permission_level.admin},
+	"spawn": {"description": "help_wspawn_desc", "permission": permission_level.admin},
 	"setspawn": {"description": "help_setspawn_desc", "permission": permission_level.admin},
 	"setwspawn": {"description": "help_setwspawn_desc", "permission": permission_level.admin},
 	"tp": {"description": "help_tp_desc", "permission": permission_level.op},
@@ -113,9 +113,9 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 			return server_spawn(net_id, message)
 		"wspawn":
 			return world_spawn(net_id, message)
-		"setspawn":
-			return set_server_spawn(net_id, message)
-		"setwspawn":
+#		"setspawn":
+#			return set_server_spawn(net_id, message)
+		"setspawn": # Originally /setwspawn
 			return set_world_spawn(net_id, message)
 		"tp":
 			return teleport(net_id, message)
@@ -555,7 +555,8 @@ func set_server_spawn(net_id: int, message: PoolStringArray) -> String:
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	if check_permission(players_permission_level, command_permission_level):
-		var world_path : String = world_handler.starting_world
+		var world_path : String = world_handler.starting_world # Server Spawn World
+#		var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
 
 		load_world_server_thread.start(world_handler, "load_world_server_threaded", [net_id, world_path])
 		var world_name : String = load_world_server_thread.wait_to_finish()
@@ -570,7 +571,7 @@ func set_server_spawn(net_id: int, message: PoolStringArray) -> String:
 		if world_gen_node == null:
 			return functions.get_translation("set_server_spawn_command_world_node_not_found", player_registrar.players[net_id].locale) % [world_name]
 
-		var new_spawn : Vector2 = Vector2(0, 0)
+		var new_spawn : Vector2 = spawn_handler.get_player_body_node(net_id).position
 
 		# Get Coordinates From Player Position
 		world_gen_node.set_spawn(new_spawn)
@@ -597,7 +598,7 @@ func set_world_spawn(net_id: int, message: PoolStringArray) -> String:
 		if world_gen_node == null:
 			return functions.get_translation("set_world_spawn_command_world_node_not_found", player_registrar.players[net_id].locale) % [world_name]
 
-		var new_spawn : Vector2 = Vector2(0, 0)
+		var new_spawn : Vector2 = spawn_handler.get_player_body_node(net_id).position
 
 		# Either Get Coordinates From Player Position or From Arguments
 		world_gen_node.set_spawn(new_spawn)
@@ -723,15 +724,10 @@ func toggle_gravity(net_id: int, message: PoolStringArray) -> String:
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	if check_permission(players_permission_level, command_permission_level):
-		var player_base : Node2D = spawn_handler.get_player_node(net_id)
-
-		if player_base == null:
-			return functions.get_translation("toggle_gravity_command_missing_player_base", player_registrar.players[net_id].locale)
-
-		var player : Player = player_base.get_node_or_null("KinematicBody2D")
+		var player : Player = spawn_handler.get_player_body_node(net_id)
 
 		if player == null:
-			return functions.get_translation("toggle_gravity_command_missing_player_body", player_registrar.players[net_id].locale)
+			return functions.get_translation("toggle_gravity_command_missing_player_node", player_registrar.players[net_id].locale)
 
 		if player.get_gravity_state():
 			player.set_gravity_state(false)

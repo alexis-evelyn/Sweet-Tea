@@ -109,12 +109,7 @@ func _physics_process(_delta: float) -> void:
 
 func get_player_node() -> Node:
 	#logger.verbose("Parent: %s" % get_parent().name)
-
-	var players : Node
-	if get_parent().has_node("WorldGrid/Players"):
-		players = get_parent().get_node("WorldGrid/Players")
-
-	return players.get_node(str(gamestate.net_id)).get_node("KinematicBody2D")
+	return spawn_handler.get_player_body_node(gamestate.net_id)
 
 func update_chunk_label(chunk: Vector2) -> void:
 	chunk_position_label.bbcode_text = key_begin_bbcode + tr("debug_chunk_label") % [value_begin_bbcode + str(chunk) + both_end_bbcode] + both_end_bbcode
