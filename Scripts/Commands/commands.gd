@@ -44,8 +44,9 @@ var supported_commands : Dictionary = {
 	"seed": {"description": "help_seed_desc", "permission": permission_level.server_owner},
 	"servertime": {"description": "help_servertime_desc", "permission": permission_level.player},
 	"gravity": {"description": "help_gravity_desc", "permission": permission_level.op},
+	"setspawnworld": {"description": "help_setspawnworld_desc", "permission": permission_level.admin},
 
-	# These are the essentially same command
+	# These are essentially the same command
 	"msg": {"description": "help_msg_desc", "permission": permission_level.player},
 	"tell": {"description": "help_msg_desc", "permission": permission_level.player}
 }
@@ -129,6 +130,8 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 			return get_server_time(net_id, message)
 		"gravity":
 			return toggle_gravity(net_id, message)
+		"setspawnworld":
+			return set_spawn_world(net_id, message)
 		_: # Default Result - Put at Bottom of Match Results
 			if command == "":
 				return ""
@@ -745,6 +748,26 @@ func toggle_gravity(net_id: int, message: PoolStringArray) -> String:
 			return functions.get_translation("toggle_gravity_command_success_on", player_registrar.players[net_id].locale)
 
 	return functions.get_translation("toggle_gravity_command_no_permission", player_registrar.players[net_id].locale)
+
+func set_spawn_world(net_id: int, message: PoolStringArray) -> String:
+	"""
+		Set Server's Spawn World
+
+		Not Meant to Be Called Directly
+	"""
+
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
+	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
+
+	if check_permission(players_permission_level, command_permission_level):
+		gamestate.player_info.starting_world = world_handler.get_world_folder(spawn_handler.get_world_name(net_id))
+
+		gamestate.save_player(gamestate.loaded_save)
+		return tr("set_spawn_world_command_success") % gamestate.player_info.starting_world
+
+	return tr("set_spawn_world_command_no_permission")
 
 func get_class() -> String:
 	return "ServerCommands"

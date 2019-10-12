@@ -35,6 +35,8 @@ var player_info : Dictionary = {
 # warning-ignore:unused_class_variable
 var net_id : int = 1 # Player's ID
 # warning-ignore:unused_class_variable
+var loaded_save : int = -1 # Currently Loaded Save
+# warning-ignore:unused_class_variable
 var debug : bool = false
 
 # A Note On Saving
@@ -196,6 +198,7 @@ func load_player(slot: int) -> int:
 		logger.error("Cannot Interpret Save!!! Invalid JSON!!!")
 
 	save_data.close()
+	self.loaded_save = slot # Used to Remember Which Save is Currently Loaded
 	return 0
 
 # Delete Player From Save

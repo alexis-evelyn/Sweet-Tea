@@ -30,6 +30,7 @@ const world_template : String = "res://WorldGen/WorldTemplate.tscn" # What Scene
 const loading_screen_name : String = "res://Menus/LoadingScreen.tscn" # Loading Screen
 var starting_world : String = "Not Set" # Template From World (Server Side - Includes Single Player)
 var starting_world_name : String = "Not Set" # Spawn World's Name (Server Side - Includes Single Player)
+var world_folder_path_template = "user://worlds/%s"
 
 # Server Gets Currently Loaded Worlds
 var loaded_worlds : Dictionary = {}
@@ -348,7 +349,7 @@ func save_world(world: ViewportContainer):
 	var world_generator = world.get_node("Viewport/WorldGrid/WorldGen")
 	var world_generator_background = world_generator.get_node("Background")
 
-	var world_folder_path = "user://worlds/%s" % world.name
+	var world_folder_path = get_world_folder(world.name)
 	var save_path = world_folder_path.plus_file("world.json")
 	var save_path_backup = save_path + ".backup"
 
@@ -394,6 +395,9 @@ func save_world(world: ViewportContainer):
 
 	# Save World to Drive
 	world_data.store_string(to_json(world_data_dict))
+
+func get_world_folder(world_name: String) -> String:
+	return world_folder_path_template % world_name
 
 func create_world_server_threaded(thread_data: Array) -> String:
 	if thread_data.size() < 1 or thread_data.size() > 3:
