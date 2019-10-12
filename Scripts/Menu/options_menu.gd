@@ -38,6 +38,8 @@ onready var physics_fps_label : RichTextLabel = $Scroll/Center/Options/PhysicsFP
 onready var physics_jitter_fix_label : RichTextLabel = $Scroll/Center/Options/PhysicsFPS/lblPhysicsFPS
 # warning-ignore:unused_class_variable
 onready var timescale_label : RichTextLabel = $Scroll/Center/Options/TimeScale/lblSelectedTimeScale
+# warning-ignore:unused_class_variable
+onready var logger_verbosity_label : RichTextLabel = $Scroll/Center/Options/LoggerVerbosity/lblLoggerVerbosity
 
 # Category Labels
 # warning-ignore:unused_class_variable
@@ -62,6 +64,7 @@ onready var lpum_checkbox : CheckBox = $Scroll/Center/Options/LPUM/ckbLPUM
 onready var physics_fps_value_label : RichTextLabel = $Scroll/Center/Options/PhysicsFPS/lblSelectedPhysicsFPS
 onready var physics_jitter_fix_value_label : RichTextLabel = $Scroll/Center/Options/PhysicsJitterFix/lblSelectedJitterPhysicsFix
 onready var time_scale_value_label : RichTextLabel = $Scroll/Center/Options/TimeScale/lblSelectedTimeScale
+onready var logger_verbosity_value_label : RichTextLabel = $Scroll/Center/Options/LoggerVerbosity/lblSelectedLoggerVerbosity
 
 # Options
 # Set Locale - TranslationServer.set_locale("en") and gamestate.player_info.locale = TranslationServer.get_locale()
@@ -145,6 +148,9 @@ func retrieve_current_values() -> void:
 
 	# Time Scale Value Label
 	time_scale_value_label.text = str(Engine.time_scale)
+
+	# Logger Verbosity
+	logger_verbosity_value_label.text = str(logger.verbosity)
 
 func locale_left_pressed() -> void:
 	pass # Replace with function body.

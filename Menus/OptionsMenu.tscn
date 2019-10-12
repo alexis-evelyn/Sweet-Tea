@@ -52,14 +52,14 @@ __meta__ = {
 }
 
 [node name="btnBack" type="Button" parent="Scroll/Center/Options"]
+visible = false
 margin_right = 1904.0
 margin_bottom = 37.0
 text = "Back"
 
 [node name="Locale" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 47.0
 margin_right = 1904.0
-margin_bottom = 94.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -106,9 +106,9 @@ __meta__ = {
 }
 
 [node name="lblControls" type="RichTextLabel" parent="Scroll/Center/Options"]
-margin_top = 104.0
+margin_top = 57.0
 margin_right = 1904.0
-margin_bottom = 151.0
+margin_bottom = 104.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_colors/default_color = Color( 0.313726, 1, 0, 1 )
@@ -119,9 +119,9 @@ __meta__ = {
 }
 
 [node name="KeyboardConfig" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 161.0
+margin_top = 114.0
 margin_right = 1904.0
-margin_bottom = 208.0
+margin_bottom = 161.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -144,9 +144,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="JoypadConfig" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 218.0
+margin_top = 171.0
 margin_right = 1904.0
-margin_bottom = 265.0
+margin_bottom = 218.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -169,9 +169,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="lblVideo" type="RichTextLabel" parent="Scroll/Center/Options"]
-margin_top = 275.0
+margin_top = 228.0
 margin_right = 1904.0
-margin_bottom = 322.0
+margin_bottom = 275.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_colors/default_color = Color( 0.313726, 1, 0, 1 )
@@ -182,9 +182,9 @@ __meta__ = {
 }
 
 [node name="Fullscreen" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 332.0
+margin_top = 285.0
 margin_right = 1904.0
-margin_bottom = 380.0
+margin_bottom = 333.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -210,9 +210,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="WindowSize" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 390.0
+margin_top = 343.0
 margin_right = 1904.0
-margin_bottom = 437.0
+margin_bottom = 390.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -235,9 +235,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VSync" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 447.0
+margin_top = 400.0
 margin_right = 1904.0
-margin_bottom = 495.0
+margin_bottom = 448.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -263,9 +263,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="FPS" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 505.0
+margin_top = 458.0
 margin_right = 1904.0
-margin_bottom = 552.0
+margin_bottom = 505.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -307,9 +307,9 @@ __meta__ = {
 }
 
 [node name="ShaderUsage" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 562.0
+margin_top = 515.0
 margin_right = 1904.0
-margin_bottom = 609.0
+margin_bottom = 562.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -351,9 +351,9 @@ __meta__ = {
 }
 
 [node name="lblAudio" type="RichTextLabel" parent="Scroll/Center/Options"]
-margin_top = 619.0
+margin_top = 572.0
 margin_right = 1904.0
-margin_bottom = 666.0
+margin_bottom = 619.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_colors/default_color = Color( 0.313726, 1, 0, 1 )
@@ -364,9 +364,9 @@ __meta__ = {
 }
 
 [node name="MusicVolume" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 676.0
+margin_top = 629.0
 margin_right = 1904.0
-margin_bottom = 723.0
+margin_bottom = 676.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -392,9 +392,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="SoundVolume" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 733.0
+margin_top = 686.0
 margin_right = 1904.0
-margin_bottom = 780.0
+margin_bottom = 733.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -417,9 +417,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="lblAdvancedSetting" type="RichTextLabel" parent="Scroll/Center/Options"]
-margin_top = 790.0
+margin_top = 743.0
 margin_right = 1904.0
-margin_bottom = 837.0
+margin_bottom = 790.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_colors/default_color = Color( 0.313726, 1, 0, 1 )
@@ -430,9 +430,9 @@ __meta__ = {
 }
 
 [node name="LPUM" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 847.0
+margin_top = 800.0
 margin_right = 1904.0
-margin_bottom = 895.0
+margin_bottom = 848.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -455,9 +455,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="PhysicsFPS" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 905.0
+margin_top = 858.0
 margin_right = 1904.0
-margin_bottom = 952.0
+margin_bottom = 905.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -499,9 +499,9 @@ __meta__ = {
 }
 
 [node name="PhysicsJitterFix" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 962.0
+margin_top = 915.0
 margin_right = 1904.0
-margin_bottom = 1009.0
+margin_bottom = 962.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -546,15 +546,15 @@ __meta__ = {
 }
 
 [node name="TimeScale" type="HBoxContainer" parent="Scroll/Center/Options"]
-margin_top = 1019.0
+margin_top = 972.0
 margin_right = 1904.0
-margin_bottom = 1080.0
+margin_bottom = 1019.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="lblTimeScale" type="RichTextLabel" parent="Scroll/Center/Options/TimeScale"]
 margin_right = 470.0
-margin_bottom = 61.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Engine's Time Scale"
@@ -563,7 +563,7 @@ scroll_active = false
 [node name="btnLeft" type="TextureButton" parent="Scroll/Center/Options/TimeScale"]
 margin_left = 478.0
 margin_right = 948.0
-margin_bottom = 61.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -573,7 +573,7 @@ __meta__ = {
 [node name="lblSelectedTimeScale" type="RichTextLabel" parent="Scroll/Center/Options/TimeScale"]
 margin_left = 956.0
 margin_right = 1426.0
-margin_bottom = 61.0
+margin_bottom = 47.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Time Scale..."
@@ -582,7 +582,51 @@ scroll_active = false
 [node name="btnRight" type="TextureButton" parent="Scroll/Center/Options/TimeScale"]
 margin_left = 1434.0
 margin_right = 1904.0
-margin_bottom = 61.0
+margin_bottom = 47.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LoggerVerbosity" type="HBoxContainer" parent="Scroll/Center/Options"]
+margin_top = 1029.0
+margin_right = 1904.0
+margin_bottom = 1080.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="lblLoggerVerbosity" type="RichTextLabel" parent="Scroll/Center/Options/LoggerVerbosity"]
+margin_right = 470.0
+margin_bottom = 51.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Logger Verbosity"
+scroll_active = false
+
+[node name="btnLeft" type="TextureButton" parent="Scroll/Center/Options/LoggerVerbosity"]
+margin_left = 478.0
+margin_right = 948.0
+margin_bottom = 51.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="lblSelectedLoggerVerbosity" type="RichTextLabel" parent="Scroll/Center/Options/LoggerVerbosity"]
+margin_left = 956.0
+margin_right = 1426.0
+margin_bottom = 51.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Verbosity..."
+scroll_active = false
+
+[node name="btnRight" type="TextureButton" parent="Scroll/Center/Options/LoggerVerbosity"]
+margin_left = 1434.0
+margin_right = 1904.0
+margin_bottom = 51.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 __meta__ = {
@@ -616,3 +660,5 @@ size_flags_horizontal = 3
 [connection signal="pressed" from="Scroll/Center/Options/PhysicsJitterFix/btnRight" to="." method="physics_jitter_right_pressed"]
 [connection signal="pressed" from="Scroll/Center/Options/TimeScale/btnLeft" to="." method="time_scale_left_pressed"]
 [connection signal="pressed" from="Scroll/Center/Options/TimeScale/btnRight" to="." method="time_scale_right_pressed"]
+[connection signal="pressed" from="Scroll/Center/Options/LoggerVerbosity/btnLeft" to="." method="time_scale_left_pressed"]
+[connection signal="pressed" from="Scroll/Center/Options/LoggerVerbosity/btnRight" to="." method="time_scale_right_pressed"]
