@@ -127,6 +127,17 @@ func _on_userChat_gui_input(event) -> void:
 		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 		just_opened = false
 
+func autosend_command(command: String) -> void:
+	# Meant to Be Used By Automated Means (e.g. Command Hotkeys)
+
+	arguments = command.split(" ", false, 0) # Convert Message into Arguments
+	internal_reply = client_commands.process_commands(arguments)
+
+	if internal_reply == "":
+		rpc_unreliable_id(1, "chat_message_server", command)
+	else:
+		chat_message_client(internal_reply)
+
 # When URLs are Clicked in Chat Window
 func _on_chatMessages_meta_clicked(meta: String) -> void:
 	if typeof(meta) == TYPE_STRING:

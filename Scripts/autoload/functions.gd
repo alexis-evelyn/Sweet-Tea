@@ -352,6 +352,22 @@ func get_system() -> int:
 		_:
 			return host_system.unknown
 
+# Meant to Be Assigned to Hotkeys
+func run_button_command(panelChat: ChatPanel, command_id: String = "0") -> void:
+	# In the Release Version, None Of The Hotkeys Will Be Pre-Assigned.
+	# They Will Be Configurable In The Options Menu (and Commands Will Be Assigned Via Chat)
+
+	if command_id == "0":
+		# For Testing is Assigned L3
+		panelChat.autosend_command("/shader animated_rainbow")
+	elif command_id == "1":
+		# For Testing is Assigned R3
+		panelChat.autosend_command("/shader remove")
+
+# Meant to Be Assigned to Joypad Axes
+func run_axes_command(panelChat: ChatPanel, command_id: String = "0") -> void:
+	pass
+
 func get_class() -> String:
 	return "Functions"
 

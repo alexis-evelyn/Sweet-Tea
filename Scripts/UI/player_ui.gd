@@ -26,10 +26,14 @@ func _input(event) -> void:
 	if not get_tree().has_network_peer() or not network.connected:
 		return
 
+	# Checks To Make Sure Game is Focused
 	if not main_loop_events.game_is_focused:
 		return
 
+	# Generic Joypad Test Code
+	# Not Necessary for Regular InputMap Events
 	if event is InputEventJoypadButton:
+		# For Detecting Generic Buttons
 		logger.debug("Pressed Joypad Button: %s - Pressure (If Applicable): %s" % [Input.get_joy_button_string(event.get_button_index()), event.get_pressure()])
 #		logger.debug("Pressed Joypad Button: %s - Pressure (If Applicable): %s" % [event.get_button_index(), event.get_pressure()])
 
@@ -49,9 +53,24 @@ func _input(event) -> void:
 #			logger.debug("Device: %s" % event.get_device())
 
 	elif event is InputEventJoypadMotion:
+		# For Detecting Generic Axes.
 #		logger.debug("Pressed Joypad Axis: %s - Value (-1.0, 1.0): %s" % [event.get_axis(), event.get_axis_value()])
 		pass
 
+	# Test For Assigning Hotkeys to Commands
+	if event.is_action("command_0") and !pauseMenu.is_paused():
+		# TODO: Figure Out How To Read ID in Command Action (To Help with Modding More Commands)
+
+		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
+		functions.run_button_command(panelChat, "0") # Activate Command Assigned to Command 0
+#		functions.run_axes_command(panelChat, "0") # Activate Command Assigned to Command 0
+
+	if event.is_action("command_1") and !pauseMenu.is_paused():
+		# TODO: Figure Out How To Read ID in Command Action (To Help with Modding More Commands)
+
+		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
+		functions.run_button_command(panelChat, "1") # Activate Command Assigned to Command 0
+#		functions.run_axes_command(panelChat, "1") # Activate Command Assigned to Command 0
 
 	# This allows user to see player list (I will eventually add support to change keys and maybe joystick support)
 	if event.is_action("show_playerlist") and !pauseMenu.is_paused():
