@@ -60,7 +60,7 @@ sync func chat_message_client(message: String) -> void:
 			chatMessages.remove_line(0)
 
 # Process Chat Message from Client
-master func chat_message_server(message: String) -> int:
+master func chat_message_server(message: String, send_to_chat: bool = true) -> int:
 	var added_username : String= "" # Used for Custom Username Formatting
 	var net_id : int = -1 # Invalid NetID (will be corrected later)
 	var chat_color : String = "red" # Default Chat Color
@@ -102,7 +102,9 @@ master func chat_message_server(message: String) -> int:
 	var username_end : String = "[/u][/b][/color][/url]"
 	added_username = "<" + username_start + str(player_registrar.name(int(net_id))) + username_end + "> " + message
 
-	rpc_unreliable("chat_message_client", added_username)
+	if send_to_chat:
+		rpc_unreliable("chat_message_client", added_username)
+
 	return 0
 
 # Send Chat To Server
@@ -127,15 +129,15 @@ func _on_userChat_gui_input(event) -> void:
 		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 		just_opened = false
 
-func autosend_command(command: String) -> void:
+func autosend_command(command: String, send_to_chat: bool = true) -> void:
 	# Meant to Be Used By Automated Means (e.g. Command Hotkeys)
 
 	arguments = command.split(" ", false, 0) # Convert Message into Arguments
 	internal_reply = client_commands.process_commands(arguments)
 
 	if internal_reply == "":
-		rpc_unreliable_id(1, "chat_message_server", command)
-	else:
+		rpc_unreliable_id(1, "chat_message_server", command, send_to_chat)
+	elif send_to_chat:
 		chat_message_client(internal_reply)
 
 # When URLs are Clicked in Chat Window

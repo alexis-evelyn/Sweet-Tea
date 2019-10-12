@@ -479,6 +479,7 @@ func test_joy_vibration(message: PoolStringArray) -> String:
 
 # warning-ignore:unused_argument
 func list_controllers(message: PoolStringArray) -> String:
+	# warning-ignore:unassigned_variable
 	var response : PoolStringArray
 
 	for controller in Input.get_connected_joypads():
@@ -489,6 +490,7 @@ func list_controllers(message: PoolStringArray) -> String:
 
 	return tr("list_controllers_no_controllers")
 
+# warning-ignore:unused_argument
 func toggle_debug_mode(message: PoolStringArray) -> String:
 	gamestate.debug = !gamestate.debug # Flip Gamestate Debug Boolean
 
