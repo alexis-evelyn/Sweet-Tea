@@ -58,14 +58,14 @@ func _input(event) -> void:
 		pass
 
 	# Test For Assigning Hotkeys to Commands
-	if event.is_action("command_0") and !pauseMenu.is_paused():
+	if event.is_action_pressed("command_0") and !pauseMenu.is_paused():
 		# TODO: Figure Out How To Read ID in Command Action (To Help with Modding More Commands)
 
 		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 		functions.run_button_command(panelChat, "0") # Activate Command Assigned to Command 0
 #		functions.run_axes_command(panelChat, "0") # Activate Command Assigned to Command 0
 
-	if event.is_action("command_1") and !pauseMenu.is_paused():
+	if event.is_action_pressed("command_1") and !pauseMenu.is_paused():
 		# TODO: Figure Out How To Read ID in Command Action (To Help with Modding More Commands)
 
 		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions

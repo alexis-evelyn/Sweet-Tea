@@ -39,6 +39,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return test_joy_vibration(message)
 		"controllers":
 			return list_controllers(message)
+		"randomshader":
+			return pick_random_shader(message)
 		_:
 			return ""
 
@@ -543,6 +545,20 @@ func toggle_debug_mode(message: PoolStringArray) -> String:
 #		gamestate.save_player(slot)
 
 		return tr("toggle_debug_mode_command_off")
+
+func pick_random_shader(message: PoolStringArray) -> String:
+	# /randomshader [world or game]
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_arguments : PoolStringArray = message
+	command_arguments.remove(0)
+
+	var shader_name : String = shaders.keys()[randi() % shaders.size()]
+
+	functions.set_world_shader(load(shaders.get(shader_name).path))
+	load_default_params(shader_name, tr("shader_world_argument"))
+
+	return tr("random_shader_command_success") % tr(shaders.get(shader_name).name)
 
 func get_class() -> String:
 	return "ClientCommands"

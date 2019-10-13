@@ -5,7 +5,7 @@ shader_type canvas_item;
 // https://en.m.wikipedia.org/wiki/File:Nonbinary_flag.svg
 
 // Note to Self, Alpha goes on the end and everything is on a range of 0 to 1. So, take your rgba values and divide each by 255.
-uniform vec4 black = vec4(0, 0, 0, 1); // Black - #000 (0,0,0)
+uniform vec4 black = vec4(0.3, 0.3, 0.3, 1); // Black - #000 (0,0,0) - Modified To Allow Transparency
 uniform vec4 purple = vec4(0.611764705882353, 0.349019607843137, 0.819607843137255, 1); // Purple - #9C59D1 (156,89,209)
 uniform vec4 white = vec4(1, 1, 1, 1); // White - #fff (255,255,255)
 uniform vec4 yellow = vec4(1, 0.956862745098039, 0.188235294117647, 1); // Yellow - #FFF430 (255,244,48)

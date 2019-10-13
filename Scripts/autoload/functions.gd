@@ -359,7 +359,7 @@ func run_button_command(panelChat: ChatPanel, command_id: String = "0") -> void:
 
 	if command_id == "0":
 		# For Testing is Assigned L3
-		panelChat.autosend_command("/shader animated_rainbow")
+		panelChat.autosend_command("/randomshader")
 	elif command_id == "1":
 		# For Testing is Assigned R3
 		panelChat.autosend_command("/shader remove")
