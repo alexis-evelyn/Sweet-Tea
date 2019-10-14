@@ -62,7 +62,7 @@ sync func chat_message_client(message: String) -> void:
 # Process Chat Message from Client
 master func chat_message_server(message: String, send_to_chat: bool = true) -> int:
 	var added_username : String= "" # Used for Custom Username Formatting
-	var net_id : int = -1 # Invalid NetID (will be corrected later)
+	var net_id : int = gamestate.standard_netids.invalid_id # Invalid NetID (will be corrected later)
 	var chat_color : String = "red" # Default Chat Color
 
 	# Record Chat Message in Server Log (e.g. if harassment needs to be reported)

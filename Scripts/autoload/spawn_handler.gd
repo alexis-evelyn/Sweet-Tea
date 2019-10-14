@@ -182,7 +182,7 @@ remote func despawn_player(net_id: int) -> void:
 	if (get_tree().is_network_server()):
 		for id in player_registrar.players:
 			# Skip sending the despawn packet to both the disconnected player and the server (itself)
-			if (id == net_id || id == 1):
+			if (id == net_id || id == gamestate.standard_netids.server):
 				continue
 
 			# Notify players (clients) of despawned player

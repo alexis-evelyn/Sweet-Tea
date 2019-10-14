@@ -107,7 +107,7 @@ func _ready() -> void:
 	#logger.verbose("Background TileMap's Owner: %s" % background_tilemap.get_owner().name) # Debug Statement to list Background TileMap's Owner's Name
 
 	# Seed should be set by world loader (if pre-existing world)
-	if gamestate.net_id == 1: # Clients don't need the seed (and these seeds would be wrong anyway on the client's side)
+	if gamestate.net_id == gamestate.standard_netids.server: # Clients don't need the seed (and these seeds would be wrong anyway on the client's side)
 		if world_seed.empty():
 			logger.verbose("Generate Seed: %s" % generate_seed()) # Generates A Random Seed (Int) and Applies to Generator
 		else:
@@ -194,7 +194,7 @@ func load_chunks_threaded(thread_data: Array):
 				# The bug does not occur when the server player moves, so I am leaving server player's chunk gen on if debug mode is enabled.
 				# Movement Based Chunk Gen Segfault - https://github.com/godotengine/godot/issues/31477
 
-				if net_id == 1 and gamestate.debug:
+				if net_id == gamestate.standard_netids.server and gamestate.debug:
 					#logger.verbose("Generating: %s" % Vector2(chunk.x - chunk_x, chunk.y - chunk_y))
 					# warning-ignore:narrowing_conversion
 					# warning-ignore:narrowing_conversion

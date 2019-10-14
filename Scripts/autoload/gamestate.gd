@@ -32,10 +32,34 @@ var player_info : Dictionary = {
 	locale = TranslationServer.get_locale(), # Helps Servers Know What Language To Use (for multilingual supporting servers)
 }
 
+# Used to Standardize Loading Error Ints
+const save_error = {
+	success = 0,
+	file_not_exists = -1,
+	player_slot_not_exists = -2,
+	data_not_dictionary = -3,
+	invalid_json = -4
+}
+
+# Names for Slot Numbers (Non-Modded Only - Unless Mods Can Modify Enums)
+const slot_number = {
+	invalid_slot = -1,
+	first_slot = 0,
+	second_slot = 1,
+	third_slot = 2,
+	fourth_slot = 3
+}
+
+# Used to Store Predefined Network IDs (Compile Time)
+const standard_netids = {
+	invalid_id = -1,
+	server = 1
+}
+
 # warning-ignore:unused_class_variable
-var net_id : int = 1 # Player's ID
+var net_id : int = standard_netids.server # Player's ID
 # warning-ignore:unused_class_variable
-var loaded_save : int = -1 # Currently Loaded Save
+var loaded_save : int = slot_number.invalid_slot # Currently Loaded Save
 # warning-ignore:unused_class_variable
 var debug : bool = false
 
@@ -114,14 +138,14 @@ func save_player(slot: int) -> void:
 	if save_data.file_exists(save_path):
 		#logger.verbose("Save File Exists!!!")
 
+		# Backup The Save File (I Want It To Back Up Regardless of if It Is Corrupted)
+		# warning-ignore:return_value_discarded
+		file_op.copy(save_path, save_path_backup) # Copy Save File to Backup
+
 		# warning-ignore:return_value_discarded
 		save_data.open(save_path, File.READ_WRITE) # Open Save File For Reading/Writing
 		players_data = JSON.parse(save_data.get_as_text()) # Load existing Save File as JSON
 		save_data.close() # Because I Cannot Just Overwrite Files When Reading Them, I Will Have to Open a New File Writer
-
-		# Backup The Save File (I Want It To Back Up Regardless of if It Is Corrupted)
-		# warning-ignore:return_value_discarded
-		file_op.copy(save_path, save_path_backup) # Copy Save File to Backup
 
 		# Checks to Make Sure JSON was Parsed
 		# warning-ignore:unsafe_property_access
@@ -132,11 +156,12 @@ func save_player(slot: int) -> void:
 			players_data_result = players_data.result # Grabs Result From JSON (this is done now so I can grab the error code from earlier)
 
 			# Should I merge this and the code from new save into a single function?
-			players_data_result["game_version"] = game_version
+			# Only update game version when checking version on load. Game save should be updated by this point.
+#			players_data_result["game_version"] = game_version
 
 			# If Debug Mode Enabled, Save to File
 			if debug:
-				logger.error("Debug Mode Saved")
+#				logger.error("Debug Mode Saved")
 				dirty_player_info.debug = true
 			else:
 				dirty_player_info.erase("debug")
@@ -159,7 +184,7 @@ func save_player(slot: int) -> void:
 
 		# If Debug Mode Enabled, Save to File
 		if debug:
-			logger.error("Debug Mode Saved")
+#			logger.error("Debug Mode Saved")
 			dirty_player_info.debug = true
 		else:
 			dirty_player_info.erase("debug")
@@ -182,7 +207,7 @@ func load_player(slot: int) -> int:
 
 	if not save_data.file_exists(save_directory.plus_file(save_file)): # Check If Save File Exists
 		#logger.verbose("Save File Does Not Exist!!! New Player?")
-		return -1 # Returns -1 to signal that loading save file failed (for reasons of non-existence)
+		return save_error.file_not_exists # Returns -1 to signal that loading save file failed (for reasons of non-existence)
 
 	# warning-ignore:return_value_discarded
 	save_data.open(save_directory.plus_file(save_file), File.READ)
@@ -220,16 +245,67 @@ func load_player(slot: int) -> int:
 
 			else:
 				logger.warn("Player Slot Does Not Exist: %s" % slot)
-				return -2 # Returns -2 to signal that player slot does not exist
+				return save_error.player_slot_not_exists # Returns -2 to signal that player slot does not exist
 		else:
 			logger.error("Save Format Is Not A Dictionary!!! It Probably is An Array!!")
-			return -3 # Returns -3 to signal that JSON cannot be interpreted as a Dictionary
+			return save_error.data_not_dictionary # Returns -3 to signal that JSON cannot be interpreted as a Dictionary
 	else:
 		logger.error("Cannot Interpret Save!!! Invalid JSON!!!")
 
 	save_data.close()
 	self.loaded_save = slot # Used to Remember Which Save is Currently Loaded
-	return 0
+	return save_error.success
+
+# This is used to update save file without accidentally adding server provided values
+func overwrite_save_value(slot: int, key: String, value) -> int:
+	var save_path : String = save_directory.plus_file(save_file) # Save File Path
+
+	# Backup Directory and File
+	var save_path_backup : String = save_directory.plus_file(backups_dir.plus_file(backups_save_file.replace("%date%", str(OS.get_unix_time())))) # Save File Backup Path - OS.get_unix_time() is Unix Time Stamp
+	var backup_path : String = save_directory.plus_file(backups_dir) # Backup Directory Path
+
+	var file_op : Directory = Directory.new() # Allows Performing Operations on Files (like moving or deleting a file)
+
+	# Make Save File Backup Directory (if it does not exist)
+	if not file_op.dir_exists(backup_path):
+		# warning-ignore:return_value_discarded
+		file_op.make_dir(backup_path)
+
+	var players_data : JSONParseResult # Data To Save
+	var players_data_result : Dictionary # players_data's Result
+
+	var save_data : File = File.new()
+
+	# Checks to See If Save File Exists
+	if not save_data.file_exists(save_path):
+		return save_error.file_not_exists
+
+	# Backup The Save File (I Want It To Back Up Regardless of if It Is Corrupted)
+	# warning-ignore:return_value_discarded
+	file_op.copy(save_path, save_path_backup) # Copy Save File to Backup
+
+	# warning-ignore:return_value_discarded
+	save_data.open(save_path, File.READ_WRITE) # Open Save File For Reading/Writing
+	players_data = JSON.parse(save_data.get_as_text()) # Load existing Save File as JSON
+	save_data.close() # Because I Cannot Just Overwrite Files When Reading Them, I Will Have to Open a New File Writer
+
+	if players_data.error == OK and typeof(players_data.result) == TYPE_DICTIONARY:
+		#logger.verbose("Save File Read and Imported As Dictionary!!!")
+		# warning-ignore:unsafe_property_access
+		players_data_result = players_data.result # Grabs Result From JSON (this is done now so I can grab the error code from earlier)
+
+		players_data_result[str(slot)][key] = value
+
+#		logger.debug(to_json(players_data_result)) # Print Save Data to stdout (Debug)
+		save_data.open(save_path, File.WRITE) # Open Save File For Writing Only - To Counteract Inability to Overwrite Files When Reading
+		save_data.store_string(to_json(players_data_result))
+		save_data.close()
+
+		return save_error.success
+	elif players_data.error != OK:
+		return save_error.invalid_json
+	else:
+		return save_error.data_not_dictionary
 
 # Delete Player From Save
 # warning-ignore:unused_argument
@@ -244,7 +320,7 @@ func check_if_slot_exists(slot: int) -> bool:
 		#logger.verbose("Save File Does Not Exist!!! So, Slot Does Not Exist!!!")
 		return false
 
-# warning-ignore:return_value_discarded
+	# warning-ignore:return_value_discarded
 	save_data.open(save_directory.plus_file(save_file), File.READ)
 	var json : JSONParseResult = JSON.parse(save_data.get_as_text())
 

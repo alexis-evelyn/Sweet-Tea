@@ -60,7 +60,7 @@ func open_calculator(message: PoolStringArray) -> String:
 func server_ip(message: PoolStringArray) -> String:
 	var net : NetworkedMultiplayerENet = get_tree().get_network_peer()
 
-	if gamestate.net_id == 1:
+	if gamestate.net_id == gamestate.standard_netids.server:
 		return tr("server_ip_command_self")
 
 	return tr("server_ip_command") % net.get_peer_address(1)
@@ -520,7 +520,8 @@ func toggle_debug_mode(message: PoolStringArray) -> String:
 				world_generator.background_tilemap.tile_set = world_generator.debug_tileset_background
 				world_generator.set_shader_background_tiles()
 
-		gamestate.save_player(gamestate.loaded_save) # Save Player Debug Mode Switch
+#		gamestate.save_player(gamestate.loaded_save) # Save Player Debug Mode Switch
+		gamestate.overwrite_save_value(gamestate.loaded_save, "debug", true)
 
 		return tr("toggle_debug_mode_command_on")
 	else:
@@ -540,7 +541,8 @@ func toggle_debug_mode(message: PoolStringArray) -> String:
 				world_generator.background_tilemap.tile_set = world_generator.default_tileset_background
 				world_generator.set_shader_background_tiles()
 
-		gamestate.save_player(gamestate.loaded_save) # Save Player Debug Mode Switch
+#		gamestate.save_player(gamestate.loaded_save) # Save Player Debug Mode Switch
+		gamestate.overwrite_save_value(gamestate.loaded_save, "debug", false)
 
 		return tr("toggle_debug_mode_command_off")
 

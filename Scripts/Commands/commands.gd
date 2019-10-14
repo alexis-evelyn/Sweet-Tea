@@ -368,7 +368,7 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 
 		load_world_server_thread.start(world_handler, "load_world_server_threaded", [net_id, world_path])
 
-		if net_id == 1:
+		if net_id == gamestate.standard_netids.server:
 			# If Server, show loading screen here.
 			pass
 
@@ -424,7 +424,7 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 
 		create_world_server_thread.start(world_handler, "create_world_server_threaded", [net_id, ""]) # Run's createworld function
 
-		if net_id == 1:
+		if net_id == gamestate.standard_netids.server:
 			# If Server, show loading screen here.
 			pass
 
@@ -485,7 +485,7 @@ func server_spawn(net_id: int, message: PoolStringArray) -> String:
 
 		load_world_server_thread.start(world_handler, "load_world_server_threaded", [net_id, world_path])
 
-		if net_id == 1:
+		if net_id == gamestate.standard_netids.server:
 			# If Server, show loading screen here.
 			pass
 
@@ -764,7 +764,8 @@ func set_spawn_world(net_id: int, message: PoolStringArray) -> String:
 	if check_permission(players_permission_level, command_permission_level):
 		gamestate.player_info.starting_world = world_handler.get_world_folder(spawn_handler.get_world_name(net_id))
 
-		gamestate.save_player(gamestate.loaded_save)
+#		gamestate.save_player(gamestate.loaded_save)
+		gamestate.overwrite_save_value(gamestate.loaded_save, "starting_world", gamestate.player_info.starting_world)
 		return tr("set_spawn_world_command_success") % gamestate.player_info.starting_world
 
 	return tr("set_spawn_world_command_no_permission")
