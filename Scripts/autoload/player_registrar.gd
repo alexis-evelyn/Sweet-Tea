@@ -75,7 +75,7 @@ remote func register_player(pinfo: Dictionary, net_id: int, new_world : bool = f
 
 	if not pinfo.has("name"):
 		pinfo.display_name = "Unnamed Player"
-		return -2 # Allows Client and Server to Know it had to Change Player's Name Due To Name Missing - I May Implement A Custom Error Enum
+		return ERR_INVALID_DATA # Allows Client and Server to Know it had to Change Player's Name Due To Name Missing - I May Implement A Custom Error Enum
 
 	return OK
 
