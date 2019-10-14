@@ -8,7 +8,7 @@ onready var playerCreationWindow = $PlayerCreationWindow
 onready var createCharacterButton = $PlayerCreationWindow/background/Interface/CreateCharacter
 onready var characterName = $PlayerCreationWindow/background/Interface/CharacterName
 onready var characterColor = $PlayerCreationWindow/background/Interface/CharacterColor
-onready var debugMode = $PlayerCreationWindow/background/Interface/DebugMode
+#onready var debugMode = $PlayerCreationWindow/background/Interface/DebugMode
 onready var worldSeed = $PlayerCreationWindow/background/Interface/WorldSeed
 
 var old_title : String = functions.empty_string # Title From Before Window Was Shown
@@ -32,7 +32,7 @@ func _ready():
 
 func set_text() -> void:
 	createCharacterButton.text = tr("create_character_button")
-	debugMode.text = tr("debug_mode_checkbox")
+#	debugMode.text = tr("debug_mode_checkbox")
 
 	worldSeed.placeholder_text = tr("world_seed_placeholder")
 	characterName.placeholder_text = tr("character_name_placeholder")
@@ -50,7 +50,8 @@ func create_character() -> void:
 	gamestate.player_info.char_unique_id = gamestate.generate_character_unique_id()
 
 	# Unless modded, the checkbox should always be a valid boolean value
-	gamestate.debug = debugMode.is_pressed()
+	# Now that debug mode can be set by command, I am removing it from the character creation menu.
+#	gamestate.debug = debugMode.is_pressed()
 
 	# Currently Loaded Save
 	gamestate.loaded_save = slot

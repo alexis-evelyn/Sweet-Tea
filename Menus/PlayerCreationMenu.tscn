@@ -43,16 +43,16 @@ margin_right = 185.0
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="PlayerCreationWindow/background/Interface"]
 margin_left = 193.0
-margin_right = 357.0
+margin_right = 217.0
 
 [node name="VBoxContainer3" type="VBoxContainer" parent="PlayerCreationWindow/background/Interface"]
-margin_left = 365.0
-margin_right = 517.0
+margin_left = 225.0
+margin_right = 389.0
 
 [node name="CreateCharacter" type="Button" parent="PlayerCreationWindow/background/Interface"]
 margin_top = 8.0
 margin_right = 185.0
-margin_bottom = 88.0
+margin_bottom = 53.0
 text = "New Character"
 flat = true
 __meta__ = {
@@ -62,8 +62,8 @@ __meta__ = {
 [node name="CharacterColor" type="ColorPickerButton" parent="PlayerCreationWindow/background/Interface"]
 margin_left = 193.0
 margin_top = 8.0
-margin_right = 357.0
-margin_bottom = 88.0
+margin_right = 217.0
+margin_bottom = 53.0
 color = Color( 1, 1, 1, 1 )
 edit_alpha = false
 __meta__ = {
@@ -71,22 +71,23 @@ __meta__ = {
 }
 
 [node name="DebugMode" type="CheckButton" parent="PlayerCreationWindow/background/Interface"]
+visible = false
 margin_left = 365.0
 margin_top = 8.0
 margin_right = 517.0
 margin_bottom = 88.0
 
 [node name="WorldSeed" type="LineEdit" parent="PlayerCreationWindow/background/Interface"]
-margin_top = 96.0
-margin_right = 185.0
-margin_bottom = 141.0
+margin_left = 225.0
+margin_top = 8.0
+margin_right = 389.0
+margin_bottom = 53.0
 placeholder_text = "World Seed..."
 
 [node name="CharacterName" type="LineEdit" parent="PlayerCreationWindow/background/Interface"]
-margin_left = 193.0
-margin_top = 96.0
-margin_right = 357.0
-margin_bottom = 141.0
+margin_top = 61.0
+margin_right = 185.0
+margin_bottom = 106.0
 placeholder_text = "Character's Name"
 [connection signal="about_to_show" from="PlayerCreationWindow" to="." method="_about_to_show"]
 [connection signal="popup_hide" from="PlayerCreationWindow" to="." method="_about_to_hide"]
