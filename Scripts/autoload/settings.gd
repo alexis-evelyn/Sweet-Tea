@@ -57,7 +57,7 @@ func load_server_info() -> int:
 
 	if not save_data.file_exists(save_path): # Check If Save File Exists
 		logger.verbose("Save File Does Not Exist!!! Using Default Server Info?")
-		return -1 # Returns -1 to signal that loading save file failed (for reasons of non-existence)
+		return gamestate.save_error.file_not_exists # Returns -1 to signal that loading save file failed (for reasons of non-existence)
 
 	# warning-ignore:return_value_discarded
 	save_data.open(save_path, File.READ)
@@ -114,12 +114,12 @@ func load_server_info() -> int:
 #			logger.error("Save Format Is Not A Dictionary!!! It Probably is An Array!!")
 #			logger.error("Server Info Is Missing From File: %s" % save_path)
 			logger.error("Could Not Load Save File: %s" % save_path)
-			return -3 # Returns -3 to signal that JSON cannot be interpreted as a Dictionary or loaded
+			return gamestate.save_error.data_not_dictionary # Returns -3 to signal that JSON cannot be interpreted as a Dictionary or loaded
 	else:
 		logger.error("Cannot Interpret Save!!! Invalid JSON!!!")
 
 	save_data.close()
-	return 0
+	return gamestate.save_error.success
 
 # Check OS Settings For Optimizing Game Performance
 func check_settings():
@@ -294,7 +294,7 @@ func load_game_settings() -> int:
 
 	if not save_data.file_exists(save_path): # Check If Save File Exists
 		#logger.verbose("Save File Does Not Exist!!! New Player?")
-		return -1 # Returns -1 to signal that loading save file failed (for reasons of non-existence)
+		return gamestate.save_error.file_not_exists # Returns -1 to signal that loading save file failed (for reasons of non-existence)
 
 	# warning-ignore:return_value_discarded
 	save_data.open(save_path, File.READ)
@@ -332,15 +332,15 @@ func load_game_settings() -> int:
 #
 #			else:
 #				logger.warn("Player Slot Does Not Exist: %s" % slot)
-#				return -2 # Returns -2 to signal that player slot does not exist
+#				return  # Returns gamestate.save_error.player_slot_not_exists to signal that player slot does not exist
 		else:
 			logger.error("Save Format Is Not A Dictionary!!! It Probably is An Array!!")
-			return -3 # Returns -3 to signal that JSON cannot be interpreted as a Dictionary
+			return gamestate.save_error.data_not_dictionary # Returns -3 to signal that JSON cannot be interpreted as a Dictionary
 	else:
 		logger.error("Cannot Interpret Save!!! Invalid JSON!!!")
 
 	save_data.close()
-	return 0
+	return gamestate.save_error.success
 
 func get_class() -> String:
 	return "SettingsLoader"

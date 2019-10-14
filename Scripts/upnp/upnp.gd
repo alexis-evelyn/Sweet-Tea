@@ -22,4 +22,4 @@ func forward_game(port: int) -> int:
 #
 #	logger.debug("UPNP Add Port Mapping (%s to %s): %s" % [port, external_port, successful])
 
-	return 0
+	return OK

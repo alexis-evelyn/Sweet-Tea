@@ -195,7 +195,7 @@ func send_to_clients(mot: Vector2) -> void:
 
 	# Send copy to server regardless of it is in the world - Server won't update otherwise if not in same world
 	if int(gamestate.net_id) != 1:
-		rpc_unreliable_id(1, "move_player", mot)
+		rpc_unreliable_id(gamestate.standard_netids.server, "move_player", mot)
 
 # puppet (formerly slave) sets for all devices except master (the calling client)
 puppet func move_player(mot: Vector2) -> void:

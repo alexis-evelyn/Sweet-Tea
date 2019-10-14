@@ -316,7 +316,7 @@ func _on_connected_to_server() -> void:
 	player_registrar.register_player(gamestate.player_info, 0) # Update Own Dictionary With Ourself
 
 	# Server will send current_world to client through the register_player function. The above line of code makes sure to already have a copy of player info registered before calling the server's register_player function
-	player_registrar.rpc_unreliable_id(1, "register_player", gamestate.player_info, gamestate.net_id) # Ask Server To Update Player Dictionary - Server ID is Always 1
+	player_registrar.rpc_unreliable_id(gamestate.standard_netids.server, "register_player", gamestate.player_info, gamestate.net_id) # Ask Server To Update Player Dictionary - Server ID is Always 1
 
 # Failed To Connect To Server
 func _on_connection_failed() -> void:
@@ -339,7 +339,7 @@ func start_ping(message: String = "Ping") -> void:
 # Send Ping to Server
 func send_ping(message: String = "Ping") -> void:
 	#logger.verbose("Send Ping: %s" % message)
-	rpc_unreliable_id(1, "server_ping", message)
+	rpc_unreliable_id(gamestate.standard_netids.server, "server_ping", message)
 
 # Recieve Ping From Client (and send ping back)
 master func server_ping(message: String) -> void:

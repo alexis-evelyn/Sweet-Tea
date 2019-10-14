@@ -73,14 +73,14 @@ master func chat_message_server(message: String, send_to_chat: bool = true) -> i
 		message = message.substr(0, max_characters)
 
 	# Get's The Sender's NetID
-	if get_tree().get_rpc_sender_id() == 0:
+	if get_tree().get_rpc_sender_id() == gamestate.standard_netids.ourself:
 		net_id = gamestate.net_id
 	elif player_registrar.has(get_tree().get_rpc_sender_id()):
 		net_id = get_tree().get_rpc_sender_id()
 
 	# Make Sure Player Registered With Server First (keeps from having unregistered clients chatting)
-		if !player_registrar.has(net_id):
-			return -1
+	if !player_registrar.has(net_id):
+		return ERR_DOES_NOT_EXIST
 
 	# Check to See if Message is a Command
 	if message.substr(0,1) == "/":
@@ -89,7 +89,7 @@ master func chat_message_server(message: String, send_to_chat: bool = true) -> i
 		#if response != null and response != "":
 		#	rpc_unreliable_id(net_id, "chat_message_client", response)
 
-		return 0 # Prevents executing the rest of the function
+		return OK # Prevents executing the rest of the function
 
 	# Set Color for Player's Username
 	chat_color = "#" + player_registrar.color(int(net_id)).to_html(false) # For now, I am specify chat color as color of character. I may change how color is set later.
@@ -105,7 +105,7 @@ master func chat_message_server(message: String, send_to_chat: bool = true) -> i
 	if send_to_chat:
 		rpc_unreliable("chat_message_client", added_username)
 
-	return 0
+	return OK
 
 # Send Chat To Server
 func _on_userChat_gui_input(event) -> void:
@@ -120,7 +120,7 @@ func _on_userChat_gui_input(event) -> void:
 			arguments = chatInput.text.split(" ", false, 0) # Convert Message into Arguments
 			internal_reply = client_commands.process_commands(arguments)
 			if internal_reply == "":
-				rpc_unreliable_id(1, "chat_message_server", chatInput.text)
+				rpc_unreliable_id(gamestate.standard_netids.server, "chat_message_server", chatInput.text)
 			else:
 				chat_message_client(internal_reply)
 
@@ -136,7 +136,7 @@ func autosend_command(command: String, send_to_chat: bool = true) -> void:
 	internal_reply = client_commands.process_commands(arguments)
 
 	if internal_reply == "":
-		rpc_unreliable_id(1, "chat_message_server", command, send_to_chat)
+		rpc_unreliable_id(gamestate.standard_netids.server, "chat_message_server", command, send_to_chat)
 	elif send_to_chat:
 		chat_message_client(internal_reply)
 

@@ -7,10 +7,35 @@ var shaders : Dictionary = shaders_class.shaders
 # warning-ignore:unused_class_variable
 var dictionary = preload("res://Scripts/functions/dictionary_registry.gd").new()
 
+# Used by Help Command to Provide List of Commands
+# The Help Descriptions Do Not Exist Yet...
+var supported_commands : Dictionary = {
+	"help_client": {"description": "help_help_client_desc", "cheat": false},
+	"calc": {"description": "help_calc_desc", "cheat": false},
+	"serverip": {"description": "help_serverip_desc", "cheat": false},
+	"cam": {"description": "help_cam_desc", "cheat": true},
+	"shaderinfo": {"description": "help_shaderinfo_desc", "cheat": true},
+
+	"shader": {"description": "help_shader_desc", "cheat": true},
+	"shaderparam": {"description": "help_shaderparam_desc", "cheat": true},
+	"debug": {"description": "help_debug_desc", "cheat": true},
+#	"debugdraw": {"description": "help_debugdraw_desc"},
+
+	"screenshot": {"description": "help_screenshot_desc", "cheat": false},
+	"dict": {"description": "help_dict_desc", "cheat": true},
+
+	"debugcollisions": {"description": "help_debugcollisions_desc", "cheat": true},
+	"testvibration": {"description": "help_testvibration_desc", "cheat": false},
+	"controllers": {"description": "help_controllers_desc", "cheat": false},
+	"randomshader": {"description": "help_randomshader_desc", "cheat": true}
+}
+
 func process_commands(message: PoolStringArray) -> String:
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 
 	match command:
+		"help_client":
+			return help_command(message)
 		"calc":
 			return open_calculator(message)
 		"server_ip":
@@ -43,6 +68,13 @@ func process_commands(message: PoolStringArray) -> String:
 			return pick_random_shader(message)
 		_:
 			return ""
+
+# warning-ignore:unused_argument
+func help_command(message: PoolStringArray) -> String:
+	# I'm not sure how to receive data from server within this function if it is even possible.
+#	rpc_unreliable_id(gamestate.standard_netids.server, "chat_message_server", message, true)
+
+	return "Help Command"
 
 # warning-ignore:unused_argument
 func open_calculator(message: PoolStringArray) -> String:

@@ -174,7 +174,7 @@ puppet func load_world_client() -> void:
 		get_tree().get_root().get_node("NetworkMenu").queue_free()
 
 	# Now that the current world has been set, ask server to spawn player
-	spawn_handler.rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
+	spawn_handler.rpc_unreliable_id(gamestate.standard_netids.server, "spawn_player_server", gamestate.player_info) # Notify Server To Spawn Client
 	emit_signal("world_loaded_client")
 
 # Load Template to Instance World Into

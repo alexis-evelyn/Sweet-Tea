@@ -62,7 +62,7 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 
 		# Make Sure Player Registered With Server First (keeps from having invisible clients)
 		if !player_registrar.has(net_id):
-			return -1
+			return ERR_DOES_NOT_EXIST
 
 		for id in player_registrar.players:
 			# Spawn Existing Players for New Client (Not New Player)
@@ -107,7 +107,7 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 		network.rpc_id(net_id, "set_client_title", message % player_registrar.players[int(net_id)].current_world)
 
 	add_player(pinfo, net_id, coordinates) # TODO: Check to see if this is what causes problems with the Headless Server Mode
-	return 0
+	return OK
 
 # Spawns a new player actor, using the provided player_info structure and the given spawn index
 # http://kehomsforge.com/tutorials/multi/gdMultiplayerSetup/part03/ - "Spawning A Player"
@@ -235,7 +235,7 @@ remote func change_world(world_name: String, same_world: bool = false) -> void:
 
 			worlds.add_child(spawn)
 		# TODO (IMPORTANT): Every once in a blue moon, the client does not spawn it's own player in (after it loads the world) after changing worlds. Figure out why!!!
-		rpc_unreliable_id(1, "spawn_player_server", gamestate.player_info) # Request Server Spawn
+		rpc_unreliable_id(gamestate.standard_netids.server, "spawn_player_server", gamestate.player_info) # Request Server Spawn
 	elif get_tree().is_network_server():
 		# There's a bug specific to the server player changing to a world with existing clients
 		# The existing clients won't see the server player (this does not affect a client with existing clients)

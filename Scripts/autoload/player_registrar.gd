@@ -30,7 +30,7 @@ remote func register_player(pinfo: Dictionary, net_id: int, new_world : bool = f
 	# Because of Server Adding To Registry Data - I Cannot Allow Client to Update Data Mid-Session
 	# This is overriden if the server is sender - allows updating player info on world change and modded servers can change player's info on a vanilla client
 	if players.has(int(net_id)) and get_tree().get_rpc_sender_id() != 1:
-		return -1
+		return ERR_DOES_NOT_EXIST
 
 	#logger.verbose("Registering Player %s (%s) to Player Registry" % [pinfo.name, net_id])
 	# If Character Color is Missing, Then Set Character Color to Default Color
@@ -77,7 +77,7 @@ remote func register_player(pinfo: Dictionary, net_id: int, new_world : bool = f
 		pinfo.display_name = "Unnamed Player"
 		return -2 # Allows Client and Server to Know it had to Change Player's Name Due To Name Missing - I May Implement A Custom Error Enum
 
-	return 0
+	return OK
 
 # Clients Notified To Remove Player From Player List
 remote func unregister_player(id: int) -> void:

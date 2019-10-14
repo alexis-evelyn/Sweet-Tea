@@ -53,6 +53,7 @@ const slot_number = {
 # Used to Store Predefined Network IDs (Compile Time)
 const standard_netids = {
 	invalid_id = -1,
+	ourself = 0,
 	server = 1
 }
 
@@ -118,6 +119,7 @@ func save_player(slot: int) -> void:
 	var save_path : String = save_directory.plus_file(save_file) # Save File Path
 	var save_path_backup : String = save_directory.plus_file(backups_dir.plus_file(backups_save_file.replace("%date%", str(OS.get_unix_time())))) # Save File Backup Path - OS.get_unix_time() is Unix Time Stamp
 	var backup_path : String = save_directory.plus_file(backups_dir) # Backup Directory Path
+# warning-ignore:unused_variable
 	var locale : String # Store a Copy of Player's Locale
 
 	#logger.verbose("Game Version: %s" % game_version)

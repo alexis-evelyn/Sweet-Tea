@@ -27,28 +27,28 @@ enum permission_level {
 
 # Used by Help Command to Provide List of Commands
 var supported_commands : Dictionary = {
-	"help": {"description": "help_help_desc", "permission": permission_level.player},
-	"kick": {"description": "help_kick_desc", "permission": permission_level.mod},
-	"kickip": {"description": "help_kickip_desc", "permission": permission_level.mod},
-	"ban": {"description": "help_ban_desc", "permission": permission_level.mod},
-	"banip": {"description": "help_banip_desc", "permission": permission_level.mod},
-	"shutdown": {"description": "help_shutdown_desc", "permission": permission_level.server_owner},
+	"help": {"description": "help_help_desc", "permission": permission_level.player, "cheat": false},
+	"kick": {"description": "help_kick_desc", "permission": permission_level.mod, "cheat": false},
+	"kickip": {"description": "help_kickip_desc", "permission": permission_level.mod, "cheat": false},
+	"ban": {"description": "help_ban_desc", "permission": permission_level.mod, "cheat": false},
+	"banip": {"description": "help_banip_desc", "permission": permission_level.mod, "cheat": false},
+	"shutdown": {"description": "help_shutdown_desc", "permission": permission_level.server_owner, "cheat": false},
 
-	"changeworld": {"description": "help_changeworld_desc", "permission": permission_level.op},
-	"createworld": {"description": "help_createworld_desc", "permission": permission_level.mod},
-#	"spawn": {"description": "help_spawn_desc", "permission": permission_level.admin},
-	"spawn": {"description": "help_wspawn_desc", "permission": permission_level.admin},
-	"setspawn": {"description": "help_setspawn_desc", "permission": permission_level.admin},
-	"setwspawn": {"description": "help_setwspawn_desc", "permission": permission_level.admin},
-	"tp": {"description": "help_tp_desc", "permission": permission_level.op},
-	"seed": {"description": "help_seed_desc", "permission": permission_level.server_owner},
-	"servertime": {"description": "help_servertime_desc", "permission": permission_level.player},
-	"gravity": {"description": "help_gravity_desc", "permission": permission_level.op},
-	"setspawnworld": {"description": "help_setspawnworld_desc", "permission": permission_level.admin},
+	"changeworld": {"description": "help_changeworld_desc", "permission": permission_level.op, "cheat": true},
+	"createworld": {"description": "help_createworld_desc", "permission": permission_level.mod, "cheat": true},
+	"spawn": {"description": "help_spawn_desc", "permission": permission_level.admin, "cheat": true},
+	"wspawn": {"description": "help_wspawn_desc", "permission": permission_level.admin, "cheat": true},
+	"setspawn": {"description": "help_setspawn_desc", "permission": permission_level.admin, "cheat": true},
+#	"setwspawn": {"description": "help_setwspawn_desc", "permission": permission_level.admin, "cheat": true},
+	"tp": {"description": "help_tp_desc", "permission": permission_level.op, "cheat": true},
+	"seed": {"description": "help_seed_desc", "permission": permission_level.server_owner, "cheat": true},
+	"servertime": {"description": "help_servertime_desc", "permission": permission_level.player, "cheat": false},
+	"gravity": {"description": "help_gravity_desc", "permission": permission_level.op, "cheat": true},
+	"setspawnworld": {"description": "help_setspawnworld_desc", "permission": permission_level.admin, "cheat": true},
 
 	# These are essentially the same command
-	"msg": {"description": "help_msg_desc", "permission": permission_level.player},
-	"tell": {"description": "help_msg_desc", "permission": permission_level.player}
+	"msg": {"description": "help_msg_desc", "permission": permission_level.player, "cheat": false},
+	"tell": {"description": "help_msg_desc", "permission": permission_level.player, "cheat": false}
 }
 
 var arguments : PoolStringArray # To Convert Message into Arguments
