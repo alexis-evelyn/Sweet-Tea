@@ -66,6 +66,29 @@ func reset_player_info() -> void:
 	gamestate.player_info.saved_world = "" # Functionally the same thing as current_world, but meant for Single Player Only (the one exception is, the single player world is loaded on client when connected to server. Similar idea to Starbound's Spaceship on Servers) - Loads Player In Last Saved World
 #	gamestate.player_info.locale = TranslationServer.get_locale() # Helps Servers Know What Language To Use (for multilingual supporting servers)
 
+func cleanup_player_info(pinfo: Dictionary) -> Dictionary:
+	# Remove Locale From Player Info
+	if pinfo.has("locale"):
+		pinfo.erase("locale")
+
+	# Remove Permission Level From Player Info
+	if pinfo.has("permission_level"):
+		pinfo.erase("permission_level")
+
+	# Remove Secure Unique ID From Player Info
+	if pinfo.has("secure_unique_id"):
+		pinfo.erase("secure_unique_id")
+
+	# Remove Current World From Player Info
+	if pinfo.has("current_world"):
+		pinfo.erase("current_world")
+
+	# Remove Display Name From Player Info
+	if pinfo.has("display_name"):
+		pinfo.erase("display_name")
+
+	return pinfo
+
 # Save Game Data
 func save_player(slot: int) -> void:
 	var save_path : String = save_directory.plus_file(save_file) # Save File Path
@@ -76,6 +99,7 @@ func save_player(slot: int) -> void:
 	#logger.verbose("Game Version: %s" % game_version)
 	var players_data : JSONParseResult # Data To Save
 	var players_data_result : Dictionary # players_data's Result
+	var dirty_player_info : Dictionary = player_info.duplicate(true)
 
 	var file_op : Directory = Directory.new() # Allows Performing Operations on Files (like moving or deleting a file)
 
@@ -93,6 +117,7 @@ func save_player(slot: int) -> void:
 		# warning-ignore:return_value_discarded
 		save_data.open(save_path, File.READ_WRITE) # Open Save File For Reading/Writing
 		players_data = JSON.parse(save_data.get_as_text()) # Load existing Save File as JSON
+		save_data.close() # Because I Cannot Just Overwrite Files When Reading Them, I Will Have to Open a New File Writer
 
 		# Backup The Save File (I Want It To Back Up Regardless of if It Is Corrupted)
 		# warning-ignore:return_value_discarded
@@ -109,16 +134,19 @@ func save_player(slot: int) -> void:
 			# Should I merge this and the code from new save into a single function?
 			players_data_result["game_version"] = game_version
 
-			# Temporarily Remove Locale From Player Info
-			if player_info.has("locale"):
-				locale = player_info.locale
-				player_info.erase("locale")
+			# If Debug Mode Enabled, Save to File
+			if debug:
+				logger.error("Debug Mode Saved")
+				dirty_player_info.debug = true
+			else:
+				dirty_player_info.erase("debug")
 
 			# Note: Key has to be a string, otherwise Godot bugs out and adds duplicate keys to Dictionary
-			players_data_result[str(slot)] = player_info # Replaces Key In Dictionary With Updated Player_Info
+			players_data_result[str(slot)] = cleanup_player_info(dirty_player_info)
 
-			#logger.verbose(to_json(players_data)) # Print Save Data to stdout (Debug)
-			save_data.store_string(to_json(players_data_result))
+#		logger.debug(to_json(players_data_result)) # Print Save Data to stdout (Debug)
+		save_data.open(save_path, File.WRITE) # Open Save File For Writing Only - To Counteract Inability to Overwrite Files When Reading
+		save_data.store_string(to_json(players_data_result))
 	else:
 		#logger.verbose("Save File Does Not Exist!!! Creating!!!")
 		# warning-ignore:return_value_discarded
@@ -129,18 +157,19 @@ func save_player(slot: int) -> void:
 
 		player_info["char_unique_id"] = generate_character_unique_id()
 
-		# Temporarily Remove Locale From Player Info
-		if player_info.has("locale"):
-			locale = player_info.locale
-			player_info.erase("locale")
+		# If Debug Mode Enabled, Save to File
+		if debug:
+			logger.error("Debug Mode Saved")
+			dirty_player_info.debug = true
+		else:
+			dirty_player_info.erase("debug")
 
 		# Note: Key has to be a string, otherwise Godot bugs out and adds duplicate keys to Dictionary
-		players_data_result[str(slot)] = player_info
+		players_data_result[str(slot)] = cleanup_player_info(player_info)
 
-		#logger.verbose(to_json(players_data)) # Print Save Data to stdout (Debug)
+		#logger.debug(to_json(players_data_result)) # Print Save Data to stdout (Debug)
 		save_data.store_string(to_json(players_data_result))
 
-	player_info.locale = locale # Set Locale Back For Gamestate
 	save_data.close()
 
 # Load Game Data
@@ -187,6 +216,7 @@ func load_player(slot: int) -> int:
 				# Check if Save Data Has Debug Boolean
 				if player_info.has("debug"):
 					debug = bool(player_info.debug)
+					player_info.erase("debug")
 
 			else:
 				logger.warn("Player Slot Does Not Exist: %s" % slot)

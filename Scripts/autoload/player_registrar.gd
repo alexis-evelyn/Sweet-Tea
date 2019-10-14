@@ -42,7 +42,7 @@ remote func register_player(pinfo: Dictionary, net_id: int, new_world : bool = f
 	if get_tree().is_network_server():
 		# TODO: Change to use a permanent id supplied by auth server
 		# The idea is that this id cannot be manipulated by the user. In essence, it is secure (as opposed to char_unique_id or os_unique_id)
-		players[int(net_id)].name = "%s#%s" % [pinfo.name, net_id] # Setup Player's ID to be Unique
+		players[int(net_id)].display_name = "%s#%s" % [pinfo.name, net_id] # Setup Player's ID to be Unique
 		players[int(net_id)].secure_unique_id = net_id # Copy the id to a value that can be easily retrieved (without parsing overhead)
 
 		# Add Starting World Name to Player Data (names are unique in the same parent node, so it can be treated as an id)
@@ -74,7 +74,7 @@ remote func register_player(pinfo: Dictionary, net_id: int, new_world : bool = f
 					rpc_unreliable_id(id, "register_player", players[int(net_id)], net_id)
 
 	if not pinfo.has("name"):
-		pinfo.name = "Unnamed Player"
+		pinfo.display_name = "Unnamed Player"
 		return -2 # Allows Client and Server to Know it had to Change Player's Name Due To Name Missing - I May Implement A Custom Error Enum
 
 	return 0
@@ -128,6 +128,18 @@ func name(id: int) -> String:
 		return "Not Set - Failed Name Lookup"
 
 	return players[id].name
+
+# Returns Player's Display Name
+func display_name(id: int) -> String:
+	if not players.has(id):
+		logger.error("Return Player Display Name Failed: Player ID '%s' Not Registered!!!" % str(id))
+		return ""
+
+	if not players[id].has("display_name"):
+		logger.warning("Return Player Name Failed: Player Display Name for ID '%s' Is Not Set!!!" % str(id))
+		return "Not Set - Failed Display Name Lookup"
+
+	return players[id].display_name
 
 # Returns Player's Character's Color
 func color(id: int) -> Color:

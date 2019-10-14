@@ -520,8 +520,7 @@ func toggle_debug_mode(message: PoolStringArray) -> String:
 				world_generator.background_tilemap.tile_set = world_generator.debug_tileset_background
 				world_generator.set_shader_background_tiles()
 
-		# Should I Save Character's New Debug Mode State
-#		gamestate.save_player(slot)
+		gamestate.save_player(gamestate.loaded_save) # Save Player Debug Mode Switch
 
 		return tr("toggle_debug_mode_command_on")
 	else:
@@ -541,8 +540,7 @@ func toggle_debug_mode(message: PoolStringArray) -> String:
 				world_generator.background_tilemap.tile_set = world_generator.default_tileset_background
 				world_generator.set_shader_background_tiles()
 
-		# Should I Save Character's New Debug Mode State
-#		gamestate.save_player(slot)
+		gamestate.save_player(gamestate.loaded_save) # Save Player Debug Mode Switch
 
 		return tr("toggle_debug_mode_command_off")
 

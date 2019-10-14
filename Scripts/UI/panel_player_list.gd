@@ -40,7 +40,15 @@ func _on_player_list_changed() -> void:
 			if (int(player.name) != gamestate.net_id):
 				var connectedPlayerLabel : Label = Label.new()
 				connectedPlayerLabel.align = Label.ALIGN_CENTER # Aligns the Text To Center
-				connectedPlayerLabel.text = player_registrar.players[int(player.name)].name
+
+				if player_registrar.players[int(player.name)].has("display_name"):
+					connectedPlayerLabel.text = player_registrar.players[int(player.name)].display_name # Try to Use Display Name
+				elif player_registrar.players[int(player.name)].has("name"):
+					connectedPlayerLabel.text = player_registrar.players[int(player.name)].name # If not, Use Name
+				else:
+					connectedPlayerLabel.text = player.name # Else Use Net ID
+
+
 				# Font does not need to be loaded every single time (only once)
 				#connectedPlayerLabel.add_font_override("font", load("res://Assets/Fonts/dynamicfont/firacode-regular.tres"))
 				$boxList.add_child(connectedPlayerLabel)

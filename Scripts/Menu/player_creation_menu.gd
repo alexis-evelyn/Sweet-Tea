@@ -52,6 +52,9 @@ func create_character() -> void:
 	# Unless modded, the checkbox should always be a valid boolean value
 	gamestate.debug = debugMode.is_pressed()
 
+	# Currently Loaded Save
+	gamestate.loaded_save = slot
+
 	# I am not officially supporting Mobile Devices Until After Release, But I Am Testing The Game on Android
 	if (functions.get_system() == functions.host_system.android) or (functions.get_system() == functions.host_system.iOS):
 		gamestate.debug = true

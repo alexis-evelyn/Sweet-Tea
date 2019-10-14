@@ -100,7 +100,7 @@ master func chat_message_server(message: String, send_to_chat: bool = true) -> i
 	# The URL Idea Came From: https://docs.godotengine.org/en/latest/classes/class_richtextlabel.html?highlight=bbcode#signals
 	var username_start : String = "[url={\"player_net_id\":\"" + str(net_id) + "\"}][color=" + chat_color + "][b][u]"
 	var username_end : String = "[/u][/b][/color][/url]"
-	added_username = "<" + username_start + str(player_registrar.name(int(net_id))) + username_end + "> " + message
+	added_username = "<" + username_start + str(player_registrar.display_name(int(net_id))) + username_end + "> " + message
 
 	if send_to_chat:
 		rpc_unreliable("chat_message_client", added_username)
