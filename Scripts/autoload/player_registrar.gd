@@ -74,7 +74,7 @@ remote func register_player(pinfo: Dictionary, net_id: int, new_world : bool = f
 					rpc_unreliable_id(id, "register_player", players[int(net_id)], net_id)
 
 	if not pinfo.has("name"):
-		pinfo.display_name = "Unnamed Player"
+		pinfo.display_name = gamestate.DEFAULT_PLAYER_NAME
 		return ERR_INVALID_DATA # Allows Client and Server to Know it had to Change Player's Name Due To Name Missing - I May Implement A Custom Error Enum
 
 	return OK
@@ -121,7 +121,7 @@ func has(id: int) -> bool:
 func name(id: int) -> String:
 	if not players.has(id):
 		logger.error("Return Player Name Failed: Player ID '%s' Not Registered!!!" % str(id))
-		return ""
+		return functions.empty_string
 
 	if not players[id].has("name"):
 		logger.warning("Return Player Name Failed: Player Name for ID '%s' Is Not Set!!!" % str(id))
@@ -133,7 +133,7 @@ func name(id: int) -> String:
 func display_name(id: int) -> String:
 	if not players.has(id):
 		logger.error("Return Player Display Name Failed: Player ID '%s' Not Registered!!!" % str(id))
-		return ""
+		return functions.empty_string
 
 	if not players[id].has("display_name"):
 		logger.warning("Return Player Name Failed: Player Display Name for ID '%s' Is Not Set!!!" % str(id))

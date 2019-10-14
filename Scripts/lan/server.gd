@@ -6,11 +6,11 @@ class_name ServerFinderHelper
 var used_port: int
 var packet_buffer_size: int = 1000 # Clients repeatedly send packets, so there is no reason to cache 65536 packets.
 var server : Thread = Thread.new()
-var calling_card : String = "Nihilistic Sweet Tea"
+const calling_card : String = "Nihilistic Sweet Tea"
 var delay_packet_processing_time_milliseconds : int = 300 # Delay processing to prevent cpu usage rising dramatically by a flood of packets (won't prevent DOS, but helps out on normal usage)
 var udp_peer : PacketPeerUDP = PacketPeerUDP.new()
 
-var string_insertion : String = "%s" # String to look for when inserting another string!!!
+const string_insertion : String = "%s" # String to look for when inserting another string!!!
 var server_info : Dictionary = network.server_info.duplicate() # Copy Server Info To Manipulate
 var motd : String
 
@@ -101,11 +101,11 @@ func process_message(client_ip: String, client_port: int, bytes: PoolByteArray):
 #			logger.verbose("Client IP Address: %s" % server_info.ip_address)
 #			logger.verbose("IP Addresses: %s" % server_info.ip_addresses)
 			if split_message[0] == calling_card:
-				game_version = split_message[1].trim_prefix(" ").trim_suffix(" ")
+				game_version = split_message[1].trim_prefix(functions.space_string).trim_suffix(functions.space_string)
 			elif split_message[0] == "name":
-				character_name = split_message[1].trim_prefix(" ").trim_suffix(" ")
+				character_name = split_message[1].trim_prefix(functions.space_string).trim_suffix(functions.space_string)
 			elif split_message[0] == "character_unique_id":
-				character_unique_id = split_message[1].trim_prefix(" ").trim_suffix(" ")
+				character_unique_id = split_message[1].trim_prefix(functions.space_string).trim_suffix(functions.space_string)
 
 #		logger.warning("(%s:%s) Client's Game Version: '%s'" % [client_ip, str(client_port), game_version])
 #		logger.warning("(%s:%s) Character Name: '%s'" % [client_ip, str(client_port), character_name])

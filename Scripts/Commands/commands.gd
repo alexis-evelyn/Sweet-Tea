@@ -67,12 +67,12 @@ func process_command(net_id: int, message: String) -> void:
 		Only Meant to Be Called By RPC (and by server)
 	"""
 	#logger.verbose("UserID: %s Command: %s" % [net_id, message])
-	arguments = message.split(" ", false, 0) # Convert Message into Arguments
+	arguments = message.split(functions.space_string, false, 0) # Convert Message into Arguments
 
 	var response : String = check_command(net_id, arguments)
 
 	# If response is empty, then don't send anything to chat
-	if response == "":
+	if response == functions.empty_string:
 		return
 
 	#var response = "UserID: " + str(net_id) + " Command: " + message
@@ -133,8 +133,8 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 		"setspawnworld":
 			return set_spawn_world(net_id, message)
 		_: # Default Result - Put at Bottom of Match Results
-			if command == "":
-				return ""
+			if command == functions.empty_string:
+				return functions.empty_string
 			else:
 				return functions.get_translation("command_not_found", player_registrar.players[net_id].locale) % command
 
@@ -233,7 +233,7 @@ func private_message(net_id: int, message: PoolStringArray) -> String:
 	if not player_registrar.players.has(user_net_id) or player_registrar.players[user_net_id].name.to_lower() != username.to_lower():
 		return functions.get_translation("private_message_user_not_found", player_registrar.players[net_id].locale) % username
 
-	var private_message_string : String = PoolStringArray(message).join(" ")
+	var private_message_string : String = PoolStringArray(message).join(functions.space_string)
 
 	# Set Color for Player's Username
 	var chat_color = "#" + player_registrar.color(int(net_id)).to_html(false) # For now, I am specify chat color as color of character. I may change how color is set later.
@@ -259,7 +259,7 @@ func private_message(net_id: int, message: PoolStringArray) -> String:
 			var added_username = "* " + functions.get_translation("private_message_whisper_self", player_registrar.players[net_id].locale) + private_message_start + private_message_string + private_message_end
 			functions.rpc_unreliable_id(user_net_id, "request_attention", functions.attention_reason.private_message)
 			get_parent().rpc_unreliable_id(user_net_id, "chat_message_client", added_username)
-			return ""
+			return functions.empty_string
 	else:
 		if net_id != user_net_id:
 			var added_username = "* " + username_start + str(player_registrar.name(int(net_id))) + username_end + functions.get_translation("private_message_whisper", player_registrar.players[net_id].locale) + private_message_start + private_message_string + private_message_end
@@ -271,7 +271,7 @@ func private_message(net_id: int, message: PoolStringArray) -> String:
 			var added_username = "* " + functions.get_translation("private_message_whisper_self", player_registrar.players[net_id].locale) + private_message_start + private_message_string + private_message_end
 			functions.request_attention(functions.attention_reason.private_message)
 			get_parent().chat_message_client(added_username) # This just calls the chat_message_client directly as the server wants to message itself
-			return ""
+			return functions.empty_string
 
 # Kick Player Command
 # warning-ignore:unused_argument
@@ -363,7 +363,7 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	if check_permission(players_permission_level, command_permission_level):
-		var world_path : String = "user://worlds/World 2"
+		var world_path : String = gamestate.get_world_folder("World 2")
 #		var world_name : String = world_handler.load_world_server(net_id, world_path)
 
 		load_world_server_thread.start(world_handler, "load_world_server_threaded", [net_id, world_path])
@@ -379,7 +379,7 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 		world_generation.clear_player_chunks(net_id)
 		#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
 
-		if world_name == "":
+		if world_name == functions.empty_string:
 			# TODO: Replace world_path in error message with name user gave!!!
 			return functions.get_translation("change_world_command_failed_load_world", player_registrar.players[net_id].locale) % [world_path, net_id]
 
@@ -420,9 +420,9 @@ func create_world(net_id: int, message: PoolStringArray) -> String:
 		world_generation.clear_player_chunks(net_id)
 		#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
 
-#		var world_name = world_handler.create_world(net_id, "") # Run's createworld function
+#		var world_name = world_handler.create_world(net_id, functions.empty_string) # Run's createworld function
 
-		create_world_server_thread.start(world_handler, "create_world_server_threaded", [net_id, ""]) # Run's createworld function
+		create_world_server_thread.start(world_handler, "create_world_server_threaded", [net_id, functions.empty_string]) # Run's createworld function
 
 		if net_id == gamestate.standard_netids.server:
 			# If Server, show loading screen here.
@@ -463,7 +463,7 @@ func shutdown_server(net_id: int, message: PoolStringArray) -> String:
 	if check_permission(players_permission_level, command_permission_level):
 		# Server is Shutdown, so player cannot see the message regardless
 		network.close_connection()
-		return ""
+		return functions.empty_string
 
 	return functions.get_translation("shutdown_server_no_permission", player_registrar.players[net_id].locale)
 
@@ -496,7 +496,7 @@ func server_spawn(net_id: int, message: PoolStringArray) -> String:
 		world_generation.clear_player_chunks(net_id)
 		#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
 
-		if world_name == "":
+		if world_name == functions.empty_string:
 			# TODO: Replace world_path in error message with name user gave!!!
 			return functions.get_translation("spawn_command_failed", player_registrar.players[net_id].locale) % [world_path, net_id]
 
@@ -565,7 +565,7 @@ func set_server_spawn(net_id: int, message: PoolStringArray) -> String:
 		var world_name : String = load_world_server_thread.wait_to_finish()
 
 		# World Name not Found
-		if world_name == "":
+		if world_name == functions.empty_string:
 			return functions.get_translation("set_server_spawn_command_world_name_not_found", player_registrar.players[net_id].locale)
 
 		var world_gen_node : TileMap = spawn_handler.get_world_generator_node(world_name) # Get the node for the picked world
@@ -592,7 +592,7 @@ func set_world_spawn(net_id: int, message: PoolStringArray) -> String:
 		var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
 
 		# World Name not Found
-		if world_name == "":
+		if world_name == functions.empty_string:
 			return functions.get_translation("set_world_spawn_command_world_name_not_found", player_registrar.players[net_id].locale)
 
 		var world_gen_node : TileMap = spawn_handler.get_world_generator_node(world_name) # Get the node for the picked world

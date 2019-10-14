@@ -28,9 +28,9 @@ signal loaded_background_tiles
 # I also want to have a "home" that players spawn at before they join the world_template (like how Starbound has a spaceship. but I want my home to be an actual world that will be the player's home world. The player can then use portals to join the server world.
 const world_template : String = "res://WorldGen/WorldTemplate.tscn" # What Scene to use to instance the world into (Client Side)
 const loading_screen_name : String = "res://Menus/LoadingScreen.tscn" # Loading Screen
-var starting_world : String = "Not Set" # Template From World (Server Side - Includes Single Player)
-var starting_world_name : String = "Not Set" # Spawn World's Name (Server Side - Includes Single Player)
-var world_folder_path_template = "user://worlds/%s"
+var starting_world : String = functions.not_set_string # Template From World (Server Side - Includes Single Player)
+var starting_world_name : String = functions.not_set_string # Spawn World's Name (Server Side - Includes Single Player)
+const world_folder_path_template = "user://worlds/%s"
 
 # Server Gets Currently Loaded Worlds
 var loaded_worlds : Dictionary = {}
@@ -115,7 +115,7 @@ func start_server() -> void:
 #	yield(get_tree().create_timer(1), "timeout")
 #	loading_screen.queue_free()
 
-	if world == "":
+	if world == functions.empty_string:
 		#logger.verbose("World is Missing (on Server Start)!!! Check Player Save File!!!")
 
 		# Cleans Up Connection on Error
@@ -201,7 +201,7 @@ func load_template(location: String) -> Node:
 
 func load_world_server_threaded(thread_data: Array) -> String:
 	if thread_data.size() != 2:
-		return ""
+		return functions.empty_string
 
 	var net_id: int = int(thread_data[0])
 	var location: String = thread_data[1]
@@ -222,7 +222,7 @@ func load_world_server(net_id: int, location: String) -> String:
 	# If world's metadata does not exist, do not even attempt to load the world
 	if not file_check.file_exists(world_meta):
 		logger.error("Failed To Find world.json When Loading World!!!")
-		return ""
+		return functions.empty_string
 
 	emit_signal("found_world_data")
 
@@ -233,7 +233,7 @@ func load_world_server(net_id: int, location: String) -> String:
 
 		if world_grid == null:
 			logger.error("Cannot Load World Grid for World '%s'" % world_meta)
-			return ""
+			return functions.empty_string
 
 		emit_signal("loaded_world_grid")
 
@@ -266,7 +266,7 @@ func load_world_server(net_id: int, location: String) -> String:
 		# Failed to Parse JSON
 		logger.error("Failed To Parse JSON When Loading World!!!")
 #		emit_signal("failed_loading_world")
-		return ""
+		return functions.empty_string
 
 	if typeof(json.result) == TYPE_DICTIONARY:
 		var results = json.result
@@ -275,18 +275,18 @@ func load_world_server(net_id: int, location: String) -> String:
 			# If the world seed is missing, there is no way for the generator to accurately generate the world
 			# So don't even bother loading the world.
 			logger.error("Failed To Find Seed or World Name When Loading World!!!")
-			return ""
+			return functions.empty_string
 
 		if not results.has("chunks_foreground") or not results.has("chunks_background"):
 			# Chunk data is missing, don't want to accidentally overwrite player world.
 			logger.error("Failed To Find Chunks Foreground or Chunks Background When Loading World!!!")
-			return ""
+			return functions.empty_string
 
 		var template = load_template(world_template)
 		if template == null:
 			# If world fails to load, then notify world changer (or commands if server).
 			logger.error("Failed To Load Template When Loading World!!!")
-			return ""
+			return functions.empty_string
 
 		emit_signal("loaded_template")
 
@@ -341,7 +341,7 @@ func load_world_server(net_id: int, location: String) -> String:
 	else:
 		# Unknown JSON Format
 		logger.error("Failed To Parse JSON (Unknown Format) When Loading World!!!")
-		return ""
+		return functions.empty_string
 
 func save_world(world: ViewportContainer):
 	world_data_dict.clear() # Clears Dictionary From Previous Uses
@@ -401,7 +401,7 @@ func get_world_folder(world_name: String) -> String:
 
 func create_world_server_threaded(thread_data: Array) -> String:
 	if thread_data.size() < 1 or thread_data.size() > 3:
-		return ""
+		return functions.empty_string
 
 	var net_id: int = int(thread_data[0])
 	var world_seed: String = thread_data[1]
@@ -414,11 +414,11 @@ func create_world_server_threaded(thread_data: Array) -> String:
 	var world_size : Vector2 = thread_data[2]
 	return create_world(net_id, world_seed, world_size)
 
-func create_world(net_id: int = -1, world_seed: String = "", world_size: Vector2 = Vector2(0, 0)):
+func create_world(net_id: int = -1, world_seed: String = functions.empty_string, world_size: Vector2 = Vector2(0, 0)):
 	# Creates A World From Scratch
 	var worlds : Node # Worlds Node
 	var world_name : String = uuid.v4()
-	var location = "user://worlds/".plus_file(world_name)
+	var location = get_world_folder(world_name)
 	var world_meta = location.plus_file("world.json")
 	# warning-ignore:unused_variable
 	var world_file : File = File.new()
@@ -435,12 +435,12 @@ func create_world(net_id: int = -1, world_seed: String = "", world_size: Vector2
 	if template == null:
 		# If world fails to load, then notify world changer (or commands if server).
 		logger.error("Failed To Load Template When Creating World!!!")
-		return ""
+		return functions.empty_string
 
 	# Set World's Metadata
 	var generator = template.get_node("Viewport/WorldGrid/WorldGen")
 
-	if world_seed != "":
+	if world_seed != functions.empty_string:
 		generator.world_seed = world_seed # Set World's Seed
 
 	template.name = world_name # Set World's Name

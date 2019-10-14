@@ -262,7 +262,7 @@ func set_world_name(world_name: String) -> void:
 # Gets Player's Current World Name - Added To Make Code More Legible
 func get_world_name(net_id: int) -> String:
 	if not player_registrar.players.has(int(net_id)) or not player_registrar.players[int(net_id)].has("current_world"):
-		return ""
+		return functions.empty_string
 
 	return str(player_registrar.players[int(net_id)].current_world)
 

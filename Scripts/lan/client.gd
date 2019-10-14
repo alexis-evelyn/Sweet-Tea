@@ -12,16 +12,16 @@ var udp_peer = PacketPeerUDP.new()
 var packet_buffer_size : int = 65536
 
 var client : Thread = Thread.new() # I cannot switch to to OS.delay_msec(...) like I did for the server as then the client will not be able to set one way collisions and will crash. More info can be found at https://www.reddit.com/r/godot/comments/cu8jed/where_is_the_best_place_i_can_get_help_with/
-var calling_card : String = "Nihilistic Sweet Tea: %s" # Text Server watches for (includes game version to determine compatibility).
+const calling_card : String = "Nihilistic Sweet Tea: %s" # Text Server watches for (includes game version to determine compatibility).
 var delay_broadcast_time_seconds : float = 0.01 # 5 seconds
 var search_time : float = 30.0 # Only search for servers for 30 seconds until refresh is pressed.
 var delay_broadcast_search : Timer # Search For Servers Timer
 
 # Broadcast Addresses - IPV6 Does Not Support Broadcast (only using Multicast)
-var broadcast_address : String = "255.255.255.255" # For Lan networks.
-var localhost_address : String = "127.0.0.1" # For people running client and server on same machine.
+const broadcast_address : String = "255.255.255.255" # For Lan networks.
+const localhost_address : String = "127.0.0.1" # For people running client and server on same machine.
 # warning-ignore:unused_class_variable
-var localhost_broadcast : String = "127.255.255.255" # 127.255.255.255 is the localhost broadcast address (the server cannot detect it :(, how do I fix that?
+const localhost_broadcast : String = "127.255.255.255" # 127.255.255.255 is the localhost broadcast address (the server cannot detect it :(, how do I fix that?
 
 var addresses : Array = [localhost_address, broadcast_address] # Addresses to Broadcast to
 

@@ -14,7 +14,7 @@ onready var api = $GameJoltAPI
 
 var gamejolt_credentials_name = ".gj-credentials"
 var executable_directory = get_executable_folder()
-var protocol = ""
+var protocol = functions.empty_string
 var gamejolt_auth_path = protocol.plus_file(executable_directory.plus_file(gamejolt_credentials_name))
 
 # Called when the node enters the scene tree for the first time.
@@ -135,7 +135,7 @@ func get_executable_folder():
 	# Keeps folder in Project Directory (will probably bug out on OSX if running a debug build outside the editor)
 	# Godot Keeps Defaulting Back to Debug Mode and I Keep Forgetting to Change Exports Back to Release Mode, So I Am Disabling This
 #	if OS.is_debug_build(): #Engine.is_editor_hint(): is for if running inside editor (put tool at top of file)
-#		return ""
+#		return functions.empty_string
 
 	var path = OS.get_executable_path()
 

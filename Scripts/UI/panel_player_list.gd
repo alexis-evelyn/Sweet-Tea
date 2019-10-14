@@ -62,7 +62,7 @@ func get_players_node(world_name: String) -> Node:
 func get_world_name(net_id: int) -> String:
 	if player_registrar.players[int(net_id)].has("current_world"):
 		return str(player_registrar.players[int(net_id)].current_world)
-	return ""
+	return functions.empty_string
 
 func show_player_list() -> void:
 	self.visible = true

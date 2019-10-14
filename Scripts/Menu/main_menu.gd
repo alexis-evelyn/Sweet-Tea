@@ -108,7 +108,7 @@ func _on_Singleplayer_pressed() -> void:
 		Not Meant to Be Called Directly
 	"""
 
-	player_selection_window.set_menu("") # Set's menu to load after selecting player
+	player_selection_window.set_menu(functions.empty_string) # Set's menu to load after selecting player
 	player_selection_window.popup_centered()
 
 func _on_Multiplayer_pressed() -> void:

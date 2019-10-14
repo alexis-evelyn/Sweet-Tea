@@ -160,19 +160,19 @@ func _on_btnJoin_pressed() -> void:
 	var address : PoolStringArray = ($panelNetwork/manualJoin/txtServerAddress.text).split(":", true, 1)
 
 	# If IP Address is Empty, Just Return
-	if address.size() == 0 or address[0].rstrip(" ").lstrip(" ") == "":
+	if address.size() == 0 or address[0].rstrip(functions.space_string).lstrip(functions.space_string) == functions.empty_string:
 		logger.error("IP Address in Network Menu is Empty!!!")
 		return
 
 	var ip : String = address[0]
 	var port : int
 
-	if address.size() != 2 or address[1].rstrip(" ").lstrip(" ") == "":
+	if address.size() != 2 or address[1].rstrip(functions.space_string).lstrip(functions.space_string) == functions.empty_string:
 		# I will be adding support for scanning the server with server finder whos IP address is listed without a port.
 		logger.error("Missing Port Number in Network Menu!!!")
 		return
 
-	port = int(address[1].rstrip(" ").lstrip(" "))
+	port = int(address[1].rstrip(functions.space_string).lstrip(functions.space_string))
 
 	network.join_server(ip, port)
 

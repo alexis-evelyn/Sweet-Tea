@@ -11,10 +11,10 @@ onready var characterColor = $PlayerCreationWindow/background/Interface/Characte
 onready var debugMode = $PlayerCreationWindow/background/Interface/DebugMode
 onready var worldSeed = $PlayerCreationWindow/background/Interface/WorldSeed
 
-var old_title : String = "" # Title From Before Window Was Shown
+var old_title : String = functions.empty_string # Title From Before Window Was Shown
 var slot : int # Save Slot to Use For Character
 var is_client : bool = false # Determine If Is Server or Client
-var world_seed : String = "" # Seed to use to generate world
+var world_seed : String = functions.empty_string # Seed to use to generate world
 
 # warning-ignore:unused_class_variable
 var loading_screen : LoadingScreen
@@ -63,8 +63,8 @@ func create_character() -> void:
 	gamestate.player_info.name = get_character_name()
 
 	# Set World's Seed
-	if get_seed() == "":
-		if worldSeed.text == "":
+	if get_seed() == functions.empty_string:
+		if worldSeed.text == functions.empty_string:
 			set_seed("Randomly Generated Seed")
 		else:
 			set_seed(worldSeed.text)
@@ -74,7 +74,7 @@ func create_character() -> void:
 	if is_client:
 		gamestate.player_info.world_created = false
 		gamestate.player_info.world_seed = world_seed
-		gamestate.player_info.starting_world = "Not Set" # Fixes A Bug Where World Path Can Appear to Be Set, but Isn't
+		gamestate.player_info.starting_world = functions.not_set_string # Fixes A Bug Where World Path Can Appear to Be Set, but Isn't
 		gamestate.save_player(slot)
 	else:
 		create_world()
@@ -101,7 +101,7 @@ func create_world() -> void:
 #	var world_name : String = create_world_server_thread.wait_to_finish()
 	var world_name : String = world_handler.create_world_server_threaded([-1, world_seed, Vector2(0, 0)])
 
-	gamestate.player_info.starting_world = "user://worlds/".plus_file(world_name)
+	gamestate.player_info.starting_world = gamestate.get_world_folder(world_name)
 
 #	gamestate.save_player(slot)
 
@@ -114,11 +114,12 @@ func get_picker_color() -> String:
 	return characterColor.color.to_html(false)
 
 func get_character_name() -> String:
-	if characterName.text == "":
-		return get_random_name()
+	if characterName.text == functions.empty_string:
+		return gamestate.DEFAULT_PLAYER_NAME
 	else:
 		return characterName.text
 
+# I probably won't do random names.
 func get_random_name() -> String:
 	# Pick A Random Name For Character
 	return "Default Character Name"

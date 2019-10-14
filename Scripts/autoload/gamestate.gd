@@ -1,11 +1,11 @@
 extends Node
 class_name GameState
 
-var save_directory : String = "user://" # Set's Storage Directory
-var save_file : String = "characters.json" # Save File Name
+const save_directory : String = "user://" # Set's Storage Directory
+const save_file : String = "characters.json" # Save File Name
 
-var backups_dir : String = "save_backups" # Backup Directory Name
-var backups_save_file : String = "characters_%date%.json" # Backup Save File Name Template
+const backups_dir : String = "save_backups" # Backup Directory Name
+const backups_save_file : String = "characters_%date%.json" # Backup Save File Name Template
 
 var game_version : String = ProjectSettings.get_setting("application/config/Version")
 
@@ -23,12 +23,12 @@ var server_mode : bool = false
 
 # Player Info Dictionary
 var player_info : Dictionary = {
-	name = "Player", # Player's Name
+	name = gamestate.DEFAULT_PLAYER_NAME, # Player's Name
 	char_color = Color.white.to_html(false), # Unmodified Player Color - May Combine With Custom Sprites (and JSON)
 	os_unique_id = OS.get_unique_id(), # Stores OS Unique ID - Can be used to link players together, Not Designed to Be Secure (as in player is allowed to tamper with it)
-	char_unique_id = "Not Set", # Unique Character ID (meant for servers so they can attach features to specific characters - very useful for server plugins
-	starting_world = "Not Set", # Spawn World - Saved to File so The World Loader Can Load The Spawn World Up (Say Permanent Chunk Loading - Will Be Loaded on Client when Client is Connected to Server. Similar idea to Starbound's Spaceship on Servers') - Not Meant to Spawn Players in (Meant for Server Player Only - E.g. Single Player).
-	saved_world = "", # Functionally the same thing as current_world, but meant for Single Player Only (the one exception is, the single player world is loaded on client when connected to server. Similar idea to Starbound's Spaceship on Servers) - Loads Player In Last Saved World
+	char_unique_id = functions.not_set_string, # Unique Character ID (meant for servers so they can attach features to specific characters - very useful for server plugins
+	starting_world = functions.not_set_string, # Spawn World - Saved to File so The World Loader Can Load The Spawn World Up (Say Permanent Chunk Loading - Will Be Loaded on Client when Client is Connected to Server. Similar idea to Starbound's Spaceship on Servers') - Not Meant to Spawn Players in (Meant for Server Player Only - E.g. Single Player).
+	saved_world = functions.empty_string, # Functionally the same thing as current_world, but meant for Single Player Only (the one exception is, the single player world is loaded on client when connected to server. Similar idea to Starbound's Spaceship on Servers) - Loads Player In Last Saved World
 	locale = TranslationServer.get_locale(), # Helps Servers Know What Language To Use (for multilingual supporting servers)
 }
 
@@ -57,6 +57,8 @@ const standard_netids = {
 	server = 1
 }
 
+const DEFAULT_PLAYER_NAME = "Alex"
+
 # warning-ignore:unused_class_variable
 var net_id : int = standard_netids.server # Player's ID
 # warning-ignore:unused_class_variable
@@ -83,12 +85,12 @@ var debug : bool = false
 
 # Used To Cleanup Player Info
 func reset_player_info() -> void:
-	gamestate.player_info.name = "Player" # Player's Name
+	gamestate.player_info.name = gamestate.DEFAULT_PLAYER_NAME # Player's Name
 	gamestate.player_info.char_color = Color.white.to_html(false) # Unmodified Player Color - May Combine With Custom Sprites (and JSON)
 	gamestate.player_info.os_unique_id = OS.get_unique_id() # Stores OS Unique ID - Can be used to link players together, Not Designed to Be Secure (as in player is allowed to tamper with it)
-	gamestate.player_info.char_unique_id = "Not Set" # Unique Character ID (meant for servers so they can attach features to specific characters - very useful for server plugins
-	gamestate.player_info.starting_world = "Not Set" # Spawn World - Saved to File so The World Loader Can Load The Spawn World Up (Say Permanent Chunk Loading - Will Be Loaded on Client when Client is Connected to Server. Similar idea to Starbound's Spaceship on Servers') - Not Meant to Spawn Players in (Meant for Server Player Only - E.g. Single Player).
-	gamestate.player_info.saved_world = "" # Functionally the same thing as current_world, but meant for Single Player Only (the one exception is, the single player world is loaded on client when connected to server. Similar idea to Starbound's Spaceship on Servers) - Loads Player In Last Saved World
+	gamestate.player_info.char_unique_id = functions.not_set_string # Unique Character ID (meant for servers so they can attach features to specific characters - very useful for server plugins
+	gamestate.player_info.starting_world = functions.not_set_string # Spawn World - Saved to File so The World Loader Can Load The Spawn World Up (Say Permanent Chunk Loading - Will Be Loaded on Client when Client is Connected to Server. Similar idea to Starbound's Spaceship on Servers') - Not Meant to Spawn Players in (Meant for Server Player Only - E.g. Single Player).
+	gamestate.player_info.saved_world = functions.empty_string # Functionally the same thing as current_world, but meant for Single Player Only (the one exception is, the single player world is loaded on client when connected to server. Similar idea to Starbound's Spaceship on Servers) - Loads Player In Last Saved World
 #	gamestate.player_info.locale = TranslationServer.get_locale() # Helps Servers Know What Language To Use (for multilingual supporting servers)
 
 func cleanup_player_info(pinfo: Dictionary) -> Dictionary:

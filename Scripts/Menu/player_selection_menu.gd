@@ -4,8 +4,8 @@ class_name PlayerSelectionMenu
 # Declare member variables here. Examples:
 onready var playerSlots : VBoxContainer = $background/PlayerSlots
 
-var scene : String = "" # Menu to load if set
-var old_title : String = "" # Title From Before Window Was Shown
+var scene : String = functions.empty_string # Menu to load if set
+var old_title : String = functions.empty_string # Title From Before Window Was Shown
 var yielding : bool = false # Prevents data.blocked > 0 crash by preventing yielding more than once
 
 const player_creation_menu : String = "res://Menus/PlayerCreationMenu.tscn" # Player Creation Menu
@@ -80,7 +80,7 @@ func _character_slot_pressed(button: Button) -> void:
 		gamestate.load_player(slot) # Load Character To Memory
 		#logger.verbose("Character Pressed: %s" % gamestate.player_info.name)
 
-		if scene == "":
+		if scene == functions.empty_string:
 			# These values "world_seed" and "world_created" are stored in Player's Save data when player is created for the network menu.
 			if gamestate.player_info.has("world_seed") and gamestate.player_info.has("world_created"):
 				if gamestate.player_info.world_created == false: # I am leaving the dictionary entries alone if the value was set to something other than false.
@@ -126,7 +126,7 @@ func _character_slot_pressed(button: Button) -> void:
 	# For more info, the error is "data.blocked > 0". Also, yes, I know losing threads normally means that it runs in the background potentially indefinitely, but that issue is solved by the fact that when the main menu is freed(), then so is every child (including the player creation thread).
 	# This means that the thread is cleaned up, although not in a traditional way.
 
-	if scene != "":
+	if scene != functions.empty_string:
 		get_tree().change_scene(scene)
 
 func _about_to_show() -> void:

@@ -10,7 +10,7 @@ class_name ModLoader
 var mods_node : Node # Mods Node
 
 var scene_to_change_to = ProjectSettings.get_setting("application/run/main_menu")
-var mods_folder : String = "user://mods/"
+const mods_folder : String = "user://mods/"
 var mods_installed : bool = false
 
 var mods_folder_check : Directory = Directory.new() # Check For Mods Directory
@@ -45,21 +45,21 @@ func check_for_mods() -> bool:
 		mods_folder_check.open(mods_folder)
 		mods_folder_check.list_dir_begin(true, true) # Opens Stream for Listing Directories - https://docs.godotengine.org/en/3.1/classes/class_directory.html#class-directory-method-list-dir-begin
 
-		logger.verbose(" ")
+		logger.verbose(functions.space_string)
 		logger.verbose("Reading Mods Folder!!!")
 
 		var file = null
-		while file != "":
+		while file != functions.empty_string:
 			file = mods_folder_check.get_next()
 
-			if file != "":
+			if file != functions.empty_string:
 				# Should I restrict to .tres and .res extensions?
 				logger.verbose("File: %s" % file)
 				installed_mods.append(file)
 
 		mods_folder_check.list_dir_end() # Closes Stream for Listing Directories (Not Necessary if get_next() reaches end of directory list) - https://docs.godotengine.org/en/3.1/classes/class_directory.html#class-directory-method-list-dir-end
 
-		logger.verbose(" ")
+		logger.verbose(functions.space_string)
 
 		if installed_mods.size() > 0:
 			return true

@@ -24,35 +24,35 @@ func create_log():
 		log_data = File.new()
 		log_data.open(log_file_path, File.WRITE)
 
-func debug(statement: String = ""):
+func debug(statement: String = functions.empty_string):
 	if verbosity >= 4:
 		print(statement)
 
 	if save_to_drive:
 		flush_to_log("Debug: %s" % statement)
 
-func info(statement: String = ""):
+func info(statement: String = functions.empty_string):
 	if verbosity >= 3:
 		print(statement)
 
 	if save_to_drive:
 		flush_to_log("Info: %s" % statement)
 
-func verbose(statement: String = ""):
+func verbose(statement: String = functions.empty_string):
 	if verbosity >= 5:
 		print(statement)
 
 	if save_to_drive:
 		flush_to_log("Verbose: %s" % statement)
 
-func superverbose(statement: String = ""):
+func superverbose(statement: String = functions.empty_string):
 	if verbosity >= 6:
 		print(statement)
 
 	if save_to_drive:
 		flush_to_log("SuperVerbose: %s" % statement)
 
-func warn(statement: String = ""):
+func warn(statement: String = functions.empty_string):
 	if verbosity >= 2:
 		printerr("Warning: %s" % statement)
 		push_warning("Warning: %s" % statement)
@@ -61,10 +61,10 @@ func warn(statement: String = ""):
 		flush_to_log("Warning: %s" % statement)
 
 # This is because I apparently can't remember if I used warn or warning, so I am adding both.
-func warning(statement: String = ""):
+func warning(statement: String = functions.empty_string):
 	warn(statement)
 
-func error(statement: String = ""):
+func error(statement: String = functions.empty_string):
 	if verbosity >= 1:
 		push_error("Error: %s" % statement)
 		printerr("Error: %s" % statement)
@@ -72,7 +72,7 @@ func error(statement: String = ""):
 	if save_to_drive:
 		flush_to_log("Error: %s" % statement)
 
-func fatal(statement: String = ""):
+func fatal(statement: String = functions.empty_string):
 	if verbosity >= 0:
 		push_error("Fatal: %s" % statement)
 		printerr("Fatal: %s" % statement)
@@ -81,11 +81,11 @@ func fatal(statement: String = ""):
 		flush_to_log("Fatal: %s" % statement)
 
 # Not Meant To Be Printed
-func file(statement: String = ""):
+func file(statement: String = functions.empty_string):
 	if save_to_drive:
 		flush_to_log("File: %s" % statement)
 
-func trace(statement: String = ""):
+func trace(statement: String = functions.empty_string):
 	if verbosity >= 0:
 		printerr("If trace does not show up, it means Godot still doesn't support stacktraces in exported games. Try breaking the game in the Godot editor (you will need the source code at https://github.com/alex-evelyn/Sweet-Tea)")
 		printerr("Error: '%s' Trace: '%s'" % [statement, get_stack()])

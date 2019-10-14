@@ -67,7 +67,7 @@ func process_commands(message: PoolStringArray) -> String:
 		"randomshader":
 			return pick_random_shader(message)
 		_:
-			return ""
+			return functions.empty_string
 
 # warning-ignore:unused_argument
 func help_command(message: PoolStringArray) -> String:
@@ -168,7 +168,7 @@ func shader_info(message: PoolStringArray) -> String:
 		response.append(tr("shader_info_command_name") % tr(shaders[shader].name))
 		response.append(tr("shader_info_command_description") % tr(shaders[shader].description))
 		response.append(tr("shader_info_command_seizure_warning") % shaders[shader].seizure_warning)
-		response.append("")
+		response.append(functions.empty_string)
 
 	response.remove(response.size()-1)
 
@@ -499,7 +499,7 @@ func set_debug_collisions(message: PoolStringArray) -> String:
 # warning-ignore:unused_argument
 func start_recording(message: PoolStringArray) -> String:
 	# Start Recording - May Do 30 Second Thing Where The Recording is Always Running.
-	return ""
+	return functions.empty_string
 
 # warning-ignore:unused_argument
 func test_joy_vibration(message: PoolStringArray) -> String:

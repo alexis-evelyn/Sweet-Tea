@@ -61,7 +61,7 @@ sync func chat_message_client(message: String) -> void:
 
 # Process Chat Message from Client
 master func chat_message_server(message: String, send_to_chat: bool = true) -> int:
-	var added_username : String= "" # Used for Custom Username Formatting
+	var added_username : String = functions.empty_string # Used for Custom Username Formatting
 	var net_id : int = gamestate.standard_netids.invalid_id # Invalid NetID (will be corrected later)
 	var chat_color : String = "red" # Default Chat Color
 
@@ -86,7 +86,7 @@ master func chat_message_server(message: String, send_to_chat: bool = true) -> i
 	if message.substr(0,1) == "/":
 		$commands.process_command(net_id, message)
 
-		#if response != null and response != "":
+		#if response != null and response != functions.empty_string:
 		#	rpc_unreliable_id(net_id, "chat_message_client", response)
 
 		return OK # Prevents executing the rest of the function
@@ -113,18 +113,18 @@ func _on_userChat_gui_input(event) -> void:
 		return
 
 	if event is InputEventKey and not just_opened:
-		if event.is_action_pressed("chat_send") and chatInput.text.rstrip(" ").lstrip(" ") != "":
+		if event.is_action_pressed("chat_send") and chatInput.text.rstrip(functions.space_string).lstrip(functions.space_string) != functions.empty_string:
 			get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 			# TODO (IMPORTANT): Create Way to Store Command History (maybe full chat history?)
 
-			arguments = chatInput.text.split(" ", false, 0) # Convert Message into Arguments
+			arguments = chatInput.text.split(functions.space_string, false, 0) # Convert Message into Arguments
 			internal_reply = client_commands.process_commands(arguments)
-			if internal_reply == "":
+			if internal_reply == functions.empty_string:
 				rpc_unreliable_id(gamestate.standard_netids.server, "chat_message_server", chatInput.text)
 			else:
 				chat_message_client(internal_reply)
 
-			chatInput.text = ""
+			chatInput.text = functions.empty_string
 	else:
 		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 		just_opened = false
@@ -132,10 +132,10 @@ func _on_userChat_gui_input(event) -> void:
 func autosend_command(command: String, send_to_chat: bool = true) -> void:
 	# Meant to Be Used By Automated Means (e.g. Command Hotkeys)
 
-	arguments = command.split(" ", false, 0) # Convert Message into Arguments
+	arguments = command.split(functions.space_string, false, 0) # Convert Message into Arguments
 	internal_reply = client_commands.process_commands(arguments)
 
-	if internal_reply == "":
+	if internal_reply == functions.empty_string:
 		rpc_unreliable_id(gamestate.standard_netids.server, "chat_message_server", command, send_to_chat)
 	elif send_to_chat:
 		chat_message_client(internal_reply)

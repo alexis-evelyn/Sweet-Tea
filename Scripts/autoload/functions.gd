@@ -19,10 +19,16 @@ enum host_system {
 	X11 = 8
 }
 
+# These Are Used to Save Memory
+# This is Untested. I'll Be Testing Tomorrow Night or Tuesday Afternoon
+const empty_string = ""
+const space_string = " "
+const not_set_string = "Not Set"
+
 # get_class() - https://godotengine.org/qa/46057/how-to-get-the-class-name-of-a-custom-node?show=46059#a46059
 
 # Declare member variables here. Examples:
-var current_title : String = ""
+var current_title : String = functions.empty_string
 var screenshot : Image # Variable To Hold Screenshot
 
 # I may replace the default window title bar with my own. - https://www.youtube.com/watch?v=alKdkRJy-iY&list=PL0t9iz007UitFwiu33Vx4ZnjYQHH9th2r&index=4&t=0s
@@ -52,12 +58,12 @@ func get_translation_csv(translations_file: String, key: String, locale: String)
 	if open_csv_status != OK:
 		logger.error("Failed to find locale '%s' for key '%s' because the csv file '%s' couldn't be opened!!!" % [locale, key, translations_file])
 		file.close()
-		return ""
+		return functions.empty_string
 
 	if file.eof_reached():
 		logger.warn("Failed to find locale '%s' for key '%s' because the csv file '%s' is empty!!!" % [locale, key, translations_file])
 		file.close()
-		return ""
+		return functions.empty_string
 
 	var index : int = -1 # Column that Locale Is On
 	var line : Array = Array(file.get_csv_line()) # Get first line of csv file
@@ -66,7 +72,7 @@ func get_translation_csv(translations_file: String, key: String, locale: String)
 	if not line.has(locale):
 		logger.warn("Failed to find locale '%s' for key '%s' because the csv file '%s' is does not have the locale!!!" % [locale, key, translations_file])
 		file.close()
-		return ""
+		return functions.empty_string
 
 	index = line.find(locale) # Get column the locale is on
 
@@ -80,7 +86,7 @@ func get_translation_csv(translations_file: String, key: String, locale: String)
 
 	logger.warn("Failed to find locale '%s' for key '%s' because the csv file '%s' does not have the key!!!" % [locale, key, translations_file])
 	file.close()
-	return "" # If it does not have the key, then just return
+	return functions.empty_string # If it does not have the key, then just return
 
 # Get Translation For Specified Locale
 # warning-ignore:unused_argument
@@ -322,7 +328,7 @@ func parse_for_unicode(string: String) -> String:
 		unicode_ints.append(unicode_chars[x].hex_to_int())
 
 	# Convert Integers to Characters
-	var joined_chars : String = ""
+	var joined_chars : String = functions.empty_string
 	for unicode_int in unicode_ints:
 		joined_chars += char(unicode_int)
 

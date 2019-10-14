@@ -14,8 +14,8 @@ class_name Hotbits
 # Based on My Project From Web Development Class - https://github.com/SenorContento/self-hosted-blog/blob/6748e365a16ceffdebd6579a8269603f0fb0e323/api/hotbits/index.php
 
 # Declare member variables here. Examples:
-var api_url : String = "https://www.fourmilab.ch/cgi-bin/Hotbits.api" # API Url
-var test_key : String = "Pseudorandom" # Useful for testing without rate limiting or banning
+const api_url : String = "https://www.fourmilab.ch/cgi-bin/Hotbits.api" # API Url
+const test_key : String = "Pseudorandom" # Useful for testing without rate limiting or banning
 var data_format : String = "json" # Available Formats: hex, bin, c, xml, json, password
 var number_of_requested_bytes : int = 2048 # Maximum 2048 bytes - Not Active When format is password
 
