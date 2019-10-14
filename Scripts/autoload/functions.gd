@@ -28,7 +28,7 @@ const not_set_string = "Not Set"
 # get_class() - https://godotengine.org/qa/46057/how-to-get-the-class-name-of-a-custom-node?show=46059#a46059
 
 # Declare member variables here. Examples:
-var current_title : String = functions.empty_string
+var current_title : String = empty_string
 var screenshot : Image # Variable To Hold Screenshot
 
 # I may replace the default window title bar with my own. - https://www.youtube.com/watch?v=alKdkRJy-iY&list=PL0t9iz007UitFwiu33Vx4ZnjYQHH9th2r&index=4&t=0s

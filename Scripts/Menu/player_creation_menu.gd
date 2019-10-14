@@ -101,7 +101,7 @@ func create_world() -> void:
 #	var world_name : String = create_world_server_thread.wait_to_finish()
 	var world_name : String = world_handler.create_world_server_threaded([-1, world_seed, Vector2(0, 0)])
 
-	gamestate.player_info.starting_world = gamestate.get_world_folder(world_name)
+	gamestate.player_info.starting_world = world_handler.get_world_folder(world_name)
 
 #	gamestate.save_player(slot)
 

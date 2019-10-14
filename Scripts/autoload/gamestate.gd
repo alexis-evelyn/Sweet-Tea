@@ -23,7 +23,7 @@ var server_mode : bool = false
 
 # Player Info Dictionary
 var player_info : Dictionary = {
-	name = gamestate.DEFAULT_PLAYER_NAME, # Player's Name
+	name = DEFAULT_PLAYER_NAME, # Player's Name
 	char_color = Color.white.to_html(false), # Unmodified Player Color - May Combine With Custom Sprites (and JSON)
 	os_unique_id = OS.get_unique_id(), # Stores OS Unique ID - Can be used to link players together, Not Designed to Be Secure (as in player is allowed to tamper with it)
 	char_unique_id = functions.not_set_string, # Unique Character ID (meant for servers so they can attach features to specific characters - very useful for server plugins

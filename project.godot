@@ -277,6 +277,7 @@ run/main_menu="res://Menus/MainMenu.tscn"
 
 [autoload]
 
+functions="*res://Scripts/autoload/functions.gd"
 settings="*res://Scripts/autoload/settings.gd"
 logger="*res://Scripts/autoload/logger.gd"
 main_loop_events="*res://Scripts/autoload/main_loop_events.gd"
@@ -288,7 +289,6 @@ world_handler="*res://Scripts/autoload/world_handler.gd"
 spawn_handler="*res://Scripts/autoload/spawn_handler.gd"
 GameJoltAPI="*res://Custom/GameJoltAPI.tscn"
 uuid="*res://Scripts/autoload/third_party/uuid.gd"
-functions="*res://Scripts/autoload/functions.gd"
 Music="*res://AudioHandlers/TitleScreenMusic.tscn"
 Hotbits="*res://Custom/Hotbits.tscn"
 

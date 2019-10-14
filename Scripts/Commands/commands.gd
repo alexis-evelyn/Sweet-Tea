@@ -363,7 +363,7 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
 	if check_permission(players_permission_level, command_permission_level):
-		var world_path : String = gamestate.get_world_folder("World 2")
+		var world_path : String = world_handler.get_world_folder("World 2")
 #		var world_name : String = world_handler.load_world_server(net_id, world_path)
 
 		load_world_server_thread.start(world_handler, "load_world_server_threaded", [net_id, world_path])
