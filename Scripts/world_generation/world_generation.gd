@@ -619,6 +619,14 @@ func clear_player_chunks(net_id: int) -> bool:
 	player_chunks.erase(net_id)
 	return true
 
+# Meant to Be Used by Player Node
+func get_tile(tile_coordinates: Vector2) -> int:
+	return get_cellv(tile_coordinates)
+
+# Meant to Be Used by Player Node
+func get_tile_coordinates(world_coordinates: Vector2) -> Vector2:
+	return world_to_map(world_coordinates)
+
 # Sets World's Spawn
 func set_spawn(coordinates: Vector2) -> void:
 	spawn_coor = coordinates

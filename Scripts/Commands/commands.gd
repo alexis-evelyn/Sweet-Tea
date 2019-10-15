@@ -692,24 +692,8 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 		else:
 			return functions.get_translation("teleport_command_too_many_arguments", player_registrar.players[net_id].locale)
 
-		var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
-
-		# Clears Loaded Chunks From Previous World Generator's Memory
-		var world_generation = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
-		world_generation.clear_player_chunks(net_id)
-		#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
-
-		spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
-
-	#	player_registrar.players[net_id].spawn_coordinates = coordinates # Set To Use World's Spawn Location
-		player_registrar.players[net_id].spawn_coordinates_safety_off = coordinates # Set To Use World's Spawn Location
-
-		if net_id != 1:
-			#logger.verbose("NetID Change World: %s" % net_id)
-			spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name, true)
-		else:
-			#logger.verbose("Server Change World: %s" % net_id)
-			spawn_handler.change_world(world_name)
+		functions.teleport(net_id, coordinates) # This allows client to just reposition itself without reloading world. So useful for short distances.
+#		functions.teleport_despawn(net_id, coordinates) # This allows forcing client to reload world. So, useful for long distances.
 
 		return functions.get_translation("teleport_command_success", player_registrar.players[net_id].locale) % [coordinates.x, coordinates.y]
 	return functions.get_translation("teleport_command_no_permission", player_registrar.players[net_id].locale)

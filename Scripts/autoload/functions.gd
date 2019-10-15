@@ -374,6 +374,39 @@ func run_button_command(panelChat: ChatPanel, command_id: String = "0") -> void:
 func run_axes_command(panelChat: ChatPanel, command_id: String = "0") -> void:
 	pass
 
+func teleport_despawn(net_id: int, coordinates: Vector2) -> void:
+	var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
+
+	# Clears Loaded Chunks From Previous World Generator's Memory
+	var world_generation = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
+	world_generation.clear_player_chunks(net_id)
+	#logger.verbose("Previous World: %s" % spawn_handler.get_world_name(net_id))
+
+	spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
+
+#	player_registrar.players[net_id].spawn_coordinates = coordinates # Set To Use World's Spawn Location
+	player_registrar.players[net_id].spawn_coordinates_safety_off = coordinates # Set To Use World's Spawn Location
+
+	if net_id == gamestate.standard_netids.server:
+		#logger.verbose("Server Change World: %s" % net_id)
+		spawn_handler.change_world(world_name)
+
+	#logger.verbose("NetID Change World: %s" % net_id)
+	spawn_handler.rpc_unreliable_id(net_id, "change_world", world_name, true)
+
+func teleport(net_id: int, coordinates: Vector2) -> int:
+	var player : Player = spawn_handler.get_player_body_node(net_id)
+
+	if player == null:
+		return ERR_CANT_ACQUIRE_RESOURCE
+
+	player.correct_coordinates(coordinates) # Update Coordinates on Server
+
+	if net_id != gamestate.standard_netids.server:
+		player.rpc_unreliable_id(net_id, "correct_coordinates", coordinates) # Send New Coordinates to Client
+
+	return OK
+
 func get_class() -> String:
 	return "Functions"
 

@@ -107,14 +107,7 @@ func _physics_process(_delta: float) -> void:
 	if not get_tree().has_network_peer():
 		return # Should Be Connected Here
 
-	if gravity_enabled and not is_on_floor():
-		motion.y += GRAVITY
-#		move_and_slide(Vector2(0, GRAVITY), UP)
-
-	if not main_loop_events.game_is_focused:
-		return
-
-	if is_network_master() and (not pauseMenu.is_paused() or pauseMenu.is_open_to_lan):
+	if main_loop_events.game_is_focused and is_network_master() and (not pauseMenu.is_paused() or pauseMenu.is_open_to_lan):
 		if Input.is_action_pressed("move_up") and !panelChat.visible and not pauseMenu.is_paused():
 			if not gravity_enabled:
 				friction = false
@@ -172,17 +165,57 @@ func _physics_process(_delta: float) -> void:
 				motion.y = lerp(motion.y, 0, 0.2)
 				friction = false
 
+	if is_network_master() and (not pauseMenu.is_paused() or pauseMenu.is_open_to_lan):
 		#if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))):
 		if motion.abs() != Vector2(0, 0):
-#			logger.superverbose("Motion: (%s, %s)" % [abs(motion.x), abs(motion.y)])
+#		logger.superverbose("Motion: (%s, %s)" % [abs(motion.x), abs(motion.y)])
 			motion = move_and_slide(motion, UP)
 			send_to_clients(motion)
 
-			# Load Chunks to Send to Server Player
-			if get_tree().is_network_server():
-				world_generator.load_chunks(gamestate.net_id, self.position)
-			elif is_network_master() and gamestate.debug:
-				world_generator.center_chunk(self.position, true) # Allows DebugCamera to be Updated on Chunk Position
+		# Moved
+		if gravity_enabled and not is_on_floor():
+#			logger.debug("Gravity: %s" % motion.y)
+			motion.y += GRAVITY
+#			move_and_slide(Vector2(0, GRAVITY), UP)
+
+		# Load Chunks to Send to Server Player
+		if get_tree().is_network_server():
+			world_generator.load_chunks(gamestate.net_id, self.position)
+		elif is_network_master() and gamestate.debug:
+			world_generator.center_chunk(self.position, true) # Allows DebugCamera to be Updated on Chunk Position
+
+# is_on_floor() is buggy, so I am overriding the function
+func is_on_floor() -> bool:
+	# More info can be found at https://github.com/godotengine/godot/issues/16268
+	# The problem is not solved even though the issue was closed.
+
+	# In my case, teleporting to the air requires movement before is_on_floor() updates to false. This is my fault for this specific issue.
+	# The other issue is the is_on_floor() believes that the character is not on the floor if the character is moving. This can be solved by adjusting the safe margin, but then the player floats off of the ground. There is no in-between.
+
+	# This solves floating in mid-air.
+	if .is_on_floor():
+		# Tile Directly Below and To Left and Right
+		if is_tile_empty(DOWN) and is_tile_empty(DOWN+LEFT) and is_tile_empty(DOWN+RIGHT):
+			return false
+		return true
+
+	# This still needs work as if a tile is nearby, but you are not standing on it, then you will float.
+#	if not is_tile_empty(DOWN) or not is_tile_empty(DOWN+LEFT) or not is_tile_empty(DOWN+RIGHT):
+#			return true
+
+	# This only bugs out if the player is teleported with a tile next to and below the character.
+	# So, I am allowing this bug to remain as it should not activate unless a player intentionally activates it.
+	# There is no easy solution to fix this. :P
+	if not is_tile_empty(DOWN):
+		return true
+
+	return false
+
+func is_tile_empty(tile_direction: Vector2) -> bool:
+	if world_generator.get_tile(world_generator.get_tile_coordinates(self.position) + tile_direction) == -1:
+		return true
+
+	return false
 
 # Handles relaying client's position to other clients in same world
 func send_to_clients(mot: Vector2) -> void:
