@@ -21,10 +21,15 @@ const DASH_TIMEOUT : float = 1.0 # How long before allow dash again
 
 const CORRECT_COORDINATES_TIMEOUT : float = 0.05 # Execute Every Fifth of a Second (almost completely smooth and keeps laptop cool with just one client)
 
+# Axes Strength Minimum and Maximum
+const EMPTY_AXES_STRENGTH : int = 0
+const FULL_AXES_STRENGTH : int = 1
+
 # Only apply friction when controls are not actively being used.
 # This is meant as a way to implement a sliding stop.
 var friction : bool = false # Is player moving?
 var gravity_enabled : bool = true # Enable Gravity (and Disable Flying)
+var use_axes_strength : bool = true # Use axes strength for more precise controls with a controller.
 
 #var player_transform : Transform2D = Transform2D(0, get_position())
 var motion : Vector2 = Vector2()
@@ -117,13 +122,13 @@ func _physics_process(_delta: float) -> void:
 				# The keyboard always produces 1 when pressed.
 				# An analog joystick can produce any value.
 				# This will allow finer control when a joystick is used.
-				motion.y = max((motion.y - ACCELERATION) * Input.get_action_strength("move_up"), -MAX_SPEED)
+				motion.y = max((motion.y - ACCELERATION) * process_axes_strength(Input.get_action_strength("move_up")), -MAX_SPEED)
 		elif Input.is_action_pressed("move_down") and !panelChat.visible and not pauseMenu.is_paused():
 			if not gravity_enabled:
 				friction = false
 
 #				logger.superverbose("Down")
-				motion.y = min((motion.y + ACCELERATION) * Input.get_action_strength("move_down"), MAX_SPEED)
+				motion.y = min((motion.y + ACCELERATION) * process_axes_strength(Input.get_action_strength("move_down")), MAX_SPEED)
 		else:
 			friction = true;
 			#$Sprite.play("Idle");
@@ -132,12 +137,12 @@ func _physics_process(_delta: float) -> void:
 			friction = false
 
 #			logger.superverbose("Left")
-			motion.x = max((motion.x - ACCELERATION) * Input.get_action_strength("move_left"), -MAX_SPEED)
+			motion.x = max((motion.x - ACCELERATION) * process_axes_strength(Input.get_action_strength("move_left")), -MAX_SPEED)
 		elif Input.is_action_pressed("move_right") and !panelChat.visible and not pauseMenu.is_paused():
 			friction = false
 
 #			logger.superverbose("Right")
-			motion.x = min((motion.x + ACCELERATION) * Input.get_action_strength("move_right"), MAX_SPEED)
+			motion.x = min((motion.x + ACCELERATION) * process_axes_strength(Input.get_action_strength("move_right")), MAX_SPEED)
 		else:
 			friction = true;
 			#$Sprite.play("Idle");
@@ -186,6 +191,12 @@ func _physics_process(_delta: float) -> void:
 
 # is_on_floor() is buggy, so I am overriding the function
 func is_on_floor() -> bool:
+	"""
+		Override for is_on_floor() function.
+
+		Used to work around bug documented at https://github.com/godotengine/godot/issues/16268
+	"""
+
 	# More info can be found at https://github.com/godotengine/godot/issues/16268
 	# The problem is not solved even though the issue was closed.
 
@@ -222,12 +233,12 @@ func send_to_clients(mot: Vector2) -> void:
 	# Loop Through All Players
 	for player in players.get_children():
 		# Make sure to not send to self or server (server will be told about it later)
-		if (int(gamestate.net_id) != int(player.name)) and (1 != int(player.name)):
+		if (int(gamestate.net_id) != int(player.name)) and (gamestate.standard_netids.server != int(player.name)):
 			#logger.verbose("Sending To: %s" % player.name)
 			rpc_unreliable_id(int(player.name), "move_player", mot)
 
 	# Send copy to server regardless of it is in the world - Server won't update otherwise if not in same world
-	if int(gamestate.net_id) != 1:
+	if int(gamestate.net_id) != gamestate.standard_netids.server:
 		rpc_unreliable_id(gamestate.standard_netids.server, "move_player", mot)
 
 # puppet (formerly slave) sets for all devices except master (the calling client)
@@ -258,15 +269,19 @@ func correct_coordinates_server() -> void:
 	#if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))): # Can be used to only send rpc if client is moving (will be slightly off due to latency)
 
 	# Loop Through All Players
-	for player in players.get_children():
-		if int(player.name) != 1:
-			rpc_unreliable_id(int(player.name), "correct_coordinates", self.position)
+#	for player in players.get_children():
+#		if int(player.name) != gamestate.standard_netids.server:
+#			rpc_unreliable_id(int(player.name), "correct_coordinates", self.position)
+
+	# I am not sure why I was looping through all the players before. I guess we'll find out if this quits working.
+	rpc_unreliable_id(int(self.name), "correct_coordinates", self.position)
 
 # Could also be used for teleporting (designed to correct coordinates from lag, etc...)
 # Server is also guilty of getting out of sync with client, but server is arbiter and executor, so it overrides other clients' positions
 remotesync func correct_coordinates(coordinates: Vector2) -> void:
-#	logger.superverbose("Coordinates: %s" % coordinates)
-	self.position = coordinates
+	if get_tree().get_rpc_sender_id() == gamestate.standard_netids.server:
+#		logger.superverbose("Coordinates: %s" % coordinates)
+		self.position = coordinates
 
 # Sets Player's Color (also sets other players colors too)
 func set_dominant_color(color: Color) -> void:
@@ -286,6 +301,22 @@ func debug_camera(activated : bool = true):
 
 		# This allows me to align camera to Player
 		#add_child(camera)
+
+remotesync func set_process_axes_strength(process: bool) -> void:
+	if get_tree().get_rpc_sender_id() == gamestate.standard_netids.server:
+		self.use_axes_strength = process
+
+func process_axes_strength(action_strength: int = FULL_AXES_STRENGTH) -> int:
+	"""
+		Used to choose to give more precise controls if player enables it.
+
+		When game is released, this will be set to false by default.
+	"""
+
+	if use_axes_strength:
+		return action_strength
+
+	return FULL_AXES_STRENGTH
 
 # I put player camera here as it is guaranteed that the player is placed in a loaded world by this point
 # warning-ignore:unused_argument

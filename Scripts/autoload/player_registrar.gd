@@ -20,16 +20,16 @@ remote func register_player(pinfo: Dictionary, net_id: int, new_world : bool = f
 	#logger.verbose("Registering Player")
 
 	# Only check new_world if caller is self - prevents net_id spoofing
-	if (get_tree().get_rpc_sender_id() == 0) and (new_world == false):
+	if (get_tree().get_rpc_sender_id() == gamestate.standard_netids.ourself) and (new_world == false):
 		net_id = gamestate.net_id
 	else:
 		# If rpc_sender is not server, don't trust the given net_id
-		if get_tree().get_rpc_sender_id() != 1:
+		if get_tree().get_rpc_sender_id() != gamestate.standard_netids.server:
 			net_id = get_tree().get_rpc_sender_id()
 
 	# Because of Server Adding To Registry Data - I Cannot Allow Client to Update Data Mid-Session
 	# This is overriden if the server is sender - allows updating player info on world change and modded servers can change player's info on a vanilla client
-	if players.has(int(net_id)) and get_tree().get_rpc_sender_id() != 1:
+	if players.has(int(net_id)) and get_tree().get_rpc_sender_id() != gamestate.standard_netids.server:
 		return ERR_DOES_NOT_EXIST
 
 	#logger.verbose("Registering Player %s (%s) to Player Registry" % [pinfo.name, net_id])

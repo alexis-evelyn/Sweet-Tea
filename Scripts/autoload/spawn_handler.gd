@@ -26,7 +26,7 @@ master func spawn_player_server(pinfo: Dictionary) -> int:
 	if pinfo.has("char_unique_id"):
 		logger.verbose("Player ID: %s Character Unique ID: %s" % [net_id, pinfo.char_unique_id])
 
-	if get_tree().get_rpc_sender_id() == 0:
+	if get_tree().get_rpc_sender_id() == gamestate.standard_netids.ourself:
 		net_id = gamestate.net_id
 	else:
 		net_id = get_tree().get_rpc_sender_id()
