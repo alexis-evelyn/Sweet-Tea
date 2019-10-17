@@ -40,6 +40,9 @@ var world_generator: TileMap
 var camera: Camera2D
 
 func _enter_tree() -> void:
+	# Get's World Generator Node (of Current World)
+	world_generator = get_parent().get_parent().get_parent().get_node("WorldGen")
+
 	# Activate Debug Camera if Gamestate Debug Camera Boolean is True
 	# Get the camera initialized immediately so the camera is centered on the player before the player sees the world screen.
 	# Works in conjunction with loading screen timer.
@@ -62,9 +65,6 @@ func _ready() -> void:
 	# Get All Players in This Player's World
 	players = get_parent().get_parent()
 
-	# Get's World Generator Node (of Current World)
-	world_generator = get_parent().get_parent().get_parent().get_node("WorldGen")
-
 	# Checks to See if in Server/Client Mode (I may have a server always started, but refuse connections in single player. That is still up to debate).
 	if not get_tree().has_network_peer():
 		return # Should Be Connected Here
@@ -86,8 +86,8 @@ func _ready() -> void:
 		# This still needs to be tested in an environment with real latency. The Wait Time Should Be Configurable.
 		correct_coordinates_timer.set_wait_time(CORRECT_COORDINATES_TIMEOUT) # Execute Every Fifth of a Second (almost completely smooth and keeps laptop cool with just one client)
 		correct_coordinates_timer.start() # Start Timer
-	elif is_network_master() and gamestate.debug:
-		world_generator.center_chunk(self.position, true) # Allows DebugCamera to be Updated on Chunk Position
+#	elif is_network_master() and gamestate.debug:
+#		world_generator.center_chunk(self.position, true) # Allows DebugCamera to be Updated on Chunk Position
 
 func detect_loading_screen_closed() -> void:
 	if get_tree().get_root().has_node("LoadingScreen"):
@@ -289,6 +289,9 @@ func set_dominant_color(color: Color) -> void:
 # I put debug camera here as it is guaranteed that the player is placed in a loaded world by this point
 # warning-ignore:unused_argument
 func debug_camera(activated : bool = true):
+	if is_network_master():
+		world_generator.center_chunk(self.position, true) # Allows DebugCamera to be Updated on Chunk Position
+
 	# The camera is automatically cleaned up when the player is unloaded (e.g. world change)
 	if not get_tree().get_root().get_node("Worlds").get_node(player_registrar.players[gamestate.net_id].current_world).get_node("Viewport").has_node("DebugCamera"):
 		# Check to Make Sure Camera isn't Already Loaded - Prevents Duplicate Cameras (to save memory)
