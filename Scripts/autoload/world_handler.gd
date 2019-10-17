@@ -472,21 +472,62 @@ func create_world(net_id: int = -1, world_seed: String = functions.empty_string,
 	emit_signal("world_created")
 	return template.name # Returns World's Name
 
-func get_world_name(worldname: String) -> Node:
-	var worlds : Node
+func get_tiles_from_chunk(tilemap: TileMap, chunk: Vector2) -> Dictionary:
+	"""
+		Retrieves Tiles From Specific Chunk
+	"""
 
-	if not get_tree().get_root().has_node("Worlds"):
-		return null
+	if tilemap.get_used_cells().size() == 0:
+		return {}
 
-	worlds = get_tree().get_root().get_node("Worlds") # Get Worlds node
+	var cells = get_tiles_coordinates(chunk)
 
-	if worlds.has_node(worldname):
-		return worlds.get_node(worldname)
+	if cells.size() == 0 or cells == null:
+		return {}
 
-	return null
+	var tiles = {}
+
+	for cell in cells:
+		#logger.verbose("Cell: %s" % cell)
+		tiles[str(cell)] = tilemap.get_cellv(cell)
+
+	return tiles
+
+func get_tiles_coordinates(chunk: Vector2) -> PoolVector2Array:
+	"""
+		Get Tiles Coordinates in Tile Coordinates (Not World Coordinates)
+	"""
+
+	var chunk_size : Vector2 = Vector2(16, 16) # This is hardcoded for prototyping, but should be retrieving value from world generator (same variable name)
+	var starting_tile_x : int = 0
+	var starting_tile_y : int = 0
+
+	var chunk_tiles : PoolVector2Array = []
+
+	if chunk.x >= 0:
+		starting_tile_x = chunk_size.x * chunk.x
+	else:
+		starting_tile_x = (chunk_size.x * chunk.x) - chunk_size.x
+
+	if chunk.y >= 0:
+		starting_tile_y = (chunk_size.y * chunk.y)
+	else:
+		starting_tile_y = (chunk_size.y * chunk.y) - chunk_size.y
+
+	for x in range(0, chunk_size.x):
+		for y in range(0, chunk_size.y):
+			chunk_tiles.append(Vector2(x, y))
+
+	return chunk_tiles
 
 # Get Tiles From TileMap
 func get_tiles(tilemap: TileMap) -> Dictionary:
+	"""
+		Old System to Get Tiles For Whole Tilemap
+
+		Simple, But Doesn't Fare Well For Large Worlds
+	"""
+
 	# Fixes A Rare Crash With Loading Missing World First Then Trying To Load Valid World
 	# I am not sure why this fixes it, I was going to have this go back to main menu on failure, but it loads properly now.
 	if tilemap.get_used_cells().size() == 0:

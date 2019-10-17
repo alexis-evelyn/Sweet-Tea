@@ -42,11 +42,25 @@ signal chunk_change(chunk_pos) # Allows Other nodes to know when player has ente
 # Mojang used strings to solve this problem, but I don't know if I can make Tilemap use strings.
 # I may have to create my own Tilemap from scratch (after release).
 # Block IDs (referencing the Tilemap Tile ID)
-const block : Dictionary = {
+var block : Dictionary = {
 	'air': -1, # -1 means no tile exists - there is no such thing as block_air. It is just void.
 	'stone': 0,
 	'dirt': 1,
-	'grass': 2
+	'grass': 2,
+	'teleporter': 3,
+	'water': 4,
+	'lava': 5
+}
+
+# warning-ignore:unused_class_variable
+var liquid : Dictionary = {
+	'water': 4,
+	'lava': 5
+}
+
+# warning-ignore:unused_class_variable
+var gas : Dictionary = {
+	'air': -1
 }
 
 # Tilesets
@@ -244,7 +258,7 @@ func center_chunk(position: Vector2, update_debug: bool = false) -> Vector2:
 		# warning-ignore:narrowing_conversion
 		chunk_x = (position.x / standard_pixel_size.x / chunk_size.x) - 1
 
-	if  position.y >= 0:
+	if position.y >= 0:
 		# warning-ignore:narrowing_conversion
 		chunk_y = (position.y / standard_pixel_size.y / chunk_size.y)
 	else:

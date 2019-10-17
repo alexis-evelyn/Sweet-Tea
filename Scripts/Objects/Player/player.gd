@@ -212,7 +212,7 @@ func is_on_floor() -> bool:
 	return false
 
 func is_tile_empty(tile_direction: Vector2) -> bool:
-	if world_generator.get_tile(world_generator.get_tile_coordinates(self.position) + tile_direction) == -1:
+	if world_generator.get_tile(world_generator.get_tile_coordinates(self.position) + tile_direction) == world_generator.block.air:
 		return true
 
 	return false

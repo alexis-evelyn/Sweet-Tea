@@ -267,10 +267,21 @@ func get_world_name(net_id: int) -> String:
 	return str(player_registrar.players[int(net_id)].current_world)
 
 func get_world_node(world_name: String) -> Node:
-	if not get_tree().get_root().has_node("Worlds/" + world_name):
+	"""
+		Get World Node By Name
+	"""
+
+	var worlds : Node
+
+	if not get_tree().get_root().has_node("Worlds"):
 		return null
 
-	return get_tree().get_root().get_node("Worlds/" + world_name)
+	worlds = get_tree().get_root().get_node("Worlds") # Get Worlds node
+
+	if worlds.has_node(world_name):
+		return worlds.get_node(world_name)
+
+	return null
 
 # Get World Grid Node - Added To Make Code More Legible
 func get_world_grid(world_name: String) -> Node:
