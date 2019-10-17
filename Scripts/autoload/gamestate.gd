@@ -64,7 +64,9 @@ var net_id : int = standard_netids.server # Player's ID
 # warning-ignore:unused_class_variable
 var loaded_save : int = slot_number.invalid_slot # Currently Loaded Save
 # warning-ignore:unused_class_variable
-var debug : bool = false
+var debug : bool = false # Used to Determine if Game is In Debug Mode
+# warning-ignore:unused_class_variable
+var use_axes_strength : bool = true # Use axes strength for more precise controls with a controller.
 
 # A Note On Saving
 # I am able to load and save nodes natively using Godot.

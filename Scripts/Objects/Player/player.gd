@@ -29,7 +29,6 @@ const FULL_AXES_STRENGTH : int = 1
 # This is meant as a way to implement a sliding stop.
 var friction : bool = false # Is player moving?
 var gravity_enabled : bool = true # Enable Gravity (and Disable Flying)
-var use_axes_strength : bool = true # Use axes strength for more precise controls with a controller.
 
 #var player_transform : Transform2D = Transform2D(0, get_position())
 var motion : Vector2 = Vector2()
@@ -302,10 +301,6 @@ func debug_camera(activated : bool = true):
 		# This allows me to align camera to Player
 		#add_child(camera)
 
-remotesync func set_process_axes_strength(process: bool) -> void:
-	if get_tree().get_rpc_sender_id() == gamestate.standard_netids.server:
-		self.use_axes_strength = process
-
 func process_axes_strength(action_strength: int = FULL_AXES_STRENGTH) -> int:
 	"""
 		Used to choose to give more precise controls if player enables it.
@@ -313,7 +308,7 @@ func process_axes_strength(action_strength: int = FULL_AXES_STRENGTH) -> int:
 		When game is released, this will be set to false by default.
 	"""
 
-	if use_axes_strength:
+	if gamestate.use_axes_strength:
 		return action_strength
 
 	return FULL_AXES_STRENGTH
