@@ -1,6 +1,9 @@
 extends Control
 class_name MainMenu
 
+const github_repo : String = "https://github.com/alex-evelyn/Sweet-Tea"
+const github_issue : String = "https://github.com/alex-evelyn/Sweet-Tea/issues/new/choose"
+
 var konami_max_position : int = 10 # ↑ ↑ ↓ ↓ ← → ← → ⓑ ⓐ
 var konami_position : int = 0 # Max 10.
 
@@ -99,6 +102,8 @@ func set_language_text() -> void:
 	buttons.get_node("Singleplayer").text = tr("singleplayer_button")
 	buttons.get_node("Multiplayer").text = tr("multiplayer_button")
 	buttons.get_node("Options").text = tr("options_button")
+	buttons.get_node("About").text = tr("about_button")
+	buttons.get_node("GithubIssue").text = tr("github_issue_button")
 	buttons.get_node("Quit").text = tr("quit_button")
 
 func _on_Singleplayer_pressed() -> void:
@@ -130,6 +135,22 @@ func _on_Options_pressed() -> void:
 
 	get_tree().change_scene("res://Menus/OptionsMenu.tscn")
 	pass
+
+func _on_About_Game_pressed() -> void:
+	"""
+		Display Info About Game
+	"""
+
+	main_loop_events.about_game()
+
+func _on_Github_Issue_pressed() -> void:
+	"""
+		Open Up Github Issue In Browser
+
+		https://github.com/alex-evelyn/Sweet-Tea/issues/new/choose
+	"""
+
+	OS.shell_open(github_issue)
 
 func _on_Quit_pressed() -> void:
 	"""

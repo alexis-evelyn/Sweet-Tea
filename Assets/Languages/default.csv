@@ -1,4 +1,5 @@
 ,en,es,ja,mz,pr
+about_button,About Game,,,,
 about_game_text,Made by Alex Evelyn,,,,
 about_game_title,About Sweet Tea,,,,
 ban_player_command_no_permission,Ban Player and Optional Message - Permission Needed: %s,,,,
@@ -50,6 +51,7 @@ engine_start_time_label,Time Since Game Start: %s Seconds - %s Microseconds,,,,
 first_name_list,"{""Masc"":[""John"",""James"",""Brandon"",""Robert"",""Robert""],""Fem"":[""Emma"",""Amelia"",""Mary"",""Ava"",""Autumn"",""Evelyn"",""Alexis"",""Jane""],""NB"":[""Alex"",""Sam"",""Chris"",""Mel"",""Avery"",""Alexis"",""Jess""]}",,,,
 fps_label,FPS: %s/%s,,,,
 generic_key_value,%s: %s,,,,
+github_issue_button,Submit Bug Report or Feature Request,,,,
 handle_url_click,Clicked Player Name: %s Player ID: %s,,,,
 help_ban_desc,Bans Player Specified As Argument,,,,
 help_banip_desc,Bans IP Address From Joining Server,,,,

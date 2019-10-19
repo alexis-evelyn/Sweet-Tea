@@ -26,17 +26,17 @@ __meta__ = {
 }
 
 [node name="Buttons" type="VBoxContainer" parent="Menu"]
-margin_left = 780.0
-margin_top = 390.0
-margin_right = 1140.0
-margin_bottom = 690.0
+margin_left = 740.0
+margin_top = 310.0
+margin_right = 1180.0
+margin_bottom = 770.0
 custom_constants/separation = 20
 alignment = 1
 
 [node name="Singleplayer" type="Button" parent="Menu/Buttons" groups=[
 "Main Menu UI Select",
 ]]
-margin_right = 360.0
+margin_right = 440.0
 margin_bottom = 60.0
 rect_min_size = Vector2( 360, 60 )
 group = SubResource( 1 )
@@ -46,7 +46,7 @@ text = "Singleplayer"
 "Main Menu UI Select",
 ]]
 margin_top = 80.0
-margin_right = 360.0
+margin_right = 440.0
 margin_bottom = 140.0
 rect_min_size = Vector2( 360, 60 )
 group = SubResource( 1 )
@@ -56,18 +56,38 @@ text = "Multiplayer"
 "Main Menu UI Select",
 ]]
 margin_top = 160.0
-margin_right = 360.0
+margin_right = 440.0
 margin_bottom = 220.0
 rect_min_size = Vector2( 360, 60 )
 group = SubResource( 1 )
 text = "Options"
 
-[node name="Quit" type="Button" parent="Menu/Buttons" groups=[
+[node name="About" type="Button" parent="Menu/Buttons" groups=[
 "Main Menu UI Select",
 ]]
 margin_top = 240.0
-margin_right = 360.0
+margin_right = 440.0
 margin_bottom = 300.0
+rect_min_size = Vector2( 360, 60 )
+group = SubResource( 1 )
+text = "About Game"
+
+[node name="GithubIssue" type="Button" parent="Menu/Buttons" groups=[
+"Main Menu UI Select",
+]]
+margin_top = 320.0
+margin_right = 440.0
+margin_bottom = 380.0
+rect_min_size = Vector2( 360, 60 )
+group = SubResource( 1 )
+text = "Submit Bug Report or Feature Request"
+
+[node name="Quit" type="Button" parent="Menu/Buttons" groups=[
+"Main Menu UI Select",
+]]
+margin_top = 400.0
+margin_right = 440.0
+margin_bottom = 460.0
 rect_min_size = Vector2( 360, 60 )
 group = SubResource( 1 )
 text = "Quit"
@@ -77,4 +97,6 @@ visible = true
 [connection signal="pressed" from="Menu/Buttons/Singleplayer" to="." method="_on_Singleplayer_pressed"]
 [connection signal="pressed" from="Menu/Buttons/Multiplayer" to="." method="_on_Multiplayer_pressed"]
 [connection signal="pressed" from="Menu/Buttons/Options" to="." method="_on_Options_pressed"]
+[connection signal="pressed" from="Menu/Buttons/About" to="." method="_on_About_Game_pressed"]
+[connection signal="pressed" from="Menu/Buttons/GithubIssue" to="." method="_on_Github_Issue_pressed"]
 [connection signal="pressed" from="Menu/Buttons/Quit" to="." method="_on_Quit_pressed"]
