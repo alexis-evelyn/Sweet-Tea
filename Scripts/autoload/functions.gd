@@ -446,7 +446,7 @@ func mirror_world() -> bool:
 	gamestate.mirrored = !gamestate.mirrored
 
 	if gamestate.mirrored:
-		var shader_name : String = "animated_rainbow" # Set back to mirror once mirror shader is created.
+		var shader_name : String = "mirror" # Set back to mirror once mirror shader is created.
 
 		set_world_shader(load(shaders.get(shader_name).path), shader_rectangle_id.secondary)
 #		load_default_params(shader_name, tr("shader_world_argument"))
