@@ -67,6 +67,8 @@ var loaded_save : int = slot_number.invalid_slot # Currently Loaded Save
 var debug : bool = false # Used to Determine if Game is In Debug Mode
 # warning-ignore:unused_class_variable
 var use_axes_strength : bool = true # Use axes strength for more precise controls with a controller.
+# warning-ignore:unused_class_variable
+var mirrored : bool = false # Used to determine if controls should be inverted.
 
 # A Note On Saving
 # I am able to load and save nodes natively using Godot.

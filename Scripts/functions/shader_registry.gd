@@ -269,5 +269,12 @@ var shaders : Dictionary = {
 			"forgiveness": Vector3(0.0, 0.0, 1.0)
 		}, "description": "highlighter_description",
 		"seizure_warning": false
-	}
+	},
+	"mirror": {
+		"name": "mirror_name",
+		"path": "res://Scripts/Shaders/mirror.shader",
+		"animated": false,
+		"description": "mirror_description",
+		"seizure_warning": false
+	},
 }

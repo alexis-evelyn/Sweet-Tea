@@ -169,7 +169,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ShaderRectangle" type="ColorRect" parent="."]
+[node name="PrimaryShaderRectangle" type="ColorRect" parent="."]
+visible = false
+margin_left = -0.954376
+margin_right = 1919.05
+margin_bottom = 1080.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SecondaryShaderRectangle" type="ColorRect" parent="."]
 visible = false
 margin_left = -0.954376
 margin_right = 1919.05

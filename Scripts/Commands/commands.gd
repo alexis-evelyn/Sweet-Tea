@@ -248,7 +248,7 @@ func private_message(net_id: int, message: PoolStringArray) -> String:
 	var private_message_end : String = "[/i][/color]"
 
 	# There's Probably A Way To Make This Use Less Code!!!
-	if net_id != 1:
+	if net_id != gamestate.standard_netids.server:
 		# Whisper To A Client
 		if net_id != user_net_id:
 			var added_username = "* " + username_start + str(player_registrar.name(int(net_id))) + username_end + functions.get_translation("private_message_whisper", player_registrar.players[net_id].locale) + private_message_start + private_message_string + private_message_end

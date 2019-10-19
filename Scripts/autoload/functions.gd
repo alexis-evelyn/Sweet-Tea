@@ -1,8 +1,12 @@
 extends Node
 class_name Functions
 
+# Allows For Configuration Over When to Request Attention
 enum attention_reason {
-	private_message = 0
+	unspecified = -1,
+	private_message = 0,
+	character_attacked = 1,
+	character_died = 2
 }
 
 # To make it easier to check the host system type
@@ -19,8 +23,16 @@ enum host_system {
 	X11 = 8
 }
 
+# To Select World Shader Rectangle to Use
+enum shader_rectangle_type {
+	primary = 0, # Main Shaders Use This
+	secondary = 1 # Added So Mirror Mode Can Exist Without Stopping Other Shaders From Being Used
+}
+
+var shaders_class = preload("res://Scripts/functions/shader_registry.gd").new()
+var shaders : Dictionary = shaders_class.shaders
+
 # These Are Used to Save Memory
-# This is Untested. I'll Be Testing Tomorrow Night or Tuesday Afternoon
 const empty_string = ""
 const space_string = " "
 const not_set_string = "Not Set"
@@ -41,10 +53,21 @@ func get_title() -> String:
 	# There is no builtin way to get the window title, so I have to store it in a variable. - https://github.com/godotengine/godot/issues/27536
 	return current_title
 
-sync func request_attention(reason: int) -> void:
+sync func request_attention(reason: int = attention_reason.unspecified) -> void:
 	# Use the reason combined with notification settings to determine if attention should be requested
-	OS.request_attention()
-	logger.superverbose("Requesting User Attention - Reason: %s" % reason)
+	if reason == attention_reason.private_message:
+		logger.debug("Received Private Message!!!")
+		OS.request_attention()
+	elif reason == attention_reason.character_attacked:
+		logger.warning("Character Has Been Attacked!!!")
+		OS.request_attention()
+	elif reason == attention_reason.character_died:
+		logger.error("Character Has Died!!!")
+		OS.request_attention()
+	elif reason == attention_reason.unspecified:
+		logger.debug("Reason For Request Was Unspecified!!!")
+	else:
+		logger.debug("Unknown Reason For Requesting Attention!!!")
 
 # While this is no longer used as Github user merumelu helped me out with reading the .translation files, but I am keeping it here incase it becomes useful later.
 # For example, I don't know if the Godot engine can generate translation files after the game is built, so I may build in an interface to let users produce their own translation in game and then just save it in csv format.
@@ -152,8 +175,7 @@ func list_game_translations() -> Dictionary:
 #	print("Translation Dictionary: %s" % translation_names)
 	return translation_names
 
-
-func get_world_camera() -> ColorRect:
+func get_world_camera(rectangle_type: int = shader_rectangle_type.primary) -> ColorRect:
 	var shader_screen : ColorRect
 	var player : Node2D = spawn_handler.get_player_body_node(gamestate.net_id)
 
@@ -161,7 +183,10 @@ func get_world_camera() -> ColorRect:
 		return null
 
 	if player.has_node("PlayerCamera"):
-		shader_screen = player.get_node("PlayerCamera").get_node("ShaderRectangle")
+		if rectangle_type == shader_rectangle_type.primary:
+			shader_screen = player.get_node("PlayerCamera").get_node("PrimaryShaderRectangle")
+		elif rectangle_type == shader_rectangle_type.secondary:
+			shader_screen = player.get_node("PlayerCamera").get_node("SecondaryShaderRectangle")
 	else:
 		if not gamestate.player_info.has("current_world"):
 			logger.error("Set World Shader - Missing Current World Info")
@@ -173,12 +198,15 @@ func get_world_camera() -> ColorRect:
 			logger.error("Set World Shader - Missing Debug Camera")
 			return null
 
-		shader_screen = world.get_node("Viewport").get_node("DebugCamera").get_node("ShaderRectangle")
+		if rectangle_type == shader_rectangle_type.primary:
+			shader_screen = world.get_node("Viewport").get_node("DebugCamera").get_node("PrimaryShaderRectangle")
+		elif rectangle_type == shader_rectangle_type.secondary:
+			shader_screen = world.get_node("Viewport").get_node("DebugCamera").get_node("SecondaryShaderRectangle")
 
 	return shader_screen
 
-func set_world_shader(shader: Shader) -> bool:
-	var shader_screen : ColorRect = get_world_camera()
+func set_world_shader(shader: Shader, shader_type : int = shader_rectangle_type.primary) -> bool:
+	var shader_screen : ColorRect = get_world_camera(shader_type)
 
 	if shader_screen == null:
 		logger.error("Set World Shader - Failed to Get Shader Rectangle for Shader: %s" % shader.resource_path)
@@ -209,7 +237,7 @@ func set_world_shader_param(param: String, value) -> bool:
 
 	return true
 
-func remove_world_shader() -> bool:
+func remove_world_shader(shader_type : int = shader_rectangle_type.primary) -> bool:
 	var shader_screen : ColorRect = get_world_camera()
 
 	if shader_screen == null:
@@ -406,6 +434,23 @@ func teleport(net_id: int, coordinates: Vector2) -> int:
 		player.rpc_unreliable_id(net_id, "correct_coordinates", coordinates) # Send New Coordinates to Client
 
 	return OK
+
+func mirror_world() -> bool:
+	"""
+		Inverts Mirror Mode Variable
+	"""
+
+	gamestate.mirrored = !gamestate.mirrored
+
+	if gamestate.mirrored:
+		var shader_name : String = "mirror"
+
+		set_world_shader(load(shaders.get(shader_name).path), shader_rectangle_type.secondary)
+#		load_default_params(shader_name, tr("shader_world_argument"))
+	else:
+		remove_world_shader(shader_rectangle_type.secondary)
+
+	return gamestate.mirrored
 
 func get_class() -> String:
 	return "Functions"

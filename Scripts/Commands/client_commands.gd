@@ -28,7 +28,8 @@ var supported_commands : Dictionary = {
 	"debugcollisions": {"description": "help_debugcollisions_desc", "cheat": true},
 	"testvibration": {"description": "help_testvibration_desc", "cheat": false},
 	"controllers": {"description": "help_controllers_desc", "cheat": false},
-	"randomshader": {"description": "help_randomshader_desc", "cheat": true}
+	"randomshader": {"description": "help_randomshader_desc", "cheat": true},
+	"mirror": {"description": "help_mirror_desc", "cheat": false}
 }
 
 func process_commands(message: PoolStringArray) -> String:
@@ -67,6 +68,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return list_controllers(message)
 		"randomshader":
 			return pick_random_shader(message)
+		"mirror":
+			return farest_mirror(message)
 		_:
 			return functions.empty_string
 
@@ -592,6 +595,28 @@ func pick_random_shader(message: PoolStringArray) -> String:
 	load_default_params(shader_name, tr("shader_world_argument"))
 
 	return tr("random_shader_command_success") % tr(shaders.get(shader_name).name)
+
+func farest_mirror(message: PoolStringArray) -> String:
+	"""
+		Used to Give Game A Mirror Mode
+
+		Note For Modders, Only The Client Cares About Input. The server doesn't know what buttons are being pressed.
+
+		Not Meant to Be Called Directly
+	"""
+
+	# /mirror
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_arguments : PoolStringArray = message
+	command_arguments.remove(0)
+
+	# Mirror Mode Turned On
+	if functions.mirror_world():
+		return tr("mirror_command_on")
+
+	# Mirror Mode Turned Off
+	return tr("mirror_command_off")
 
 func get_class() -> String:
 	return "ClientCommands"
