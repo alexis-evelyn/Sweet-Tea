@@ -10,16 +10,21 @@ onready var panelChat : Panel = $panelChat
 # warning-ignore:unused_class_variable
 onready var panelStats : Panel = $panelPlayerStats
 onready var pauseMenu : Control = $PauseMenu
+onready var alphaGameVersionLabel : RichTextLabel = $alphaGameVersionLabel
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 #	set_process(true)
 
 	set_theme(gamestate.game_theme)
+	set_alpha_game_version_label() # Puts Up Alpha Version Label
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(_delta: float) -> void:
 #	pass
+
+func set_alpha_game_version_label() -> void:
+	alphaGameVersionLabel.bbcode_text = tr("alpha_game_version_warning_label") % gamestate.game_version
 
 func _input(event: InputEvent) -> void:
 	# Checks to See if connected to server (if not, just return)
