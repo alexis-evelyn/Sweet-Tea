@@ -397,6 +397,9 @@ func run_button_command(panelChat: ChatPanel, command_id: String = "0") -> void:
 	elif command_id == "1":
 		# For Testing is Assigned R3
 		panelChat.autosend_command("/shader remove")
+	elif command_id == "2":
+		# For Testing is Assigned Select
+		panelChat.autosend_command("/mirror")
 
 # Meant to Be Assigned to Joypad Axes
 func run_axes_command(panelChat: ChatPanel, command_id: String = "0") -> void:
@@ -443,15 +446,17 @@ func mirror_world() -> bool:
 	# TODO: Color Rectangles Cannot Work Next To Each Other In Same Parent Node. Why?
 	# Fix this.
 
+	# Switch Back to Secondary After Fixs
+
 	gamestate.mirrored = !gamestate.mirrored
 
 	if gamestate.mirrored:
 		var shader_name : String = "mirror" # Set back to mirror once mirror shader is created.
 
-		set_world_shader(load(shaders.get(shader_name).path), shader_rectangle_id.secondary)
+		set_world_shader(load(shaders.get(shader_name).path), shader_rectangle_id.primary)
 #		load_default_params(shader_name, tr("shader_world_argument"))
 	else:
-		remove_world_shader(shader_rectangle_id.secondary)
+		remove_world_shader(shader_rectangle_id.primary)
 
 	return gamestate.mirrored
 

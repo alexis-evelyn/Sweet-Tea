@@ -21,7 +21,7 @@ func _ready() -> void:
 #func _process(_delta: float) -> void:
 #	pass
 
-func _input(event) -> void:
+func _input(event: InputEvent) -> void:
 	# Checks to See if connected to server (if not, just return)
 	if not get_tree().has_network_peer() or not network.connected:
 		return
@@ -29,6 +29,8 @@ func _input(event) -> void:
 	# Checks To Make Sure Game is Focused
 	if not main_loop_events.game_is_focused:
 		return
+
+	detect_command_presses(event) # Detect When Command Actions Are Pressed
 
 	# Generic Joypad Test Code
 	# Not Necessary for Regular InputMap Events
@@ -58,20 +60,7 @@ func _input(event) -> void:
 #		logger.debug("Pressed Joypad Axis: %s - Value (-1.0, 1.0): %s" % [event.get_axis(), event.get_axis_value()])
 		pass
 
-	# Test For Assigning Hotkeys to Commands
-	if event.is_action_pressed("command_0") and !pauseMenu.is_paused():
-		# TODO: Figure Out How To Read ID in Command Action (To Help with Modding More Commands)
 
-		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
-		functions.run_button_command(panelChat, "0") # Activate Command Assigned to Command 0
-#		functions.run_axes_command(panelChat, "0") # Activate Command Assigned to Command 0
-
-	if event.is_action_pressed("command_1") and !pauseMenu.is_paused():
-		# TODO: Figure Out How To Read ID in Command Action (To Help with Modding More Commands)
-
-		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
-		functions.run_button_command(panelChat, "1") # Activate Command Assigned to Command 0
-#		functions.run_axes_command(panelChat, "1") # Activate Command Assigned to Command 0
 
 	# This allows user to see player list (I will eventually add support to change keys and maybe joystick support)
 	if event.is_action("show_playerlist") and !pauseMenu.is_paused():
@@ -156,6 +145,29 @@ func set_theme(theme) -> void:
 # Checks if Calculator is Open (from Easter Eggs)
 func is_calc_open() -> bool:
 	return get_tree().get_root().has_node("Calculator")
+
+func detect_command_presses(event: InputEvent) -> void:
+	# Test For Assigning Hotkeys to Commands
+	if event.is_action_pressed("command_0") and !pauseMenu.is_paused():
+		# TODO: Figure Out How To Read ID in Command Action (To Help with Modding More Commands)
+
+		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
+		functions.run_button_command(panelChat, "0") # Activate Command Assigned to Command 0
+#		functions.run_axes_command(panelChat, "0") # Activate Command Assigned to Command 0
+
+	if event.is_action_pressed("command_1") and !pauseMenu.is_paused():
+		# TODO: Figure Out How To Read ID in Command Action (To Help with Modding More Commands)
+
+		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
+		functions.run_button_command(panelChat, "1") # Activate Command Assigned to Command 0
+#		functions.run_axes_command(panelChat, "1") # Activate Command Assigned to Command 0
+
+	if event.is_action_pressed("command_2") and !pauseMenu.is_paused():
+		# TODO: Figure Out How To Read ID in Command Action (To Help with Modding More Commands)
+
+		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
+		functions.run_button_command(panelChat, "2") # Activate Command Assigned to Command 0
+#		functions.run_axes_command(panelChat, "1") # Activate Command Assigned to Command 0
 
 func get_class() -> String:
 	return "PlayerUI"
