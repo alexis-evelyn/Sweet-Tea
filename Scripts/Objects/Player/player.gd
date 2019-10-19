@@ -22,8 +22,8 @@ const DASH_TIMEOUT : float = 1.0 # How long before allow dash again
 const CORRECT_COORDINATES_TIMEOUT : float = 0.05 # Execute Every Fifth of a Second (almost completely smooth and keeps laptop cool with just one client)
 
 # Axes Strength Minimum and Maximum
-const EMPTY_AXES_STRENGTH : int = 0
-const FULL_AXES_STRENGTH : int = 1
+const EMPTY_AXES_STRENGTH : float = 0.0
+const FULL_AXES_STRENGTH : float = 1.0
 
 # Only apply friction when controls are not actively being used.
 # This is meant as a way to implement a sliding stop.
@@ -268,12 +268,12 @@ func correct_coordinates_server() -> void:
 	#if (int(abs(motion.x)) != int(abs(0))) or (int(abs(motion.y)) != int(abs(0))): # Can be used to only send rpc if client is moving (will be slightly off due to latency)
 
 	# Loop Through All Players
-#	for player in players.get_children():
-#		if int(player.name) != gamestate.standard_netids.server:
-#			rpc_unreliable_id(int(player.name), "correct_coordinates", self.position)
+	for player in players.get_children():
+		if int(player.name) != gamestate.standard_netids.server:
+			rpc_unreliable_id(int(player.name), "correct_coordinates", self.position)
 
 	# I am not sure why I was looping through all the players before. I guess we'll find out if this quits working.
-	rpc_unreliable_id(int(self.name), "correct_coordinates", self.position)
+#	rpc_unreliable_id(int(self.name), "correct_coordinates", self.position)
 
 # Could also be used for teleporting (designed to correct coordinates from lag, etc...)
 # Server is also guilty of getting out of sync with client, but server is arbiter and executor, so it overrides other clients' positions
@@ -304,12 +304,14 @@ func debug_camera(activated : bool = true):
 		# This allows me to align camera to Player
 		#add_child(camera)
 
-func process_axes_strength(action_strength: int = FULL_AXES_STRENGTH) -> int:
+func process_axes_strength(action_strength: float = FULL_AXES_STRENGTH) -> float:
 	"""
 		Used to choose to give more precise controls if player enables it.
 
 		When game is released, this will be set to false by default.
 	"""
+
+	logger.superverbose("Player Axes Strength: %s" % action_strength)
 
 	if gamestate.use_axes_strength:
 		return action_strength
