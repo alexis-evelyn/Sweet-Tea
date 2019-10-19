@@ -41,16 +41,17 @@ func _input(event) -> void:
 #		logger.debug("Controller GUID 0: %s" % Input.get_joy_guid(0))
 #		logger.debug("Controller GUID 1: %s" % Input.get_joy_guid(1))
 
-		# Fixed Guide (Sony Logo) and Share Button in Godot - https://github.com/alex-evelyn/Godot-3.2-Sweet-Tea/commit/37e8be7946794fba1783c95255a6a23cad167758
-		if event.is_action_pressed("test_guide"):
-			logger.debug("Logo Button Pressed!!!")
+#		# Fixed Guide (Sony Logo) and Share Button in Godot - https://github.com/alex-evelyn/Godot-3.2-Sweet-Tea/commit/37e8be7946794fba1783c95255a6a23cad167758
+#		if event.is_action_pressed("test_guide"):
+#			logger.debug("Logo Button Pressed!!!")
 
-		if event.is_action_pressed("test_share"):
-			logger.debug("Share Button Pressed!!!")
+#		if event.is_action_pressed("test_share"):
+#			logger.debug("Share Button Pressed!!!")
 
-		if event.get_button_index() == JOY_GUIDE: # PS Button
-			Input.start_joy_vibration(event.get_device(), 1, 1, 3)
+#		if event.get_button_index() == JOY_GUIDE: # PS Button
+#			Input.start_joy_vibration(event.get_device(), 1, 1, 3)
 #			logger.debug("Device: %s" % event.get_device())
+		pass
 
 	elif event is InputEventJoypadMotion:
 		# For Detecting Generic Axes.
