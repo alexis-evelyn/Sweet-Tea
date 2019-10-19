@@ -6,8 +6,25 @@
 anchor_mode = 0
 current = true
 script = ExtResource( 1 )
+
+[node name="PrimaryShaderRectangle" type="ColorRect" parent="."]
+visible = false
+margin_left = -0.954376
+margin_right = 1919.05
+margin_bottom = 1080.0
+mouse_filter = 2
 __meta__ = {
-"_edit_lock_": true
+"_edit_use_anchors_": false
+}
+
+[node name="SecondaryShaderRectangle" type="ColorRect" parent="."]
+visible = false
+margin_left = -0.954376
+margin_right = 1919.05
+margin_bottom = 1080.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
 }
 
 [node name="PlayerCoordinates" type="RichTextLabel" parent="."]
@@ -165,26 +182,6 @@ bbcode_enabled = true
 bbcode_text = "[color=black][center]+[/center][/color]"
 text = "+"
 scroll_active = false
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="PrimaryShaderRectangle" type="ColorRect" parent="."]
-visible = false
-margin_left = -0.954376
-margin_right = 1919.05
-margin_bottom = 1080.0
-mouse_filter = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="SecondaryShaderRectangle" type="ColorRect" parent="."]
-visible = false
-margin_left = -0.954376
-margin_right = 1919.05
-margin_bottom = 1080.0
-mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -34,7 +34,7 @@ func _input(event) -> void:
 	# Not Necessary for Regular InputMap Events
 	if event is InputEventJoypadButton:
 		# For Detecting Generic Buttons
-		logger.debug("Pressed Joypad Button: %s - Pressure (If Applicable): %s" % [Input.get_joy_button_string(event.get_button_index()), event.get_pressure()])
+#		logger.debug("Pressed Joypad Button: %s - Pressure (If Applicable): %s" % [Input.get_joy_button_string(event.get_button_index()), event.get_pressure()])
 #		logger.debug("Pressed Joypad Button: %s - Pressure (If Applicable): %s" % [event.get_button_index(), event.get_pressure()])
 
 #		logger.debug("Share Button: %s" % Input.get_joy_button_string(17))

@@ -136,12 +136,18 @@ func _physics_process(_delta: float) -> void:
 			friction = false
 
 #			logger.superverbose("Left")
-			motion.x = max((motion.x - ACCELERATION) * process_axes_strength(Input.get_action_strength("move_left")), -MAX_SPEED)
+			if gamestate.mirrored:
+				motion.x = min((motion.x + ACCELERATION) * process_axes_strength(Input.get_action_strength("move_left")), MAX_SPEED)
+			else:
+				motion.x = max((motion.x - ACCELERATION) * process_axes_strength(Input.get_action_strength("move_left")), -MAX_SPEED)
 		elif Input.is_action_pressed("move_right") and !panelChat.visible and not pauseMenu.is_paused():
 			friction = false
 
 #			logger.superverbose("Right")
-			motion.x = min((motion.x + ACCELERATION) * process_axes_strength(Input.get_action_strength("move_right")), MAX_SPEED)
+			if gamestate.mirrored:
+				motion.x = max((motion.x - ACCELERATION) * process_axes_strength(Input.get_action_strength("move_right")), -MAX_SPEED)
+			else:
+				motion.x = min((motion.x + ACCELERATION) * process_axes_strength(Input.get_action_strength("move_right")), MAX_SPEED)
 		else:
 			friction = true;
 			#$Sprite.play("Idle");
@@ -216,7 +222,8 @@ func is_on_floor() -> bool:
 	# This only bugs out if the player is teleported with a tile next to and below the character.
 	# So, I am allowing this bug to remain as it should not activate unless a player intentionally activates it.
 	# There is no easy solution to fix this. :P
-	if not is_tile_empty(DOWN):
+	if not is_tile_empty(DOWN) and test_move(self.transform, DOWN, false):
+		# Checks if Tile is Below and Checks To Make Sure It Is Actually Touching Tile Below (using test_move)
 		return true
 
 	return false

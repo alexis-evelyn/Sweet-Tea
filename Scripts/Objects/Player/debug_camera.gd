@@ -99,10 +99,18 @@ func _physics_process(_delta: float) -> void:
 		translate(Vector2(0, cam_speed))
 		update_camera_pos_label()
 	if Input.is_action_pressed("debug_left") and !panelChat.visible:
-		translate(Vector2(-cam_speed, 0))
+		if gamestate.mirrored:
+			translate(Vector2(cam_speed, 0)) # Right
+		else:
+			translate(Vector2(-cam_speed, 0)) # Left
+
 		update_camera_pos_label()
 	if Input.is_action_pressed("debug_right") and !panelChat.visible:
-		translate(Vector2(cam_speed, 0))
+		if gamestate.mirrored:
+			translate(Vector2(-cam_speed, 0)) # Left
+		else:
+			translate(Vector2(cam_speed, 0)) # Right
+
 		update_camera_pos_label()
 
 	update_player_pos_label()

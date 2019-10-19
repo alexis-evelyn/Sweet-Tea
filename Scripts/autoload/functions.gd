@@ -24,7 +24,7 @@ enum host_system {
 }
 
 # To Select World Shader Rectangle to Use
-enum shader_rectangle_type {
+enum shader_rectangle_id {
 	primary = 0, # Main Shaders Use This
 	secondary = 1 # Added So Mirror Mode Can Exist Without Stopping Other Shaders From Being Used
 }
@@ -175,7 +175,7 @@ func list_game_translations() -> Dictionary:
 #	print("Translation Dictionary: %s" % translation_names)
 	return translation_names
 
-func get_world_camera(rectangle_type: int = shader_rectangle_type.primary) -> ColorRect:
+func get_world_camera(rectangle_id : int = shader_rectangle_id.primary) -> ColorRect:
 	var shader_screen : ColorRect
 	var player : Node2D = spawn_handler.get_player_body_node(gamestate.net_id)
 
@@ -183,9 +183,9 @@ func get_world_camera(rectangle_type: int = shader_rectangle_type.primary) -> Co
 		return null
 
 	if player.has_node("PlayerCamera"):
-		if rectangle_type == shader_rectangle_type.primary:
+		if rectangle_id == shader_rectangle_id.primary:
 			shader_screen = player.get_node("PlayerCamera").get_node("PrimaryShaderRectangle")
-		elif rectangle_type == shader_rectangle_type.secondary:
+		elif rectangle_id == shader_rectangle_id.secondary:
 			shader_screen = player.get_node("PlayerCamera").get_node("SecondaryShaderRectangle")
 	else:
 		if not gamestate.player_info.has("current_world"):
@@ -198,15 +198,15 @@ func get_world_camera(rectangle_type: int = shader_rectangle_type.primary) -> Co
 			logger.error("Set World Shader - Missing Debug Camera")
 			return null
 
-		if rectangle_type == shader_rectangle_type.primary:
+		if rectangle_id == shader_rectangle_id.primary:
 			shader_screen = world.get_node("Viewport").get_node("DebugCamera").get_node("PrimaryShaderRectangle")
-		elif rectangle_type == shader_rectangle_type.secondary:
+		elif rectangle_id == shader_rectangle_id.secondary:
 			shader_screen = world.get_node("Viewport").get_node("DebugCamera").get_node("SecondaryShaderRectangle")
 
 	return shader_screen
 
-func set_world_shader(shader: Shader, shader_type : int = shader_rectangle_type.primary) -> bool:
-	var shader_screen : ColorRect = get_world_camera(shader_type)
+func set_world_shader(shader: Shader, rectangle_id : int = shader_rectangle_id.primary) -> bool:
+	var shader_screen : ColorRect = get_world_camera(rectangle_id)
 
 	if shader_screen == null:
 		logger.error("Set World Shader - Failed to Get Shader Rectangle for Shader: %s" % shader.resource_path)
@@ -220,8 +220,8 @@ func set_world_shader(shader: Shader, shader_type : int = shader_rectangle_type.
 
 	return true
 
-func set_world_shader_param(param: String, value) -> bool:
-	var shader_screen : ColorRect = get_world_camera()
+func set_world_shader_param(param: String, value, rectangle_id : int = shader_rectangle_id.primary) -> bool:
+	var shader_screen : ColorRect = get_world_camera(rectangle_id)
 
 	if shader_screen == null:
 		logger.error("Set World Shader Param - Failed to Get Shader Rectangle for Shader")
@@ -237,8 +237,8 @@ func set_world_shader_param(param: String, value) -> bool:
 
 	return true
 
-func remove_world_shader(shader_type : int = shader_rectangle_type.primary) -> bool:
-	var shader_screen : ColorRect = get_world_camera()
+func remove_world_shader(rectangle_id : int = shader_rectangle_id.primary) -> bool:
+	var shader_screen : ColorRect = get_world_camera(rectangle_id)
 
 	if shader_screen == null:
 #		logger.error("Remove World Shader - Failed to Get Shader Rectangle for Shader")
@@ -440,15 +440,18 @@ func mirror_world() -> bool:
 		Inverts Mirror Mode Variable
 	"""
 
+	# TODO: Color Rectangles Cannot Work Next To Each Other In Same Parent Node. Why?
+	# Fix this.
+
 	gamestate.mirrored = !gamestate.mirrored
 
 	if gamestate.mirrored:
-		var shader_name : String = "mirror"
+		var shader_name : String = "animated_rainbow" # Set back to mirror once mirror shader is created.
 
-		set_world_shader(load(shaders.get(shader_name).path), shader_rectangle_type.secondary)
+		set_world_shader(load(shaders.get(shader_name).path), shader_rectangle_id.secondary)
 #		load_default_params(shader_name, tr("shader_world_argument"))
 	else:
-		remove_world_shader(shader_rectangle_type.secondary)
+		remove_world_shader(shader_rectangle_id.secondary)
 
 	return gamestate.mirrored
 
