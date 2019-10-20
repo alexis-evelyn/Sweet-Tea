@@ -29,7 +29,8 @@ var supported_commands : Dictionary = {
 	"testvibration": {"description": "help_testvibration_desc", "cheat": false},
 	"controllers": {"description": "help_controllers_desc", "cheat": false},
 	"randomshader": {"description": "help_randomshader_desc", "cheat": true},
-	"mirror": {"description": "help_mirror_desc", "cheat": false}
+	"mirror": {"description": "help_mirror_desc", "cheat": false},
+	"timescale": {"description": "help_timescale_desc", "cheat": true}
 }
 
 func process_commands(message: PoolStringArray) -> String:
@@ -70,6 +71,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return pick_random_shader(message)
 		"mirror":
 			return farest_mirror(message)
+		"timescale":
+			return set_timescale(message)
 		_:
 			return functions.empty_string
 
@@ -617,6 +620,48 @@ func farest_mirror(message: PoolStringArray) -> String:
 
 	# Mirror Mode Turned Off
 	return tr("mirror_command_off")
+
+func set_timescale(message: PoolStringArray) -> String:
+	# /timescale [value or increment]
+	# /timescale 1.0
+	# /timescale +3.0
+	# /timescale -3.0
+
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_arguments : PoolStringArray = message
+	command_arguments.remove(0)
+
+	if command_arguments.size() != 1:
+		if command_arguments.size() == 0:
+			return tr("timescale_command_display_timescale") % Engine.time_scale
+
+		return tr("timescale_command_invalid_number_of_arguments")
+
+	var old_timescale : float = Engine.time_scale # Used to check if timescale set successfully
+	var timescale : String = command_arguments[0]
+
+	if "+" in timescale:
+		Engine.time_scale += float(timescale)
+
+		if Engine.time_scale == old_timescale:
+			return tr("timescale_command_plus_timescale_not_changed") % Engine.time_scale
+
+		return tr("timescale_command_timescale_added") % [float(timescale), Engine.time_scale]
+	elif "-" in timescale:
+		Engine.time_scale += float(timescale)
+
+		if Engine.time_scale == old_timescale:
+			return tr("timescale_command_minus_timescale_not_changed") % Engine.time_scale
+
+		return tr("timescale_command_timescale_subtracted") % [float(timescale) * -1.0, Engine.time_scale]
+
+	Engine.time_scale = float(timescale)
+
+	if Engine.time_scale == old_timescale:
+		return tr("timescale_command_timescale_not_changed") % Engine.time_scale
+
+	return tr("timescale_command_timescale_set") % Engine.time_scale
 
 func get_class() -> String:
 	return "ClientCommands"
