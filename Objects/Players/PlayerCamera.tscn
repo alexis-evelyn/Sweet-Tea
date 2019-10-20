@@ -20,12 +20,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SecondaryShaderRectangle" type="ColorRect" parent="."]
+[node name="secondaryBackBuffer" type="BackBufferCopy" parent="."]
+position = Vector2( -960, -540 )
+
+[node name="SecondaryShaderRectangle" type="ColorRect" parent="secondaryBackBuffer"]
 visible = false
-margin_left = -960.0
-margin_top = -540.0
-margin_right = 960.0
-margin_bottom = 540.0
+margin_right = 1920.0
+margin_bottom = 1080.0
 mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": false

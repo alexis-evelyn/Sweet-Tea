@@ -35,8 +35,6 @@ func _input(event: InputEvent) -> void:
 	if not main_loop_events.game_is_focused:
 		return
 
-	detect_command_presses(event) # Detect When Command Actions Are Pressed
-
 	# Generic Joypad Test Code
 	# Not Necessary for Regular InputMap Events
 	if event is InputEventJoypadButton:
@@ -114,6 +112,8 @@ func _input(event: InputEvent) -> void:
 			OS.window_fullscreen = false
 		else:
 			OS.window_fullscreen = true
+
+	detect_command_presses(event) # Detect When Command Actions Are Pressed
 
 # Make Sure Game Saves World On Quit or Crash
 func _notification(what: int) -> void:

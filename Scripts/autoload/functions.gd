@@ -186,7 +186,7 @@ func get_world_camera(rectangle_id : int = shader_rectangle_id.primary) -> Color
 		if rectangle_id == shader_rectangle_id.primary:
 			shader_screen = player.get_node("PlayerCamera").get_node("PrimaryShaderRectangle")
 		elif rectangle_id == shader_rectangle_id.secondary:
-			shader_screen = player.get_node("PlayerCamera").get_node("SecondaryShaderRectangle")
+			shader_screen = player.get_node("PlayerCamera").get_node("secondaryBackBuffer/SecondaryShaderRectangle")
 	else:
 		if not gamestate.player_info.has("current_world"):
 			logger.error("Set World Shader - Missing Current World Info")
@@ -201,7 +201,7 @@ func get_world_camera(rectangle_id : int = shader_rectangle_id.primary) -> Color
 		if rectangle_id == shader_rectangle_id.primary:
 			shader_screen = world.get_node("Viewport").get_node("DebugCamera").get_node("PrimaryShaderRectangle")
 		elif rectangle_id == shader_rectangle_id.secondary:
-			shader_screen = world.get_node("Viewport").get_node("DebugCamera").get_node("SecondaryShaderRectangle")
+			shader_screen = world.get_node("Viewport").get_node("DebugCamera").get_node("secondaryBackBuffer/SecondaryShaderRectangle")
 
 	return shader_screen
 
@@ -453,10 +453,10 @@ func mirror_world() -> bool:
 	if gamestate.mirrored:
 		var shader_name : String = "mirror" # Set back to mirror once mirror shader is created.
 
-		set_world_shader(load(shaders.get(shader_name).path), shader_rectangle_id.primary)
+		set_world_shader(load(shaders.get(shader_name).path), shader_rectangle_id.secondary)
 #		load_default_params(shader_name, tr("shader_world_argument"))
 	else:
-		remove_world_shader(shader_rectangle_id.primary)
+		remove_world_shader(shader_rectangle_id.secondary)
 
 	return gamestate.mirrored
 
