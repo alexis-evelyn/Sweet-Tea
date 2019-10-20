@@ -11,10 +11,11 @@ const LEFT : Vector2 = Vector2(-1, 0)
 const RIGHT : Vector2 = Vector2(1, 0)
 const DOWN : Vector2 = Vector2(0, 1)
 
-const ACCELERATION : int = 50 # Originally 50 (Moonwalk 200)
-const GRAVITY : int = 20 # Originally 20 (Moonwalk 20)
-const MAX_SPEED : int = 200 # Originally 200 (Moonwalk 400)
-const JUMP_HEIGHT : int = -400 # Originally -500 (Moonwalk -500)
+# Now I Have Delta In The Equation, The Original Values and Moonwalk are Meaningless
+const ACCELERATION : int = 5000 # Originally 50 (Moonwalk 200)
+const GRAVITY : int = 2000 # Originally 20 (Moonwalk 20)
+const MAX_SPEED : int = 20000 # Originally 200 (Moonwalk 400)
+const JUMP_HEIGHT : int = -700 # Originally -500 (Moonwalk -500) - What is -20000 times 0.033333? :P
 
 const MAX_DASH_SPEED_MULTIPLIER : Vector2 = Vector2(30.0, 30.0) # Max Dash Speeed
 const DASH_TIMEOUT : float = 1.0 # How long before allow dash again
@@ -121,13 +122,13 @@ func _physics_process(_delta: float) -> void:
 				# The keyboard always produces 1 when pressed.
 				# An analog joystick can produce any value.
 				# This will allow finer control when a joystick is used.
-				motion.y = max((motion.y - ACCELERATION) * process_axes_strength(Input.get_action_strength("move_up")), -MAX_SPEED)
+				motion.y = max((motion.y - ACCELERATION) * process_axes_strength(Input.get_action_strength("move_up")) * _delta, -MAX_SPEED * _delta)
 		elif Input.is_action_pressed("move_down") and !panelChat.visible and not pauseMenu.is_paused():
 			if not gravity_enabled:
 				friction = false
 
 #				logger.superverbose("Down")
-				motion.y = min((motion.y + ACCELERATION) * process_axes_strength(Input.get_action_strength("move_down")), MAX_SPEED)
+				motion.y = min((motion.y + ACCELERATION) * process_axes_strength(Input.get_action_strength("move_down")) * _delta, MAX_SPEED * _delta)
 		else:
 			friction = true;
 			#$Sprite.play("Idle");
@@ -137,17 +138,17 @@ func _physics_process(_delta: float) -> void:
 
 #			logger.superverbose("Left")
 			if gamestate.mirrored:
-				motion.x = min((motion.x + ACCELERATION) * process_axes_strength(Input.get_action_strength("move_left")), MAX_SPEED)
+				motion.x = min((motion.x + ACCELERATION) * process_axes_strength(Input.get_action_strength("move_left")) * _delta, MAX_SPEED * _delta)
 			else:
-				motion.x = max((motion.x - ACCELERATION) * process_axes_strength(Input.get_action_strength("move_left")), -MAX_SPEED)
+				motion.x = max((motion.x - ACCELERATION) * process_axes_strength(Input.get_action_strength("move_left")) * _delta, -MAX_SPEED * _delta)
 		elif Input.is_action_pressed("move_right") and !panelChat.visible and not pauseMenu.is_paused():
 			friction = false
 
 #			logger.superverbose("Right")
 			if gamestate.mirrored:
-				motion.x = max((motion.x - ACCELERATION) * process_axes_strength(Input.get_action_strength("move_right")), -MAX_SPEED)
+				motion.x = max((motion.x - ACCELERATION) * process_axes_strength(Input.get_action_strength("move_right")) * _delta, -MAX_SPEED * _delta)
 			else:
-				motion.x = min((motion.x + ACCELERATION) * process_axes_strength(Input.get_action_strength("move_right")), MAX_SPEED)
+				motion.x = min((motion.x + ACCELERATION) * process_axes_strength(Input.get_action_strength("move_right")) * _delta, MAX_SPEED * _delta)
 		else:
 			friction = true;
 			#$Sprite.play("Idle");
@@ -155,9 +156,10 @@ func _physics_process(_delta: float) -> void:
 		if Input.is_action_pressed("player_jump") and !panelChat.visible and not pauseMenu.is_paused():
 			# Look at old project for jump code and then add in a feature for detecting how long jump is held.
 			if is_on_floor() and gravity_enabled:
-				# Why does the jump height get exponentially higher when moving left or right?
-				# Fix this!!!
-				motion.y = JUMP_HEIGHT
+				# Why does exponentially increasing the timescale make the player jump higher?
+				motion.y += JUMP_HEIGHT # 0.033333 is Delta Value at 30 Physics FPS/Regular FPS
+#				motion.y += (JUMP_HEIGHT * _delta) # Jump height would be -20000 for this line.
+#				logger.debug("Delta: %s" % _delta) # Timescale affects _delta.
 
 		if is_on_floor():
 			if friction:
@@ -170,7 +172,7 @@ func _physics_process(_delta: float) -> void:
 			friction = false
 		elif not gravity_enabled:
 			# For When Gravity is Disabled
-			if friction:
+			if friction and not is_on_floor():
 				motion.x = lerp(motion.x, 0, 0.2)
 				motion.y = lerp(motion.y, 0, 0.2)
 				friction = false
@@ -185,7 +187,7 @@ func _physics_process(_delta: float) -> void:
 		# Moved
 		if gravity_enabled and not is_on_floor():
 #			logger.debug("Gravity: %s" % motion.y)
-			motion.y += GRAVITY
+			motion.y += (GRAVITY * _delta)
 #			move_and_slide(Vector2(0, GRAVITY), UP)
 
 		# Load Chunks to Send to Server Player
