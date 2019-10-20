@@ -11,13 +11,13 @@ var game_version : String = ProjectSettings.get_setting("application/config/Vers
 
 # Mazawalza Fonts
 # warning-ignore:unused_class_variable
-var mazawalza_regular : DynamicFont = load("res://Assets/Fonts/dynamicfont/mazawalza-regular.tres")
+const mazawalza_regular : DynamicFont = preload("res://Assets/Fonts/dynamicfont/mazawalza-regular.tres") # This most likely won't change except at compile time. If I'm wrong, I will change it back to a variable.
 #var mazawalza_bold : DynamicFont = load("res://Assets/Fonts/dynamicfont/mazawalza-bold.tres") # This does not exist. Probably Never Will Given What Font is Used For.
 #var mazawalza_italic : DynamicFont = load("res://Assets/Fonts/dynamicfont/mazawalza-italic.tres") # This Will Never Exist Given What Font is Used For.
 #var mazawalza_bold_italic : DynamicFont = load("res://Assets/Fonts/dynamicfont/mazawalza-bold-italic.tres") # This Will Never Exist Given What Font is Used For.
 
 # warning-ignore:unused_class_variable
-var game_theme : Theme = preload("res://Assets/Themes/default_theme.tres")
+var game_theme : Theme = preload("res://Assets/Themes/default_theme.tres") # This won't be a constant as I plan on supporting changing the theme during runtime.
 # warning-ignore:unused_class_variable
 var server_mode : bool = false
 

@@ -63,7 +63,8 @@ func _input(event: InputEvent) -> void:
 #		logger.debug("Pressed Joypad Axis: %s - Value (-1.0, 1.0): %s" % [event.get_axis(), event.get_axis_value()])
 		pass
 
-
+	if event is InputEventScreenTouch:
+		process_screentouch(event)
 
 	# This allows user to see player list (I will eventually add support to change keys and maybe joystick support)
 	if event.is_action("show_playerlist") and !pauseMenu.is_paused():
@@ -173,6 +174,20 @@ func detect_command_presses(event: InputEvent) -> void:
 		get_tree().set_input_as_handled() # Prevent's Input from Being Sent to Any _unhandled_input functions
 		functions.run_button_command(panelChat, "2") # Activate Command Assigned to Command 0
 #		functions.run_axes_command(panelChat, "1") # Activate Command Assigned to Command 0
+
+func process_screentouch(event: InputEvent) -> void:
+#	event.get_index()
+#	event.get_position()
+#	event.is_pressed()
+
+	# I am not officially supporting mobile devices, I am just allowing unofficial binaries to be made while I work on the desktop versions.
+	# Do note, if an unofficial port is made, make sure it still uses my same auth server. Anything else can be changed (e.g. improve performance, better controls, etc...).
+	# Just make sure it is obvious it is not an official port. See the License File For More Detail.
+	if OS.has_virtual_keyboard():
+		if OS.get_virtual_keyboard_height() == 0: # If the height is 0, the keyboard is not visible.
+			OS.show_virtual_keyboard()
+		else:
+			OS.hide_virtual_keyboard()
 
 func get_class() -> String:
 	return "PlayerUI"

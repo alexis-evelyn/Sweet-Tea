@@ -25,7 +25,7 @@ The reason why I am creating a license is to allow people to use my source code 
   6. Bots can be made from the client code (say to test AI deep learning)
   7. The code can be used in educational environments (say to teach how to make games).
 
-Any game that has been modified/ported must make very clear the game is not an official build (official meaning that the original developer, Alex Evelyn, did not build it). Just putting "Unofficial" in the name of the game will suffice (providing people can easily see it). The game's name can also be changed or added onto so long as it distinguishes the game from an official build. The name change applies to the place where a user can retrieve a copy of the modified game (e.g. on a download page).
+Any game that has been modified/ported must make very clear the game is not an official build (official meaning that the original developer, Alex Evelyn, did not build it). Just putting "Unofficial" in the name of the game will suffice (providing people can easily see it). The game's name can also be changed or added onto so long as it distinguishes the game from an official build. The name change applies to the place where a user can retrieve a copy of the modified game (e.g. on a download page) as well as in game.
 
 Those who port/modify the game to other platforms can charge for their work. The source code still has to be released with this license. If there is a legal reason the source cannot be released, the person porting the game can contact me and explain the situation. After investigating, if I deem the reason to not disclose the source to be legitimate, then I will authorize the game to not have to disclose the source code.
 
@@ -60,7 +60,7 @@ This paid authentication system also allows for bans to be more feasible as the 
 I worked very hard on this game, so I would like to be paid for my work so I can afford to continue working on the game and other cool projects.
 
 Having a paid authentication system allows me to release the source code as now the game itself doesn't cost money, but the license to use the game does.
-  Yes, I know that private users will remove the auth system to pirate the game. This would happen regardless of if the game was open source.
+  Yes, I know that some private users will remove the auth system to pirate the game. This would happen regardless of if the game was open source.
   However, most users will be more than willing to pay for the game and at least with the source code available, pirating the game has less of a risk of downloading viruses (providing the pirate knows how to compile source code).
   I am not really concerned about a few pirates here and there, only that I don't have my income stolen from me to the point where I cannot afford to continue my work.
 
