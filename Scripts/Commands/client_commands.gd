@@ -20,7 +20,7 @@ var supported_commands : Dictionary = {
 	"shader": {"description": "help_shader_desc", "cheat": true},
 	"shaderparam": {"description": "help_shaderparam_desc", "cheat": true},
 	"debug": {"description": "help_debug_desc", "cheat": true},
-#	"debugdraw": {"description": "help_debugdraw_desc"},
+#	"debugdraw": {"description": "help_debugdraw_desc", "cheat": true},
 
 	"screenshot": {"description": "help_screenshot_desc", "cheat": false},
 	"dict": {"description": "help_dict_desc", "cheat": true},
