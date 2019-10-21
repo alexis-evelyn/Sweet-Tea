@@ -99,11 +99,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/Menu/menu_background.gd"
 }, {
-"base": "Node",
-"class": "MixingDeskMusic",
-"language": "GDScript",
-"path": "res://addons/mixing-desk/music/mixing_desk_music.gd"
-}, {
 "base": "Control",
 "class": "ModLoader",
 "language": "GDScript",
@@ -238,7 +233,6 @@ _global_script_class_icons={
 "Mazawalza_Dictionary": "",
 "Mazawalza_Dictionary_Detailed": "",
 "MenuBackground": "",
-"MixingDeskMusic": "",
 "ModLoader": "",
 "MultiplayerMenu": "",
 "OptionsMenu": "",

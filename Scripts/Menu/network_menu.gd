@@ -6,8 +6,7 @@ class_name MultiplayerMenu
 
 onready var server_address : LineEdit = $panelNetwork/manualJoin/txtServerAddress
 onready var join_server_button : Button = $panelNetwork/manualJoin/btnJoinServer
-# warning-ignore:unused_class_variable
-onready var search_button : Button = $panelNetwork/manualJoin/btnRefreshSearch
+#onready var search_button : Button = $panelNetwork/manualJoin/btnRefreshSearch
 onready var lan_servers : ItemList = $panelNetwork/lanServers
 
 var server_finder : ServerFinder
@@ -16,7 +15,7 @@ const lan_client : String = "res://Scripts/lan/client.gd"
 const default_icon : Resource = preload("res://Assets/Blocks/grass-debug.png")
 
 # warning-ignore:unused_class_variable
-var max_servers : int = 50 # Apply a maximum number of servers to show
+const max_servers : int = 50 # Apply a maximum number of servers to show
 var servers : Array # Keep track of already added servers - to avoid duplicates
 var server_list : Dictionary # Used to Store Server Information
 var server : String # Server to add to servers list

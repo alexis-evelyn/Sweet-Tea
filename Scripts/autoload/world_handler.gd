@@ -246,9 +246,9 @@ func load_world_server(net_id: int, location: String) -> String:
 
 		var player : bool = world_grid.get_node("Players").has_node(str(gamestate.net_id)) # If already in same world, keep visible
 
-		if (net_id == gamestate.net_id) or (player) or (net_id == -1):
+		if (net_id == gamestate.net_id) or (player) or (net_id == gamestate.standard_netids.invalid_id):
 			# Make sure previous world was made invisible
-			if net_id != -1:
+			if net_id != gamestate.standard_netids.invalid_id:
 				worlds.get_node(spawn_handler.get_world_name(net_id)).visible = false
 
 			world.visible = true
@@ -327,9 +327,9 @@ func load_world_server(net_id: int, location: String) -> String:
 
 		if get_tree().is_network_server():
 			# Makes sure the viewport (world) is only visible (to the server player) if the server player is changing worlds
-			if (net_id == gamestate.net_id) or (net_id == -1):
+			if (net_id == gamestate.net_id) or (net_id == gamestate.standard_netids.invalid_id):
 				# Make sure previous world was made invisible
-				if net_id != -1:
+				if net_id != gamestate.standard_netids.invalid_id:
 					worlds.get_node(spawn_handler.get_world_name(net_id)).visible = false
 
 				template.visible = true
@@ -464,8 +464,8 @@ func create_world(net_id: int = -1, world_seed: String = functions.empty_string,
 
 	if get_tree().has_network_peer() and get_tree().is_network_server():
 		# Makes sure the viewport (world) is only visible (to the server player) if the server player is changing worlds
-		if (net_id == gamestate.net_id) or (net_id == -1):
-			if net_id != -1:
+		if (net_id == gamestate.net_id) or (net_id == gamestate.standard_netids.invalid_id):
+			if net_id != gamestate.standard_netids.invalid_id:
 				worlds.get_node(spawn_handler.get_world_name(net_id)).visible = false
 
 			template.visible = true

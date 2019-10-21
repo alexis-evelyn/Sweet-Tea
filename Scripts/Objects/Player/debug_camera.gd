@@ -42,7 +42,6 @@ onready var battery_label = $BatteryStats
 onready var clock_label = $Clock
 onready var engine_start_time_label = $TimeSinceStart
 
-# warning-ignore:unused_class_variable
 onready var crosshair = $Crosshair
 
 onready var world : Node = get_parent().get_parent()

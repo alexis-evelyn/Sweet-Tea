@@ -110,10 +110,8 @@ var mazawalza : Dictionary = {
 }
 
 # May Use. May Not
-# warning-ignore:unused_class_variable
-const entry : String = "entry_"
-# warning-ignore:unused_class_variable
-const meaning : String = "meaning_"
+#const entry : String = "entry_"
+#const meaning : String = "meaning_"
 
 # Effect Modifiers
 enum modifier {

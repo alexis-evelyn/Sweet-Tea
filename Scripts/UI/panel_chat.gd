@@ -16,8 +16,7 @@ var NWSC : String = PoolByteArray(['U+8203']).get_string_from_utf8() # No Width 
 
 onready var chatMessages : RichTextLabel = $chatMessages
 onready var chatInput : LineEdit = $userChat
-# warning-ignore:unused_class_variable
-onready var closeButton : TextureButton = $closeChat
+#onready var closeButton : TextureButton = $closeChat
 
 # Supposed to Request Window Attention - Only Works if Window is Out of Focus
 #OS.request_attention()

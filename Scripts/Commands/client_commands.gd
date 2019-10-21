@@ -5,11 +5,9 @@ var shaders_class = preload("res://Scripts/functions/shader_registry.gd").new()
 var shaders : Dictionary = shaders_class.shaders
 
 # warning-ignore:unused_class_variable
-var dictionary = preload("res://Scripts/functions/dictionary_registry.gd").new()
+#var dictionary = preload("res://Scripts/functions/dictionary_registry.gd").new()
 
 # Used by Help Command to Provide List of Commands
-# The Help Descriptions Do Not Exist Yet...
-# warning-ignore:unused_class_variable
 var supported_commands : Dictionary = {
 	"help_client": {"description": "help_help_client_desc", "cheat": false},
 	"calc": {"description": "help_calc_desc", "cheat": false},

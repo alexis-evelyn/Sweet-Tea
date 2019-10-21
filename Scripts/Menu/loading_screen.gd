@@ -4,9 +4,7 @@ class_name LoadingScreen
 signal loading_screen_closed
 
 # Declare member variables here. Examples:
-# warning-ignore:unused_class_variable
-onready var loading_bar : TextureProgress = $background/loadingBar
-# warning-ignore:unused_class_variable
+#onready var loading_bar : TextureProgress = $background/loadingBar
 onready var loading_bar_plain : ProgressBar = $background/loadingBarPlain
 
 var main_menu : String = ProjectSettings.get_setting("application/run/main_menu")
