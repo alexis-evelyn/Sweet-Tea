@@ -30,7 +30,8 @@ var supported_commands : Dictionary = {
 	"controllers": {"description": "help_controllers_desc", "cheat": false},
 	"randomshader": {"description": "help_randomshader_desc", "cheat": true},
 	"mirror": {"description": "help_mirror_desc", "cheat": false},
-	"timescale": {"description": "help_timescale_desc", "cheat": true}
+	"timescale": {"description": "help_timescale_desc", "cheat": true},
+	"saves": {"description": "help_saves_desc", "cheat": false} # Technically can be used for cheating, but really, who cares. I don't. The person playing the game is only going to ruin it for themselves if they cheat (before beating the game legitimately).
 }
 
 func process_commands(message: PoolStringArray) -> String:
@@ -73,6 +74,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return farest_mirror(message)
 		"timescale":
 			return set_timescale(message)
+		"saves":
+			return open_saves_folder(message)
 		_:
 			return functions.empty_string
 
@@ -662,6 +665,24 @@ func set_timescale(message: PoolStringArray) -> String:
 		return tr("timescale_command_timescale_not_changed") % Engine.time_scale
 
 	return tr("timescale_command_timescale_set") % Engine.time_scale
+
+func open_saves_folder(message: PoolStringArray) -> String:
+	# /saves
+
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_arguments : PoolStringArray = message
+	command_arguments.remove(0)
+
+	var error_code : int = OS.shell_open("file://".plus_file(OS.get_user_data_dir()))
+
+	if error_code == OK:
+		return tr("saves_command_success")
+
+	return tr("saves_command_failed") % error_code
+
+
+
 
 func get_class() -> String:
 	return "ClientCommands"

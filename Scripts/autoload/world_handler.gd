@@ -344,6 +344,9 @@ func load_world_server(net_id: int, location: String) -> String:
 		return functions.empty_string
 
 func save_world(world: ViewportContainer):
+	# What does this do?
+	# OS.set_use_file_access_save_and_swap(true)
+
 	world_data_dict.clear() # Clears Dictionary From Previous Uses
 
 	var world_generator = world.get_node("Viewport/WorldGrid/WorldGen")
