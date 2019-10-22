@@ -35,7 +35,8 @@ var supported_commands : Dictionary = {
 func process_commands(message: PoolStringArray) -> String:
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 
-	match command:
+	# Compare lowercase version of command so it is not case sensitive.
+	match command.to_lower():
 		"help_client":
 			return help_command(message)
 		"calc":

@@ -93,7 +93,8 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 
-	match command:
+	# Compare lowercase version of command so it is not case sensitive.
+	match command.to_lower():
 		"help":
 			return help_command(net_id, message)
 		"kick":
@@ -661,9 +662,20 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 
 		var coordinates : Vector2
 		if command_arguments.size() == 2:
-			# TODO: If - (minus) is specified as coordinate, use current coordinate in place instead of 0.
-			var x_coor : int = convert(command_arguments[0], TYPE_INT)
-			var y_coor : int = convert(command_arguments[1], TYPE_INT)
+			var x_coor : float
+			var y_coor : float
+
+			if command_arguments[0] != "~" and command_arguments[0] != "-":
+				x_coor = convert(command_arguments[0], TYPE_INT)
+			else:
+				# If using tilde or minus, then use current coordinate from player
+				x_coor = spawn_handler.get_player_body_node(net_id).position.x
+
+			if command_arguments[1] != "~" and command_arguments[1] != "-":
+				y_coor = convert(command_arguments[1], TYPE_INT)
+			else:
+				# If using tilde or minus, then use current coordinate from player
+				y_coor = spawn_handler.get_player_body_node(net_id).position.y
 
 			coordinates = Vector2(x_coor, y_coor)
 		elif command_arguments.size() == 1:
