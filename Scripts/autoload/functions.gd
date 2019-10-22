@@ -460,6 +460,50 @@ func mirror_world() -> bool:
 
 	return gamestate.mirrored
 
+func grab_player_body_by_id(playerid: String) -> Node:
+	"""
+		Grab Player's Body By ID
+
+		I may implement a user friendly id/username system on top of using net_id.
+		This function will be able to process both net_id and the user friendly id.
+
+		This function is meant to be used when the id type is unknown (e.g. commands).
+		It is not meant to be used when the id is guaranteed to be a net_id.
+
+		If playerid is guaranteed to be a net_id, use 'spawn_handler.get_player_body_node(net_id: int) -> Node'.
+		This is to avoid using unnecessary memory dealing with string conversion.
+	"""
+
+	if playerid.is_valid_integer():
+		return spawn_handler.get_player_body_node(int(playerid))
+
+	# Eventually, there will be a way to retrieve a player node by a user friendly id.
+	# User friendly ids just need to exist first.
+
+	return null
+
+func grab_player_node_by_id(playerid: String) -> Node:
+	"""
+		Grab Player's Node By ID
+
+		I may implement a user friendly id/username system on top of using net_id.
+		This function will be able to process both net_id and the user friendly id.
+
+		This function is meant to be used when the id type is unknown (e.g. commands).
+		It is not meant to be used when the id is guaranteed to be a net_id.
+
+		If playerid is guaranteed to be a net_id, use 'spawn_handler.get_player_node(net_id: int) -> Node'.
+		This is to avoid using unnecessary memory dealing with string conversion.
+	"""
+
+	if playerid.is_valid_integer():
+		return spawn_handler.get_player_node(int(playerid))
+
+	# Eventually, there will be a way to retrieve a player node by a user friendly id.
+	# User friendly ids just need to exist first.
+
+	return null
+
 func get_class() -> String:
 	return "Functions"
 

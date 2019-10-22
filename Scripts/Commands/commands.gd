@@ -660,11 +660,11 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 		var command_arguments : PoolStringArray = message
 		command_arguments.remove(0)
 
+		var x_coor : float
+		var y_coor : float
+
 		var coordinates : Vector2
 		if command_arguments.size() == 2:
-			var x_coor : float
-			var y_coor : float
-
 			if command_arguments[0] != "~" and command_arguments[0] != "-":
 				x_coor = convert(command_arguments[0], TYPE_INT)
 			else:
@@ -678,20 +678,31 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 				y_coor = spawn_handler.get_player_body_node(net_id).position.y
 
 			coordinates = Vector2(x_coor, y_coor)
+
+			functions.teleport(net_id, coordinates) # This allows client to just reposition itself without reloading world. So useful for short distances.
+#			functions.teleport_despawn(net_id, coordinates) # This allows forcing client to reload world. So, useful for long distances.
+
+			return functions.get_translation("teleport_command_success", player_registrar.players[net_id].locale) % [coordinates.x, coordinates.y]
 		elif command_arguments.size() == 1:
 			# Teleport to Player (Not Implemented)
 			# I may have different permission sublevels for this command.
 			# I would have to decide what the best way to implement "sublevels" are.
 			# I think it would need more finegrained control than just, are you high enough?
 
-			var player_id : int = convert(command_arguments[0], TYPE_INT)
+			var player_id : String = command_arguments[0]
+			var other_player : Node = functions.grab_player_body_by_id(player_id)
 
-			if player_registrar.players.has(player_id):
-				pass
-			else:
-				pass
+			if player_registrar.players.has(other_player):
+				x_coor = other_player.position.x
+				y_coor = other_player.position.y
 
-			return functions.get_translation("teleport_command_not_enough_arguments", player_registrar.players[net_id].locale)
+				coordinates = Vector2(x_coor, y_coor)
+
+				functions.teleport(net_id, coordinates) # This allows client to just reposition itself without reloading world. So useful for short distances.
+#				functions.teleport_despawn(net_id, coordinates) # This allows forcing client to reload world. So, useful for long distances.
+
+				return "Success TP To Other Player - Replace Me With Translation Friendly String"
+			return "Other Player Not Found - Replace Me With Translation Friendly String"
 		elif command_arguments.size() == 3:
 			# Teleport Player to Other Location (if alphabetical characters are first)
 			# Disable Safety Check (if alphabetical characters are third)
@@ -704,10 +715,6 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 		else:
 			return functions.get_translation("teleport_command_too_many_arguments", player_registrar.players[net_id].locale)
 
-		functions.teleport(net_id, coordinates) # This allows client to just reposition itself without reloading world. So useful for short distances.
-#		functions.teleport_despawn(net_id, coordinates) # This allows forcing client to reload world. So, useful for long distances.
-
-		return functions.get_translation("teleport_command_success", player_registrar.players[net_id].locale) % [coordinates.x, coordinates.y]
 	return functions.get_translation("teleport_command_no_permission", player_registrar.players[net_id].locale)
 
 # warning-ignore:unused_argument
