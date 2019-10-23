@@ -27,6 +27,9 @@ func _ready():
 		#test()
 		pass
 
+func wait() -> void:
+	yield(self, "function_finished") # Wait Until Function is Finished
+
 func debug_auth_path():
 	var output = []
 	OS.execute('export', [], true, output)

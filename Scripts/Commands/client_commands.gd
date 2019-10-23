@@ -7,6 +7,8 @@ var shaders : Dictionary = shaders_class.shaders
 # warning-ignore:unused_class_variable
 #var dictionary = preload("res://Scripts/functions/dictionary_registry.gd").new()
 
+onready var gamejolt : GameJoltFunctions = get_tree().get_root().get_node("GameJoltAPI")
+
 # Used by Help Command to Provide List of Commands
 var supported_commands : Dictionary = {
 	"help_client": {"description": "help_help_client_desc", "cheat": false},
@@ -30,6 +32,8 @@ var supported_commands : Dictionary = {
 	"mirror": {"description": "help_mirror_desc", "cheat": false},
 	"timescale": {"description": "help_timescale_desc", "cheat": true},
 	"saves": {"description": "help_saves_desc", "cheat": false} # Technically can be used for cheating, but really, who cares. I don't. The person playing the game is only going to ruin it for themselves if they cheat (before beating the game legitimately).
+	# Achievements - Cheat
+	# Gamejolt - No Cheat
 }
 
 func process_commands(message: PoolStringArray) -> String:
@@ -77,6 +81,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return open_saves_folder(message)
 		"achievement":
 			return handle_achievement(message)
+		"gamejolt":
+			return gamejolt_manual_login(message)
 		_:
 			return functions.empty_string
 
@@ -682,6 +688,39 @@ func open_saves_folder(message: PoolStringArray) -> String:
 
 	return tr("saves_command_failed") % error_code
 
+func gamejolt_manual_login(message: PoolStringArray) -> String:
+	"""
+		Command to Login to GameJolt
+	"""
+
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_arguments : PoolStringArray = message
+	command_arguments.remove(0)
+
+	if not command_arguments.size() == 2:
+		return "Wrong Amount of Arguments"
+
+	if not gamejolt.is_initialized():
+		gamejolt.init()
+
+	var username : String = command_arguments[0]
+	var token : String = command_arguments[1]
+
+	gamejolt.login(username, token)
+#	yield(gamejolt, "function_finished") # Wait Until Function is Finished
+
+	# Figure out how to wait for success or failure.
+	# Yield just terminates this function early.
+
+	# Most likely I want to terminate this function with an empty string and call
+	# another function which will send a reply to chat later.
+
+	if not gamejolt.is_logged_in():
+		return "Failed Login!!!"
+
+	return "Manually Logged In!!!"
+
 func handle_achievement(message: PoolStringArray) -> String:
 	"""
 		Command to Help Manually Adjust/View Achievements
@@ -692,15 +731,27 @@ func handle_achievement(message: PoolStringArray) -> String:
 	# /achievement <achievement_id> <true> - Set As If Achievement Was Earned
 	# /achievement <achievement_id> <toggle> - Toggle If Achievement Was Earned
 
-	var gamejolt : GameJoltFunctions = get_tree().get_root().get_node("GameJoltAPI")
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_arguments : PoolStringArray = message
+	command_arguments.remove(0)
 
 	if not gamejolt.is_initialized():
 		gamejolt.init()
+#		yield(self, "function_finished") # Wait Until Function is Finished
 
 	if not gamejolt.is_logged_in():
 		gamejolt.autologin()
+#		yield(self, "function_finished") # Wait Until Function is Finished
 
-	print(gamejolt.get_trophies())
+	if not gamejolt.is_logged_in():
+		return "Failed Autologin!!!"
+
+	var trophies : Dictionary = gamejolt.get_trophies()
+#	yield(self, "function_finished") # Wait Until Function is Finished
+
+	for trophy in trophies:
+		print(trophy)
 
 	return "Check Your Log!!!"
 
