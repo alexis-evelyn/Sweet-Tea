@@ -75,6 +75,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return set_timescale(message)
 		"saves":
 			return open_saves_folder(message)
+		"achievement":
+			return handle_achievement(message)
 		_:
 			return functions.empty_string
 
@@ -680,8 +682,27 @@ func open_saves_folder(message: PoolStringArray) -> String:
 
 	return tr("saves_command_failed") % error_code
 
+func handle_achievement(message: PoolStringArray) -> String:
+	"""
+		Command to Help Manually Adjust/View Achievements
+	"""
 
+	# /achievement - Display List of Achievements And If Any Were Earned
+	# /achievement <achievement_id> - Display Achievement Details and If Was Earned
+	# /achievement <achievement_id> <true> - Set As If Achievement Was Earned
+	# /achievement <achievement_id> <toggle> - Toggle If Achievement Was Earned
 
+	var gamejolt : GameJoltFunctions = get_tree().get_root().get_node("GameJoltAPI")
+
+	if not gamejolt.is_initialized():
+		gamejolt.init()
+
+	if not gamejolt.is_logged_in():
+		gamejolt.autologin()
+
+	print(gamejolt.get_trophies())
+
+	return "Check Your Log!!!"
 
 func get_class() -> String:
 	return "ClientCommands"

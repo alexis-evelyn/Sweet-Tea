@@ -17,6 +17,9 @@ var executable_directory = get_executable_folder()
 var protocol = functions.empty_string
 var gamejolt_auth_path = protocol.plus_file(executable_directory.plus_file(gamejolt_credentials_name))
 
+var logged_in : bool = false
+var initialize : bool = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	if not gamestate.server_mode:
@@ -34,6 +37,44 @@ func debug_auth_path():
 
 	test.store_string(str(output))
 	test.close()
+
+func init() -> void:
+	var api_key = ProjectSettings.get_setting("application/config/Gamejolt API Key")
+	var game_id = ProjectSettings.get_setting("application/config/Gamejolt Game ID")
+	api.init(game_id, api_key)
+	initialize = true
+
+func is_initialized() -> bool:
+	return initialize
+
+func is_logged_in() -> bool:
+	return logged_in
+
+func autologin() -> bool:
+	var gamejolt_auth = File.new()
+
+	#logger.verbose("Credentials: %s" % gamejolt_auth.file_exists(gamejolt_auth_path))
+	#logger.verbose("Path: %s" % gamejolt_auth_path)
+
+	if gamejolt_auth.file_exists(gamejolt_auth_path):
+		gamejolt_auth.open(gamejolt_auth_path, File.READ)
+
+		var auth = PoolStringArray()
+		while not gamejolt_auth.eof_reached():
+			auth.append(gamejolt_auth.get_line())
+
+		gamejolt_auth.close()
+
+		if auth.size() >= 3:
+			var name : String = auth[1]
+			var token : String = auth[2]
+
+			login(name, token)
+			yield(self, "function_finished") # Wait Until Function is Finished
+			return true
+
+		return false
+	return false
 
 func test():
 	# There is no real way to protect the API key and a bad actor will be able to get it anyway.
@@ -75,15 +116,17 @@ func test():
 	else:
 		logger.error("GameJolt File Not Found")
 
-func login(name: String, token: String):
+func login(name: String, token: String) -> void:
 	# There's a user friendly token on GameJolt's site. This token functions in place of the one inside the gamejolt file.
 	api.auth_user(name, token)
 
 	var result = yield(api, 'gamejolt_request_completed')
 	if api.is_ok(result):
 		logger.verbose("Successful Login: %s" % result.responseBody.success)
+		logged_in = true
 	else:
 		api.print_error(result)
+		logged_in = false
 
 	emit_signal("function_finished")
 
@@ -97,19 +140,55 @@ func get_gj_time():
 
 	emit_signal("function_finished")
 
-func get_trophies():
+func get_trophies() -> Dictionary:
 	api.fetch_trophy()
 	var result = yield(api, 'gamejolt_request_completed')
 	if api.is_ok(result):
-		loop_trophies(result.responseBody.trophies)
+		#loop_trophies(result.responseBody.trophies)
+		emit_signal("function_finished")
+		return result.responseBody.trophies
+
+	api.print_error(result)
+	emit_signal("function_finished")
+	return result
+
+func loop_trophies(trophies: Array):
+	for trophy in trophies:
+		logger.verbose("Trophy Name: %s - ID: %s - Achieved: %s" % [trophy.title, trophy.id, trophy.achieved])
+
+func achieve_trophy(trophy: String):
+	api.fetch_trophy(trophy)
+	var result = yield(api, 'gamejolt_request_completed')
+	if api.is_ok(result):
+		var trophies = result.responseBody.trophies
+
+		if trophies.size() > 0:
+			var achieved = trophies[0].achieved
+
+			if achieved == "false":
+				api.set_trophy_achieved(trophy)
+				#logger.verbose("Trophy Achieved: %s" % trophies[0].title)
 	else:
 		api.print_error(result)
 
 	emit_signal("function_finished")
 
-func loop_trophies(trophies: Array):
-	for trophy in trophies:
-		logger.verbose("Trophy Name: %s - ID: %s - Achieved: %s" % [trophy.title, trophy.id, trophy.achieved])
+func remove_trophy(trophy: String):
+	api.fetch_trophy(trophy)
+	var result = yield(api, 'gamejolt_request_completed')
+	if api.is_ok(result):
+		var trophies = result.responseBody.trophies
+
+		if trophies.size() > 0:
+			var achieved = trophies[0].achieved
+
+			if achieved == "true":
+				api.remove_trophy_achieved(trophy)
+				#logger.verbose("Trophy Removed: %s" % trophies[0].title)
+	else:
+		api.print_error(result)
+
+	emit_signal("function_finished")
 
 func toggle_trophy(trophy: String):
 	api.fetch_trophy(trophy)
