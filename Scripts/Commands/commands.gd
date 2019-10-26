@@ -133,6 +133,8 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 			return toggle_gravity(net_id, message)
 		"setspawnworld":
 			return set_spawn_world(net_id, message)
+		"lua":
+			return execute_lua(net_id, message)
 		_: # Default Result - Put at Bottom of Match Results
 			if command == functions.empty_string:
 				return functions.empty_string
@@ -772,6 +774,20 @@ func set_spawn_world(net_id: int, message: PoolStringArray) -> String:
 		return tr("set_spawn_world_command_success") % gamestate.player_info.starting_world
 
 	return tr("set_spawn_world_command_no_permission")
+
+func execute_lua(net_id: int, message: PoolStringArray) -> String:
+	"""
+		Test Lua Execution and Sandboxing
+
+		Uses Module From https://github.com/perbone/luascript
+
+		Not Meant to Be Called Directly
+	"""
+
+	var lua_class = load("res://Scripts/Lua/test_lua.lua").new()
+
+	# Currently it Doesn't Seem Like Engine Callbacks Work ATM...
+	return lua_class.command(message.join(" "))
 
 func get_class() -> String:
 	return "ServerCommands"
