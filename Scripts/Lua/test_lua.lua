@@ -1,4 +1,3 @@
-
 local class = require 'lua.class' -- Import the system class library
 godot.Node = require 'godot.Node' -- Make sure to import the base class
 

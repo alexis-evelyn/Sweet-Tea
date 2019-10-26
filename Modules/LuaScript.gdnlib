@@ -8,11 +8,7 @@ reloadable=true
 [entry]
 
 OSX.64="res://Modules/lua/osx/libLuaScript.dylib"
-Windows.64="res://Modules/lua/win64/LuaScript.dll"
-X11.64="res://Modules/lua/x11/libLuaScript.so"
 
 [dependencies]
 
-OSX.64=[ "res://Modules/lua/osx/libgodot-cpp.osx.debug.64.a" ]
-Windows.64=[ "res://Modules/lua/win64/lua.dll" ]
-X11.64=[ "res://Modules/lua/x11/liblua.a" ]
+OSX.64=[ "res://Modules/lua/osx/liblua.a" ]

@@ -792,7 +792,7 @@ func execute_lua(net_id: int, message: PoolStringArray) -> String:
 		logger.error("About to Load Lua Module!!!")
 		lua.set_script(load("res://Modules/LuaScript.gdns"))
 		lua.set_name("LuaNode")
-		#get_tree().get_root().add_child(lua)
+		get_tree().get_root().add_child(lua)
 	else:
 		lua = get_tree().get_root().get_node("LuaNode")
 
