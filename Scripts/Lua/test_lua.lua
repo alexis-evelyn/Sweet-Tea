@@ -17,4 +17,8 @@ function NewScript:command(variable)
 	return "Variable: %s" % variable
 end
 
+function NewScript:get_class()
+	return "Test Lua"
+end
+
 return NewScript

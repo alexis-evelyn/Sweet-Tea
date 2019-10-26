@@ -5,13 +5,24 @@ class_name Logger
 # then I will be logging to the system log too. This is very useful for the crash handler (especially when the game is in alpha stage).
 
 # Declare member variables here. Examples:
-var verbosity : int = 5
+var verbosity : int = values.debug
 var save_to_drive : bool = true
 
 var log_data : File
 var log_dir : Directory
 var log_dir_path : String = OS.get_user_data_dir().plus_file("logs")
 var log_file_path : String = log_dir_path.plus_file("%s.log" % OS.get_unix_time())
+
+enum values {
+	fatal = 0,
+	error = 1,
+	warning = 2,
+	warn = 2,
+	info = 3,
+	debug = 4,
+	verbose = 5,
+	superverbose = 6
+}
 
 func create_log():
 	if save_to_drive:
@@ -25,35 +36,35 @@ func create_log():
 		log_data.open(log_file_path, File.WRITE)
 
 func debug(statement: String = functions.empty_string):
-	if verbosity >= 4:
+	if verbosity >= values.debug:
 		print(statement)
 
 	if save_to_drive:
 		flush_to_log("Debug: %s" % statement)
 
 func info(statement: String = functions.empty_string):
-	if verbosity >= 3:
+	if verbosity >= values.info:
 		print(statement)
 
 	if save_to_drive:
 		flush_to_log("Info: %s" % statement)
 
 func verbose(statement: String = functions.empty_string):
-	if verbosity >= 5:
+	if verbosity >= values.verbose:
 		print(statement)
 
 	if save_to_drive:
 		flush_to_log("Verbose: %s" % statement)
 
 func superverbose(statement: String = functions.empty_string):
-	if verbosity >= 6:
+	if verbosity >= values.superverbose:
 		print(statement)
 
 	if save_to_drive:
 		flush_to_log("SuperVerbose: %s" % statement)
 
 func warn(statement: String = functions.empty_string):
-	if verbosity >= 2:
+	if verbosity >= values.warning:
 		printerr("Warning: %s" % statement)
 		push_warning("Warning: %s" % statement)
 
@@ -65,7 +76,7 @@ func warning(statement: String = functions.empty_string):
 	warn(statement)
 
 func error(statement: String = functions.empty_string):
-	if verbosity >= 1:
+	if verbosity >= values.error:
 		push_error("Error: %s" % statement)
 		printerr("Error: %s" % statement)
 
@@ -73,7 +84,7 @@ func error(statement: String = functions.empty_string):
 		flush_to_log("Error: %s" % statement)
 
 func fatal(statement: String = functions.empty_string):
-	if verbosity >= 0:
+	if verbosity >= values.fatal:
 		push_error("Fatal: %s" % statement)
 		printerr("Fatal: %s" % statement)
 
@@ -86,7 +97,7 @@ func file(statement: String = functions.empty_string):
 		flush_to_log("File: %s" % statement)
 
 func trace(statement: String = functions.empty_string):
-	if verbosity >= 0:
+	if verbosity >= values.fatal:
 		printerr("If trace does not show up, it means Godot still doesn't support stacktraces in exported games. Try breaking the game in the Godot editor (you will need the source code at https://github.com/alex-evelyn/Sweet-Tea)")
 		printerr("Error: '%s' Trace: '%s'" % [statement, get_stack()])
 		push_error("Error: '%s' Trace: '%s'" % [statement, get_stack()])

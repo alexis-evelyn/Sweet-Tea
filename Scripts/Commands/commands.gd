@@ -779,15 +779,30 @@ func execute_lua(net_id: int, message: PoolStringArray) -> String:
 	"""
 		Test Lua Execution and Sandboxing
 
-		Uses Module From https://github.com/perbone/luascript
+		Uses Module From https://github.com/wesnoth/jessene
 
 		Not Meant to Be Called Directly
 	"""
 
-	var lua_class = load("res://Scripts/Lua/test_lua.lua").new()
+	# Currently the game freezes. :(
 
-	# Currently it Doesn't Seem Like Engine Callbacks Work ATM...
-	return lua_class.command(message.join(" "))
+	var lua : Node
+	if not get_tree().get_root().has_node("LuaNode"):
+		lua = Node.new()
+		logger.error("About to Load Lua Module!!!")
+		lua.set_script(load("res://Modules/LuaScript.gdns"))
+		lua.set_name("LuaNode")
+		#get_tree().get_root().add_child(lua)
+	else:
+		lua = get_tree().get_root().get_node("LuaNode")
+
+	logger.error("About to Load Lua Script!!!")
+	lua.load("res://Scripts/Lua/test_lua.lua")
+
+	return lua.execute("get_class")
+
+	#return lua_class.command(message.join(" "))
+	#return "Test Lua... Not Implemented Yet!!!"
 
 func get_class() -> String:
 	return "ServerCommands"
