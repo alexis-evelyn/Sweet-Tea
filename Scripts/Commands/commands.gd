@@ -59,8 +59,6 @@ var create_world_server_thread : Thread = Thread.new()
 # The NWSC is used to break up BBCode submitted by user without deleting characters - Should be able to be disabled by Server Request
 var NWSC : String = PoolByteArray(['U+8203']).get_string_from_utf8() # No Width Space Character (Used to be called RawArray?) - https://docs.godotengine.org/en/3.1/classes/class_poolbytearray.html
 
-var lua : NativeScript = Reference.new()
-
 # Process the Command and Return Result if Any
 func process_command(net_id: int, message: String) -> void:
 	"""
@@ -788,15 +786,10 @@ func execute_lua(net_id: int, message: PoolStringArray) -> String:
 		Not Meant to Be Called Directly
 	"""
 
-	lua.set_script(preload("res://Modules/lua/LuaScript.gdns"))
+	var results : Array = functions.execute_lua_file("res://Scripts/Lua/test_lua.lua", "test_sandbox", [1, 2, 3, 4])
 
-	if not lua.load("res://Scripts/Lua/test_lua.lua"):
-		return "Failed to Load Lua Script"
-
-	# Lua will always return an Array (for some reason is backwards)
-	var results : Array = lua.execute("test_sandbox", [1, 2, 3, 4])
-
-	results.invert() # Reverses Order of Array to Correct for Backwards Order
+	if not results:
+		return tr("execute_lua_failed_load_script")
 
 	return PoolStringArray(results).join(" ")
 

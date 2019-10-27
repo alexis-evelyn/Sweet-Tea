@@ -32,6 +32,9 @@ enum shader_rectangle_id {
 var shaders_class = preload("res://Scripts/functions/shader_registry.gd").new()
 var shaders : Dictionary = shaders_class.shaders
 
+# Set by using set_script(lua_class)
+var lua_class : NativeScript = preload("res://Modules/lua/LuaScript.gdns")
+
 # These Are Used to Save Memory
 const empty_string = ""
 const space_string = " "
@@ -503,6 +506,26 @@ func grab_player_node_by_id(playerid: String) -> Node:
 	# User friendly ids just need to exist first.
 
 	return null
+
+func execute_lua_file(lua_script : String, function: String, arguments: Array):
+	"""
+		Generic Lua Executing Function
+	"""
+
+	# How Can I Properly Thread This and Properly Return Value to Calling Function?
+
+	var lua : NativeScript = Reference.new() # Doesn't Need to Be Garbage Collected - https://godotengine.org/qa/4658/is-gdscript-garbage-collected-or-reference-counted?show=4668#a4668
+	lua.set_script(lua_class)
+
+	if not lua.load(lua_script):
+		return false # Failed to Load Lua Script
+
+	# Lua will always return an Array (for some reason is backwards)
+	var results : Array = lua.execute(function, arguments)
+
+	results.invert() # Reverses Order of Array to Correct for Backwards Order
+
+	return results
 
 func get_class() -> String:
 	return "Functions"
