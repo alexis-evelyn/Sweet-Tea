@@ -793,7 +793,12 @@ func execute_lua(net_id: int, message: PoolStringArray) -> String:
 	if not lua.load("res://Scripts/Lua/test_lua.lua"):
 		return "Failed to Load Lua Script"
 
-	return "%s" % lua.execute("test_sandbox", [1, 2, 3, 4])
+	# Lua will always return an Array (for some reason is backwards)
+	var results : Array = lua.execute("test_sandbox", [1, 2, 3, 4])
+
+	results.invert() # Reverses Order of Array to Correct for Backwards Order
+
+	return PoolStringArray(results).join(" ")
 
 func get_class() -> String:
 	return "ServerCommands"
