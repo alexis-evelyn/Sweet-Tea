@@ -775,6 +775,8 @@ func set_spawn_world(net_id: int, message: PoolStringArray) -> String:
 
 	return tr("set_spawn_world_command_no_permission")
 
+# warning-ignore:unused_argument
+# warning-ignore:unused_argument
 func execute_lua(net_id: int, message: PoolStringArray) -> String:
 	"""
 		Test Lua Execution and Sandboxing
@@ -790,10 +792,11 @@ func execute_lua(net_id: int, message: PoolStringArray) -> String:
 	if not get_tree().get_root().has_node("LuaNode"):
 		lua = Node.new()
 		logger.error("About to Load Lua Module!!!")
-		lua.set_script(load("res://Modules/Lua.gdns"))
+		lua.set_script(preload("res://Modules/lua/Lua.gdns"))
 		lua.set_name("LuaNode")
 		get_tree().get_root().add_child(lua)
 	else:
+		logger.error("Lua Module Already Loaded!!!")
 		lua = get_tree().get_root().get_node("LuaNode")
 
 	logger.error("About to Load Lua Script!!!")

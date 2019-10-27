@@ -9,7 +9,7 @@ onready var meaning : RichTextLabel = $background/meaning
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Listens for cleanup_ui signal. Allows cleaning up on server shutdown.
-	get_tree().get_root().get_node("PlayerUI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
+	get_tree().get_root().get_node("Player_UI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
 
 	# Sets the Dictionary's Theme
 	set_theme(gamestate.game_theme)

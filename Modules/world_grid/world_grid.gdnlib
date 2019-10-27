@@ -1,0 +1,14 @@
+[general]
+
+singleton=false
+load_once=true
+symbol_prefix="godot_"
+reloadable=false
+
+[entry]
+
+OSX.64="res://Modules/world_grid/osx/libWorldGrid.dylib"
+
+[dependencies]
+
+OSX.64=[  ]

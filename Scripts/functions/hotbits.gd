@@ -1,5 +1,5 @@
 extends Node
-class_name Hotbits
+class_name HotbitsSDK
 
 # Unfinished But Mostly Ready For Use - May Use Later
 

@@ -7,7 +7,7 @@ var localPlayer: Label
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	spawn_handler.connect("player_list_changed", self, "_on_player_list_changed") # Register When Player List Has Been Changed
-	get_tree().get_root().get_node("PlayerUI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
+	get_tree().get_root().get_node("Player_UI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
 
 # Load Player List - Called When Player Joins Server
 func loadPlayerList() -> void:

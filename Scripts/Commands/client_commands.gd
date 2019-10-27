@@ -99,7 +99,7 @@ func open_calculator(message: PoolStringArray) -> String:
 		var calc : Control = preload("res://Menus/Jokes/Calculator.tscn").instance()
 		calc.name = "Calculator"
 
-		get_tree().get_root().get_node("PlayerUI").add_child(calc)
+		get_tree().get_root().get_node("Player_UI").add_child(calc)
 #		get_tree().get_root().add_child_below_node(get_node_or_null("/root/Worlds"), calc)
 #		get_tree().get_root().move_child(calc, 0)
 
@@ -478,7 +478,7 @@ func read_dictionary(message: PoolStringArray) -> String:
 		var dictionary : Control = preload("res://Menus/Dictionary.tscn").instance()
 		dictionary.name = "Mazawalza_Dictionary"
 
-		get_tree().get_root().get_node("PlayerUI").add_child(dictionary)
+		get_tree().get_root().get_node("Player_UI").add_child(dictionary)
 		return tr("open_dictionary")
 
 	# warning-ignore:unassigned_variable

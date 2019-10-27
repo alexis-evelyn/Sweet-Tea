@@ -215,7 +215,7 @@ remote func despawn_player(net_id: int) -> void:
 # Changing Worlds - Perform Cleanup and Load World
 remote func change_world(world_name: String, same_world: bool = false) -> void:
 	#logger.verbose("Player %s Change World: %s" % [gamestate.net_id, get_world_name(gamestate.net_id)])
-	get_tree().get_root().get_node("PlayerUI/panelPlayerList").cleanup() # Cleanup Player List
+	get_tree().get_root().get_node("Player_UI/panelPlayerList").cleanup() # Cleanup Player List
 
 	# Download World using network.gd and Load it using world_handler.gd
 	# If I use HTTP to transfer world, world_path will be replaced by a URL

@@ -623,6 +623,7 @@ func find_safe_spawn(position: Vector2, world_spawn: bool = false) -> Vector2:
 #		if get_cellv(player_cell - Vector2(0, -1)) == -1:
 #			unsafe = true
 
+	#logger.debug("Safe Spawn Try Count: %s" % count)
 	position = map_to_world(player_cell)
 	return position
 

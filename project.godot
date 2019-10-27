@@ -60,7 +60,7 @@ _global_script_classes=[ {
 "path": "res://Scripts/autoload/gamestate.gd"
 }, {
 "base": "Node",
-"class": "Hotbits",
+"class": "HotbitsSDK",
 "language": "GDScript",
 "path": "res://Scripts/functions/hotbits.gd"
 }, {
@@ -230,7 +230,7 @@ _global_script_class_icons={
 "GameConnection": "",
 "GameJoltFunctions": "",
 "GameState": "",
-"Hotbits": "",
+"HotbitsSDK": "",
 "LoadingScreen": "",
 "Logger": "",
 "MainLoopEvents": "",
@@ -283,7 +283,7 @@ logger="*res://Scripts/autoload/logger.gd"
 main_loop_events="*res://Scripts/autoload/main_loop_events.gd"
 gamestate="*res://Scripts/autoload/gamestate.gd"
 network="*res://Scripts/autoload/network.gd"
-PlayerUI="*res://PlayerUI/PlayerUI.tscn"
+Player_UI="*res://PlayerUI/PlayerUI.tscn"
 player_registrar="*res://Scripts/autoload/player_registrar.gd"
 world_handler="*res://Scripts/autoload/world_handler.gd"
 spawn_handler="*res://Scripts/autoload/spawn_handler.gd"

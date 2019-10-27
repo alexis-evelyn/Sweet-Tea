@@ -12,7 +12,7 @@ func _ready():
 	self.window_title = tr("dictionary_title")
 
 	# Listens for cleanup_ui signal. Allows cleaning up on server shutdown.
-	get_tree().get_root().get_node("PlayerUI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
+	get_tree().get_root().get_node("Player_UI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
 
 	# ItemList Handling - https://docs.godotengine.org/en/3.1/classes/class_itemlist.html
 	entries.connect("item_selected", self, "item_selected") # Detect Selected Item

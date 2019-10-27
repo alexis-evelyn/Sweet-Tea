@@ -32,13 +32,13 @@ const enc_client : String = "res://Scripts/Security/client_encryption.gd"
 # UPNP Game Forwarding
 const game_forwarding : String = "res://Scripts/upnp/upnp.gd"
 
-onready var pauseMenu : PauseMenu = get_tree().get_root().get_node("PlayerUI/PauseMenu")
+onready var pauseMenu : PauseMenu = get_tree().get_root().get_node("Player_UI/PauseMenu")
 
 # Reference to Player List
-onready var playerUI : PlayerUI = get_tree().get_root().get_node("PlayerUI")
-onready var playerList : Panel = get_tree().get_root().get_node("PlayerUI/panelPlayerList")
-onready var playerStats : Panel = get_tree().get_root().get_node("PlayerUI/panelPlayerStats")
-onready var playerChat : Panel = get_tree().get_root().get_node("PlayerUI/panelChat")
+onready var playerUI = get_tree().get_root().get_node("Player_UI")
+onready var playerList : Panel = get_tree().get_root().get_node("Player_UI/panelPlayerList")
+onready var playerStats : Panel = get_tree().get_root().get_node("Player_UI/panelPlayerStats")
+onready var playerChat : Panel = get_tree().get_root().get_node("Player_UI/panelChat")
 
 var max_pixel_width : int = 32
 

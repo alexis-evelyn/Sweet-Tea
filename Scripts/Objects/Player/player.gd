@@ -2,9 +2,9 @@ extends KinematicBody2D
 class_name Player
 
 # Declare member variables here:
-onready var panelChat : Panel = get_tree().get_root().get_node("PlayerUI/panelChat")
-onready var playerStats : Panel = get_tree().get_root().get_node("PlayerUI/panelPlayerStats")
-onready var pauseMenu : Control = get_tree().get_root().get_node("PlayerUI/PauseMenu")
+onready var panelChat : Panel = get_tree().get_root().get_node("Player_UI/panelChat")
+onready var playerStats : Panel = get_tree().get_root().get_node("Player_UI/panelPlayerStats")
+onready var pauseMenu : Control = get_tree().get_root().get_node("Player_UI/PauseMenu")
 
 const UP : Vector2 = Vector2(0, -1)
 const LEFT : Vector2 = Vector2(-1, 0)
@@ -86,6 +86,7 @@ func _ready() -> void:
 		# Every Quarter of A Second Seems to Produce the Most Seamless Experience without Causing the Server to Catch Fire
 		# This still needs to be tested in an environment with real latency. The Wait Time Should Be Configurable.
 		correct_coordinates_timer.set_wait_time(CORRECT_COORDINATES_TIMEOUT) # Execute Every Fifth of a Second (almost completely smooth and keeps laptop cool with just one client)
+		yield(correct_coordinates_timer, "ready") # Wait Until Added To Scene Tree
 		correct_coordinates_timer.start() # Start Timer
 #	elif is_network_master() and gamestate.debug:
 #		world_generator.center_chunk(self.position, true) # Allows DebugCamera to be Updated on Chunk Position

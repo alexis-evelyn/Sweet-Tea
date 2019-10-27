@@ -27,8 +27,8 @@ var value_begin_bbcode : String = "[color=#" + value_color.to_html(true) + "]"
 var key_begin_bbcode : String = "[color=#" + key_color.to_html(true) + "]"
 var both_end_bbcode : String = "[/color]"
 
-onready var panelChat : Panel = get_tree().get_root().get_node("PlayerUI/panelChat")
-onready var pauseMenu : Panel = get_tree().get_root().get_node("PlayerUI/PauseMenu")
+onready var panelChat : Panel = get_tree().get_root().get_node("Player_UI/panelChat")
+onready var pauseMenu : Panel = get_tree().get_root().get_node("Player_UI/PauseMenu")
 
 onready var coor_label = $PlayerCoordinates
 onready var cam_coor_label = $CameraCoordinates

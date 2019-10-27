@@ -256,11 +256,11 @@ func remove_world_shader(rectangle_id : int = shader_rectangle_id.primary) -> bo
 	return true
 
 func set_global_shader(shader: Shader) -> bool:
-	if not get_tree().get_root().get_node("PlayerUI").has_node("Screen Shader"):
+	if not get_tree().get_root().get_node("Player_UI").has_node("Screen Shader"):
 		logger.error("Set World Shader Param - Failed to Get Shader Rectangle for Shader: %s" % shader.resource_path)
 		return false
 
-	var shader_screen : ColorRect = get_tree().get_root().get_node("PlayerUI").get_node("Screen Shader")
+	var shader_screen : ColorRect = get_tree().get_root().get_node("Player_UI").get_node("Screen Shader")
 
 	var shader_material : ShaderMaterial = ShaderMaterial.new()
 	shader_material.set_shader(shader)
@@ -271,11 +271,11 @@ func set_global_shader(shader: Shader) -> bool:
 	return true
 
 func set_global_shader_param(param: String, value) -> bool:
-	if not get_tree().get_root().get_node("PlayerUI").has_node("Screen Shader"):
+	if not get_tree().get_root().get_node("Player_UI").has_node("Screen Shader"):
 		logger.error("Set Global Shader Param - Failed to Get Shader Rectangle for Shader")
 		return false
 
-	var shader_screen : ColorRect = get_tree().get_root().get_node("PlayerUI").get_node("Screen Shader")
+	var shader_screen : ColorRect = get_tree().get_root().get_node("Player_UI").get_node("Screen Shader")
 
 	var shader_material : ShaderMaterial = shader_screen.get_material()
 
@@ -288,10 +288,10 @@ func set_global_shader_param(param: String, value) -> bool:
 	return true
 
 func remove_global_shader() -> bool:
-#	if not get_tree().get_root().get_node("PlayerUI").has_node("Screen Shader"):
+#	if not get_tree().get_root().get_node("Player_UI").has_node("Screen Shader"):
 #		return true
 
-	var shader_screen : ColorRect = get_tree().get_root().get_node("PlayerUI").get_node("Screen Shader")
+	var shader_screen : ColorRect = get_tree().get_root().get_node("Player_UI").get_node("Screen Shader")
 
 	if shader_screen.get_material() == null:
 		return true
@@ -306,7 +306,7 @@ func remove_global_shader() -> bool:
 
 # Example Shader Rectangle Creation Code
 #func create_global_shader_rect() -> void:
-#	if get_tree().get_root().get_node("PlayerUI").has_node("Screen Shader"):
+#	if get_tree().get_root().get_node("Player_UI").has_node("Screen Shader"):
 #		return
 #
 #	var shader_screen : ColorRect = ColorRect.new()
@@ -315,7 +315,7 @@ func remove_global_shader() -> bool:
 #	shader_screen.mouse_filter = Control.MOUSE_FILTER_IGNORE
 #	shader_screen.name = "Screen Shader"
 #
-#	get_tree().get_root().get_node("PlayerUI").add_child(shader_screen)
+#	get_tree().get_root().get_node("Player_UI").add_child(shader_screen)
 
 func check_data_type(data: String):
 	# Check if hex code

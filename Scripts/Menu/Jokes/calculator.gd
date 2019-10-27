@@ -24,7 +24,7 @@ func _ready() -> void:
 				button.connect("pressed", self, "_button_pressed", [button]) # Connects Button to Function
 
 	# Listens for cleanup_ui signal. Allows cleaning up on server shutdown.
-	get_tree().get_root().get_node("PlayerUI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
+	get_tree().get_root().get_node("Player_UI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
 
 	# Sets the Calculator's Theme
 	set_theme(gamestate.game_theme)

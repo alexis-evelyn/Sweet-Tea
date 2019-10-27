@@ -33,7 +33,7 @@ func _ready() -> void:
 		client_commands.set_script(preload("res://Scripts/Commands/client_commands.gd"))
 		add_child(client_commands)
 
-	get_tree().get_root().get_node("PlayerUI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
+	get_tree().get_root().get_node("Player_UI").connect("cleanup_ui", self, "cleanup") # Register With PlayerUI Cleanup Signal - Useful for Modders
 
 	chatInput.set_max_length(max_characters)
 

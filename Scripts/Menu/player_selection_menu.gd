@@ -9,7 +9,7 @@ var old_title : String = functions.empty_string # Title From Before Window Was S
 var yielding : bool = false # Prevents data.blocked > 0 crash by preventing yielding more than once
 
 const player_creation_menu : String = "res://Menus/PlayerCreationMenu.tscn" # Player Creation Menu
-var creation_menu : PlayerCreationMenu # Player Creation Menu
+var creation_menu # Player Creation Menu
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Scripts/Objects/Player/player.gd" type="Script" id=1]
 [ext_resource path="res://Assets/Icons/player_icon_temp.png" type="Texture" id=2]
+[ext_resource path="res://Modules/world_grid/world_grid.gdns" type="Script" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 18.9356, 19.102 )
@@ -21,3 +22,4 @@ shape = SubResource( 1 )
 [node name="Sprite" type="Sprite" parent="KinematicBody2D/CollisionShape2D"]
 scale = Vector2( 0.6, 0.6 )
 texture = ExtResource( 2 )
+script = ExtResource( 3 )
