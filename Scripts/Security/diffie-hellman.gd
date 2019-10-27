@@ -13,7 +13,7 @@ class_name DiffieHellman
 # Question on GameJolt forum about server/client auth - https://gamejolt.com/f/can-gamejolt-api-help-with-a-client-authenticating-a-server/345491
 
 # Diffie-Hellman Steps (Server Side)
-# If RSA (or GPG) is not enabled, then Skip to 
+# If RSA (or GPG) is not enabled, then Skip to
 # Load (or generate if first time) RSA/GPG key. If first time, upload GPG Key to PGP Keyserver
 # ...
 # Minecraft does a hash system which requires a live server (that costs money, so I may not make mitm auth until I know the game will take off)
@@ -36,47 +36,54 @@ func generate_secret(public_base: int, public_modulus: int, private_exponent: in
 	# There is no reason the exponent should be 1.
 	if private_exponent == 1:
 		return public_base
-	
+
 	return convert(pow(public_base, private_exponent), TYPE_INT) % public_modulus
 
 func test():
 	#logger.verbose("Diffie-Hellman Test")
-	
+
 	# Generate Base (smaller than modulus) and Modulus to Share Across Clearnet
 	var public_base = 20 # This does not need to be prime
 	var public_modulus = 23 # This has to be a prime number - https://crypto.stackexchange.com/questions/30328/why-does-the-modulus-of-diffie-hellman-need-to-be-a-prime#comment70299_30333
-	
+
 	#logger.verbose("Public Base: %s Public Modulus: %s" % [public_base, public_modulus])
-	
+
 	# Public Base and Public Modulus should be Shared Between Both Computers
-	
+
 	# These do not need to be prime (they can be)
 	var private_key_a = 4
 	var private_key_b = 3
-	
+
 	#logger.verbose("Private Key A: %s Private Key B: %s" % [private_key_a, private_key_b])
-	
+
 	# Generate Secrets to Share Across Clearnet
 	var shared_secret_a = generate_secret(public_base, public_modulus, private_key_a)
 	var shared_secret_b = generate_secret(public_base, public_modulus, private_key_b)
 
 	#logger.verbose("Shared Secret A: %s Shared Secret B: %s" % [shared_secret_a, shared_secret_b])
-	
+
 	# Shared Secret A and B would be exchanged with each other here
 	# The idea is that the secret can be safely shared while the keys are never sent
-	
+
 	# Computer A Calculates This With Shared Secret B
 	var secret_key_a = generate_secret(shared_secret_b, public_modulus, private_key_a)
-	
+
 	# Computer B Calculates This With Shared Secret A
 	var secret_key_b = generate_secret(shared_secret_a, public_modulus, private_key_b)
 
 	# The Keys Are Supposed to Match - This is Done Without Sharing private_key_a/b or secret_key_a/b
 	# Only public_base/modulus and shared_secret_a/b should be shared with each other
 	#logger.verbose("Secret Key A: %s Secret Key B: %s" % [secret_key_a, secret_key_b])
-	
+
 	if secret_key_a == secret_key_b:
 		logger.verbose("Diffie-Hellman Test Successful!!!")
+
+		#var test : cripter = cripter.new()
+		#var enc = test.encrypt_var_GCM("data", "key", "data")
+		#var dec = test.decrypt_var_GCM(enc, "key", "data")
+
+		#logger.error(enc.get_string_from_ascii())
+		#logger.error(dec)
 	else:
 		logger.fatal("Diffie-Hellman Test Failed!!!")
 

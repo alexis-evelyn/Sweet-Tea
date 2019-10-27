@@ -309,6 +309,10 @@ window/per_pixel_transparency/allowed=true
 
 enabled=PoolStringArray( "gamejolt", "mixing-desk" )
 
+[gdnative]
+
+singletons=[  ]
+
 [gui]
 
 theme/use_hidpi=true
