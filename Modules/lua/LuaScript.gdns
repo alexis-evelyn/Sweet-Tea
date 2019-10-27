@@ -3,4 +3,6 @@
 [ext_resource path="res://Modules/lua/Lua.gdnlib" type="GDNativeLibrary" id=1]
 
 [resource]
+resource_name = "LuaScript"
+class_name = "LuaScript"
 library = ExtResource( 1 )

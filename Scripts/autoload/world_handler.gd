@@ -502,19 +502,25 @@ func get_tiles_coordinates(chunk: Vector2) -> PoolVector2Array:
 	"""
 
 	var chunk_size : Vector2 = Vector2(16, 16) # This is hardcoded for prototyping, but should be retrieving value from world generator (same variable name)
+	# warning-ignore:unused_variable
 	var starting_tile_x : int = 0
+	# warning-ignore:unused_variable
 	var starting_tile_y : int = 0
 
 	var chunk_tiles : PoolVector2Array = []
 
 	if chunk.x >= 0:
+	# warning-ignore:narrowing_conversion
 		starting_tile_x = chunk_size.x * chunk.x
 	else:
+	# warning-ignore:narrowing_conversion
 		starting_tile_x = (chunk_size.x * chunk.x) - chunk_size.x
 
 	if chunk.y >= 0:
+	# warning-ignore:narrowing_conversion
 		starting_tile_y = (chunk_size.y * chunk.y)
 	else:
+	# warning-ignore:narrowing_conversion
 		starting_tile_y = (chunk_size.y * chunk.y) - chunk_size.y
 
 	for x in range(0, chunk_size.x):

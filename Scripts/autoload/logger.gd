@@ -5,7 +5,7 @@ class_name Logger
 # then I will be logging to the system log too. This is very useful for the crash handler (especially when the game is in alpha stage).
 
 # Declare member variables here. Examples:
-var verbosity : int = values.verbose
+var verbosity : int = values.debug
 var save_to_drive : bool = true
 
 var log_data : File

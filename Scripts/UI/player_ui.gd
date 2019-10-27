@@ -175,6 +175,7 @@ func detect_command_presses(event: InputEvent) -> void:
 		functions.run_button_command(panelChat, "2") # Activate Command Assigned to Command 0
 #		functions.run_axes_command(panelChat, "1") # Activate Command Assigned to Command 0
 
+# warning-ignore:unused_argument
 func process_screentouch(event: InputEvent) -> void:
 #	event.get_index()
 #	event.get_position()

@@ -7,7 +7,7 @@ signal loading_screen_closed
 #onready var loading_bar : TextureProgress = $background/loadingBar
 onready var loading_bar_plain : ProgressBar = $background/loadingBarPlain
 
-var main_menu : String = ProjectSettings.get_setting("application/run/main_menu")
+#var main_menu : String = ProjectSettings.get_setting("application/run/main_menu")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
