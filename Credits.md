@@ -14,7 +14,7 @@ cripter - MIT License - https://github.com/Malkverbena/cripter
 MBedTLS - Apache 2.0 license - https://www.apache.org/licenses/LICENSE-2.0 from https://tls.mbed.org/
 UUID GDScript - MIT License - https://github.com/binogure-studio/godot-uuid/blob/master/LICENSE
 Mixing Desk Addon - MIT License - https://github.com/kyzfrintin/Godot-Mixing-Desk
-Lua Script - Apache 2.0 license - https://www.apache.org/licenses/LICENSE-2.0 from https://github.com/perbone/luascript/blob/master/README.md
+LuaScript - MIT License - https://github.com/wesnoth/jessene/blob/master/LICENSE
 
 Shaders
 ---------
