@@ -786,25 +786,32 @@ func execute_lua(net_id: int, message: PoolStringArray) -> String:
 		Not Meant to Be Called Directly
 	"""
 
-	# This works, so why does LuaScript not show up as registered? I even tested LuaScript in the LuaNode creation code and it worked.
 	#var sprite : Sprite = spawn_handler.get_player_body_node(net_id).get_node("CollisionShape2D/Sprite")
 	#return sprite.echo("Hello")
 
-	var lua : Node
-	if not get_tree().get_root().has_node("LuaNode"):
-		lua = Node.new()
-		logger.error("About to Load Lua Module!!!")
-		lua.set_script(preload("res://Modules/lua/LuaScript.gdns"))
-		lua.set_name("LuaNode")
-		get_tree().get_root().add_child(lua)
-	else:
-		logger.error("Lua Module Already Loaded!!!")
-		lua = get_tree().get_root().get_node("LuaNode")
+	var lua : NativeScript = Reference.new()
+	lua.set_script(preload("res://Modules/lua/LuaScript.gdns"))
 
-	logger.error("About to Load Lua Script!!!")
-	lua.load("res://Scripts/Lua/test_lua.lua")
+	logger.error("Loaded Lua Script: %s" % lua.load("res://Scripts/Lua/test_lua.lua"))
+	var sum = lua.execute("sum", [1, 2, 3, 4])
 
-	return lua.execute("get_class")
+	return "Sum %s" % sum
+
+#	var lua : Node
+#	if not get_tree().get_root().has_node("LuaNode"):
+#		lua = Node.new()
+#		logger.error("About to Load Lua Module!!!")
+#		lua.set_script(preload("res://Modules/lua/LuaScript.gdns"))
+#		lua.set_name("LuaNode")
+#		get_tree().get_root().add_child(lua)
+#	else:
+#		logger.error("Lua Module Already Loaded!!!")
+#		lua = get_tree().get_root().get_node("LuaNode")
+#
+#	logger.error("About to Load Lua Script!!!")
+#	lua.load("res://Scripts/Lua/test_lua.lua")
+#
+#	return str(lua.execute("sum", [1, 2, 3, 4])[0])
 
 	#return lua_class.command(message.join(" "))
 	#return "Test Lua... Not Implemented Yet!!!"
