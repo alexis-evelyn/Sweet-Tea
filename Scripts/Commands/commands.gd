@@ -786,7 +786,7 @@ func execute_lua(net_id: int, message: PoolStringArray) -> String:
 		Not Meant to Be Called Directly
 	"""
 
-	var results : Array = functions.execute_lua_file("res://Scripts/Lua/test_lua.lua", "test_sandbox", [1, 2, 3, 4])
+	var results : Array = functions.execute_lua_file("res://Scripts/Lua/functions.lua", "test_sandbox", [1, 2, 3, 4])
 
 	if not results:
 		return tr("execute_lua_failed_load_script")
