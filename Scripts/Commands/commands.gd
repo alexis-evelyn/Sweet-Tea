@@ -59,6 +59,8 @@ var create_world_server_thread : Thread = Thread.new()
 # The NWSC is used to break up BBCode submitted by user without deleting characters - Should be able to be disabled by Server Request
 var NWSC : String = PoolByteArray(['U+8203']).get_string_from_utf8() # No Width Space Character (Used to be called RawArray?) - https://docs.godotengine.org/en/3.1/classes/class_poolbytearray.html
 
+var lua : NativeScript = Reference.new()
+
 # Process the Command and Return Result if Any
 func process_command(net_id: int, message: String) -> void:
 	"""
@@ -786,35 +788,12 @@ func execute_lua(net_id: int, message: PoolStringArray) -> String:
 		Not Meant to Be Called Directly
 	"""
 
-	#var sprite : Sprite = spawn_handler.get_player_body_node(net_id).get_node("CollisionShape2D/Sprite")
-	#return sprite.echo("Hello")
-
-	var lua : NativeScript = Reference.new()
 	lua.set_script(preload("res://Modules/lua/LuaScript.gdns"))
 
-	logger.error("Loaded Lua Script: %s" % lua.load("res://Scripts/Lua/test_lua.lua"))
-	var sum = lua.execute("sum", [1, 2, 3, 4])
+	if not lua.load("res://Scripts/Lua/test_lua.lua"):
+		return "Failed to Load Lua Script"
 
-	return "Sum %s" % sum
-
-#	var lua : Node
-#	if not get_tree().get_root().has_node("LuaNode"):
-#		lua = Node.new()
-#		logger.error("About to Load Lua Module!!!")
-#		lua.set_script(preload("res://Modules/lua/LuaScript.gdns"))
-#		lua.set_name("LuaNode")
-#		get_tree().get_root().add_child(lua)
-#	else:
-#		logger.error("Lua Module Already Loaded!!!")
-#		lua = get_tree().get_root().get_node("LuaNode")
-#
-#	logger.error("About to Load Lua Script!!!")
-#	lua.load("res://Scripts/Lua/test_lua.lua")
-#
-#	return str(lua.execute("sum", [1, 2, 3, 4])[0])
-
-	#return lua_class.command(message.join(" "))
-	#return "Test Lua... Not Implemented Yet!!!"
+	return "%s" % lua.execute("test_sandbox", [1, 2, 3, 4])
 
 func get_class() -> String:
 	return "ServerCommands"
