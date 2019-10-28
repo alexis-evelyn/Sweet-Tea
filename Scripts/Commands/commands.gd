@@ -40,11 +40,12 @@ var supported_commands : Dictionary = {
 	"wspawn": {"description": "help_wspawn_desc", "permission": permission_level.admin, "cheat": true},
 	"setspawn": {"description": "help_setspawn_desc", "permission": permission_level.admin, "cheat": true},
 #	"setwspawn": {"description": "help_setwspawn_desc", "permission": permission_level.admin, "cheat": true},
-	"tp": {"description": "help_tp_desc", "permission": permission_level.op, "cheat": true},
+	"tp": {"description": "help_tp_desc", "permission": permission_level.player, "cheat": true},
 	"seed": {"description": "help_seed_desc", "permission": permission_level.server_owner, "cheat": true},
 	"servertime": {"description": "help_servertime_desc", "permission": permission_level.player, "cheat": false},
 	"gravity": {"description": "help_gravity_desc", "permission": permission_level.op, "cheat": true},
 	"setspawnworld": {"description": "help_setspawnworld_desc", "permission": permission_level.admin, "cheat": true},
+	"lua": {"description": "help_execute_lua_desc", "permission": permission_level.server_owner, "cheat": true},
 
 	# These are essentially the same command
 	"msg": {"description": "help_msg_desc", "permission": permission_level.player, "cheat": false},
@@ -632,6 +633,12 @@ func get_seed(net_id: int, message: PoolStringArray) -> String:
 	return functions.get_translation("world_seed_command_no_permission", player_registrar.players[net_id].locale)
 
 func get_server_time(net_id: int, message: PoolStringArray) -> String:
+	"""
+		Retrieves Server's Clock and Returns in American Time
+
+		Not Meant to Be Called Directly
+	"""
+
 	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
@@ -643,7 +650,7 @@ func get_server_time(net_id: int, message: PoolStringArray) -> String:
 
 		date_time = OS.get_datetime()
 		time_milliseconds = OS.get_system_time_msecs() - (OS.get_system_time_secs() * 1000)
-		formatted_time = tr("datetime_formatting") % [int(date_time["hour"]), int(date_time["minute"]), int(date_time["second"]), time_milliseconds, OS.get_time_zone_info().name]
+		formatted_time = functions.get_translation("datetime_formatting", player_registrar.players[net_id].locale) % [int(date_time["hour"]), int(date_time["minute"]), int(date_time["second"]), time_milliseconds, OS.get_time_zone_info().name]
 		return functions.get_translation("servertime_command_success", player_registrar.players[net_id].locale) % formatted_time
 	return functions.get_translation("servertime_command_no_permission", player_registrar.players[net_id].locale)
 
@@ -681,6 +688,8 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 
 			coordinates = Vector2(x_coor, y_coor)
 
+			# This is completely broken for clients. The coordinate correction code fixes the position to the old position before the new position can be updated.
+			# I may temporarily disable the coordinate correction code until I come up with better code.
 			functions.teleport(net_id, coordinates) # This allows client to just reposition itself without reloading world. So useful for short distances.
 #			functions.teleport_despawn(net_id, coordinates) # This allows forcing client to reload world. So, useful for long distances.
 
@@ -694,7 +703,11 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 			var player_id : String = command_arguments[0]
 			var other_player : Node = functions.grab_player_body_by_id(player_id)
 
-			if player_registrar.players.has(other_player):
+			if other_player == null:
+				return functions.get_translation("teleport_command_missing_other_player", player_registrar.players[net_id].locale) % player_id
+
+			# Check if Both Players Are In Same World
+			if spawn_handler.get_world_name(int(net_id)) == spawn_handler.get_world_name(int(player_id)):
 				x_coor = other_player.position.x
 				y_coor = other_player.position.y
 
@@ -703,8 +716,11 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 				functions.teleport(net_id, coordinates) # This allows client to just reposition itself without reloading world. So useful for short distances.
 #				functions.teleport_despawn(net_id, coordinates) # This allows forcing client to reload world. So, useful for long distances.
 
-				return "Success TP To Other Player - Replace Me With Translation Friendly String"
-			return "Other Player Not Found - Replace Me With Translation Friendly String"
+				return functions.get_translation("teleport_command_success_other_player", player_registrar.players[net_id].locale) % player_id
+
+			# Players in Different Worlds
+			# Not Yet Implemented
+			return functions.get_translation("teleport_command_wrong_world_other_player", player_registrar.players[net_id].locale) % player_id
 		elif command_arguments.size() == 3:
 			# Teleport Player to Other Location (if alphabetical characters are first)
 			# Disable Safety Check (if alphabetical characters are third)
@@ -771,9 +787,9 @@ func set_spawn_world(net_id: int, message: PoolStringArray) -> String:
 
 #		gamestate.save_player(gamestate.loaded_save)
 		gamestate.overwrite_save_value(gamestate.loaded_save, "starting_world", gamestate.player_info.starting_world)
-		return tr("set_spawn_world_command_success") % gamestate.player_info.starting_world
+		return functions.get_translation("set_spawn_world_command_success", player_registrar.players[net_id].locale) % gamestate.player_info.starting_world
 
-	return tr("set_spawn_world_command_no_permission")
+	return functions.get_translation("set_spawn_world_command_no_permission", player_registrar.players[net_id].locale)
 
 # warning-ignore:unused_argument
 # warning-ignore:unused_argument
@@ -786,12 +802,20 @@ func execute_lua(net_id: int, message: PoolStringArray) -> String:
 		Not Meant to Be Called Directly
 	"""
 
-	var results : Array = functions.execute_lua_file("res://Scripts/Lua/functions.lua", "test_sandbox", [1, 2, 3, 4])
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
+	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
-	if not results:
-		return tr("execute_lua_failed_load_script")
+	if check_permission(players_permission_level, command_permission_level):
+		var results : Array = functions.execute_lua_file("res://Scripts/Lua/functions.lua", "test_sandbox", [1, 2, 3, 4])
 
-	return PoolStringArray(results).join(" ")
+		if not results:
+			return functions.get_translation("execute_lua_failed_load_script", player_registrar.players[net_id].locale)
+
+		return PoolStringArray(results).join(" ")
+
+	return functions.get_translation("execute_lua_command_no_permission", player_registrar.players[net_id].locale)
 
 func get_class() -> String:
 	return "ServerCommands"

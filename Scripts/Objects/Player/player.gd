@@ -75,19 +75,20 @@ func _ready() -> void:
 	if get_tree().is_network_server():
 		world_generator.load_chunks(int(player_name), self.position, true) # Allows Getting Chunks Before Moving
 
-		var correct_coordinates_timer : Timer = Timer.new()
-		correct_coordinates_timer.name = "correct_coordinates_timer"
-
-		# Root of Player Node Will be Busy Setting up Children Right Now, so Defer Adding Another Child For Now
-		get_parent().call_deferred("add_child", correct_coordinates_timer) # Add Timer to Root of Player Node
-
-		correct_coordinates_timer.connect("timeout", self, "correct_coordinates_server") # Function to Execute After Timer Runs Out
-
-		# Every Quarter of A Second Seems to Produce the Most Seamless Experience without Causing the Server to Catch Fire
-		# This still needs to be tested in an environment with real latency. The Wait Time Should Be Configurable.
-		correct_coordinates_timer.set_wait_time(CORRECT_COORDINATES_TIMEOUT) # Execute Every Fifth of a Second (almost completely smooth and keeps laptop cool with just one client)
-		yield(correct_coordinates_timer, "ready") # Wait Until Added To Scene Tree
-		correct_coordinates_timer.start() # Start Timer
+		# Disabled until I work on bettering the code to not be as itchy (trigger happy or strict) as it is.
+#		var correct_coordinates_timer : Timer = Timer.new()
+#		correct_coordinates_timer.name = "correct_coordinates_timer"
+#
+#		# Root of Player Node Will be Busy Setting up Children Right Now, so Defer Adding Another Child For Now
+#		get_parent().call_deferred("add_child", correct_coordinates_timer) # Add Timer to Root of Player Node
+#
+#		correct_coordinates_timer.connect("timeout", self, "correct_coordinates_server") # Function to Execute After Timer Runs Out
+#
+#		# Every Quarter of A Second Seems to Produce the Most Seamless Experience without Causing the Server to Catch Fire
+#		# This still needs to be tested in an environment with real latency. The Wait Time Should Be Configurable.
+#		correct_coordinates_timer.set_wait_time(CORRECT_COORDINATES_TIMEOUT) # Execute Every Fifth of a Second (almost completely smooth and keeps laptop cool with just one client)
+#		yield(correct_coordinates_timer, "ready") # Wait Until Added To Scene Tree
+#		correct_coordinates_timer.start() # Start Timer
 #	elif is_network_master() and gamestate.debug:
 #		world_generator.center_chunk(self.position, true) # Allows DebugCamera to be Updated on Chunk Position
 

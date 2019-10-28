@@ -137,7 +137,7 @@ func get_translation(key: String, locale: String) -> String:
 	# If No Translation File Found, Then Just Return. This will crash on debug builds, but not release builds.
 	if selected_translations.size() == 0:
 		logger.error("No Translation File Found For Locale '%s'" % locale)
-		return "No Translation File Found For Locale '%s'" % locale
+		return tr("missing_translation_file") % locale
 
 	var translator : Translation
 	var message : String

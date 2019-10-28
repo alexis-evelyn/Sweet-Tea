@@ -42,10 +42,12 @@ func find_servers(peer: PacketPeerUDP) -> void:
 
 		delay_broadcast_search = Timer.new() # Create Search For Servers Timer
 		get_tree().get_root().call_deferred("add_child", delay_broadcast_search)
+		yield(delay_broadcast_search, "ready") # Wait Until Timer Has Been Added to SceneTree
 
 		delay_broadcast_search.set_wait_time(delay_broadcast_time_seconds) # Execute Every delay_broadcast_time_seconds Seconds
 		delay_broadcast_search.start() # Start Timer
-		yield(delay_broadcast_search, "timeout")
+		yield(delay_broadcast_search, "timeout") # Wait Until Timer Times Out
+
 		delay_broadcast_search.queue_free() # Supposed To Prevent Resume Failed From Object Class Being Expired (It Doesn't)
 
 		if peer.get_available_packet_count() > 0:

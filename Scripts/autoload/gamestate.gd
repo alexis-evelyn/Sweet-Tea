@@ -57,7 +57,7 @@ const standard_netids = {
 	server = 1
 }
 
-const DEFAULT_PLAYER_NAME = "Alex"
+const DEFAULT_PLAYER_NAME = "Alex" #tr("default_character_name")
 
 # warning-ignore:unused_class_variable
 var net_id : int = standard_netids.server # Player's ID

@@ -156,7 +156,7 @@ func get_random_name() -> String:
 	"""
 
 	# Pick A Random Name For Character
-	return "Default Character Name"
+	return tr("default_character_name")
 
 func set_seed(set_seed: String) -> void:
 	"""

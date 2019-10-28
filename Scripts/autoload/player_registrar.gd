@@ -30,7 +30,11 @@ remote func register_player(pinfo: Dictionary, net_id: int, new_world : bool = f
 	# Because of Server Adding To Registry Data - I Cannot Allow Client to Update Data Mid-Session
 	# This is overriden if the server is sender - allows updating player info on world change and modded servers can change player's info on a vanilla client
 	if players.has(int(net_id)) and get_tree().get_rpc_sender_id() != gamestate.standard_netids.server:
-		return ERR_DOES_NOT_EXIST
+		return ERR_ALREADY_EXISTS
+
+	# Make Sure A Locale is Set
+	if not pinfo.has("locale"):
+		pinfo.locale = ProjectSettings.get_setting("locale/fallback") # Set Locale to Whatever Project Settings Suggests (en or Generic English)
 
 	#logger.verbose("Registering Player %s (%s) to Player Registry" % [pinfo.name, net_id])
 	# If Character Color is Missing, Then Set Character Color to Default Color
@@ -125,7 +129,7 @@ func name(id: int) -> String:
 
 	if not players[id].has("name"):
 		logger.warning("Return Player Name Failed: Player Name for ID '%s' Is Not Set!!!" % str(id))
-		return "Not Set - Failed Name Lookup"
+		return functions.get_translation("player_registrar_failed_name_lookup", players[id].locale)
 
 	return players[id].name
 
@@ -137,7 +141,7 @@ func display_name(id: int) -> String:
 
 	if not players[id].has("display_name"):
 		logger.warning("Return Player Name Failed: Player Display Name for ID '%s' Is Not Set!!!" % str(id))
-		return "Not Set - Failed Display Name Lookup"
+		return functions.get_translation("player_registrar_failed_display_name_lookup", players[id].locale)
 
 	return players[id].display_name
 

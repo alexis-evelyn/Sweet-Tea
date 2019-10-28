@@ -91,7 +91,7 @@ func help_command(message: PoolStringArray) -> String:
 	# I'm not sure how to receive data from server within this function if it is even possible.
 #	rpc_unreliable_id(gamestate.standard_netids.server, "chat_message_server", message, true)
 
-	return "Help Command"
+	return tr("command_client_help")
 
 # warning-ignore:unused_argument
 func open_calculator(message: PoolStringArray) -> String:
@@ -526,7 +526,7 @@ func test_joy_vibration(message: PoolStringArray) -> String:
 
 		logger.debug(str(controller))
 
-	return "Testing... Not Fully Implemented. Don't Have Vibration Working For DS4 Controller Yet."
+	return tr("command_test_joy_vibration")
 
 # warning-ignore:unused_argument
 func list_controllers(message: PoolStringArray) -> String:
@@ -699,7 +699,7 @@ func gamejolt_manual_login(message: PoolStringArray) -> String:
 	command_arguments.remove(0)
 
 	if not command_arguments.size() == 2:
-		return "Wrong Amount of Arguments"
+		return tr("command_gamejolt_manual_login_wrong_arguments")
 
 	if not gamejolt.is_initialized():
 		gamejolt.init()
@@ -717,9 +717,9 @@ func gamejolt_manual_login(message: PoolStringArray) -> String:
 	# another function which will send a reply to chat later.
 
 	if not gamejolt.is_logged_in():
-		return "Failed Login!!!"
+		return tr("command_gamejolt_manual_login_failed")
 
-	return "Manually Logged In!!!"
+	return tr("command_gamejolt_manual_login_success")
 
 func handle_achievement(message: PoolStringArray) -> String:
 	"""
@@ -745,7 +745,7 @@ func handle_achievement(message: PoolStringArray) -> String:
 #		yield(self, "function_finished") # Wait Until Function is Finished
 
 	if not gamejolt.is_logged_in():
-		return "Failed Autologin!!!"
+		return tr("command_achievement_autologin_failed")
 
 	var trophies : Dictionary = gamejolt.get_trophies()
 #	yield(self, "function_finished") # Wait Until Function is Finished
@@ -753,7 +753,7 @@ func handle_achievement(message: PoolStringArray) -> String:
 	for trophy in trophies:
 		print(trophy)
 
-	return "Check Your Log!!!"
+	return tr("command_achievement_success")
 
 func get_class() -> String:
 	return "ClientCommands"
