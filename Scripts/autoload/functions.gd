@@ -443,7 +443,7 @@ func teleport(net_id: int, coordinates: Vector2) -> int:
 
 func mirror_world() -> bool:
 	"""
-		Inverts Mirror Mode Variable
+		Toggles Mirror Mode
 	"""
 
 	# TODO: Color Rectangles Cannot Work Next To Each Other In Same Parent Node. Why?
