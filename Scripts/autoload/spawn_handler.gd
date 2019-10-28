@@ -259,6 +259,15 @@ remote func change_world(world_name: String, same_world: bool = false) -> void:
 func set_world_name(world_name: String) -> void:
 	player_registrar.players[gamestate.net_id].current_world = world_name
 
+func get_world_name_by_player_node(player: Node) -> String:
+	if player == null:
+		return functions.empty_string
+
+	if player.name == "KinematicBody2D":
+		return get_world_name(int(player.get_parent().name))
+
+	return get_world_name(int(player.name))
+
 # Gets Player's Current World Name - Added To Make Code More Legible
 func get_world_name(net_id: int) -> String:
 	if not player_registrar.players.has(int(net_id)) or not player_registrar.players[int(net_id)].has("current_world"):

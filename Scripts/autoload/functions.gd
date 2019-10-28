@@ -408,8 +408,10 @@ func run_button_command(panelChat: ChatPanel, command_id: String = "0") -> void:
 func run_axes_command(panelChat: ChatPanel, command_id: String = "0") -> void:
 	pass
 
-func teleport_despawn(net_id: int, coordinates: Vector2) -> void:
-	var world_name : String = spawn_handler.get_world_name(net_id) # Pick world player is currently in
+func teleport_despawn(net_id: int, coordinates: Vector2, world_name: String = empty_string) -> void:
+	# Detect if World is Being Changed
+	if world_name == empty_string:
+		world_name = spawn_handler.get_world_name(net_id) # Pick world player is currently in
 
 	# Clears Loaded Chunks From Previous World Generator's Memory
 	var world_generation = spawn_handler.get_world_generator_node(spawn_handler.get_world_name(net_id))
@@ -435,6 +437,7 @@ func teleport(net_id: int, coordinates: Vector2) -> int:
 		return ERR_CANT_ACQUIRE_RESOURCE
 
 	player.correct_coordinates(coordinates) # Update Coordinates on Server
+	player.correct_coordinates_server() # Server Checking is Already Handled by Player Node
 
 	if net_id != gamestate.standard_netids.server:
 		player.rpc_unreliable_id(net_id, "correct_coordinates", coordinates) # Send New Coordinates to Client

@@ -707,7 +707,7 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 				return functions.get_translation("teleport_command_missing_other_player", player_registrar.players[net_id].locale) % player_id
 
 			# Check if Both Players Are In Same World
-			if spawn_handler.get_world_name(int(net_id)) == spawn_handler.get_world_name(int(player_id)):
+			if spawn_handler.get_world_name(int(net_id)) == spawn_handler.get_world_name_by_player_node(other_player):
 				x_coor = other_player.position.x
 				y_coor = other_player.position.y
 
@@ -719,7 +719,8 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 				return functions.get_translation("teleport_command_success_other_player", player_registrar.players[net_id].locale) % player_id
 
 			# Players in Different Worlds
-			# Not Yet Implemented
+			# Not Yet Implemented - Still Broken
+			#functions.teleport_despawn(net_id, coordinates, spawn_handler.get_world_name_by_player_node(other_player))
 			return functions.get_translation("teleport_command_wrong_world_other_player", player_registrar.players[net_id].locale) % player_id
 		elif command_arguments.size() == 3:
 			# Teleport Player to Other Location (if alphabetical characters are first)
