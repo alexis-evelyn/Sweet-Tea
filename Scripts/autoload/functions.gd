@@ -29,6 +29,18 @@ enum shader_rectangle_id {
 	secondary = 1 # Added So Mirror Mode Can Exist Without Stopping Other Shaders From Being Used
 }
 
+enum moon_phase {
+	# 4 Main Phases Are New, Third Quarter, Full, and First Quarter
+	new = 0, # New Moon
+	waning_crescent = 1, # Waning Crescent
+	third_quarter = 2, # Third Quarter
+	waning_gibbous = 3, # Waning Gibbous
+	full = 4, # Full Moon
+	waxing_gibbous = 5, # Waxing Gibbous
+	first_quarter = 6, # First Quarter
+	waxing_crescent = 7, # Waxing Crescent
+}
+
 var shaders_class = preload("res://Scripts/functions/shader_registry.gd").new()
 var shaders : Dictionary = shaders_class.shaders
 
@@ -529,6 +541,81 @@ func execute_lua_file(lua_script : String, function: String, arguments: Array):
 	results.invert() # Reverses Order of Array to Correct for Backwards Order
 
 	return results
+
+func calculate_julian_date(gregorian_date: Dictionary = OS.get_datetime(true)) -> float:
+	# No Year 0 on Julian System
+
+	# Dates October 5, 1582 through October 14, 1582 Don't Exist (10 Days)
+	# The day after October 4, 1582 became October 15, 1582 (14-4=10)
+
+	# We Don't Need to Worry About BCE (Because We Aren't Building A Calculator, Just Detecting Moon Phases For Easter Eggs)
+
+	# Also, If January or February, Subtract 1 From Year and Add 12 To The Month (Otherwise Leave it Alone)
+
+	# https://quasar.as.utexas.edu/BillInfo/JulianDatesG.html
+	# https://www.subsystems.us/uploads/9/8/9/4/98948044/moonphase.pdf
+	# Obviously Y M D is Year Month Day. (The Year is 4 Digits or Full Year)
+	# A = floor(Y/100)
+	# B = floor(A/4)
+	# C = 2-A+B
+	# E = floor(365.25 * (Y+4716))
+	# F = floor(30.6001 * (M+1))
+	# JD = C+D+E+F-1524.5
+
+	# year, month, day, weekday, dst (daylight savings time), hour, minute, second.
+
+	# This is only accurate after 1582, but since we aren't building a calculator, I am not concerned with 1582 and before.
+	# For completionists sake, I may eventually fix it, but not right now.
+
+	# This calculates the date itself, not the time (time will be set to noon - something astronomers something)
+	var a = floor(gregorian_date.year/100)
+	var b = floor(a/4)
+	var c = 2-a+b
+	var e = floor(365.25 * (gregorian_date.year+4716))
+	var f = floor(30.6001 * (gregorian_date.month+1))
+	var julian_date = c+gregorian_date.day+e+f-1524.5
+
+	# These Both Produce The Same Value, Just Now We Have To Figure Out Which One is More Memory Efficient
+#	var julian_date = 2 - floor(gregorian_date.year/100) + floor(floor(gregorian_date.year/100)/4) + gregorian_date.day + floor(365.25 * (gregorian_date.year+4716)) + floor(30.6001 * (gregorian_date.month+1)) - 1524.5
+
+	# This will add up the time to the previously set date
+	# https://sciencing.com/calculate-julian-date-6465290.html
+	# Do I Really Need to Worry About Time of Day For Predicting Moon Phases? No
+	# For completionists sake, I may eventually fix it, but not right now.
+	pass
+
+	return julian_date
+
+func calculate_moon_phase(julian_date: float) -> int:
+	# Last New Moon - https://www.calendar-365.com/moon/moon-phases.html
+	# October 27, 2019 08:40:15 PM (MST) - 2458784.36128
+	# October 27, 2019 - 2458783.50000
+
+	# January 6, 2000 Midnight (UTC) - 2451549.5
+
+	# I Don't Think Timezones Matter, But I Could Be Wrong, So I Am Writing It Down Anyway
+
+	var new_moon_date : float = 2451549.5
+	var days_of_cycle : float = 29.53
+	#var number_of_new_moons : float = (julian_date - new_moon_date) / days_of_cycle
+	#var days_into_cycle : float = (decimal_part_of_number_of_new_moons) * days_of_cycle
+
+	var days_into_cycle : float = fmod((julian_date - new_moon_date), days_of_cycle) # To be able to do modulus on floats
+
+	# Remove Me
+	logger.error("Days Into Cycle: %s" % days_into_cycle)
+
+	# Number of Days After Which Phase is Active
+#	moon_phase.new # 0 and 29.53
+#	moon_phase.waning_crescent # 7/2
+#	moon_phase.third_quarter # 7
+#	moon_phase.waning_gibbous # ((15 - 7) / 2) + 7 = 11
+#	moon_phase.full # 15
+#	moon_phase.waxing_gibbous # ((22 - 15) / 2) + 15 = 18.5
+#	moon_phase.first_quarter # 22
+#	moon_phase.waxing_crescent # ((29.53 - 22) / 2) + 22 = 25.765
+
+	return OK # Will Return Enum of Phase
 
 func get_class() -> String:
 	return "Functions"

@@ -31,9 +31,10 @@ var supported_commands : Dictionary = {
 	"randomshader": {"description": "help_randomshader_desc", "cheat": true},
 	"mirror": {"description": "help_mirror_desc", "cheat": false},
 	"timescale": {"description": "help_timescale_desc", "cheat": true},
-	"saves": {"description": "help_saves_desc", "cheat": false} # Technically can be used for cheating, but really, who cares. I don't. The person playing the game is only going to ruin it for themselves if they cheat (before beating the game legitimately).
+	"saves": {"description": "help_saves_desc", "cheat": false}, # Technically can be used for cheating, but really, who cares. I don't. The person playing the game is only going to ruin it for themselves if they cheat (before beating the game legitimately).
 	# Achievements - Cheat
 	# Gamejolt - No Cheat
+	"moonphase": {"description": "help_moonphase_desc", "cheat": false} # TODO: Add help_moonphase_desc
 }
 
 func process_commands(message: PoolStringArray) -> String:
@@ -83,6 +84,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return handle_achievement(message)
 		"gamejolt":
 			return gamejolt_manual_login(message)
+		"moonphase":
+			return calculate_moon_phase(message)
 		_:
 			return functions.empty_string
 
@@ -754,6 +757,17 @@ func handle_achievement(message: PoolStringArray) -> String:
 		print(trophy)
 
 	return tr("command_achievement_success")
+
+func calculate_moon_phase(message: PoolStringArray) -> String:
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_arguments : PoolStringArray = message
+	command_arguments.remove(0)
+
+	var julian : float = functions.calculate_julian_date(OS.get_datetime(true))
+	var moonphase : int = functions.calculate_moon_phase(julian)
+
+	return "Date: %s" % julian
 
 func get_class() -> String:
 	return "ClientCommands"
