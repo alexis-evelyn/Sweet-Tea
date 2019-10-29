@@ -775,6 +775,7 @@ func calculate_moon_phase(message: PoolStringArray) -> String:
 #	gregorian_date = functions.generate_datetime(2019, 11, 12, 13, 37, 24, 2, 0) # Age: 14.68 - Full Moon - Tuesday, November 12, 2019	01:37:24 PM UTC
 #	gregorian_date = functions.generate_datetime(2019, 11, 13) # Age: 15.64 - Waning Gibbous - November 13, 2019
 #	gregorian_date = functions.generate_datetime(2019, 11, 19, 21, 13, 9, 2, 0) # Age: 21.75 - Last Quarter - Tuesday, November 19, 2019	09:13:09 PM UTC
+	gregorian_date = functions.generate_datetime(2019, 11, 20) # Age: 22.82 - Waning Crescent - November 20, 2019
 #	gregorian_date = functions.generate_datetime(2019, 11, 26, 15, 7, 41, 2, 0) # Age: 29.38 - New Moon - Tuesday, November 26, 2019	03:07:41 PM UTC
 
 	# Check For Accuracy of Calculator. I May Have Screwed It Up!!!

@@ -30,16 +30,17 @@ enum shader_rectangle_id {
 }
 
 enum moon_phase {
-	# 4 Main Phases Are New, Third Quarter, Full, and First Quarter
-	invalid_phase = -1,
+	# The 4 Main Phases Are New, Third Quarter, Full, and First Quarter
+	# https://sciencetrends.com/the-8-moon-phases-in-order-with-bonus-moon-phase-calendar/
+	invalid_phase = -1, # Not A Valid Phase
 	new = 0, # New Moon
-	waning_crescent = 1, # Waning Crescent
-	third_quarter = 2, # Third Quarter
-	waning_gibbous = 3, # Waning Gibbous
+	waxing_crescent = 1, # Waxing Crescent
+	first_quarter = 2, # First Quarter
+	waxing_gibbous = 3, # Waxing Gibbous
 	full = 4, # Full Moon
-	waxing_gibbous = 5, # Waxing Gibbous
-	first_quarter = 6, # First Quarter
-	waxing_crescent = 7, # Waxing Crescent
+	waning_gibbous = 5, # Waning Gibbous
+	third_quarter = 6, # Third Quarter
+	waning_crescent = 7, # Waning Crescent
 }
 
 var shaders_class = preload("res://Scripts/functions/shader_registry.gd").new()
@@ -608,32 +609,34 @@ func calculate_moon_phase(julian_date: float) -> int:
 	# Number of Days After Which Phase is Active
 #	moon_phase.new # 0 and 29.53
 #	moon_phase.waning_crescent # 7/2 = 3.5
-#	moon_phase.third_quarter # 7
+#	moon_phase.first_quarter # 7
 #	moon_phase.waning_gibbous # ((15 - 7) / 2) + 7 = 11
 #	moon_phase.full # 15
 #	moon_phase.waxing_gibbous # ((22 - 15) / 2) + 15 = 18.5
-#	moon_phase.first_quarter # 22
+#	moon_phase.third_quarter # 22
 #	moon_phase.waxing_crescent # ((29.53 - 22) / 2) + 22 = 25.765
 
 	# Cycle Start - 0, 3.5, 7, 11, 15, 18.5, 22, 25.765, 29.53
 	# Cycle Add - 0, +3.5, +3.5, +4, +4, +3.5, +3.5, +3.765, +3.765
 
+	# The Cresent and Gibbous Phases Are Not Detected Properly - Everything Else Is Fine
+
 	if days_into_cycle >= 0 and days_into_cycle < 3.5:
 		return moon_phase.new
 	elif days_into_cycle >= 3.5 and days_into_cycle < 7:
-		return moon_phase.waning_crescent
+		return moon_phase.waxing_crescent
 	elif days_into_cycle >= 7 and days_into_cycle < 11:
-		return moon_phase.third_quarter
+		return moon_phase.first_quarter
 	elif days_into_cycle >= 11 and days_into_cycle < 15:
-		return moon_phase.waning_gibbous
+		return moon_phase.waxing_gibbous
 	elif days_into_cycle >= 15 and days_into_cycle < 18.5:
 		return moon_phase.full
 	elif days_into_cycle >= 18.5 and days_into_cycle < 22:
-		return moon_phase.waxing_gibbous
+		return moon_phase.waning_gibbous
 	elif days_into_cycle >= 22 and days_into_cycle < 25.765:
-		return moon_phase.first_quarter
+		return moon_phase.third_quarter
 	elif days_into_cycle >= 25.765 and days_into_cycle < 28.00: # Adjusting From 29.53 To Keep Accurate
-		return moon_phase.waxing_crescent
+		return moon_phase.waning_crescent
 	elif days_into_cycle >= 28.00 and days_into_cycle <= 29.53:
 		return moon_phase.new
 
