@@ -637,6 +637,28 @@ func calculate_moon_phase(julian_date: float) -> int:
 
 	return moon_phase.invalid_phase
 
+func generate_datetime(year: int = 0, month: int = 0, day: int = 1, hour: int = 0, minute: int = 0, second: int = 0, weekday: int = 0, dst: int = -1) -> Dictionary:
+	"""
+		The Calendar Function That Doesn't Exist (Kinda Calendar)
+	"""
+	# Returns current datetime as a dictionary of keys: year, month, day, weekday, dst (daylight savings time), hour, minute, second.
+
+	# Values Could Be Validated
+
+	return {
+		# Godot uses GMTime for UTC (all ints)
+		"year": 1900+year, # Since 1900
+		"month": 1+month, # 0 - 11 (Starting From January)
+		"day": day, # 1 - 31
+
+		"hour": hour, # 0 - 23 (Starting From Midnight)
+		"minute": minute, # 0 - 59
+		"second": second, # 0 - 59 (Leap Second is 60)
+
+		"weekday": weekday, # 0 - 6 (Starting From Sunday)
+		"dst": dst # Positive if True, 0 if Not, Negative if Unknown
+	}
+
 func get_class() -> String:
 	return "Functions"
 

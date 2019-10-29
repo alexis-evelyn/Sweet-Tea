@@ -764,6 +764,9 @@ func calculate_moon_phase(message: PoolStringArray) -> String:
 	var command_arguments : PoolStringArray = message
 	command_arguments.remove(0)
 
+	# functions.calculate_julian_date(functions.generate_datetime(100, 1, 2)) # First Quarter
+	# functions.calculate_julian_date(functions.generate_datetime(1000, 1, 2)) # Full Moon
+
 	var julian : float = functions.calculate_julian_date(OS.get_datetime(true))
 	var moonphase : int = functions.calculate_moon_phase(julian)
 
