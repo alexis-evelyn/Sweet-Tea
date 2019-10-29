@@ -767,7 +767,34 @@ func calculate_moon_phase(message: PoolStringArray) -> String:
 	var julian : float = functions.calculate_julian_date(OS.get_datetime(true))
 	var moonphase : int = functions.calculate_moon_phase(julian)
 
-	return "Date: %s" % julian
+	var result : String
+
+	# https://www.calendar-365.com/moon/moon-phases.html
+	# Check Me For Accuracy
+
+	# TODO: Replace Strings With Translation Friendly Strings
+	# TODO: Remove (if done) or Move TODO Comments (To Github Issues)
+	match moonphase:
+		functions.moon_phase.new:
+			result = "New Moon"
+		functions.moon_phase.waning_crescent:
+			result = "Waning Crescent"
+		functions.moon_phase.third_quarter:
+			result = "Third Quarter"
+		functions.moon_phase.waning_gibbous:
+			result = "Waning Gibbous"
+		functions.moon_phase.full:
+			result = "Full Moon"
+		functions.moon_phase.waxing_gibbous:
+			result = "Waxing Gibbous"
+		functions.moon_phase.first_quarter:
+			result = "First Quarter"
+		functions.moon_phase.waxing_crescent:
+			result = "Waxing Crescent"
+		functions.moon_phase.invalid_phase:
+			result = "Invalid Phase"
+
+	return "Phase: %s" % result
 
 func get_class() -> String:
 	return "ClientCommands"

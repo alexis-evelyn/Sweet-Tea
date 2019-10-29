@@ -31,6 +31,7 @@ enum shader_rectangle_id {
 
 enum moon_phase {
 	# 4 Main Phases Are New, Third Quarter, Full, and First Quarter
+	invalid_phase = -1,
 	new = 0, # New Moon
 	waning_crescent = 1, # Waning Crescent
 	third_quarter = 2, # Third Quarter
@@ -602,12 +603,11 @@ func calculate_moon_phase(julian_date: float) -> int:
 
 	var days_into_cycle : float = fmod((julian_date - new_moon_date), days_of_cycle) # To be able to do modulus on floats
 
-	# Remove Me
-	logger.error("Days Into Cycle: %s" % days_into_cycle)
+	logger.superverbose("Days Into Cycle: %s" % days_into_cycle)
 
 	# Number of Days After Which Phase is Active
 #	moon_phase.new # 0 and 29.53
-#	moon_phase.waning_crescent # 7/2
+#	moon_phase.waning_crescent # 7/2 = 3.5
 #	moon_phase.third_quarter # 7
 #	moon_phase.waning_gibbous # ((15 - 7) / 2) + 7 = 11
 #	moon_phase.full # 15
@@ -615,7 +615,27 @@ func calculate_moon_phase(julian_date: float) -> int:
 #	moon_phase.first_quarter # 22
 #	moon_phase.waxing_crescent # ((29.53 - 22) / 2) + 22 = 25.765
 
-	return OK # Will Return Enum of Phase
+	# Cycle Start - 0, 3.5, 7, 11, 15, 18.5, 22, 25.765, 29.53
+	# Cycle Add - 0, +3.5, +3.5, +4, +4, +3.5, +3.5, +3.765, +3.765
+
+	if days_into_cycle >= 0 and days_into_cycle < 3.5:
+		return moon_phase.new
+	elif days_into_cycle >= 3.5 and days_into_cycle < 7:
+		return moon_phase.waning_crescent
+	elif days_into_cycle >= 7 and days_into_cycle < 11:
+		return moon_phase.third_quarter
+	elif days_into_cycle >= 11 and days_into_cycle < 15:
+		return moon_phase.waning_gibbous
+	elif days_into_cycle >= 15 and days_into_cycle < 18.5:
+		return moon_phase.full
+	elif days_into_cycle >= 18.5 and days_into_cycle < 22:
+		return moon_phase.waxing_gibbous
+	elif days_into_cycle >= 22 and days_into_cycle < 25.765:
+		return moon_phase.first_quarter
+	elif days_into_cycle >= 25.765 and days_into_cycle <= 29.53:
+		return moon_phase.waxing_crescent
+
+	return moon_phase.invalid_phase
 
 func get_class() -> String:
 	return "Functions"
