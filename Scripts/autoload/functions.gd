@@ -632,12 +632,16 @@ func calculate_moon_phase(julian_date: float) -> int:
 		return moon_phase.waxing_gibbous
 	elif days_into_cycle >= 22 and days_into_cycle < 25.765:
 		return moon_phase.first_quarter
-	elif days_into_cycle >= 25.765 and days_into_cycle <= 29.53:
+	elif days_into_cycle >= 25.765 and days_into_cycle < 28.00: # Adjusting From 29.53 To Keep Accurate
 		return moon_phase.waxing_crescent
+	elif days_into_cycle >= 28.00 and days_into_cycle <= 29.53:
+		return moon_phase.new
+
+	# Note To Self: Please Figure Out Where Between 28.00 and 29.53 Does A Moon Actually Become A New Moon
 
 	return moon_phase.invalid_phase
 
-func generate_datetime(year: int = 0, month: int = 0, day: int = 1, hour: int = 0, minute: int = 0, second: int = 0, weekday: int = 0, dst: int = -1) -> Dictionary:
+func generate_datetime(year: int = 1900, month: int = 1, day: int = 1, hour: int = 0, minute: int = 0, second: int = 0, weekday: int = 0, dst: int = -1) -> Dictionary:
 	"""
 		The Calendar Function That Doesn't Exist (Kinda Calendar)
 	"""
@@ -647,8 +651,8 @@ func generate_datetime(year: int = 0, month: int = 0, day: int = 1, hour: int = 
 
 	return {
 		# Godot uses GMTime for UTC (all ints)
-		"year": 1900+year, # Since 1900
-		"month": 1+month, # 0 - 11 (Starting From January)
+		"year": year, # Since 1900
+		"month": month, # 0 - 11 (Starting From January)
 		"day": day, # 1 - 31
 
 		"hour": hour, # 0 - 23 (Starting From Midnight)

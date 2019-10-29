@@ -764,10 +764,24 @@ func calculate_moon_phase(message: PoolStringArray) -> String:
 	var command_arguments : PoolStringArray = message
 	command_arguments.remove(0)
 
-	# functions.calculate_julian_date(functions.generate_datetime(100, 1, 2)) # First Quarter
-	# functions.calculate_julian_date(functions.generate_datetime(1000, 1, 2)) # Full Moon
+	var gregorian_date : Dictionary = OS.get_datetime(true)
+	# https://www.moongiant.com/phase/10/29/2019 - For Those Interested, This Is My Birthday (1997)
+	# year: int = 0, month: int = 0, day: int = 1, hour: int = 0, minute: int = 0, second: int = 0, weekday: int = 0, dst: int = -1
+#	gregorian_date = functions.generate_datetime(2019, 10, 27) # Age: 28.78 - Waning Crescent - October 27, 2019
+#	gregorian_date = functions.generate_datetime(2019, 10, 28, 2, 40, 15, 1, 0) # Age: 0.39 - New Moon - Monday, October 28, 2019	2:40:15 AM UTC
+#	gregorian_date = functions.generate_datetime(2019, 10, 29) # Age: 1.5 - Waxing Crescent - October 29, 2019
+#	gregorian_date = functions.generate_datetime(2019, 11, 4, 10, 23, 38, 1, 0) # Age 7.44 - First Quarter - Monday, November 4, 2019	10:23:38 AM UTC
+#	gregorian_date = functions.generate_datetime(2019, 11, 5) # Age: 8.34 - Waxing Gibbous - November 5, 2019
+#	gregorian_date = functions.generate_datetime(2019, 11, 12, 13, 37, 24, 2, 0) # Age: 14.68 - Full Moon - Tuesday, November 12, 2019	01:37:24 PM UTC
+#	gregorian_date = functions.generate_datetime(2019, 11, 13) # Age: 15.64 - Waning Gibbous - November 13, 2019
+#	gregorian_date = functions.generate_datetime(2019, 11, 19, 21, 13, 9, 2, 0) # Age: 21.75 - Last Quarter - Tuesday, November 19, 2019	09:13:09 PM UTC
+#	gregorian_date = functions.generate_datetime(2019, 11, 26, 15, 7, 41, 2, 0) # Age: 29.38 - New Moon - Tuesday, November 26, 2019	03:07:41 PM UTC
 
-	var julian : float = functions.calculate_julian_date(OS.get_datetime(true))
+	# Check For Accuracy of Calculator. I May Have Screwed It Up!!!
+	# Especially Since The Non-Main Phases Are Not Correct!!!
+
+	# Times Need To Be In UTC Format
+	var julian : float = functions.calculate_julian_date(gregorian_date)
 	var moonphase : int = functions.calculate_moon_phase(julian)
 
 	var result : String
