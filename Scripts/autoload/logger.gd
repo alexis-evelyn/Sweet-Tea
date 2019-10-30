@@ -14,6 +14,7 @@ var log_dir_path : String = OS.get_user_data_dir().plus_file("logs")
 var log_file_path : String = log_dir_path.plus_file("%s.log" % OS.get_unix_time())
 
 enum values {
+	silent = -1,
 	fatal = 0,
 	error = 1,
 	warning = 2,
