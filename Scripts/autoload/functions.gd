@@ -604,7 +604,7 @@ func calculate_moon_phase(julian_date: float) -> int:
 
 	var days_into_cycle : float = fmod((julian_date - new_moon_date), days_of_cycle) # To be able to do modulus on floats
 
-	logger.superverbose("Days Into Cycle: %s" % days_into_cycle)
+	logger.superverbose("Days Into Cycle: %0.2f" % days_into_cycle)
 
 	# Number of Days After Which Phase is Active
 #	moon_phase.new # 0 and 29.53
@@ -621,23 +621,40 @@ func calculate_moon_phase(julian_date: float) -> int:
 
 	# The Cresent and Gibbous Phases Are Not Detected Properly - Everything Else Is Fine
 
-	if days_into_cycle >= 0 and days_into_cycle < 3.5:
+	# It's Trickier To Figure Out Phase Than Just Recording Values
+	# I'd Have To Literally Track Its Orbit and Know Where In The World The Player Is To BE 100% Accurate
+	# I'm Not Doing That, So...
+	# https://en.wikipedia.org/w/index.php?title=Lunar_phase&oldid=923713150#Phases_of_the_Moon
+
+	var ninths : float = 29.53/9.0
+
+	logger.superverbose("New Moon: %0.2f-%0.2f" % [0, ninths])
+	logger.superverbose("Waxing Crescent: %0.2f-%0.2f" % [ninths, ninths*2])
+	logger.superverbose("First Quarter: %0.2f-%0.2f" % [ninths*2, ninths*3])
+	logger.superverbose("Waxing Gibbous: %0.2f-%0.2f" % [ninths*3, ninths*4])
+	logger.superverbose("Full Moon: %0.2f-%0.2f" % [ninths*4, ninths*5])
+	logger.superverbose("Waning Gibbous: %0.2f-%0.2f" % [ninths*5, ninths*6])
+	logger.superverbose("Third Quarter: %0.2f-%0.2f" % [ninths*6, ninths*7])
+	logger.superverbose("Waning Crescent: %0.2f-%0.2f" % [ninths*7, ninths*8])
+	logger.superverbose("New Moon: %0.2f-%0.2f" % [ninths*8, 29.53])
+
+	if days_into_cycle >= 0 and days_into_cycle < ninths:
 		return moon_phase.new
-	elif days_into_cycle >= 3.5 and days_into_cycle < 7:
+	elif days_into_cycle >= ninths and days_into_cycle < ninths*2:
 		return moon_phase.waxing_crescent
-	elif days_into_cycle >= 7 and days_into_cycle < 11:
+	elif days_into_cycle >= ninths*2 and days_into_cycle < ninths*3:
 		return moon_phase.first_quarter
-	elif days_into_cycle >= 11 and days_into_cycle < 15:
+	elif days_into_cycle >= ninths*3 and days_into_cycle < ninths*4:
 		return moon_phase.waxing_gibbous
-	elif days_into_cycle >= 15 and days_into_cycle < 18.5:
+	elif days_into_cycle >= ninths*4 and days_into_cycle < ninths*5:
 		return moon_phase.full
-	elif days_into_cycle >= 18.5 and days_into_cycle < 22:
+	elif days_into_cycle >= ninths*5 and days_into_cycle < ninths*6:
 		return moon_phase.waning_gibbous
-	elif days_into_cycle >= 22 and days_into_cycle < 25.765:
+	elif days_into_cycle >= ninths*6 and days_into_cycle < ninths*7:
 		return moon_phase.third_quarter
-	elif days_into_cycle >= 25.765 and days_into_cycle < 28.00: # Adjusting From 29.53 To Keep Accurate
+	elif days_into_cycle >= ninths*7 and days_into_cycle < ninths*8: # Adjusting From 29.53 To Keep Accurate
 		return moon_phase.waning_crescent
-	elif days_into_cycle >= 28.00 and days_into_cycle <= 29.53:
+	elif days_into_cycle >= ninths*9 and days_into_cycle <= 29.53:
 		return moon_phase.new
 
 	# Note To Self: Please Figure Out Where Between 28.00 and 29.53 Does A Moon Actually Become A New Moon

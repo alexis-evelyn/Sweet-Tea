@@ -312,6 +312,7 @@ enabled=PoolStringArray( "gamejolt", "mixing-desk" )
 [gdnative]
 
 singletons=[  ]
+singletons_disabled=[  ]
 
 [gui]
 
