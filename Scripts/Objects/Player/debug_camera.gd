@@ -85,6 +85,26 @@ func _process(_delta: float) -> void:
 func _physics_process(_delta: float) -> void:
 	update_physics_fps_label()
 
+#	Stuff That Doesn't Work for SDL (And Therefore Godot)
+#	For Some Reason, SDL Does Not Seem To Work With DS4 on Haptic Feedback!!!
+#	https://discourse.libsdl.org/t/haptic-broken-for-sixad/20890/8
+#
+#	Also, Controller Shows As Dead With SDL!!! The one exception is if it was plugged in with a data cable (marked as Plugged In).
+#	The weird part is, if I unplug it (and it is also connected by Bluetooth), it still says Plugged In.
+#
+#	My Goal Is To Figure Out Rumble and LED Color Changes!!!
+#
+#	There is also the mic, speaker, touchpad capacitive swiping, earphone port, accelerometer, and gyroscope.
+#	Also, there's some kind of extension port next to the earphone port and proper battery level detection.
+#
+#	It appears the external port is used for dock charging and the earphone port can also be used for a keyboard.
+
+	# Doesn't Work With DS4 on OSX
+#	logger.warn("Accelerometer: %s" % Input.get_accelerometer()) # Motion of Controller
+#	logger.warn("Gravity: %s" % Input.get_gravity()) # Gravity of Controller (May Not Exist in DS4)
+#	logger.warn("Gyroscope: %s" % Input.get_gyroscope()) # Rotation of Controller
+#	logger.warn("Magnetometer: %s" % Input.get_magnetometer()) # Magnetic Field Strength of Controller (May Not Exist in DS4)
+
 	if pauseMenu.is_paused():
 		return
 

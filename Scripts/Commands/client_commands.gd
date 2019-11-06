@@ -32,9 +32,10 @@ var supported_commands : Dictionary = {
 	"mirror": {"description": "help_mirror_desc", "cheat": false},
 	"timescale": {"description": "help_timescale_desc", "cheat": true},
 	"saves": {"description": "help_saves_desc", "cheat": false}, # Technically can be used for cheating, but really, who cares. I don't. The person playing the game is only going to ruin it for themselves if they cheat (before beating the game legitimately).
-	# Achievements - Cheat
-	# Gamejolt - No Cheat
-	"moonphase": {"description": "help_moonphase_desc", "cheat": false} # TODO: Add help_moonphase_desc
+	"achievement": {"description": "help_achievements_desc", "cheat": true},
+	"gamejolt": {"description": "help_gamejolt_desc", "cheat": false},
+	"moonphase": {"description": "help_moonphase_desc", "cheat": false},
+	"capturedevices": {"description": "help_capturedevices_desc", "cheat": false}
 }
 
 func process_commands(message: PoolStringArray) -> String:
@@ -86,6 +87,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return gamejolt_manual_login(message)
 		"moonphase":
 			return calculate_moon_phase(message)
+		"capturedevices":
+			return capture_devices(message)
 		_:
 			return functions.empty_string
 
@@ -694,6 +697,8 @@ func open_saves_folder(message: PoolStringArray) -> String:
 func gamejolt_manual_login(message: PoolStringArray) -> String:
 	"""
 		Command to Login to GameJolt
+
+		Not Meant to Be Called Directly
 	"""
 
 	# warning-ignore:unused_variable
@@ -727,6 +732,8 @@ func gamejolt_manual_login(message: PoolStringArray) -> String:
 func handle_achievement(message: PoolStringArray) -> String:
 	"""
 		Command to Help Manually Adjust/View Achievements
+
+		Not Meant to Be Called Directly
 	"""
 
 	# /achievement - Display List of Achievements And If Any Were Earned
@@ -813,6 +820,26 @@ func calculate_moon_phase(message: PoolStringArray) -> String:
 			result = "Invalid Phase"
 
 	return "Phase: %s" % result
+
+func capture_devices(message: PoolStringArray) -> String:
+	"""
+		Used to List Audio Inputs Such As Microphones
+
+		Not Meant to Be Called Directly
+	"""
+
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_arguments : PoolStringArray = message
+	command_arguments.remove(0)
+
+	# warning-ignore:unassigned_variable
+	var output : PoolStringArray
+
+	output.append(functions.empty_string)
+	output.append_array(AudioServer.capture_get_device_list())
+
+	return tr("capture_devices_list_list_devices") % [AudioServer.capture_get_device(), output.join(tr("capture_devices_list_available_devices"))]
 
 func get_class() -> String:
 	return "ClientCommands"
