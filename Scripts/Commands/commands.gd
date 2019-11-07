@@ -189,7 +189,8 @@ func help_command(net_id: int, message: PoolStringArray) -> String:
 		# Only return commands the player has access to
 		if check_permission(players_permission_level, get_permission(supported_command)):
 			# TODO: Alphanumerically Sort Commands using PSA.insert(index, string)
-			output_array.append(key_value_format % [supported_command, functions.get_translation(supported_commands[str(supported_command)]["description"], str(player_registrar.players[net_id].locale))])
+			#output_array.append(key_value_format % [supported_command, functions.get_translation(supported_commands[str(supported_command)]["description"], str(player_registrar.players[net_id].locale))])
+			output_array.append(key_value_format.format({"key": supported_commands, "value": functions.get_translation(supported_commands[str(supported_command)]["description"], str(player_registrar.players[net_id].locale))}))
 
 	return output_array.join('\n')
 
@@ -385,7 +386,8 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 
 		if world_name == functions.empty_string:
 			# TODO: Replace world_path in error message with name user gave!!!
-			return functions.get_translation("change_world_command_failed_load_world", player_registrar.players[net_id].locale) % [world_path, net_id]
+			#return functions.get_translation("change_world_command_failed_load_world", player_registrar.players[net_id].locale) % [world_path, net_id]
+			return functions.get_translation("change_world_command_failed_load_world", player_registrar.players[net_id].locale).format({"world": world_path, "player_id": net_id})
 
 		spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 
@@ -398,7 +400,8 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 			#logger.verbose("Server Change World: %s" % net_id)
 			spawn_handler.change_world(world_name)
 
-		return functions.get_translation("change_world_command_success", player_registrar.players[net_id].locale) % [net_id, world_path]
+		#return functions.get_translation("change_world_command_success", player_registrar.players[net_id].locale) % [net_id, world_path]
+		return functions.get_translation("change_world_command_success", player_registrar.players[net_id].locale).format({"world": world_path, "player_id": net_id})
 	return functions.get_translation("change_world_no_permission", player_registrar.players[net_id].locale)
 
 # Change Player's World - Server Side Only

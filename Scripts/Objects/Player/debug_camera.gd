@@ -157,7 +157,8 @@ func update_battery_label() -> void:
 	battery_label.bbcode_text = key_begin_bbcode + tr("battery_label") % [value_begin_bbcode + str(OS.get_power_percent_left()) + both_end_bbcode, value_begin_bbcode + str(OS.get_power_seconds_left()) + both_end_bbcode, value_begin_bbcode + powerstate_status + both_end_bbcode] + both_end_bbcode
 
 func update_fps_label() -> void:
-	fps_label.bbcode_text = key_begin_bbcode + tr("fps_label") % [value_begin_bbcode + str(Engine.get_frames_per_second()) + both_end_bbcode, value_begin_bbcode + str(Engine.get_frames_drawn()) + both_end_bbcode] + both_end_bbcode
+	#fps_label.bbcode_text = key_begin_bbcode + tr("fps_label") % [value_begin_bbcode + str(Engine.get_frames_per_second()) + both_end_bbcode, value_begin_bbcode + str(Engine.get_frames_drawn()) + both_end_bbcode] + both_end_bbcode
+	fps_label.bbcode_text = key_begin_bbcode + tr("fps_label").format({"current": value_begin_bbcode + str(Engine.get_frames_per_second()) + both_end_bbcode, "total": value_begin_bbcode + str(Engine.get_frames_drawn()) + both_end_bbcode}) + both_end_bbcode
 
 func update_physics_fps_label() -> void:
 	physics_fps_label.bbcode_text = key_begin_bbcode + tr("physics_fps_label") % [value_begin_bbcode + str(Engine.get_iterations_per_second()) + both_end_bbcode] + both_end_bbcode
@@ -230,7 +231,8 @@ func update_memory_usage_label() -> void:
 
 func update_time_since_start() -> void:
 	# warning-ignore:integer_division
-	engine_start_time_label.bbcode_text = key_begin_bbcode + tr("engine_start_time_label") % [value_begin_bbcode + str(OS.get_ticks_msec()/1000) + both_end_bbcode, value_begin_bbcode + str(OS.get_ticks_usec()) + both_end_bbcode] + both_end_bbcode
+	#engine_start_time_label.bbcode_text = key_begin_bbcode + tr("engine_start_time_label") % [value_begin_bbcode + str(OS.get_ticks_msec()/1000) + both_end_bbcode, value_begin_bbcode + str(OS.get_ticks_usec()) + both_end_bbcode] + both_end_bbcode
+	engine_start_time_label.bbcode_text = key_begin_bbcode + tr("engine_start_time_label").format({"seconds": value_begin_bbcode + str(OS.get_ticks_msec()/1000) + both_end_bbcode, "microseconds": value_begin_bbcode + str(OS.get_ticks_usec()) + both_end_bbcode}) + both_end_bbcode
 
 func update_clock_label() -> void:
 	date_time = OS.get_datetime()

@@ -506,7 +506,8 @@ func set_debug_collisions(message: PoolStringArray) -> String:
 #		get_tree().debug_navigation_hint = true
 
 	if command_arguments.size() != 1:
-		return tr("debug_collisions_invalid_number_of_arguments") % [tr("bool_true"), tr("bool_false")]
+		#return tr("debug_collisions_invalid_number_of_arguments") % [tr("bool_true"), tr("bool_false")]
+		return tr("debug_collisions_invalid_number_of_arguments").format({"true": tr("bool_true"), "false": tr("bool_false")})
 
 	if command_arguments[0].to_lower() == tr("bool_true").to_lower():
 		get_tree().set_debug_collisions_hint(true)
