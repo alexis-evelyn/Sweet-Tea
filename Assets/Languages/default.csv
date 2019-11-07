@@ -2,7 +2,7 @@
 about_button,About Game,,,,
 about_game_text,Made by Alex Evelyn,,,,
 about_game_title,About Sweet Tea,,,,
-alpha_game_version_warning_label,[center]Game Version: %s[/center],,,,
+alpha_game_version_warning_label,[center]Game Version: %s - Engine Version: v%d.%d.%s.%s.%s[/center],,,,
 ban_player_command_no_permission,Ban Player and Optional Message - Permission Needed: %s,,,,
 ban_player_ip_command_no_permission,Ban Player By IP and Optional Message - Permission Needed: %s,,,,
 battery_battery,Battery,,,,

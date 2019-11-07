@@ -12,6 +12,8 @@ onready var panelStats : Panel = $panelPlayerStats
 onready var pauseMenu : Control = $PauseMenu
 onready var alphaGameVersionLabel : RichTextLabel = $alphaGameVersionLabel
 
+var engine_version : Dictionary = Engine.get_version_info()
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 #	set_process(true)
@@ -24,7 +26,18 @@ func _ready() -> void:
 #	pass
 
 func set_alpha_game_version_label() -> void:
-	alphaGameVersionLabel.bbcode_text = tr("alpha_game_version_warning_label") % gamestate.game_version
+	"""
+		For Alpha and Development Builds
+
+		Will Eventually Add I Variable To Determine if It Is Displayed
+	"""
+
+	alphaGameVersionLabel.bbcode_text = tr("alpha_game_version_warning_label") % [gamestate.game_version, engine_version.major, engine_version.minor, engine_version.status, engine_version.build, engine_version.hash.substr(0, 9)]
+	#logger.error("Engine Version: %s" % Engine.get_version_info())
+
+	# Godot Engine v3.2.alpha.custom_build.3963bcc5c - https://godotengine.org
+	# {build:custom_build, hash:3963bcc5c0ee1269872375ef8b9995979d8f16ba, hex:197120, major:3, minor:2, patch:0, status:alpha, string:3.2-alpha (custom_build), year:2019}
+	# v%d.%d.%s.%s.%s [major, minor, status, build, hash]
 
 func _input(event: InputEvent) -> void:
 	# Checks to See if connected to server (if not, just return)
