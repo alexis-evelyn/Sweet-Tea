@@ -19,4 +19,4 @@ These binaries will be released at these locations for alpha builds and eventual
 
 Licensing
 ---------
-Moved to Credits.md
+Moved to [Credits.md](blob/master/Credits.md)
