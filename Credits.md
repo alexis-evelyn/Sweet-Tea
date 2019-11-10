@@ -1,7 +1,7 @@
 Licensing
 
-* Licenses are located in Legal/
-* They are formatted as <license>-<name_of_product>.txt
+* Licenses are located in [Legal/](Legal)
+* They are formatted as `<license>-<name_of_product>.txt`
 
 Software
 ---------
