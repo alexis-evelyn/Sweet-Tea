@@ -683,6 +683,101 @@ func generate_datetime(year: int = 1900, month: int = 1, day: int = 1, hour: int
 		"dst": dst # Positive if True, 0 if Not, Negative if Unknown
 	}
 
+func get_logged_in_user(net_id: int = -1) -> String:
+	match get_system():
+		host_system.OSX:
+			return get_logged_in_user_osx(net_id)
+		host_system.X11:
+			return get_logged_in_user_x11(net_id)
+		host_system.Windows:
+			return get_logged_in_user_windows(net_id)
+		host_system.UWP:
+			return get_logged_in_user_uwp(net_id)
+		host_system.android:
+			return get_logged_in_user_android(net_id)
+		host_system.iOS:
+			return get_logged_in_user_iOS(net_id)
+
+	# Didn't Find Supported System, So Returning Character's Name
+	var players_name : String
+
+	if player_registrar.players[net_id].has("display_name"):
+		players_name = player_registrar.players[net_id].display_name # Try to Use Display Name
+	elif player_registrar.players[net_id].has("name"):
+		players_name = player_registrar.players[net_id].name # If not, Use Name
+
+	logger.warn("Couldn't Find Compatible System for Getting Logged in User's Name!!!")
+
+	return players_name
+
+func get_logged_in_user_osx(net_id: int = -1) -> String:
+	# Shortname - /usr/bin/logname
+	# Shortname - whoami
+	# Longname - ???
+
+	return "Player - OSX"
+
+func get_logged_in_user_x11(net_id: int = -1) -> String:
+	# Shortname - /usr/bin/logname
+	# Shortname - whoami
+	# Longname - ???
+
+	return "Player - Linux"
+
+func get_logged_in_user_windows(net_id: int = -1) -> String:
+	# Shortname - ???
+	# Shortname - ???
+	# Longname - ???
+
+	return "Player - Windows"
+
+func get_logged_in_user_uwp(net_id: int = -1) -> String:
+	"""
+		Retrieving Account Name is Not Supported For UWP Yet
+
+		May Use ??? Account Name if Possible
+
+		I Don't Know What Exactly UWP is. So, I Am Not Sure How To Get Username!!!
+	"""
+	var players_name : String
+
+	if player_registrar.players[net_id].has("display_name"):
+		players_name = player_registrar.players[net_id].display_name # Try to Use Display Name
+	elif player_registrar.players[net_id].has("name"):
+		players_name = player_registrar.players[net_id].name # If not, Use Name
+
+	return players_name
+
+func get_logged_in_user_android(net_id: int = -1) -> String:
+	"""
+		Retrieving Account Name is Not Supported For Android Yet
+
+		May Use Google Account Name if Possible
+	"""
+	var players_name : String
+
+	if player_registrar.players[net_id].has("display_name"):
+		players_name = player_registrar.players[net_id].display_name # Try to Use Display Name
+	elif player_registrar.players[net_id].has("name"):
+		players_name = player_registrar.players[net_id].name # If not, Use Name
+
+	return players_name
+
+func get_logged_in_user_iOS(net_id: int = -1) -> String:
+	"""
+		Retrieving Account Name is Not Supported For iOS Yet
+
+		May Use Apple Account Name if Possible
+	"""
+	var players_name : String
+
+	if player_registrar.players[net_id].has("display_name"):
+		players_name = player_registrar.players[net_id].display_name # Try to Use Display Name
+	elif player_registrar.players[net_id].has("name"):
+		players_name = player_registrar.players[net_id].name # If not, Use Name
+
+	return players_name
+
 func get_class() -> String:
 	return "Functions"
 

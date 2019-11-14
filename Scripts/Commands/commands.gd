@@ -46,6 +46,7 @@ var supported_commands : Dictionary = {
 	"gravity": {"description": "help_gravity_desc", "permission": permission_level.op, "cheat": true},
 	"setspawnworld": {"description": "help_setspawnworld_desc", "permission": permission_level.admin, "cheat": true},
 	"lua": {"description": "help_execute_lua_desc", "permission": permission_level.server_owner, "cheat": true},
+	"mqtt": {"description": "help_test_mqtt_desc", "permission": permission_level.server_owner, "cheat": false},
 
 	# These are essentially the same command
 	"msg": {"description": "help_msg_desc", "permission": permission_level.player, "cheat": false},
@@ -136,6 +137,8 @@ func check_command(net_id: int, message: PoolStringArray) -> String:
 			return set_spawn_world(net_id, message)
 		"lua":
 			return execute_lua(net_id, message)
+		"mqtt":
+			return test_mqtt(net_id, message)
 		_: # Default Result - Put at Bottom of Match Results
 			if command == functions.empty_string:
 				return functions.empty_string
@@ -820,6 +823,31 @@ func execute_lua(net_id: int, message: PoolStringArray) -> String:
 		return PoolStringArray(results).join(" ")
 
 	return functions.get_translation("execute_lua_command_no_permission", player_registrar.players[net_id].locale)
+
+# warning-ignore:unused_argument
+# warning-ignore:unused_argument
+func test_mqtt(net_id: int, message: PoolStringArray) -> String:
+	"""
+		Test MQTT Commands (Meant To Be Used With Lua)
+
+		Uses Module From https://github.com/alex-evelyn/Godot-MQTT-Module/
+
+		Not Meant to Be Called Directly
+	"""
+
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
+	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
+
+	if check_permission(players_permission_level, command_permission_level):
+		var arguments = message
+		arguments.remove(0)
+
+		#return mqtt.echo(arguments.join(" "))
+		return mqtt.test("godot_topic_test", arguments.join(" "), -1)
+
+	return "Command Not Finished!!!"
 
 func get_class() -> String:
 	return "ServerCommands"

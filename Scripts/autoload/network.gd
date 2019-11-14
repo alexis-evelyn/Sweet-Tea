@@ -288,7 +288,7 @@ func _on_connected_to_server() -> void:
 
 	pauseMenu.set_client_mode() # Remove Open to Lan Button
 
-	var net : NetworkedMultiplayerENet = get_tree().get_network_peer()
+	#var net : NetworkedMultiplayerENet = get_tree().get_network_peer()
 	#functions.set_title(tr("connected_to_server_title") % [net.get_peer_address(gamestate.standard_netids.server), net.get_peer_port(gamestate.standard_netids.server)]) # 1 is the server's id
 	#functions.set_title(tr("connected_to_server_title").format({"server_host": net.get_peer_address(gamestate.standard_netids.server), "server_port": net.get_peer_port(gamestate.standard_netids.server)}))
 

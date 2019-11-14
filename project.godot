@@ -297,6 +297,7 @@ GameJoltAPI="*res://Custom/GameJoltAPI.tscn"
 uuid="*res://Scripts/autoload/third_party/uuid.gd"
 Music="*res://AudioHandlers/TitleScreenMusic.tscn"
 Hotbits="*res://Custom/Hotbits.tscn"
+mqtt="*res://Modules/libmqtt/libmqtt.gdns"
 
 [debug]
 

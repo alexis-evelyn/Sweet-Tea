@@ -1,0 +1,10 @@
+[gd_resource type="NativeScript" load_steps=2 format=2]
+
+[ext_resource path="res://Modules/libmqtt/libmqtt.gdnlib" type="GDNativeLibrary" id=1]
+
+[resource]
+
+resource_name = "libMQTT"
+class_name = "MQTT"
+library = ExtResource( 1 )
+_sections_unfolded = [ "Resource" ]
