@@ -59,6 +59,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/autoload/gamestate.gd"
 }, {
+"base": "",
+"class": "GitAPI",
+"language": "NativeScript",
+"path": "res://addons/godot-git-plugin/git_api.gdns"
+}, {
 "base": "Node",
 "class": "HotbitsSDK",
 "language": "GDScript",
@@ -235,6 +240,7 @@ _global_script_class_icons={
 "GameConnection": "",
 "GameJoltFunctions": "",
 "GameState": "",
+"GitAPI": "",
 "HotbitsSDK": "",
 "LoadingScreen": "",
 "Logger": "",
@@ -318,8 +324,8 @@ enabled=PoolStringArray( "gamejolt", "mixing-desk" )
 
 [gdnative]
 
-singletons=[  ]
-singletons_disabled=[  ]
+singletons=[ "res://addons/godot-git-plugin/git_api.gdnlib" ]
+singletons_disabled=[ "res://addons/godot-git-plugin/git_api.gdnlib" ]
 
 [gui]
 
