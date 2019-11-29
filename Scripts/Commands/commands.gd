@@ -403,7 +403,6 @@ func change_player_world(net_id: int, message: PoolStringArray) -> String:
 			#logger.verbose("Server Change World: %s" % net_id)
 			spawn_handler.change_world(world_name)
 
-		#return functions.get_translation("change_world_command_success", player_registrar.players[net_id].locale) % [net_id, world_path]
 		return functions.get_translation("change_world_command_success", player_registrar.players[net_id].locale).format({"world": world_path, "player_id": net_id})
 	return functions.get_translation("change_world_no_permission", player_registrar.players[net_id].locale)
 
@@ -508,7 +507,7 @@ func server_spawn(net_id: int, message: PoolStringArray) -> String:
 
 		if world_name == functions.empty_string:
 			# TODO: Replace world_path in error message with name user gave!!!
-			return functions.get_translation("spawn_command_failed", player_registrar.players[net_id].locale) % [world_path, net_id]
+			return functions.get_translation("spawn_command_failed_load_world", player_registrar.players[net_id].locale).format({"world_name": world_path, "player_id": net_id})
 
 		spawn_handler.despawn_player(net_id) # Removes Player From World Node and Syncs it With Everyone Else
 
@@ -589,7 +588,7 @@ func set_server_spawn(net_id: int, message: PoolStringArray) -> String:
 		# Get Coordinates From Player Position
 		world_gen_node.set_spawn(new_spawn)
 
-		return functions.get_translation("set_server_spawn_command_success", player_registrar.players[net_id].locale) % [new_spawn.x, new_spawn.y]
+		return functions.get_translation("set_server_spawn_command_success", player_registrar.players[net_id].locale).format({"x_coordinate": new_spawn.x, "y_coordinate": new_spawn.y})
 	return functions.get_translation("set_server_spawn_command_no_permission", player_registrar.players[net_id].locale)
 
 func set_world_spawn(net_id: int, message: PoolStringArray) -> String:
@@ -616,7 +615,7 @@ func set_world_spawn(net_id: int, message: PoolStringArray) -> String:
 		# Either Get Coordinates From Player Position or From Arguments
 		world_gen_node.set_spawn(new_spawn)
 
-		return functions.get_translation("set_world_spawn_command_success", player_registrar.players[net_id].locale) % [new_spawn.x, new_spawn.y]
+		return functions.get_translation("set_world_spawn_command_success", player_registrar.players[net_id].locale).format({"x_coordinate": new_spawn.x, "y_coordinate": new_spawn.y})
 	return functions.get_translation("set_world_spawn_command_no_permission", player_registrar.players[net_id].locale)
 
 func get_seed(net_id: int, message: PoolStringArray) -> String:
@@ -699,7 +698,7 @@ func teleport(net_id: int, message: PoolStringArray) -> String:
 			functions.teleport(net_id, coordinates) # This allows client to just reposition itself without reloading world. So useful for short distances.
 #			functions.teleport_despawn(net_id, coordinates) # This allows forcing client to reload world. So, useful for long distances.
 
-			return functions.get_translation("teleport_command_success", player_registrar.players[net_id].locale) % [coordinates.x, coordinates.y]
+			return functions.get_translation("teleport_command_success", player_registrar.players[net_id].locale).format({"x_coordinate": coordinates.x, "y_coordinate": coordinates.y})
 		elif command_arguments.size() == 1:
 			# Teleport to Player (Not Implemented)
 			# I may have different permission sublevels for this command.

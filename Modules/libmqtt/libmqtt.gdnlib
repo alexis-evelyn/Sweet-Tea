@@ -7,18 +7,16 @@ reloadable=true
 
 [entry]
 
-X11.32="res://Modules/libmqtt/x11/libMQTT_x86.so"
-Windows.32="res://Modules/libmqtt/win64/libMQTT_x86.dll"
-OSX.32="res://Modules/libmqtt/osx/libMQTT_x86.dylib"
-X11.64="res://Modules/libmqtt/x11/libMQTT.so"
-Windows.64="res://Modules/libmqtt/win64/libMQTT.dll"
 OSX.64="res://Modules/libmqtt/osx/libMQTT.dylib"
+Windows.64="res://Modules/libmqtt/win64/libMQTT.dll"
+Windows.32="res://Modules/libmqtt/win64/libMQTT_x86.dll"
+X11.64="res://Modules/libmqtt/x11/libMQTT.so"
+X11.32="res://Modules/libmqtt/x11/libMQTT_x86.so"
 
 [dependencies]
 
-X11.32=[  ]
-Windows.32=[  ]
-OSX.32=[  ]
-X11.64=[  ]
+OSX.64=[ "res://Modules/libmqtt/osx/libumqtt.dylib" ]
 Windows.64=[  ]
-OSX.64=[  ]
+Windows.32=[  ]
+X11.64=[  ]
+X11.32=[  ]

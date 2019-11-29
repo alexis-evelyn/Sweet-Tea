@@ -683,20 +683,25 @@ func generate_datetime(year: int = 1900, month: int = 1, day: int = 1, hour: int
 		"dst": dst # Positive if True, 0 if Not, Negative if Unknown
 	}
 
-func get_logged_in_user(net_id: int = -1) -> String:
+func get_logged_in_user(net_id: int = -1, longname : bool = false) -> String:
+	"""
+		Retrieve Account Name For Current System (If Supported)
+
+		Can be Used For Meta Games
+	"""
 	match get_system():
 		host_system.OSX:
-			return get_logged_in_user_osx(net_id)
+			return get_logged_in_user_osx(net_id, longname)
 		host_system.X11:
-			return get_logged_in_user_x11(net_id)
+			return get_logged_in_user_x11(net_id, longname)
 		host_system.Windows:
-			return get_logged_in_user_windows(net_id)
+			return get_logged_in_user_windows(net_id, longname)
 		host_system.UWP:
-			return get_logged_in_user_uwp(net_id)
+			return get_logged_in_user_uwp(net_id, longname)
 		host_system.android:
-			return get_logged_in_user_android(net_id)
+			return get_logged_in_user_android(net_id, longname)
 		host_system.iOS:
-			return get_logged_in_user_iOS(net_id)
+			return get_logged_in_user_iOS(net_id, longname)
 
 	# Didn't Find Supported System, So Returning Character's Name
 	var players_name : String
@@ -710,28 +715,37 @@ func get_logged_in_user(net_id: int = -1) -> String:
 
 	return players_name
 
-func get_logged_in_user_osx(net_id: int = -1) -> String:
+func get_logged_in_user_osx(net_id: int = -1, longname : bool = false) -> String:
 	# Shortname - /usr/bin/logname
-	# Shortname - whoami
-	# Longname - ???
+	# Shortname - /usr/bin/whoami (deprecated)
+	# Shortname - /usr/bin/id -un
+	# Longname - /usr/bin/id -F <shortname>
 
-	return "Player - OSX"
+	var output : Array
 
-func get_logged_in_user_x11(net_id: int = -1) -> String:
+	if longname:
+		OS.execute("id", ['-un'], true, output)
+		OS.execute("id", ['-F', PoolStringArray(output)[0].strip_edges()], true, output)
+	else:
+		OS.execute("id", ['-un'], true, output)
+
+	return PoolStringArray(output).join(" ").strip_edges()
+
+func get_logged_in_user_x11(net_id: int = -1, longname : bool = false) -> String:
 	# Shortname - /usr/bin/logname
 	# Shortname - whoami
 	# Longname - ???
 
 	return "Player - Linux"
 
-func get_logged_in_user_windows(net_id: int = -1) -> String:
+func get_logged_in_user_windows(net_id: int = -1, longname : bool = false) -> String:
 	# Shortname - ???
 	# Shortname - ???
 	# Longname - ???
 
 	return "Player - Windows"
 
-func get_logged_in_user_uwp(net_id: int = -1) -> String:
+func get_logged_in_user_uwp(net_id: int = -1, longname : bool = false) -> String:
 	"""
 		Retrieving Account Name is Not Supported For UWP Yet
 
@@ -748,7 +762,7 @@ func get_logged_in_user_uwp(net_id: int = -1) -> String:
 
 	return players_name
 
-func get_logged_in_user_android(net_id: int = -1) -> String:
+func get_logged_in_user_android(net_id: int = -1, longname : bool = false) -> String:
 	"""
 		Retrieving Account Name is Not Supported For Android Yet
 
@@ -763,7 +777,7 @@ func get_logged_in_user_android(net_id: int = -1) -> String:
 
 	return players_name
 
-func get_logged_in_user_iOS(net_id: int = -1) -> String:
+func get_logged_in_user_iOS(net_id: int = -1, longname : bool = false) -> String:
 	"""
 		Retrieving Account Name is Not Supported For iOS Yet
 

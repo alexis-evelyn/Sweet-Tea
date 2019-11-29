@@ -35,7 +35,8 @@ var supported_commands : Dictionary = {
 	"achievement": {"description": "help_achievements_desc", "cheat": true},
 	"gamejolt": {"description": "help_gamejolt_desc", "cheat": false},
 	"moonphase": {"description": "help_moonphase_desc", "cheat": false},
-	"capturedevices": {"description": "help_capturedevices_desc", "cheat": false}
+	"capturedevices": {"description": "help_capturedevices_desc", "cheat": false},
+	"getname": {"description": "help_getname_desc", "cheat": false}
 }
 
 func process_commands(message: PoolStringArray) -> String:
@@ -89,6 +90,8 @@ func process_commands(message: PoolStringArray) -> String:
 			return calculate_moon_phase(message)
 		"capturedevices":
 			return capture_devices(message)
+		"getname":
+			return get_user_name(message)
 		_:
 			return functions.empty_string
 
@@ -172,7 +175,7 @@ func teleport_camera(message: PoolStringArray) -> String:
 	camera.update_camera_pos(coordinates)
 	camera.update_camera_pos_label()
 
-	return tr("teleport_camera_command_success") % [coordinates.x, coordinates.y]
+	return tr("teleport_camera_command_success").format({"x_coordinate": coordinates.x, "y_coordinate": coordinates.y})
 
 func shader_info(message: PoolStringArray) -> String:
 	# /shaderinfo [shader_name]
@@ -337,7 +340,7 @@ func set_shader_param(message: PoolStringArray) -> String:
 		var formatted_value = functions.check_data_type(value) # Used to return data in the correct format
 		functions.set_world_shader_param(key, formatted_value)
 
-		return tr("shaderparam_command_success") % [key, value, tr("shader_world_argument")]
+		return tr("shaderparam_command_success").format({"key": key, "value": value, "viewport": tr("shader_world_argument")})
 	elif command_arguments.size() == 3:
 		key = command_arguments[0]
 		value = command_arguments[1]
@@ -348,18 +351,18 @@ func set_shader_param(message: PoolStringArray) -> String:
 			var formatted_value = functions.check_data_type(value) # Used to return data in the correct format
 			functions.set_world_shader_param(key, formatted_value)
 
-			return tr("shaderparam_command_success") % [key, value, tr("shader_world_argument")]
+			return tr("shaderparam_command_success").format({"key": key, "value": value, "viewport": tr("shader_world_argument")})
 		elif shader_rect.to_lower() == tr("shader_game_argument").to_lower():
 			var formatted_value = functions.check_data_type(value) # Used to return data in the correct format
 			functions.set_global_shader_param(key, formatted_value)
 
-			return tr("shaderparam_command_success") % [key, value, tr("shader_game_argument")]
+			return tr("shaderparam_command_success").format({"key": key, "value": value, "viewport": tr("shader_game_argument")})
 		elif shader_rect.to_lower() == tr("shader_all_argument").to_lower():
 			var formatted_value = functions.check_data_type(value) # Used to return data in the correct format
 			functions.set_world_shader_param(key, formatted_value)
 			functions.set_global_shader_param(key, formatted_value)
 
-			return tr("shaderparam_command_success") % [key, value, tr("shader_all_argument")]
+			return tr("shaderparam_command_success").format({"key": key, "value": value, "viewport": tr("shader_all_argument")})
 
 	return tr("shaderparam_command_invalid_arguments")
 
@@ -459,7 +462,7 @@ func take_screenshot(message: PoolStringArray) -> String:
 		var make_folder = screenshot_folder_reference.make_dir_recursive(screenshot_folder)
 
 		if make_folder != 0:
-			return tr("screenshot_command_failed_to_make_save_directory") % [screenshot_folder, make_folder]
+			return tr("screenshot_command_failed_to_make_save_directory").format({"screenshot_folder": screenshot_folder, "error_code": make_folder})
 
 	# Take and Save Screenshot
 	var screenshot : Image = functions.take_screenshot(viewport)
@@ -467,9 +470,10 @@ func take_screenshot(message: PoolStringArray) -> String:
 
 	# Return Status to Player
 	if save_success == 0:
-		return tr("screenshot_command_successful") % [chosen_viewport.to_lower(), screenshot_filepath]
+		#.format({"player_name": , "player_id": })
+		return tr("screenshot_command_successful").format({"chosen_viewport": chosen_viewport.to_lower(), "screenshot_filepath": screenshot_filepath})
 	else:
-		return tr("screenshot_command_failed_to_save") % [chosen_viewport.to_lower(), screenshot_filepath, save_success]
+		return tr("screenshot_command_failed_to_save").format({"chosen_viewport": chosen_viewport.to_lower(), "screenshot_filepath": screenshot_filepath, "error_code": save_success})
 
 func read_dictionary(message: PoolStringArray) -> String:
 	# /dict <word>
@@ -541,7 +545,7 @@ func list_controllers(message: PoolStringArray) -> String:
 	var response : PoolStringArray
 
 	for controller in Input.get_connected_joypads():
-		response.append(tr("list_controllers_command_line") % [controller, Input.get_joy_name(controller), Input.get_joy_guid(controller)])
+		response.append(tr("list_controllers_command_line").format({"controller_id": controller, "controller_name": Input.get_joy_name(controller), "controller_guid": Input.get_joy_guid(controller)}))
 
 	if response.size() != 0:
 		return response.join("\n")
@@ -841,6 +845,27 @@ func capture_devices(message: PoolStringArray) -> String:
 	output.append_array(AudioServer.capture_get_device_list())
 
 	return tr("capture_devices_list_list_devices") % [AudioServer.capture_get_device(), output.join(tr("capture_devices_list_available_devices"))]
+
+func get_user_name(message: PoolStringArray) -> String:
+	"""
+		Used to Get Player's Computer's Username
+
+		Useful For Meta Gameplay
+
+		Not Meant to Be Called Directly
+	"""
+
+	# warning-ignore:unused_variable
+	var command : String = message[0].substr(1, message[0].length()-1) # Removes Slash From Command (first character)
+	var command_arguments : PoolStringArray = message
+	command_arguments.remove(0)
+
+	var long_name : bool = false
+
+	if command_arguments.size() > 0 and command_arguments[0].to_lower() == tr("bool_true").to_lower():
+		long_name = true
+
+	return tr("get_user_name_success") % functions.get_logged_in_user(gamestate.net_id, long_name)
 
 func get_class() -> String:
 	return "ClientCommands"
