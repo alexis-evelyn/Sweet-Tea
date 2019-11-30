@@ -4,7 +4,7 @@ Originally Written: `August 7th, 2019`
 <br>
 Last Modified: `November 29th, 2019`
 
-This is a custom license written by *Alexis Evelyn* (the developer of Codename: Sweet Tea). This license is based off of GPL 3, but has been modified for my needs.
+This is a custom license written by *Alexis Evelyn* (the developer of *Codename: Sweet Tea*). This license is based off of GPL 3, but has been modified for my needs.
 
 ### License Restrictions
 
