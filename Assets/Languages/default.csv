@@ -1,6 +1,6 @@
 ,en,es,ja,mz,pr
 about_button,About Game,,,,
-about_game_text,Made by Alex Evelyn,,,,
+about_game_text,Made by Alexis Evelyn,,,,
 about_game_title,About Sweet Tea,,,,
 alpha_game_version_warning_label,[center]Game Version: %s - Engine Version: v%d.%d.%s.%s.%s[/center],,,,
 ban_player_command_no_permission,Ban Player and Optional Message - Permission Needed: %s,,,,
@@ -210,7 +210,7 @@ toggle_gravity_command_missing_player_node,"Sorry, the player node is missing!!!
 toggle_gravity_command_no_permission,"Sorry, you don't have permission to toggle gravity with this command.",,,,
 toggle_gravity_command_success_off,Disabled Gravity!!!,,,,
 toggle_gravity_command_success_on,Enabled Gravity!!!,,,,
-translation_authors,"[""Alex Evelyn""]",,,"[""Alex Evelyn""]","[""Alex Evelyn""]"
+translation_authors,"[""Alexis Evelyn""]",,,"[""Alexis Evelyn""]","[""Alexis Evelyn""]"
 world_name_label,World: %s,,,,
 world_seed_command_no_permission,"Sorry, you don't have permission to get the world seed with this command.",,,,
 world_seed_command_success,World Seed: %s,,,,

@@ -1,16 +1,31 @@
-## MODIFY ME
+# Compiling
 
-# 3.2.dev export template download (2 files needed) - https://hugo.pro/projects/godot-builds/
-# Actually, you need to compile the export template (because of custom modules)
-# http://docs.godotengine.org/en/stable/development/compiling/compiling_for_windows.html#creating-windows-export-templates
-# https://docs.godotengine.org/en/3.1/development/compiling/compiling_for_x11.html#building-export-templates
-# OSX does not have explicit instructions on how to compile export templates - http://docs.godotengine.org/en/stable/development/compiling/compiling_for_osx.html
+***I May Move Compiling To Respective Repositories***
 
-# Since I Use Mac, I Am Leaving A Link About Cross Compiling Godot
-# http://docs.godotengine.org/en/stable/development/compiling/compiling_for_windows.html#cross-compiling-for-windows-from-other-operating-systems
-# It appears I cannot cross compile for Linux from Mac, so I will have to install a Linux VM when I get close to releasing the game
-# Cross Compiling for Windows is not working for my Mac either, so I will need to reinstall Windows in a VM at the same time I reinstall the Linux VM
+### Links To Repos Needed To Compile Game
 
-# On the other hand, I uploaded the custom version of Godot I modified to https://github.com/SenorContento/Godot-3.2-Sweet-Tea.
-# There's a script in the project root that is meant to be compiled on a Mac with Homebrew installed.
-# You will have to install scons via homebrew and make sure that your working directory is the project root before you execute the script.
+**Game**
+* [The Game - This Repo Being Viewed](https://github.com/alex-evelyn/Sweet-Tea)
+
+**Godot Engine**
+* [Forked Godot Engine](https://github.com/alex-evelyn/Godot-3.2-Sweet-Tea)
+* [Godot CPP - C++ Bindings](https://github.com/alex-evelyn/godot-cpp)
+* [Godot Headers - For Godot API](https://github.com/alex-evelyn/godot_headers)
+
+**Modules**
+* [MQTT Module](https://github.com/alex-evelyn/Godot-MQTT-Module)
+* [Lua Module](https://github.com/alex-evelyn/Godot-Lua-Module)
+* [World Grid Module - Unused In Game](https://github.com/alex-evelyn/Godot-WorldGrid-Module)
+
+**Libraries**
+* [LibUMQTT Library - Used By MQTT Module](https://github.com/alex-evelyn/libumqtt)
+* [Buffer Library - Used By LibUMQTT Library](https://github.com/alex-evelyn/buffer)
+
+### Compiling Godot Engine Export Templates
+* [Windows](http://docs.godotengine.org/en/stable/development/compiling/compiling_for_windows.html#creating-windows-export-templates)
+* [Linux](https://docs.godotengine.org/en/3.1/development/compiling/compiling_for_x11.html#building-export-templates)
+* [Mac OSX](http://docs.godotengine.org/en/stable/development/compiling/compiling_for_osx.html)
+  * At The Time of Writing - The Instructions For The Template Is Missing - [This SH Script Will Compile For You](https://github.com/alex-evelyn/Godot-3.2-Sweet-Tea/blob/master/compile_osx_custom_package.sh)
+
+### Cross Compiling - Untested
+* [Cross Compiling Instructions](http://docs.godotengine.org/en/stable/development/compiling/compiling_for_windows.html#cross-compiling-for-windows-from-other-operating-systems)

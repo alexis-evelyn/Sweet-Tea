@@ -1,6 +1,6 @@
 shader_type canvas_item;
 
-// I, Alex Evelyn, Am Releasing This Shader as Public Domain!!!
+// I, Alexis Evelyn, Am Releasing This Shader as Public Domain!!!
 
 // https://en.m.wikipedia.org/wiki/File:Lesbian_Pride_Flag_2019.svg
 

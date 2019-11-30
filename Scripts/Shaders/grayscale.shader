@@ -1,7 +1,7 @@
 shader_type canvas_item;
 
 // Math came from https://xorshaders.weebly.com/tutorials/black-and-white-shader
-// Converted to Godot Shader Code by Alex Evelyn
+// Converted to Godot Shader Code by Alexis Evelyn
 
 void fragment() {
 	vec4 tex = textureLod(SCREEN_TEXTURE, SCREEN_UV, 0.0);

@@ -1,5 +1,5 @@
 ,en,mz
-translation_authors,"[""Alex Evelyn""]","[""Alex Evelyn""]"
+translation_authors,"[""Alexis Evelyn""]","[""Alexis Evelyn""]"
 Translation Notes,"This is meant to be a dictionary to be used to translate Mazawalza to other languages. Feel free to add your own. Mazawalza is a language based on concepts and intention, not words. It is based on the the idea of pasigraphy.",
 Why unicode representation?,"Godot's TranslationServer (at the time of writing) cannot handle UTF-16, so I have to convert the unicode representation in game to be able to be used.",
 What is Mazawalza?,"Mazawalza is a magic based language for the lore of my game. As such, the concepts behind the characters will be geared toward spells and potions. Unlike Mincraft's random symbols with enchanting tables, I want these symbols to have meaning so that someone who puts the effort to learn to read it can understand what the spells and potions do.",

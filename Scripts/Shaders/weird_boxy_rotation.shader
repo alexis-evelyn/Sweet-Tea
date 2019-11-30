@@ -1,6 +1,6 @@
 shader_type canvas_item;
 
-// I have no idea how this works, this shader was an accidental invention. - Alex Evelyn
+// I have no idea how this works, this shader was an accidental invention. - Alexis Evelyn
 // Modified From Source - https://godotengine.org/asset-library/asset/122
 
 //clamp(TIME, 0, 1);

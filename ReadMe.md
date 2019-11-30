@@ -1,4 +1,6 @@
-This project is a result of me (Alex Evelyn) following tutorials to learn how to make games in Godot.
+# Read Me
+
+This project is a result of me (Alexis Evelyn) following tutorials to learn how to make games in Godot.
 
 This game is inspired by Starbound and Undertale. I am not yet sure what I want to make the game into, hence the codename "Sweet Tea". Sweet Tea is my favorite drink, and working on this game helps a lot with my depression.
 
