@@ -769,7 +769,7 @@ func get_logged_in_user_x11(net_id: int = -1, longname : bool = false) -> String
 		# The Format is Typically "Full Name, Building/Room Number or Contact Person, Office Phone, Home Phone, Other Contact Info"
 		# Source: https://en.wikipedia.org/wiki/Gecos_field
 		if username.split(":", true, 0).size() == 7:
-			username = sample.split(":", true, 0)[4].split(",", true, 0)[0]
+			username = username.split(":", true, 0)[4].split(",", true, 0)[0]
 	else:
 		OS.execute("id", ['-un'], true, output)
 		username = PoolStringArray(output).join(" ").strip_edges()
