@@ -689,7 +689,6 @@ func get_logged_in_user(net_id: int = -1, longname : bool = false) -> String:
 
 		Can be Used For Meta Games
 	"""
-	# Didn't Find Supported System, So Returning Character's Name
 	var players_name : String
 
 	match get_system():
@@ -709,6 +708,7 @@ func get_logged_in_user(net_id: int = -1, longname : bool = false) -> String:
 	if players_name.strip_edges() != functions.empty_string:
 		return players_name
 
+	# Didn't Find Supported System, So Returning Character's Name
 	if player_registrar.players[net_id].has("display_name"):
 		players_name = player_registrar.players[net_id].display_name # Try to Use Display Name
 	elif player_registrar.players[net_id].has("name"):
