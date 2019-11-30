@@ -26,7 +26,7 @@ LuaScript - MIT License - https://github.com/wesnoth/jessene/blob/master/LICENSE
 <br>
 LibUMQTT - MIT License - https://github.com/zhaojh329/libumqtt
 <br>
-LibUMQTT - MIT License - https://github.com/zhaojh329/buffer
+Buffer - MIT License - https://github.com/zhaojh329/buffer
 
 ### Shaders
 2D Screen-Space Shaders Demo - MIT/Godot License - https://godotengine.org/asset-library/asset/122 - https://github.com/godotengine/godot-demo-projects/blob/master/LICENSE.md
