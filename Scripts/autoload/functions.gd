@@ -716,6 +716,12 @@ func get_logged_in_user(net_id: int = -1, longname : bool = false) -> String:
 	return players_name
 
 func get_logged_in_user_osx(net_id: int = -1, longname : bool = false) -> String:
+	"""
+		Retrieve Account Name For Current System (If Supported)
+
+		Can be Used For Meta Games
+	"""
+
 	# Shortname - /usr/bin/logname
 	# Shortname - /usr/bin/whoami (deprecated)
 	# Shortname - /usr/bin/id -un
@@ -732,11 +738,43 @@ func get_logged_in_user_osx(net_id: int = -1, longname : bool = false) -> String
 	return PoolStringArray(output).join(" ").strip_edges()
 
 func get_logged_in_user_x11(net_id: int = -1, longname : bool = false) -> String:
+	"""
+		Retrieve Account Name For Current System (If Supported)
+
+		Not Fully Tested
+
+		Can be Used For Meta Games
+	"""
+
 	# Shortname - /usr/bin/logname
-	# Shortname - whoami
+	# Shortname - /usr/bin/whoami
+	# Shortname - /usr/bin/id -un
+	# Longname - /usr/bin/getent passwd | /bin/grep <shortname> | /usr/bin/cut -d: -f5 | /usr/bin/cut -d, -f1
+	# Longname - /bin/cat /etc/passwd <shortname> | /usr/bin/cut -d: -f5 | /usr/bin/cut -d, -f1
 	# Longname - ???
 
-	return "Player - Linux"
+	var output : Array
+	var username : String
+
+	if longname:
+		OS.execute("id", ['-un'], true, output)
+		OS.execute("getent", ['passwd', PoolStringArray(output)[0].strip_edges()], true, output)
+
+		# Sample Response From GetEnt (From RPi)
+		# alex:x:1001:1001:Alexis Autumn Evelyn,,,:/home/alex:/usr/bin/zsh
+		var sample : String = "alex:x:1001:1001:Alexis Autumn Evelyn,,,:/home/alex:/usr/bin/zsh"
+		username = PoolStringArray(output).join(" ").strip_edges()
+
+		# What we want is the Gecos Field
+		# The Format is Typically "Full Name, Building/Room Number or Contact Person, Office Phone, Home Phone, Other Contact Info"
+		# Source: https://en.wikipedia.org/wiki/Gecos_field
+		if username.split(":", true, 0).size() == 7:
+			username = sample.split(":", false, 0)[4].split(",", true, 0)[0]
+	else:
+		OS.execute("id", ['-un'], true, output)
+		username = PoolStringArray(output).join(" ").strip_edges()
+
+	return username
 
 func get_logged_in_user_windows(net_id: int = -1, longname : bool = false) -> String:
 	# Shortname - ???
