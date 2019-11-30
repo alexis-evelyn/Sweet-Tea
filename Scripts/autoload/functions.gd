@@ -98,12 +98,12 @@ func get_translation_csv(translations_file: String, key: String, locale: String)
 	if open_csv_status != OK:
 		logger.error("Failed to find locale '%s' for key '%s' because the csv file '%s' couldn't be opened!!!" % [locale, key, translations_file])
 		file.close()
-		return functions.empty_string
+		return empty_string
 
 	if file.eof_reached():
 		logger.warn("Failed to find locale '%s' for key '%s' because the csv file '%s' is empty!!!" % [locale, key, translations_file])
 		file.close()
-		return functions.empty_string
+		return empty_string
 
 	var index : int = -1 # Column that Locale Is On
 	var line : Array = Array(file.get_csv_line()) # Get first line of csv file
@@ -112,7 +112,7 @@ func get_translation_csv(translations_file: String, key: String, locale: String)
 	if not line.has(locale):
 		logger.warn("Failed to find locale '%s' for key '%s' because the csv file '%s' is does not have the locale!!!" % [locale, key, translations_file])
 		file.close()
-		return functions.empty_string
+		return empty_string
 
 	index = line.find(locale) # Get column the locale is on
 
@@ -126,7 +126,7 @@ func get_translation_csv(translations_file: String, key: String, locale: String)
 
 	logger.warn("Failed to find locale '%s' for key '%s' because the csv file '%s' does not have the key!!!" % [locale, key, translations_file])
 	file.close()
-	return functions.empty_string # If it does not have the key, then just return
+	return empty_string # If it does not have the key, then just return
 
 # Get Translation For Specified Locale
 # warning-ignore:unused_argument
@@ -373,7 +373,7 @@ func parse_for_unicode(string: String) -> String:
 		unicode_ints.append(unicode_chars[x].hex_to_int())
 
 	# Convert Integers to Characters
-	var joined_chars : String = functions.empty_string
+	var joined_chars : String = empty_string
 	for unicode_int in unicode_ints:
 		joined_chars += char(unicode_int)
 
@@ -705,7 +705,7 @@ func get_logged_in_user(net_id: int = -1, longname : bool = false) -> String:
 		host_system.iOS:
 			players_name = get_logged_in_user_iOS(net_id, longname)
 
-	if players_name.strip_edges() != functions.empty_string:
+	if players_name.strip_edges() != empty_string:
 		return players_name
 
 	# Didn't Find Supported System, So Returning Character's Name
@@ -775,7 +775,7 @@ func get_logged_in_user_x11(net_id: int = -1, longname : bool = false) -> String
 			username = username.split(":", true, 0)[4].split(",", true, 0)[0]
 		else:
 			logger.error("Failed to Retrieve User's name!!! Does getent or id not exist?")
-			username = functions.empty_string
+			username = empty_string
 	else:
 		OS.execute("id", ['-un'], true, output)
 		username = PoolStringArray(output).join(" ").strip_edges()
@@ -800,7 +800,7 @@ func get_logged_in_user_windows(net_id: int = -1, longname : bool = false) -> St
 	# find - C:\Windows\System32\find.exe
 	# where - C:\Windows\System32\where.exe
 
-	return functions.empty_string
+	return empty_string
 
 func get_logged_in_user_uwp(net_id: int = -1, longname : bool = false) -> String:
 	"""
@@ -811,7 +811,7 @@ func get_logged_in_user_uwp(net_id: int = -1, longname : bool = false) -> String
 		I Don't Know What Exactly UWP is. So, I Am Not Sure How To Get Username!!!
 	"""
 
-	return functions.empty_string
+	return empty_string
 
 func get_logged_in_user_android(net_id: int = -1, longname : bool = false) -> String:
 	"""
@@ -820,7 +820,7 @@ func get_logged_in_user_android(net_id: int = -1, longname : bool = false) -> St
 		May Use Google Account Name if Possible
 	"""
 
-	return functions.empty_string
+	return empty_string
 
 func get_logged_in_user_iOS(net_id: int = -1, longname : bool = false) -> String:
 	"""
@@ -829,7 +829,7 @@ func get_logged_in_user_iOS(net_id: int = -1, longname : bool = false) -> String
 		May Use Apple Account Name if Possible
 	"""
 
-	return functions.empty_string
+	return empty_string
 
 func get_class() -> String:
 	return "Functions"
