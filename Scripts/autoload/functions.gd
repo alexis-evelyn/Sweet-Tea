@@ -762,14 +762,14 @@ func get_logged_in_user_x11(net_id: int = -1, longname : bool = false) -> String
 
 		# Sample Response From GetEnt (From RPi)
 		# alex:x:1001:1001:Alexis Autumn Evelyn,,,:/home/alex:/usr/bin/zsh
-		var sample : String = "alex:x:1001:1001:Alexis Autumn Evelyn,,,:/home/alex:/usr/bin/zsh"
+		#var sample : String = "alex:x:1001:1001:Alexis Autumn Evelyn,,,:/home/alex:/usr/bin/zsh"
 		username = PoolStringArray(output).join(" ").strip_edges()
 
 		# What we want is the Gecos Field
 		# The Format is Typically "Full Name, Building/Room Number or Contact Person, Office Phone, Home Phone, Other Contact Info"
 		# Source: https://en.wikipedia.org/wiki/Gecos_field
 		if username.split(":", true, 0).size() == 7:
-			username = sample.split(":", false, 0)[4].split(",", true, 0)[0]
+			username = sample.split(":", true, 0)[4].split(",", true, 0)[0]
 	else:
 		OS.execute("id", ['-un'], true, output)
 		username = PoolStringArray(output).join(" ").strip_edges()
