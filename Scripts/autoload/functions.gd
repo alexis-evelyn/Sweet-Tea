@@ -798,6 +798,7 @@ func get_logged_in_user_windows(net_id: int = -1, longname : bool = false) -> St
 	# net - C:\Windows\System32\net.exe
 	# whoami - C:\Windows\System32\whoami.exe
 	# find - C:\Windows\System32\find.exe
+	# where - C:\Windows\System32\where.exe
 
 	return functions.empty_string
 
