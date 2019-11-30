@@ -13,6 +13,7 @@ I fully intend for this to be a multiplayer compatible game and since I hear it 
 Release Binaries
 ---------
 GameJolt - https://gamejolt.com/games/Sweet-Tea/430985
+<br>
 Itch.io - https://alexevelyn.itch.io/sweet-tea
 
 These binaries will be released at these locations for alpha builds and eventually full releases.
