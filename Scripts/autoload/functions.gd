@@ -689,22 +689,25 @@ func get_logged_in_user(net_id: int = -1, longname : bool = false) -> String:
 
 		Can be Used For Meta Games
 	"""
-	match get_system():
-		host_system.OSX:
-			return get_logged_in_user_osx(net_id, longname)
-		host_system.X11:
-			return get_logged_in_user_x11(net_id, longname)
-		host_system.Windows:
-			return get_logged_in_user_windows(net_id, longname)
-		host_system.UWP:
-			return get_logged_in_user_uwp(net_id, longname)
-		host_system.android:
-			return get_logged_in_user_android(net_id, longname)
-		host_system.iOS:
-			return get_logged_in_user_iOS(net_id, longname)
-
 	# Didn't Find Supported System, So Returning Character's Name
 	var players_name : String
+
+	match get_system():
+		host_system.OSX:
+			players_name = get_logged_in_user_osx(net_id, longname)
+		host_system.X11:
+			players_name = get_logged_in_user_x11(net_id, longname)
+		host_system.Windows:
+			players_name = get_logged_in_user_windows(net_id, longname)
+		host_system.UWP:
+			players_name = get_logged_in_user_uwp(net_id, longname)
+		host_system.android:
+			players_name = get_logged_in_user_android(net_id, longname)
+		host_system.iOS:
+			players_name = get_logged_in_user_iOS(net_id, longname)
+
+	if players_name.strip_edges() != functions.empty_string:
+		return players_name
 
 	if player_registrar.players[net_id].has("display_name"):
 		players_name = player_registrar.players[net_id].display_name # Try to Use Display Name
@@ -770,6 +773,9 @@ func get_logged_in_user_x11(net_id: int = -1, longname : bool = false) -> String
 		# Source: https://en.wikipedia.org/wiki/Gecos_field
 		if username.split(":", true, 0).size() == 7:
 			username = username.split(":", true, 0)[4].split(",", true, 0)[0]
+		else:
+			logger.error("Failed to Retrieve User's name!!! Does getent or id not exist?")
+			username = functions.empty_string
 	else:
 		OS.execute("id", ['-un'], true, output)
 		username = PoolStringArray(output).join(" ").strip_edges()
