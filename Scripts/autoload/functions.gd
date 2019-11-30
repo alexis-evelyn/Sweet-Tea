@@ -783,11 +783,23 @@ func get_logged_in_user_x11(net_id: int = -1, longname : bool = false) -> String
 	return username
 
 func get_logged_in_user_windows(net_id: int = -1, longname : bool = false) -> String:
-	# Shortname - ???
-	# Shortname - ???
-	# Longname - ???
+	"""
+		Retrieve Account Name For Current System (If Supported)
 
-	return "Player - Windows"
+		Untested
+
+		Can be Used For Meta Games
+	"""
+
+	# Shortname - echo %USERNAME% - (e.g. IEUser)
+	# Shortname - whoami - (Outputs group/shortname - e.g. iewin7/ieuser)
+	# Longname - net user %USERNAME% | find "Full Name" - (Outputs "Full Name\t\t\t<longname>" e.g. Full Name\t\t\tAlexis Autumn Evelyn)
+
+	# net - C:\Windows\System32\net.exe
+	# whoami - C:\Windows\System32\whoami.exe
+	# find - C:\Windows\System32\find.exe
+
+	return functions.empty_string
 
 func get_logged_in_user_uwp(net_id: int = -1, longname : bool = false) -> String:
 	"""
@@ -797,14 +809,8 @@ func get_logged_in_user_uwp(net_id: int = -1, longname : bool = false) -> String
 
 		I Don't Know What Exactly UWP is. So, I Am Not Sure How To Get Username!!!
 	"""
-	var players_name : String
 
-	if player_registrar.players[net_id].has("display_name"):
-		players_name = player_registrar.players[net_id].display_name # Try to Use Display Name
-	elif player_registrar.players[net_id].has("name"):
-		players_name = player_registrar.players[net_id].name # If not, Use Name
-
-	return players_name
+	return functions.empty_string
 
 func get_logged_in_user_android(net_id: int = -1, longname : bool = false) -> String:
 	"""
@@ -812,14 +818,8 @@ func get_logged_in_user_android(net_id: int = -1, longname : bool = false) -> St
 
 		May Use Google Account Name if Possible
 	"""
-	var players_name : String
 
-	if player_registrar.players[net_id].has("display_name"):
-		players_name = player_registrar.players[net_id].display_name # Try to Use Display Name
-	elif player_registrar.players[net_id].has("name"):
-		players_name = player_registrar.players[net_id].name # If not, Use Name
-
-	return players_name
+	return functions.empty_string
 
 func get_logged_in_user_iOS(net_id: int = -1, longname : bool = false) -> String:
 	"""
@@ -827,14 +827,8 @@ func get_logged_in_user_iOS(net_id: int = -1, longname : bool = false) -> String
 
 		May Use Apple Account Name if Possible
 	"""
-	var players_name : String
 
-	if player_registrar.players[net_id].has("display_name"):
-		players_name = player_registrar.players[net_id].display_name # Try to Use Display Name
-	elif player_registrar.players[net_id].has("name"):
-		players_name = player_registrar.players[net_id].name # If not, Use Name
-
-	return players_name
+	return functions.empty_string
 
 func get_class() -> String:
 	return "Functions"
