@@ -718,6 +718,7 @@ func get_logged_in_user(net_id: int = -1, longname : bool = false) -> String:
 
 	return players_name
 
+# warning-ignore:unused_argument
 func get_logged_in_user_osx(net_id: int = -1, longname : bool = false) -> String:
 	"""
 		Retrieve Account Name For Current System (If Supported)
@@ -730,7 +731,7 @@ func get_logged_in_user_osx(net_id: int = -1, longname : bool = false) -> String
 	# Shortname - /usr/bin/id -un
 	# Longname - /usr/bin/id -F <shortname>
 
-	var output : Array
+	var output : Array = []
 
 	if longname:
 		OS.execute("id", ['-un'], true, output)
@@ -740,6 +741,7 @@ func get_logged_in_user_osx(net_id: int = -1, longname : bool = false) -> String
 
 	return PoolStringArray(output).join(" ").strip_edges()
 
+# warning-ignore:unused_argument
 func get_logged_in_user_x11(net_id: int = -1, longname : bool = false) -> String:
 	"""
 		Retrieve Account Name For Current System (If Supported)
@@ -756,7 +758,7 @@ func get_logged_in_user_x11(net_id: int = -1, longname : bool = false) -> String
 	# Longname - /bin/cat /etc/passwd <shortname> | /usr/bin/cut -d: -f5 | /usr/bin/cut -d, -f1
 	# Longname - ???
 
-	var output : Array
+	var output : Array = []
 	var username : String
 
 	if longname:
@@ -782,6 +784,8 @@ func get_logged_in_user_x11(net_id: int = -1, longname : bool = false) -> String
 
 	return username
 
+# warning-ignore:unused_argument
+# warning-ignore:unused_argument
 func get_logged_in_user_windows(net_id: int = -1, longname : bool = false) -> String:
 	"""
 		Retrieve Account Name For Current System (If Supported)
@@ -802,6 +806,8 @@ func get_logged_in_user_windows(net_id: int = -1, longname : bool = false) -> St
 
 	return empty_string
 
+# warning-ignore:unused_argument
+# warning-ignore:unused_argument
 func get_logged_in_user_uwp(net_id: int = -1, longname : bool = false) -> String:
 	"""
 		Retrieving Account Name is Not Supported For UWP Yet
@@ -813,6 +819,8 @@ func get_logged_in_user_uwp(net_id: int = -1, longname : bool = false) -> String
 
 	return empty_string
 
+# warning-ignore:unused_argument
+# warning-ignore:unused_argument
 func get_logged_in_user_android(net_id: int = -1, longname : bool = false) -> String:
 	"""
 		Retrieving Account Name is Not Supported For Android Yet
@@ -822,6 +830,8 @@ func get_logged_in_user_android(net_id: int = -1, longname : bool = false) -> St
 
 	return empty_string
 
+# warning-ignore:unused_argument
+# warning-ignore:unused_argument
 func get_logged_in_user_iOS(net_id: int = -1, longname : bool = false) -> String:
 	"""
 		Retrieving Account Name is Not Supported For iOS Yet
