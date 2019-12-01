@@ -844,6 +844,7 @@ func test_mqtt(net_id: int, message: PoolStringArray) -> String:
 		arguments.remove(0)
 
 		#return mqtt.echo(arguments.join(" "))
+		mqtt.initialize()
 		return mqtt.test("godot_topic_test", arguments.join(" "), -1)
 
 	return "Command Not Finished!!!"
