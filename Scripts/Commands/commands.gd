@@ -843,11 +843,21 @@ func test_mqtt(net_id: int, message: PoolStringArray) -> String:
 		var arguments = message
 		arguments.remove(0)
 
+		if arguments.size() == 0:
+			return functions.get_translation("test_mqtt_specify_arguments", player_registrar.players[net_id].locale)
+
+		if arguments[0] != functions.get_translation("bool_true", player_registrar.players[net_id].locale):
+			return functions.get_translation("ask_override_command_message", player_registrar.players[net_id].locale).format({
+				"command_name": message[0],
+				"command_action": functions.get_translation("test_mqtt_freezes_game", player_registrar.players[net_id].locale),
+				"override_value": functions.get_translation("bool_true", player_registrar.players[net_id].locale)
+				})
+
 		#return mqtt.echo(arguments.join(" "))
 		mqtt.initialize()
-		return mqtt.test("godot_topic_test", arguments.join(" "), -1)
+		return mqtt.test("godot_topic_test", arguments.join(" "), 0)
 
-	return "Command Not Finished!!!"
+	return functions.get_translation("command_not_implemented", player_registrar.players[net_id].locale).format({"command_name": message[0]})
 
 func get_class() -> String:
 	return "ServerCommands"
