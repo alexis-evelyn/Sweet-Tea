@@ -19,16 +19,16 @@ func add_button() -> void:
 		var buttons : Node = main_menu.get_node(\"Menu/Buttons\")
 		new_button.name = \"ButtonIDHere\"
 		new_button.text = \"About Game\"
-		
+
 		new_button.connect(\"pressed\", self, \"button_pressed\")
-		
+
 		buttons.add_child(new_button)
 	else:
 		logger.verbose(\"Menu Buttons Are Missing!!!\")
 
 func button_pressed() -> void:
 	logger.verbose(\"Mod About Button Pressed!!!\")
-	
+
 	main_loop_events.about_game()
 	# You could also change scene, etc...
 
@@ -36,7 +36,7 @@ func tree_changed() -> void:
 	if scene_root.has_node(\"MainMenu\"):
 		logger.verbose(\"Main Menu Loaded!!!\")
 		scene_tree.disconnect(\"tree_changed\", self, \"tree_changed\") # Disconnect Signal So This Function is Not Wasting More CPU
-		
+
 		main_menu = scene_root.get_node(\"MainMenu\") # MainMenu would be fully loaded by this point (and you cannot check signal ready() or script_setup() after load anyway)
 		add_button()
 "
