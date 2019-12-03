@@ -839,12 +839,14 @@ func test_mqtt(net_id: int, message: PoolStringArray) -> String:
 	var command_permission_level : int = get_permission(command) # Gets Command's Permission Level
 	var players_permission_level : int = player_registrar.players[net_id].permission_level # Get Player's Permission Level
 
+	# Pass Logger Script to Wrapper To Use
+	mqtt.logger(logger)
+
 	if check_permission(players_permission_level, command_permission_level):
 		var arguments = message
 		arguments.remove(0)
 
 		if arguments.size() == 0:
-			mqtt.logger(logger)
 			return functions.get_translation("test_mqtt_specify_arguments", player_registrar.players[net_id].locale)
 
 		if arguments[0] != functions.get_translation("bool_true", player_registrar.players[net_id].locale):
@@ -855,7 +857,7 @@ func test_mqtt(net_id: int, message: PoolStringArray) -> String:
 				})
 
 		#return mqtt.echo(arguments.join(" "))
-		mqtt.initialize()
+		#mqtt.initialize()
 		return mqtt.test("godot_topic_test", arguments.join(" "), 0)
 
 	return functions.get_translation("command_not_implemented", player_registrar.players[net_id].locale).format({"command_name": message[0]})
