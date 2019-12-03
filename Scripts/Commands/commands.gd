@@ -844,6 +844,7 @@ func test_mqtt(net_id: int, message: PoolStringArray) -> String:
 		arguments.remove(0)
 
 		if arguments.size() == 0:
+			mqtt.logger(logger)
 			return functions.get_translation("test_mqtt_specify_arguments", player_registrar.players[net_id].locale)
 
 		if arguments[0] != functions.get_translation("bool_true", player_registrar.players[net_id].locale):
