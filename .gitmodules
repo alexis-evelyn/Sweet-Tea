@@ -1,9 +1,9 @@
-[submodule "Development/Godot-MQTT-Module"]
+[submodule ".development/Godot-MQTT-Module"]
 	path = .development/Godot-MQTT-Module
-	url = https://github.com/alex-evelyn/Godot-MQTT-Module
-[submodule "Development/Godot-Lua-Module"]
+	url = https://github.com/alexis-evelyn/Godot-MQTT-Module
+[submodule ".development/Godot-Lua-Module"]
 	path = .development/Godot-Lua-Module
-	url = https://github.com/alex-evelyn/Godot-Lua-Module
-[submodule "Development/Godot-3.2-Sweet-Tea"]
+	url = https://github.com/alexis-evelyn/Godot-Lua-Module
+[submodule ".development/Godot-3.2-Sweet-Tea"]
 	path = .development/Godot-3.2-Sweet-Tea
-	url = https://github.com/alex-evelyn/Godot-3.2-Sweet-Tea
+	url = https://github.com/alexis-evelyn/Godot-3.2-Sweet-Tea
