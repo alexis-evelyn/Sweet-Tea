@@ -537,6 +537,8 @@ func execute_lua_file(lua_script : String, function: String, arguments: Array):
 	if not lua.load(lua_script):
 		return false # Failed to Load Lua Script
 
+	logger.warning(lua.check_mqtt(mqtt, "LOL!!!"))
+
 	# Lua will always return an Array (for some reason is backwards)
 	var results : Array = lua.execute(function, arguments)
 

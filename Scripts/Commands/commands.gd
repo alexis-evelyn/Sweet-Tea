@@ -857,7 +857,7 @@ func test_mqtt(net_id: int, message: PoolStringArray) -> String:
 				})
 
 		#return mqtt.echo(arguments.join(" "))
-		#mqtt.initialize()
+		mqtt.initialize()
 		return mqtt.test("godot_topic_test", arguments.join(" "), 0)
 
 	return functions.get_translation("command_not_implemented", player_registrar.players[net_id].locale).format({"command_name": message[0]})

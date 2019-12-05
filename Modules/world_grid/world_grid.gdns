@@ -1,8 +1,0 @@
-[gd_resource type="NativeScript" load_steps=2 format=2]
-
-[ext_resource path="res://Modules/world_grid/world_grid.gdnlib" type="GDNativeLibrary" id=1]
-
-[resource]
-resource_name = "WorldGrid"
-class_name = "WorldGrid"
-library = ExtResource( 1 )
